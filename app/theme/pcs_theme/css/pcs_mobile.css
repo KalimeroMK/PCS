@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+.main {font-size:30px; width:100%; border: 2px solid #444444; border-collapse: collapse; text-align:center;}
+
+.main_td {font-size:25px; border: 2px solid #444444; width: 200px; height: 50px;}
+
+.td_sub {background-color: aqua;}
+.td_sub_pkg1 {background-color: aquamarine;}
+.td_sub_pkg2 {background-color: lawngreen;}
+.td_sub_pkg3 {background-color: orange;}
+
+.td_total {background-color: lightgoldenrodyellow;}
+.td_S_total {background-color: khaki;}
+.td_G_total {background-color: gold;}
+
+.jnt_td {font-size:15px; border: 2px solid #444444; height: 60px;}
+.jnt_th {background-color: plum;}
+
+.stat_left{text-align:right; width:40%;}
+.stat_center{text-align:center; font-size: 24px;}
+.stat_right{text-align:right;}

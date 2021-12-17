@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+.pcs_subject {font-size:20px;}
+.pcs_td_spl {width:100px;text-align:center}
+.pcs_td_dwg {width:60px;text-align:center}
+.pcs_td_pnid {width:100px;text-align:center}
+.pcs_td_pkg {width:90px;text-align:center}
+.pcs_td_nor {width:150px;text-align:center}
+.pcs_td_mid {width:200px;text-align:center}
+.pcs_td_long {width:250px;text-align:center}
+
+.main {font-size:45px; width:100%; border: 2px solid #444444; border-collapse: collapse; text-align:center;}
+
+.main_td {font-size:25px; border: 2px solid #444444; width: 200px; height: 50px;}
+
+.td_upper {font-size:15px; border-width: 2px 2px 1px 2px; border-style:solid solid dashed solid; height: 60px;}
+.td_lower {font-size:15px; border-width: 1px 2px 2px 2px; border-style:dashed solid solid solid; height: 60px;}
+
+.td_sub {background-color: aqua;}
+.td_sub_pkg1 {background-color: aquamarine;}
+.td_sub_pkg2 {background-color: lawngreen;}
+.td_sub_pkg3 {background-color: orange;}
+
+.td_total {background-color: lightgoldenrodyellow;}
+.td_S_total {background-color: khaki;}
+.td_G_total {background-color: gold;}
+
+.jnt_td {font-size:15px; border: 2px solid #444444; height: 60px;}
+.jnt_th {background-color: plum;}
+
+.stat_left{text-align:left;}
+.stat_center{text-align:center; font-size: 24px;}
+.stat_right{text-align:right;}
+
+a:hover, a:focus { animation-duration: 3s; animation-name: rainbowLink; animation-iteration-count: infinite; cursor:pointer; } 
+@keyframes rainbowLink {     
+ 0% { color: #ff2a2a; }
+ 15% { color: #ff7a2a; }
+ 30% { color: #ffc52a; }
+ 45% { color: #43ff2a; }
+ 60% { color: #2a89ff; }
+ 75% { color: #202082; }
+ 90% { color: #6b2aff; } 
+ 100% { color: #e82aff; }
+}

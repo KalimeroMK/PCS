@@ -1,34 +1,20 @@
 <?php
-include_once('../../../../../common.php');
-include_once('../../pcs_core/pcs_config.php');
-if (!defined('_GNUBOARD_')) exit;
-if(isset($_POST['rev'])){$pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'_'.$_POST['rev'].'.pdf';}
-else {$pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'.pdf';}
+
+    include_once('../../../../../common.php');
+    include_once('../../pcs_core/pcs_config.php');
+    if ( ! defined('_GNUBOARD_')) {
+        exit;
+    }
+
+    if (isset($_POST['rev'])) {
+        $pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'_'.$_POST['rev'].'.pdf';
+    } else {
+        $pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'.pdf';
+    }
 ?>
 <!DOCTYPE html>
-<!--
-Copyright 2012 Mozilla Foundation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Adobe CMap resources are covered by their own copyright but the same license:
-
-    Copyright 1990-2015 Adobe Systems Incorporated.
-
-See https://github.com/adobe-type-tools/cmap-resources
--->
 <html dir="ltr" mozdisallowselectionprint>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta name="google" content="notranslate">
@@ -39,59 +25,62 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="stylesheet" href="viewer.css">
 
 
+    <!-- This snippet is used in production (included from viewer.html) -->
+    <link rel="resource" type="application/l10n" href="locale/locale.properties">
+    <script src="../build/pdf.js"></script>
+    <script>const pcs_url = '<?php echo $pdf_url."?r=".mt_rand(1, 10000); ?>';</script>
 
-<!-- This snippet is used in production (included from viewer.html) -->
-<link rel="resource" type="application/l10n" href="locale/locale.properties">
-<script src="../build/pdf.js"></script>
-<script>var pcs_url = '<?php echo $pdf_url."?r=".mt_rand(1, 10000); ?>'</script>
 
+    <script src="viewer.js"></script>
 
-  <script src="viewer.js"></script>
+</head>
 
-  </head>
+<body tabindex="1" class="loadingInProgress">
+<div id="outerContainer">
 
-  <body tabindex="1" class="loadingInProgress">
-    <div id="outerContainer">
-
-      <div id="sidebarContainer">
+    <div id="sidebarContainer">
         <div id="toolbarSidebar">
-          <div class="splitToolbarButton toggled">
-            <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
-               <span data-l10n-id="thumbs_label">Thumbnails</span>
-            </button>
-            <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3" data-l10n-id="document_outline">
-               <span data-l10n-id="document_outline_label">Document Outline</span>
-            </button>
-            <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
-               <span data-l10n-id="attachments_label">Attachments</span>
-            </button>
-            <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers">
-               <span data-l10n-id="layers_label">Layers</span>
-            </button>
-          </div>
+            <div class="splitToolbarButton toggled">
+                <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+                    <span data-l10n-id="thumbs_label">Thumbnails</span>
+                </button>
+                <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)"
+                        tabindex="3" data-l10n-id="document_outline">
+                    <span data-l10n-id="document_outline_label">Document Outline</span>
+                </button>
+                <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
+                    <span data-l10n-id="attachments_label">Attachments</span>
+                </button>
+                <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)"
+                        tabindex="5" data-l10n-id="layers">
+                    <span data-l10n-id="layers_label">Layers</span>
+                </button>
+            </div>
         </div>
         <div id="sidebarContent">
-          <div id="thumbnailView">
-          </div>
-          <div id="outlineView" class="hidden">
-          </div>
-          <div id="attachmentsView" class="hidden">
-          </div>
-          <div id="layersView" class="hidden">
-          </div>
+            <div id="thumbnailView">
+            </div>
+            <div id="outlineView" class="hidden">
+            </div>
+            <div id="attachmentsView" class="hidden">
+            </div>
+            <div id="layersView" class="hidden">
+            </div>
         </div>
         <div id="sidebarResizer" class="hidden"></div>
-      </div>  <!-- sidebarContainer -->
+    </div>  <!-- sidebarContainer -->
 
-      <div id="mainContainer">
+    <div id="mainContainer">
         <div class="findbar hidden doorHanger" id="findbar">
-          <div id="findbarInputContainer">
-            <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input">
-            <div class="splitToolbarButton">
-              <button id="findPrevious" class="toolbarButton findPrevious" title="Find the previous occurrence of the phrase" tabindex="92" data-l10n-id="find_previous">
-                <span data-l10n-id="find_previous_label">Previous</span>
-              </button>
-              <div class="splitToolbarButtonSeparator"></div>
+            <div id="findbarInputContainer">
+                <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91"
+                       data-l10n-id="find_input">
+                <div class="splitToolbarButton">
+                    <button id="findPrevious" class="toolbarButton findPrevious" title="Find the previous occurrence of the phrase"
+                            tabindex="92" data-l10n-id="find_previous">
+                        <span data-l10n-id="find_previous_label">Previous</span>
+                    </button>
+                    <div class="splitToolbarButtonSeparator"></div>
               <button id="findNext" class="toolbarButton findNext" title="Find the next occurrence of the phrase" tabindex="93" data-l10n-id="find_next">
                 <span data-l10n-id="find_next_label">Next</span>
               </button>

@@ -59,74 +59,77 @@ if($_POST['Spec']){
 	<td class="main_td" style="width:10%">Hexagon</td>
 	<td class="main_td td_sub" style="width:10%"> Bolt </td>
 	<td class="main_td" style="width:10%">Square</td>
-	<td class="main_td td_sub" style="width:10%"> Thread </td>
-	<td class="main_td" style="width:10%">Diamond</td>
-	<td class="main_td td_sub" style="width:10%"> Support </td>
-	<td class="main_td" style="width:10%">hexagon</td>
+    <td class="main_td td_sub" style="width:10%"> Thread</td>
+    <td class="main_td" style="width:10%">Diamond</td>
+    <td class="main_td td_sub" style="width:10%"> Support</td>
+    <td class="main_td" style="width:10%">hexagon</td>
 </tr>
 </tbody>
 </table>
-<table class="main">
-<tbody>
-<tr>
-	<td class="main_td td_sub" style="width:25%"> QR code </td>
-	<td class="main_td" style="width:25%"><input type="text" name="qr_x" value="<?php echo $sql_dwg_spec_array['qr_x']; ?>"></td>
-	<td class="main_td" style="width:25%"><input type="text" name="qr_y" value="<?php echo $sql_dwg_spec_array['qr_y']; ?>"></td>
-	<td class="main_td" style="width:25%"><input type="text" name="qr_size"	value="<?php echo $sql_dwg_spec_array['qr_size']; ?>"></td>
-</tr>
-</tbody>
-</table>
+    <table class="main">
+        <tbody>
+        <tr>
+            <td class="main_td td_sub" style="width:25%"> QR code</td>
+            <td class="main_td" style="width:25%"><input type="text" name="qr_x" value="<?php
+                    echo $sql_dwg_spec_array['qr_x']; ?>"></td>
+            <td class="main_td" style="width:25%"><input type="text" name="qr_y" value="<?php
+                    echo $sql_dwg_spec_array['qr_y']; ?>"></td>
+            <td class="main_td" style="width:25%"><input type="text" name="qr_size" value="<?php
+                    echo $sql_dwg_spec_array['qr_size']; ?>"></td>
+        </tr>
+        </tbody>
+    </table>
 </form>
 
 <script>
-var canvas = document.getElementById('cv');
-var context = canvas.getContext('2d');
-var qr_img = new Image();
-	qr_img.src = '<?php echo PCS_CORE_URL;?>/qr.png';
-var qr_x = <?php echo $sql_dwg_spec_array['qr_x']/2; ?>;
-var qr_y = <?php echo $sql_dwg_spec_array['qr_y']/2; ?>;
-var qr_size = <?php echo $sql_dwg_spec_array['qr_size']/2; ?>;
-var pkg_x = <?php echo $sql_dwg_spec_array['pkg_x']/2; ?>;
-var pkg_y = <?php echo $sql_dwg_spec_array['pkg_y']/2; ?>;
+    const canvas = document.getElementById('cv');
+    const context = canvas.getContext('2d');
+    const qr_img = new Image();
+    qr_img.src = '<?php echo PCS_CORE_URL;?>/qr.png';
+    let qr_x =;
+    let qr_y =;
+    let qr_size =;
+    let pkg_x =;
+    let pkg_y =;
 
 
-var loadingTask = pdfjsLib.getDocument('<?php echo PCS_CORE_URL;?>/sampleISO.pdf');
+    const loadingTask = pdfjsLib.getDocument('<?php echo PCS_CORE_URL;?>/sampleISO.pdf');
 
-loadingTask.promise.then(function(pdfFile) {
-	pdfFile.getPage(1).then(function(page) {
-		var viewport = page.getViewport({ scale: 1, });
-		var scale = canvas.width / viewport.width;
-		var scaledViewport = page.getViewport({ scale: scale, });
-		var renderContext = {
-			canvasContext: context,
-			viewport: scaledViewport
-		};
-		var rendertask = page.render(renderContext);
-		rendertask.promise.then(function(){
-			context.drawImage(qr_img, qr_x, qr_y, qr_size, qr_size);
-			context.font = 11+'px verdana';
-			context.fillStyle = 'blue';
-			context.textAlign = 'center';
+    loadingTask.promise.then(function (pdfFile) {
+        pdfFile.getPage(1).then(function (page) {
+            const viewport = page.getViewport({scale: 1,});
+            const scale = canvas.width / viewport.width;
+            const scaledViewport = page.getViewport({scale: scale,});
+            const renderContext = {
+                canvasContext: context,
+                viewport: scaledViewport
+            };
+            const rendertask = page.render(renderContext);
+            rendertask.promise.then(function () {
+                context.drawImage(qr_img, qr_x, qr_y, qr_size, qr_size);
+                context.font = 11 + 'px verdana';
+                context.fillStyle = 'blue';
+                context.textAlign = 'center';
 //			context.fillText ('PCS Welding Map', qr_x+30, qr_y+85);
-			
-			var tri = 18;
-			var texWid = context.measureText("1").width/2;
-			var NoX = pkg_x;
-			var NoY = pkg_y+10;
-			context.globalAlpha = .5;
-			context.font = 20+'px verdana';
-			context.strokeStyle = 'red';
-			context.lineWidth = 3;
-			context.beginPath();
-			context.moveTo(pkg_x,pkg_y-tri);
-			context.lineTo(pkg_x-tri,pkg_y+tri/1.7);
-			context.lineTo(pkg_x+tri,pkg_y+tri/1.7);
-			context.lineTo(pkg_x,pkg_y-tri);
-			context.fillStyle = "blue";
-			context.fillText ("1",NoX,NoY-5);
-			context.closePath();
-			context.stroke();
-		});
-	});
-});
+
+                const tri = 18;
+                const texWid = context.measureText("1").width / 2;
+                const NoX = pkg_x;
+                const NoY = pkg_y + 10;
+                context.globalAlpha = .5;
+                context.font = 20 + 'px verdana';
+                context.strokeStyle = 'red';
+                context.lineWidth = 3;
+                context.beginPath();
+                context.moveTo(pkg_x, pkg_y - tri);
+                context.lineTo(pkg_x - tri, pkg_y + tri / 1.7);
+                context.lineTo(pkg_x + tri, pkg_y + tri / 1.7);
+                context.lineTo(pkg_x, pkg_y - tri);
+                context.fillStyle = "blue";
+                context.fillText("1", NoX, NoY - 5);
+                context.closePath();
+                context.stroke();
+            });
+        });
+    });
 </script>

@@ -73,26 +73,25 @@ if( ! empty($_COOKIE['g5_admin_btn_gnb']) ){
 ?>
 
 <script>
-var tempX = 0;
-var tempY = 0;
+    const tempX = 0;
+    const tempY = 0;
 
-function imageview(id, w, h)
-{
+    function imageview(id, w, h) {
 
-    menu(id);
+        menu(id);
 
-    var el_id = document.getElementById(id);
+        const el_id = document.getElementById(id);
 
-    //submenu = eval(name+".style");
-    submenu = el_id.style;
-    submenu.left = tempX - ( w + 11 );
-    submenu.top  = tempY - ( h / 2 );
+        //submenu = eval(name+".style");
+        submenu = el_id.style;
+        submenu.left = tempX - (w + 11);
+        submenu.top = tempY - (h / 2);
 
-    selectBoxVisible();
+        selectBoxVisible();
 
-    if (el_id.style.display != 'none')
-        selectBoxHidden(id);
-}
+        if (el_id.style.display !== 'none')
+            selectBoxHidden(id);
+    }
 </script>
 
 <div id="to_content"><a href="#container">본문 바로가기</a></div>

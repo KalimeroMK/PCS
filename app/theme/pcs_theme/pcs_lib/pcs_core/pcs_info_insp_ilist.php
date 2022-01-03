@@ -12,31 +12,37 @@
 	
 	$tempcnti = count($mysql_field_array)-1;
 	for($i=$tempcnti; $mysql_field_array[$i]; $i--){
+        switch ($i) {
+            case 7 :
+                if ($_POST[$mysql_field_array[6]] == 'Request') {
+                    $query_view_insp_jnt .= '( "'.$date_fr.' 00:00:00" <= pcs_'.$insp_type.'_req_'.$mysql_field_array[$i].' AND pcs_'.$insp_type.'_req_'.$mysql_field_array[$i].' <= "'.$date_to.' 23:59:59" )';
+                } else {
+                    $query_view_insp_jnt .= '( "'.$date_fr.' 00:00:00" <= pcs_'.$insp_type.'_rlt_'.$mysql_field_array[$i].' AND pcs_'.$insp_type.'_rlt_'.$mysql_field_array[$i].' <= "'.$date_to.' 23:59:59" )';
+                }
+                break;
 
-		switch($i) {
-			case 7 :
-				if($_POST[$mysql_field_array[6]]=='Request') {$query_view_insp_jnt .= '( "'.$date_fr.' 00:00:00" <= pcs_'.$insp_type.'_req_'.$mysql_field_array[$i].' AND pcs_'.$insp_type.'_req_'.$mysql_field_array[$i].' <= "'.$date_to.' 23:59:59" )';}
-				else {$query_view_insp_jnt .= '( "'.$date_fr.' 00:00:00" <= pcs_'.$insp_type.'_rlt_'.$mysql_field_array[$i].' AND pcs_'.$insp_type.'_rlt_'.$mysql_field_array[$i].' <= "'.$date_to.' 23:59:59" )';}
-				break;
+            case 5:
+            case 6 :
+                if ($_POST[$mysql_field_array[$i]]) {
+                    $query_view_insp_jnt .= ' AND pcs_'.$insp_type.'_'.$mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'"';
+                }
+                break;
 
-			case 6 :
-				if($_POST[$mysql_field_array[$i]]) {$query_view_insp_jnt .= ' AND pcs_'.$insp_type.'_'.$mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'"';}
-				break;
+            case 1 :
+                if ($_POST[$mysql_field_array[$i]]) {
+                    $query_view_insp_jnt .= ' AND '.$mysql_field_array[$i].' LIKE "%'.$_POST[$mysql_field_array[$i]].'%"';
+                }
+                break;
 
-			case 5 :
-				if($_POST[$mysql_field_array[$i]]) {$query_view_insp_jnt .= ' AND pcs_'.$insp_type.'_'.$mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'"';}
-				break;
+            case 0 :
+                break;
 
-			case 1 :
-				if($_POST[$mysql_field_array[$i]]) {$query_view_insp_jnt .= ' AND '.$mysql_field_array[$i].' LIKE "%'.$_POST[$mysql_field_array[$i]].'%"';}
-				break;
-
-			case 0 : break;
-
-			default:
-				if($_POST[$mysql_field_array[$i]]) {$query_view_insp_jnt .= ' AND '.$mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'"';}
-				break;
-		}
+            default:
+                if ($_POST[$mysql_field_array[$i]]) {
+                    $query_view_insp_jnt .= ' AND '.$mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'"';
+                }
+                break;
+        }
 	}
 	$query_view_insp_jnt .= ' ORDER BY dwg_no, j_no';
 	

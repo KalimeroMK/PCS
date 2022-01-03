@@ -72,8 +72,8 @@ if (G5_IS_MOBILE) {
 </div>
 
 <?php
-if(G5_DEVICE_BUTTON_DISPLAY && !G5_IS_MOBILE) { ?>
-<?php
+if (G5_DEVICE_BUTTON_DISPLAY) { ?>
+    <?php
 }
 
 if ($config['cf_analytics']) {

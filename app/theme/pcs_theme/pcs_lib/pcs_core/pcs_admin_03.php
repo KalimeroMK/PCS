@@ -224,7 +224,6 @@
 
         $pdf_file_name  = $_FILES['pdf_file']['name'];
         $upload_success = 0;
-
         $temp_i = count($pdf_file_name);
         for ($i = 0; $i < $temp_i; $i++) {
             if ($_POST['form_name'] != 'joint') {
@@ -240,7 +239,6 @@
                                 if (move_uploaded_file($_FILES['pdf_file']['tmp_name'][$i], $dir.$pdf_file_name[$i])) {
                                     $upload_success++;
                                     chmod($dir.$pdf_file_name[$i], 0777);
-//								echo ($i+1).'. '.$pdf_file_name[$i]." : <font color='blue'>Upload finished.</font> <br/>";
                                 } else {
                                     echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Error Update Data.</font> <br/>';
                                 }

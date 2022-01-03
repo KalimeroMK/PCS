@@ -2,8 +2,6 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-
-	
 	$query_pkg_coor_check = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_tp_stat";
 	$sql_pkg_coor_check = sql_query ($query_pkg_coor_check);
 	

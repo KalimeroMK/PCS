@@ -96,22 +96,27 @@ $_SESSION['lgd_certify'] = $payReqMap;
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<title>LG유플러스 전자결제 본인확인서비스</title>
-<!-- 고객사 사이트가 https인 경우는 아래 http://을 https:// 으로 변경하시면 됩니다. -->
-<link rel="stylesheet" href="<?php echo G5_CSS_URL;?>/default.css">
-<script language="javascript" src="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 'https' : 'http'; ?>://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
+    <meta charset="utf-8">
+    <title>LG유플러스 전자결제 본인확인서비스</title>
+    <!-- 고객사 사이트가 https인 경우는 아래 http://을 https:// 으로 변경하시면 됩니다. -->
 
-<script type="text/javascript">
+    <link rel="stylesheet" href="<?php
+        echo G5_CSS_URL; ?>/default.css">
+    <script language="javascript" src="<?php
+        echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http'; ?>://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js"
+            type="text/javascript"></script>
 
-	/*
-	* 수정불가.
-	*/
-	var LGD_window_type = "<?php echo $LGD_WINDOW_TYPE;?>";
-	var lgd_form = "LGD_PAYINFO";
-	/*
-	* 수정불가.
-	*/
+    <script type="text/javascript">
+
+        /*
+        * 수정불가.
+        */
+        var LGD_window_type = "<?php echo $LGD_WINDOW_TYPE;?>";
+        var lgd_form = "LGD_PAYINFO";
+
+        /*
+        * 수정불가.
+        */
 	function launchCrossPlatform(){
 		
         <?php if( G5_IS_MOBILE ){   //모바일이면 ?>

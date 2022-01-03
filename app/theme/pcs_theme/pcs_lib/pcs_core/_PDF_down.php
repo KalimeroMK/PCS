@@ -17,7 +17,6 @@ switch ($_GET['flde']) {
 	default		: $filepath = PCS_REP_PDF.'/'.$_GET['flna'].'.pdf';	break;
 }
 
-
 $filesize = filesize($filepath);
 $path_parts = pathinfo($filepath);
 $filename = $path_parts['basename'];

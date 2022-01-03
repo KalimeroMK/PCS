@@ -6,34 +6,43 @@
 
 <div id="mapholder" style="width:100%; height:100vh;"></div>
 
-<script src="https://maps.google.com/maps/api/js?key=<?php include_once ('./pcs_config.php');	echo PCS_GGL_API; ?>"></script>
+<script src="https://maps.google.com/maps/api/js?key=<?php
+    include_once('./pcs_config.php');
+    echo PCS_GGL_API; ?>"></script>
 <script>
-var no = new Array();
-var lat = new Array();
-var lon = new Array();
-var i=0;
-<?php
+    const no = [];
+    const lat = [];
+    const lon = [];
+    let i = 0;
+    <?php
 
-$no  = $_POST['no'];
-$lat = $_POST['lat'];
-$lon = $_POST['lon'];
-$sumlat = 0;
-$sumlon = 0;
-$length = count($_POST['no']);
-$qty = $length+1;
-echo 'var length = '.$length.';';
-	
-for($i=0;$i<$length;$i++){
-	$j=$i+1;
-	if(!$lat[$j] || !$lon[$j]){$no[$j]=0;$lat[$j]=0;$lon[$j]=0;$qty--;}
-	else {$sumlat += $sumlat + $lat[$j]; $sumlon += $sumlon + $lon[$j];}
-	echo '
+    $no = $_POST['no'];
+    $lat = $_POST['lat'];
+    $lon = $_POST['lon'];
+    $sumlat = 0;
+    $sumlon = 0;
+    $length = count($_POST['no']);
+    $qty = $length + 1;
+    echo 'var length = '.$length.';';
+
+    for ($i = 0; $i < $length; $i++) {
+        $j = $i + 1;
+        if ( ! $lat[$j] || ! $lon[$j]) {
+            $no[$j]  = 0;
+            $lat[$j] = 0;
+            $lon[$j] = 0;
+            $qty--;
+        } else {
+            $sumlat += $sumlat + $lat[$j];
+            $sumlon += $sumlon + $lon[$j];
+        }
+        echo '
 		no['.$i.'] = '.$no[$j].';
 		lat['.$i.'] = '.$lat[$j].';
 		lon['.$i.'] = '.$lon[$j].';
 	';
-}
-?>
+    }
+    ?>
 
 window.onload = function () {
 

@@ -2,10 +2,9 @@
 
 	$query_dwg = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE dwg_no = "'.$view['wr_subject'].'"';
 	$sql_dwg = sql_query ($query_dwg);
-	$sql_dwg_arr = sql_fetch_array ($sql_dwg);
-	
+    $sql_dwg_arr = sql_fetch_array ($sql_dwg);
 	$query_pkg1 = 'SELECT wr_id FROM '.G5_TABLE_PREFIX.'write_package WHERE wr_subject = "'.$sql_dwg_arr['pkg_no1'].'"';
-	$sql_pkg1 = sql_query ($query_pkg1);
+    $sql_pkg1 = sql_query ($query_pkg1);
 	$sql_pkg1_arr = sql_fetch_array ($sql_pkg1);
 	$query_pkg2 = 'SELECT wr_id FROM '.G5_TABLE_PREFIX.'write_package WHERE wr_subject = "'.$sql_dwg_arr['pkg_no2'].'"';
 	$sql_pkg2 = sql_query ($query_pkg2);
@@ -21,7 +20,6 @@
 	$con_EQ_array = explode(";",$sql_dwg_arr['con_eq']);
 	$inc_tp_array = explode(";",$sql_dwg_arr['inc_tp']);
 
-	
 if(!G5_IS_MOBILE) { /////////// PC 버전 시작
 
 	if($_POST['dwg']){

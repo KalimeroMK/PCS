@@ -7,27 +7,25 @@ if($_POST['Spec']){
 	$sql_table = sql_query ($query_table);
 	
 	while ($table_arr = sql_fetch_array ($sql_table))	{
-		$table_name = $table_arr['Tables_in_'.G5_MYSQL_DB];
-		
-		if(strpos($table_name, '_pcs_') !== false){
-			$query_fld = 'DESCRIBE '.$table_name;
-			$sql_fld = sql_query ($query_fld);
-			
-			while ($fld_arr = sql_fetch_array ($sql_fld))	{
-				
-				if(strpos($fld_arr['Type'],'enum') !== false) {
-					for($i=0;$i<$fld_qty;$i++){
-						if($field_arr[$i]==$fld_arr['Field']){
-							
-							$query_change = 'ALTER TABLE `'.$table_name.'` CHANGE `'.$fld_arr['Field'].'` `'.$fld_arr['Field'].'` ENUM('.str_replace('\\','',$_POST[$fld_arr['Field']]).')';
-							sql_query ($query_change);
-							
-						}
-					}
-				}
-			}
-		}
-	}
+        $table_name = $table_arr['Tables_in_'.G5_MYSQL_DB];
+
+        if (str_contains($table_name, '_pcs_')) {
+            $query_fld = 'DESCRIBE '.$table_name;
+            $sql_fld   = sql_query($query_fld);
+
+            while ($fld_arr = sql_fetch_array($sql_fld)) {
+                if (str_contains($fld_arr['Type'], 'enum')) {
+                    for ($i = 0; $i < $fld_qty; $i++) {
+                        if ($field_arr[$i] == $fld_arr['Field']) {
+                            $query_change = 'ALTER TABLE `'.$table_name.'` CHANGE `'.$fld_arr['Field'].'` `'.$fld_arr['Field'].'` ENUM('.str_replace('\\',
+                                    '', $_POST[$fld_arr['Field']]).')';
+                            sql_query($query_change);
+                        }
+                    }
+                }
+            }
+        }
+    }
 	echo '<script type="text/javascript"> location.href="'.G5_URL.'" </script>';
 }
 
@@ -41,13 +39,13 @@ if($_POST['Spec']){
 
 		$sql_field = sql_query ($query);
 
-		while ($fld_arr = sql_fetch_array ($sql_field))	{
-			if(strpos($fld_arr['Type'],'enum') !== false) {
-				$temp_str = str_replace('enum(','',$fld_arr['Type']);
-				$temp_str = str_replace(')','',$temp_str);
-				$qry_field_name[$fld_arr['Field']] = $temp_str;
-			}
-		}
+		while ($fld_arr = sql_fetch_array ($sql_field)) {
+            if (str_contains($fld_arr['Type'], 'enum')) {
+                $temp_str                          = str_replace('enum(', '', $fld_arr['Type']);
+                $temp_str                          = str_replace(')', '', $temp_str);
+                $qry_field_name[$fld_arr['Field']] = $temp_str;
+            }
+        }
 		return $qry_field_name;
 	}
 

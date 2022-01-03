@@ -140,7 +140,6 @@ else {
 <a onclick='window.open("<?php echo PCS_CORE_URL.'/pcs_googlemap.php?spl='.$view['wr_subject'].'&lat='.$sql_spl_info_arr['gps_lat'].'&lon='.$sql_spl_info_arr['gps_lon']; ?>","w","width=1000, height=900, left=200, top=100");'>LOCATION<br><span style="font-weight: bold; font-size: 20px;">(GOOGLE MAP)</span> </a> </td>
 <td class="main_td" >
 <?php
-//	echo $sql_spl_info_arr['location']; 
 	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !$_POST['spl_location']){
 		echo '<form name="spool_location" method="post" onSubmit="return doSumbit()"><select name="spl_location" style="height:50px; width:100%; font-size:30px; padding:0 20px; border:none;">';
 		sel_option_enum($field_enum_value['location'], $sql_spl_info_arr['location']);

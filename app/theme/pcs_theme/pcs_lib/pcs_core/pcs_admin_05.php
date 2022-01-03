@@ -18,7 +18,6 @@ if($_POST['Spec']){
 		pkg_y = "'.$_POST['pkg_y'].'"
 	';
 	sql_query ($query_change);
-//echo $query_change.'<br>';
 }
 	$query_dwg_spec = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_dwgconfig';
 	$sql_dwg_spec = sql_query ($query_dwg_spec);
@@ -99,41 +98,41 @@ var pkg_y = <?php echo $sql_dwg_spec_array['pkg_y']/2; ?>;
 
 var loadingTask = pdfjsLib.getDocument('<?php echo PCS_CORE_URL;?>/sampleISO.pdf');
 
-loadingTask.promise.then(function(pdfFile) {
-	pdfFile.getPage(1).then(function(page) {
-		var viewport = page.getViewport({ scale: 1, });
-		var scale = canvas.width / viewport.width;
-		var scaledViewport = page.getViewport({ scale: scale, });
-		var renderContext = {
-			canvasContext: context,
-			viewport: scaledViewport
-		};
-		var rendertask = page.render(renderContext);
-		rendertask.promise.then(function(){
-			context.drawImage(qr_img, qr_x, qr_y, qr_size, qr_size);
-			context.font = 11+'px verdana';
-			context.fillStyle = 'blue';
-			context.textAlign = 'center';
-			context.fillText ('PCS Welding Map', sh_x, sh_y);
-			
-			var tri = 18;
-			var texWid = context.measureText("1").width/2;
-			var NoX = pkg_x;
-			var NoY = pkg_y+10;
-			context.globalAlpha = .5;
-			context.font = 20+'px verdana';
-			context.strokeStyle = 'red';
-			context.lineWidth = 3;
-			context.beginPath();
-			context.moveTo(pkg_x,pkg_y-tri);
-			context.lineTo(pkg_x-tri,pkg_y+tri/1.7);
-			context.lineTo(pkg_x+tri,pkg_y+tri/1.7);
-			context.lineTo(pkg_x,pkg_y-tri);
-			context.fillStyle = "blue";
-			context.fillText ("1",NoX,NoY-5);
-			context.closePath();
-			context.stroke();
-		});
-	});
+loadingTask.promise.then(function (pdfFile) {
+    pdfFile.getPage(1).then(function (page) {
+        var viewport = page.getViewport({scale: 1,});
+        var scale = canvas.width / viewport.width;
+        var scaledViewport = page.getViewport({scale: scale,});
+        var renderContext = {
+            canvasContext: context,
+            viewport: scaledViewport
+        };
+        var rendertask = page.render(renderContext);
+        rendertask.promise.then(function () {
+            context.drawImage(qr_img, qr_x, qr_y, qr_size, qr_size);
+            context.font = 11 + 'px verdana';
+            context.fillStyle = 'blue';
+            context.textAlign = 'center';
+            context.fillText('PCS Welding Map', sh_x, sh_y);
+
+            const tri = 18;
+            const texWid = context.measureText("1").width / 2;
+            const NoX = pkg_x;
+            const NoY = pkg_y + 10;
+            context.globalAlpha = .5;
+            context.font = 20 + 'px verdana';
+            context.strokeStyle = 'red';
+            context.lineWidth = 3;
+            context.beginPath();
+            context.moveTo(pkg_x, pkg_y - tri);
+            context.lineTo(pkg_x - tri, pkg_y + tri / 1.7);
+            context.lineTo(pkg_x + tri, pkg_y + tri / 1.7);
+            context.lineTo(pkg_x, pkg_y - tri);
+            context.fillStyle = "blue";
+            context.fillText("1", NoX, NoY - 5);
+            context.closePath();
+            context.stroke();
+        });
+    });
 });
 </script>

@@ -21,27 +21,19 @@ while ($sql_pkg_coor_array = sql_fetch_array ($sql_pkg_coor_check))	{
 	for($i=0;$i<count($jointcoor)-1;$i++){
 		
 		$jointcoor_val = explode(",",$jointcoor[$i]);
-		
-		for($j=0;$j<count($jointcoor_val)-1;$j++){
-			
-			if(1<$j && $j<6){
-				$jointcoor_val[$j] = round($jointcoor_val[$j]*2100/2339);
+
+		for ($j = 0; $j < count($jointcoor_val) - 1; $j++) {
+			if (1 < $j && $j < 6) {
+				$jointcoor_val[$j] = round($jointcoor_val[$j] * 2100 / 2339);
 			}
-			
-		$row_value = $row_value.$jointcoor_val[$j].',';	
+
+			$row_value = $row_value.$jointcoor_val[$j].',';
 		}
-	$row_value = $row_value.';';
+		$row_value = $row_value.';';
 	}
-	
-//	print_r($jointcoor_val);
-	
-//	$row_value = trim(implode(',',$jointcoor_val));
 
-//echo($row_value);
-	
 	$query_pkg_coor = "UPDATE ".G5_TABLE_PREFIX."pcs_info_pkg_coor SET joint_info = '".$row_value."' WHERE dwg_no = '".$sql_pkg_coor_array['dwg_no']."' AND pkg_no = '".$sql_pkg_coor_array['pkg_no']."' AND rev_no = '".$sql_pkg_coor_array['rev_no']."'";
-	sql_query ($query_pkg_coor);
-
+	sql_query($query_pkg_coor);
 }
 
 ?>

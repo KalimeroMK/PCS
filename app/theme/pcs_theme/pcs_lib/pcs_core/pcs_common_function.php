@@ -43,7 +43,7 @@ function photo_up($folder, $sub, $jn, $photo, $dwg='') {
 
 
 
-// field¸í ÃßÃâ
+// fieldï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 function field_name_array($query) {
 	
 	$sql_field = sql_query ($query);
@@ -54,7 +54,7 @@ function field_name_array($query) {
 }
 
 
-// Enum value ¹è¿­¹ÝÈ¯ÇÔ¼ö
+// Enum value ï¿½è¿­ï¿½ï¿½È¯ï¿½Ô¼ï¿½
 function enum_value($query) {
 
 	$sql_field = sql_query ($query);
@@ -71,7 +71,7 @@ function enum_value($query) {
 }
 
 
-// sql_value ÇÔ¼ö
+// sql_value ï¿½Ô¼ï¿½
 function pcs_sql_value($query) {
 	$rlt = sql_query ($query);
 	if($rlt){$sql_value_array = mysqli_fetch_row ($rlt);return $sql_value_array[0];}
@@ -80,7 +80,7 @@ function pcs_sql_value($query) {
 
 
 
-// package insert to pcs ÇÔ¼ö
+// package insert to pcs ï¿½Ô¼ï¿½
 function pcs_package_insert($arr) {
 
 	$query_pkg_pcs = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_pkg_stat WHERE pkg_no = '".$arr['pkg_no']."'";
@@ -98,7 +98,7 @@ function pcs_package_insert($arr) {
 }
 
 
-// PDF Download ÇÔ¼ö
+// PDF Download ï¿½Ô¼ï¿½
 /*
 function pdf_download($file_desc, $file_name) {
 
@@ -106,7 +106,7 @@ function pdf_download($file_desc, $file_name) {
 }
 */
 
-// PDF Report Download ÇÔ¼ö
+// PDF Report Download ï¿½Ô¼ï¿½
 /*
 function pdf_report_download($type, $name, $report, $date, $result='') {
 
@@ -115,7 +115,7 @@ function pdf_report_download($type, $name, $report, $date, $result='') {
 */
 
 
-// Select ¿É¼Ç »ý¼ºÇÔ¼ö from server
+// Select ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ from server
 function sel_option_enum($array, $selected) {
 	for ($i=0; $array[$i]; $i++){
 		$option = '<option value='.$array[$i];
@@ -127,7 +127,7 @@ function sel_option_enum($array, $selected) {
 }
 
 
-// Select ¿É¼Ç »ý¼ºÇÔ¼ö from array
+// Select ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ from array
 function sel_option_arr($array, $selected) {
 	for ($i=0; $i<count($array); $i++){
 		$option = '<option value='.($i+1);
@@ -140,7 +140,7 @@ function sel_option_arr($array, $selected) {
 
 
 
-// Submit ÅØ½ºÆ®
+// Submit ï¿½Ø½ï¿½Æ®
 function submit_text($sno, $fld_id, $dwg_no, $jnt_no, $nm, $tm, $r_c, $nde_tp) {
 
 	$txt_key = $fld_id.$r_c.$sno.$nde_tp;
@@ -185,7 +185,7 @@ function submit_text($sno, $fld_id, $dwg_no, $jnt_no, $nm, $tm, $r_c, $nde_tp) {
 }
 
 
-// spool_joint Ã¼Å© Äõ¸®¹®
+// spool_joint Ã¼Å© ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 function spl_ins_qry($f_id, $b_st) {
 	switch ($f_id)	{
 
@@ -995,7 +995,7 @@ function pcs_file_download($type, $name) {
 }
 
 
-// Æú´õ ³» ÆÄÀÏ ¸®½ºÆ® ºÒ·¯¿À´Â ÇÔ¼ö
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 function filesindir($tdir) {
 
 	if($dh = opendir($tdir)) {
@@ -1019,7 +1019,7 @@ function filesindir($tdir) {
 }
 
 
-// base64¹®ÀÚ¿­¿¡¼­ ÆÄÀÏ»ý¼º
+// base64ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï»ï¿½ï¿½ï¿½
 function base64_to_img($base64_string, $image_fiilename) {
 	$img_data = explode(',',$base64_string);
 
@@ -1031,7 +1031,7 @@ function base64_to_img($base64_string, $image_fiilename) {
 }
 
 
-// ¿ø°Ý¼­¹ö ÆÄÀÏÀ¯¹« È®ÀÎ
+// ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 function FileExitsCheck($Qt) 
 { 
 	$tempo = curl_init(); 
@@ -1043,7 +1043,7 @@ function FileExitsCheck($Qt)
 } 
 
 
-// PNG ÆÄÀÏÅ©±â Ãà¼Ò
+// PNG ï¿½ï¿½ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½
 function convertPNGto8bitPNG($sourcePath, $destPath) {
     $srcimage = imagecreatefrompng($sourcePath);
     list($width, $height) = getimagesize($sourcePath);
@@ -1059,7 +1059,7 @@ function convertPNGto8bitPNG($sourcePath, $destPath) {
 }
 
 
-// Æú´õ ³» ÆÄÀÏ¸í ¹è¿­¹ÝÈ¯
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½è¿­ï¿½ï¿½È¯
 function folder_file_array($f_path,$f_ext,$f_data) {
 
 	$dir = $f_path;
@@ -1113,7 +1113,7 @@ function folder_file_array($f_path,$f_ext,$f_data) {
 function count_files($dir){
 	clearstatcache();
 	if (!is_dir($dir)) return -1;
-	if (!preg_match("&/$&", $dir)) $dir .= "/"; // '/'·Î ³¡³ª°Ô ÇÑ´Ù
+	if (!preg_match("&/$&", $dir)) $dir .= "/"; // '/'ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½
 
 	return count(glob($dir."*.pdf", GLOB_NOSORT)); - count(glob($dir."*", GLOB_ONLYDIR));
 }
@@ -1144,25 +1144,24 @@ function remove_spe_char($spe_string){
 }
 
 
-function viewPDF($fmname,$folder,$drawing,$revision,$tb=''){
+function viewPDF($fmname,$folder,$drawing,$revision,$tb='')
+{
 	$formstring = '<form name="'.$fmname.'" action="'.PCS_WPV_URL.'/viewer.php" method="post" target="'.$fmname.'" onSubmit="return doSumbit()"> ';
 	if($folder=='pkg'){
 		if(file_exists(PCS_DWG_PKG.'/'.$tb.'/pkg_'.$drawing.'_'.$revision.'.pdf')){
 			$formstring .= '<input type="hidden" name="folder" value="dwg_pkg/'.$tb.'">';
 			$formstring .= '<input type="hidden" name="file" value="'.$folder.'_'.$drawing.'">';
-			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
-		}
+        }
 		elseif(file_exists(PCS_DWG_ISO.'/'.$drawing.'/fab_'.$drawing.'_'.$revision.'.pdf')){
 			$formstring .= '<input type="hidden" name="folder" value="dwg_iso/'.$drawing.'">';
 			$formstring .= '<input type="hidden" name="file" value="fab_'.$drawing.'">';
-			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
-		}
+        }
 		else {
 			$formstring .= '<input type="hidden" name="folder" value="dwg_iso/'.$drawing.'">';
 			$formstring .= '<input type="hidden" name="file" value="'.$drawing.'">';
-			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
-		}
-	}
+        }
+        $formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
+    }
 	elseif($folder=='plan'){
 			$formstring .= '<input type="hidden" name="folder" value="plan/piping">';
 			$formstring .= '<input type="hidden" name="file" value="'.$drawing.'">';
@@ -1181,14 +1180,13 @@ function viewPDF($fmname,$folder,$drawing,$revision,$tb=''){
 		if(file_exists(PCS_PNID_MST.'/master_'.$drawing.'_'.$revision.'.pdf')){
 			$formstring .= '<input type="hidden" name="folder" value="pnid/master">';
 			$formstring .= '<input type="hidden" name="file" value="master_'.$drawing.'">';
-			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
-		}
+        }
 		else {
 			$formstring .= '<input type="hidden" name="folder" value="pnid">';
 			$formstring .= '<input type="hidden" name="file" value="'.$drawing.'">';
-			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
-		}
-	}
+        }
+        $formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
+    }
 	elseif(file_exists(PCS_DWG_ISO.'/'.$drawing.'/'.$folder.'_'.$drawing.'_'.$revision.'.pdf')){
 		$formstring .= '<input type="hidden" name="folder" value="dwg_iso/'.$drawing.'">';
 		$formstring .= '<input type="hidden" name="file" value="'.$folder.'_'.$drawing.'">';
@@ -1204,7 +1202,7 @@ function viewPDF($fmname,$folder,$drawing,$revision,$tb=''){
 }
 
 
-function GenerateString($length)  
+function GenerateString($length): string
 {  
     $characters  = "0123456789";  
     $characters .= "abcdefghijklmnopqrstuvwxyz";  
@@ -1491,11 +1489,11 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
 
     $source_file = "$source_path/$filename";
 
-    if(!is_file($source_file)) // ¿øº» ÆÄÀÏÀÌ ¾ø´Ù¸é
+    if(!is_file($source_file)) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½
         return;
 
     $size = @getimagesize($source_file);
-    if($size[2] < 1 || $size[2] > 3) // gif, jpg, png ¿¡ ´ëÇØ¼­¸¸ Àû¿ë
+    if($size[2] < 1 || $size[2] > 3) // gif, jpg, png ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         return;
 
     if (!is_dir($target_path)) {
@@ -1503,11 +1501,11 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         @chmod($target_path, G5_DIR_PERMISSION);
     }
 
-    // µð·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾Ê°Å³ª ¾²±â ±ÇÇÑÀÌ ¾øÀ¸¸é ½æ³×ÀÏ »ý¼ºÇÏÁö ¾ÊÀ½
+    // ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     if(!(is_dir($target_path) && is_writable($target_path)))
         return '';
 
-    // Animated GIF´Â ½æ³×ÀÏ »ý¼ºÇÏÁö ¾ÊÀ½
+    // Animated GIFï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     if($size[2] == 1) {
         if(is_animated_gif($source_file))
             return basename($source_file);
@@ -1515,7 +1513,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
 
     $ext = array(1 => 'gif', 2 => 'jpg', 3 => 'png');
 
-    $thumb_filename = preg_replace("/\.[^\.]+$/i", "", $filename); // È®ÀåÀÚÁ¦°Å
+    $thumb_filename = preg_replace("/\.[^\.]+$/i", "", $filename); // È®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     $thumb_file = "$target_path/thumb_{$thumb_filename}.".$ext[$size[2]];
 
     $thumb_time = @filemtime($thumb_file);
@@ -1527,7 +1525,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         }
     }
 
-    // ¿øº»ÆÄÀÏÀÇ GD ÀÌ¹ÌÁö »ý¼º
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GD ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     $src = null;
     $degree = 0;
 
@@ -1538,7 +1536,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         $src = @imagecreatefromjpeg($source_file);
 
         if(function_exists('exif_read_data')) {
-            // exif Á¤º¸¸¦ ±âÁØÀ¸·Î È¸Àü°¢µµ ±¸ÇÔ
+            // exif ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             $exif = @exif_read_data($source_file);
             if(!empty($exif['Orientation'])) {
                 switch($exif['Orientation']) {
@@ -1553,11 +1551,11 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                         break;
                 }
 
-                // È¸Àü°¢µµ ÀÖÀ¸¸é ÀÌ¹ÌÁö È¸Àü
+                // È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
                 if($degree) {
                     $src = imagerotate($src, $degree, 0);
 
-                    // ¼¼·Î»çÁøÀÇ °æ¿ì °¡·Î, ¼¼·Î °ª ¹Ù²Þ
+                    // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù²ï¿½
                     if($degree == 90 || $degree == -90) {
                         $tmp = $size;
                         $size[0] = $tmp[1];
@@ -1577,7 +1575,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         return;
 
     $is_large = true;
-    // width, height ¼³Á¤
+    // width, height ï¿½ï¿½ï¿½ï¿½
 
     if($thumb_width) {
         if(!$thumb_height) {
@@ -1604,7 +1602,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
     $ratio = $dst_h / $dst_w;
 
     if($is_large) {
-        // Å©·ÓÃ³¸®
+        // Å©ï¿½ï¿½Ã³ï¿½ï¿½
         if($is_crop) {
             switch($crop_mode)
             {
@@ -1640,9 +1638,9 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                     imagecolortransparent($dst, $current_transparent);
                 }
             }
-        } else { // ºñÀ²¿¡ ¸Â°Ô »ý¼º
+        } else { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½
             $dst = imagecreatetruecolor($dst_w, $dst_h);
-            $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ¹è°æ»ö
+            $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ï¿½ï¿½ï¿½ï¿½
 
             if ( !((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
                 if($src_w > $src_h) {
@@ -1677,10 +1675,10 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         }
     } else {
         $dst = imagecreatetruecolor($dst_w, $dst_h);
-        $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ¹è°æ»ö
+        $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ï¿½ï¿½ï¿½ï¿½
 
         if ( ((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
-            //ÀÌ¹ÌÁö ½æ³×ÀÏÀ» ºñÀ² À¯ÁöÇÏÁö ¾Ê½À´Ï´Ù.  (5.2.6 ¹öÀü ÀÌÇÏ¿¡¼­ Ã³¸®µÈ ºÎºÐ°ú °°À½)
+            //ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.  (5.2.6 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ÎºÐ°ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
             if($src_w < $dst_w) {
                 if($src_h >= $dst_h) {
@@ -1704,7 +1702,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
             }
 
         } else {
-            //ÀÌ¹ÌÁö ½æ³×ÀÏÀ» ºñÀ² À¯ÁöÇÏ¸ç ½æ³×ÀÏ »ý¼ºÇÕ´Ï´Ù.
+            //ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
             if($src_w < $dst_w) {
                 if($src_h >= $dst_h) {
                     if( $src_h > $src_w ){
@@ -1761,7 +1759,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
 
     imagecopyresampled($dst, $src, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
-    // sharpen Àû¿ë
+    // sharpen ï¿½ï¿½ï¿½ï¿½
     if($is_sharpen && $is_large) {
         $val = explode('/', $um_value);
         UnsharpMask($dst, $val[0], $val[1], $val[2]);
@@ -1785,7 +1783,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         imagejpeg($dst, $thumb_file, $jpg_quality);
     }
 
-    chmod($thumb_file, G5_FILE_PERMISSION); // ÃßÈÄ »èÁ¦¸¦ À§ÇÏ¿© ÆÄÀÏ¸ðµå º¯°æ
+    chmod($thumb_file, G5_FILE_PERMISSION); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     imagedestroy($src);
     imagedestroy($dst);

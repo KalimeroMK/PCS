@@ -25,30 +25,33 @@ $g5_head_title = strip_tags($g5_head_title);
 // 현재 접속자
 // 게시판 제목에 ' 포함되면 오류 발생
 $g5['lo_location'] = addslashes($g5['title']);
-if ( ! $g5['lo_location']) {
+if (!$g5['lo_location'])
     $g5['lo_location'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
-}
-    $g5['lo_url'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
-    if (strstr($g5['lo_url'], '/'.G5_ADMIN_DIR.'/') || $is_admin == 'super') {
-        $g5['lo_url'] = '';
-    }
+$g5['lo_url'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
+if (strstr($g5['lo_url'], '/'.G5_ADMIN_DIR.'/') || $is_admin == 'super') $g5['lo_url'] = '';
 
+/*
+// 만료된 페이지로 사용하시는 경우
+header("Cache-Control: no-cache"); // HTTP/1.1
+header("Expires: 0"); // rfc2616 - Section 14.21
+header("Pragma: no-cache"); // HTTP/1.0
+*/
 ?>
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <?php
-            if (G5_IS_MOBILE) {
-                echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">'.PHP_EOL;
-                echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
-                echo '<meta name="format-detection" content="telephone=no">'.PHP_EOL;
-            } else {
-                echo '<meta http-equiv="imagetoolbar" content="no">'.PHP_EOL;
-                echo '<meta http-equiv="X-UA-Compatible" content="IE=Edge">'.PHP_EOL;
-            }
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<?php
+if (G5_IS_MOBILE) {
+    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">'.PHP_EOL;
+    echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
+    echo '<meta name="format-detection" content="telephone=no">'.PHP_EOL;
+} else {
+    echo '<meta http-equiv="imagetoolbar" content="no">'.PHP_EOL;
+    echo '<meta http-equiv="X-UA-Compatible" content="IE=Edge">'.PHP_EOL;
+}
 
-            if ($config['cf_add_meta'])
+if($config['cf_add_meta'])
     echo $config['cf_add_meta'].PHP_EOL;
 ?>
 <title><?php echo $g5_head_title; ?></title>

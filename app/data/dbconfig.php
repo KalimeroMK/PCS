@@ -1,12 +1,12 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
-define('G5_MYSQL_HOST', 'mysql');
-define('G5_MYSQL_USER', 'homestead');
-define('G5_MYSQL_PASSWORD', 'secret');
-define('G5_MYSQL_DB', 'homestead');
-define('G5_MYSQL_SET_MODE', true);
+    const G5_MYSQL_HOST = 'mysql';
+    const G5_MYSQL_USER = 'homestead';
+    const G5_MYSQL_PASSWORD = 'secret';
+    const G5_MYSQL_DB = 'homestead';
+    const G5_MYSQL_SET_MODE = true;
 
-define('G5_TABLE_PREFIX', 'demo_');
+    const G5_TABLE_PREFIX = 'demo_';
 
 $g5['write_prefix'] = G5_TABLE_PREFIX.'write_'; // 게시판 테이블명 접두사
 

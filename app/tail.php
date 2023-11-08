@@ -72,8 +72,8 @@ if (G5_IS_MOBILE) {
 </div>
 
 <?php
-if (G5_DEVICE_BUTTON_DISPLAY) { ?>
-    <?php
+if(G5_DEVICE_BUTTON_DISPLAY && !G5_IS_MOBILE) { ?>
+<?php
 }
 
 if ($config['cf_analytics']) {
@@ -92,4 +92,3 @@ $(function() {
 
 <?php
 include_once(G5_PATH."/tail.sub.php");
-?>

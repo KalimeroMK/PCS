@@ -7,7 +7,7 @@
 DROP TABLE IF EXISTS `g5_auth`;
 CREATE TABLE IF NOT EXISTS `g5_auth` (
   `mb_id` varchar(20) NOT NULL default '',
-  `au_menu` varchar(20) NOT NULL default '',
+  `au_menu` varchar(50) NOT NULL default '',
   `au_auth` set('r','w','d') NOT NULL default '',
   PRIMARY KEY  (`mb_id`,`au_menu`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `g5_board` (
   `bo_use_file_content` tinyint(4) NOT NULL DEFAULT '0',
   `bo_use_secret` tinyint(4) NOT NULL DEFAULT '0',
   `bo_use_dhtml_editor` tinyint(4) NOT NULL DEFAULT '0',
+  `bo_select_editor` varchar(50) NOT NULL DEFAULT '',
   `bo_use_rss_view` tinyint(4) NOT NULL DEFAULT '0',
   `bo_use_good` tinyint(4) NOT NULL DEFAULT '0',
   `bo_use_nogood` tinyint(4) NOT NULL DEFAULT '0',
@@ -284,8 +285,12 @@ CREATE TABLE IF NOT EXISTS `g5_config` (
   `cf_captcha_mp3` varchar(255) NOT NULL DEFAULT '',
   `cf_editor` varchar(50) NOT NULL DEFAULT '',
   `cf_cert_use` tinyint(4) NOT NULL DEFAULT '0',
+  `cf_cert_find` tinyint(4) NOT NULL DEFAULT '0',
   `cf_cert_ipin` varchar(255) NOT NULL DEFAULT '',
   `cf_cert_hp` varchar(255) NOT NULL DEFAULT '',
+  `cf_cert_simple` varchar(255) NOT NULL DEFAULT '',
+  `cf_cert_kg_cd` varchar(255) NOT NULL DEFAULT '',
+  `cf_cert_kg_mid` varchar(255) NOT NULL DEFAULT '',
   `cf_cert_kcb_cd` varchar(255) NOT NULL DEFAULT '',
   `cf_cert_kcp_cd` varchar(255) NOT NULL DEFAULT '',
   `cf_lg_mid` varchar(100) NOT NULL DEFAULT '',
@@ -298,6 +303,7 @@ CREATE TABLE IF NOT EXISTS `g5_config` (
   `cf_icode_pw` varchar(255) NOT NULL DEFAULT '',  
   `cf_icode_server_ip` varchar(50) NOT NULL DEFAULT '',
   `cf_icode_server_port` varchar(50) NOT NULL DEFAULT '',
+  `cf_icode_token_key` varchar(100) NOT NULL DEFAULT '',
   `cf_googl_shorturl_apikey` varchar(50) NOT NULL DEFAULT '',
   `cf_social_login_use` tinyint(4) NOT NULL DEFAULT '0',
   `cf_social_servicelist` varchar(255) NOT NULL DEFAULT '',
@@ -355,6 +361,25 @@ CREATE TABLE IF NOT EXISTS `g5_cert_history` (
   `cr_date` date NOT NULL DEFAULT '0000-00-00',
   `cr_time` time NOT NULL DEFAULT '00:00:00',
   PRIMARY KEY (`cr_id`),
+  KEY `mb_id` (`mb_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `g5_cert_history`
+--
+
+DROP TABLE IF EXISTS `g5_member_cert_history`;
+CREATE TABLE IF NOT EXISTS `g5_member_cert_history` (
+  `ch_id` int(11) NOT NULL auto_increment,
+  `mb_id` varchar(20) NOT NULL DEFAULT '',
+  `ch_name` varchar(255) NOT NULL DEFAULT '',
+  `ch_hp` varchar(255) NOT NULL DEFAULT '',
+  `ch_birth` varchar(255) NOT NULL DEFAULT '',
+  `ch_type` varchar(20) NOT NULL DEFAULT '',
+  `ch_datetime` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`ch_id`),
   KEY `mb_id` (`mb_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -592,6 +617,7 @@ CREATE TABLE IF NOT EXISTS `g5_poll` (
   `po_date` date NOT NULL default '0000-00-00',
   `po_ips` mediumtext NOT NULL,
   `mb_ids` text NOT NULL,
+  `po_use` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`po_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -890,6 +916,7 @@ CREATE TABLE IF NOT EXISTS `g5_member_social_profiles` (
 DROP TABLE IF EXISTS `g5_new_win`;
 CREATE TABLE IF NOT EXISTS `g5_new_win` (
   `nw_id` int(11) NOT NULL AUTO_INCREMENT,
+  `nw_division` varchar(10) NOT NULL DEFAULT 'both',
   `nw_device` varchar(10) NOT NULL DEFAULT 'both',
   `nw_begin_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `nw_end_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

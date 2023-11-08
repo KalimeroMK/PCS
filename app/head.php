@@ -22,6 +22,7 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 ?>
 
+
 <!-- 상단 시작 { -->
 <div id="hd">
     <h1 id="hd_h1"><?php echo $g5['title'] ?></h1>
@@ -33,7 +34,15 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
     }
     ?>
     <div id="tnb">
-    	<div class="inner">
+        <div class="inner">
+            <?php if(defined('G5_COMMUNITY_USE') == false || G5_COMMUNITY_USE) { ?>
+    		<ul id="hd_define">
+    			<li class="active"><a href="<?php echo G5_URL ?>/">커뮤니티</a></li>
+                <?php if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>
+    			<li><a href="<?php echo G5_SHOP_URL ?>/">쇼핑몰</a></li>
+                <?php } ?>
+    		</ul>
+            <?php } ?>
 			<ul id="hd_qnb">
 	            <li><a href="<?php echo G5_BBS_URL ?>/faq.php">FAQ</a></li>
 	            <li><a href="<?php echo G5_BBS_URL ?>/qalist.php">Q&A</a></li>
@@ -62,7 +71,8 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
                 <script>
                 function fsearchbox_submit(f)
                 {
-                    if (f.stx.value.length < 2) {
+                    var stx = f.stx.value.trim();
+                    if (stx.length < 2) {
                         alert("검색어는 두글자 이상 입력하십시오.");
                         f.stx.select();
                         f.stx.focus();
@@ -71,8 +81,8 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
 
                     // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
                     var cnt = 0;
-                    for (var i=0; i<f.stx.value.length; i++) {
-                        if (f.stx.value.charAt(i) == ' ')
+                    for (var i = 0; i < stx.length; i++) {
+                        if (stx.charAt(i) == ' ')
                             cnt++;
                     }
 
@@ -82,11 +92,11 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
                         f.stx.focus();
                         return false;
                     }
+                    f.stx.value = stx;
 
                     return true;
                 }
                 </script>
-
             </fieldset>
                 
             <?php echo popular(); // 인기검색어, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정  ?>
@@ -208,4 +218,4 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
     <div id="container_wr">
    
     <div id="container">
-        <?php if (!defined("_INDEX_")) { ?><h2 id="container_title"><span title="<?php echo get_text($g5['title']); ?>"><?php echo get_head_title($g5['title']); ?></span></h2><?php } ?>
+        <?php if (!defined("_INDEX_")) { ?><h2 id="container_title"><span title="<?php echo get_text($g5['title']); ?>"><?php echo get_head_title($g5['title']); ?></span></h2><?php }

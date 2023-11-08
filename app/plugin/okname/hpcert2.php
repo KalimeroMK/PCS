@@ -23,13 +23,13 @@ require('./hpcert.config.php');
 /* 공통 리턴 항목 */
 //$idcfMbrComCd           =   $_REQUEST['idcf_mbr_com_cd'];      // 고객사코드
 $idcfMbrComCd           =   $memId;
-$hsCertSvcTxSeqno       =   $_REQUEST['hs_cert_svc_tx_seqno']; // 거래번호
-$rqstSiteNm             =   $_REQUEST['rqst_site_nm'];         // 접속도메인
-$hsCertRqstCausCd       =   $_REQUEST['hs_cert_rqst_caus_cd']; // 인증요청사유코드 2byte  (00:회원가입, 01:성인인증, 02:회원정보수정, 03:비밀번호찾기, 04:상품구매, 99:기타)
+$hsCertSvcTxSeqno       =   isset($_REQUEST['hs_cert_svc_tx_seqno']) ? $_REQUEST['hs_cert_svc_tx_seqno'] : ''; // 거래번호
+$rqstSiteNm             =   isset($_REQUEST['rqst_site_nm']) ? $_REQUEST['rqst_site_nm'] : '';         // 접속도메인
+$hsCertRqstCausCd       =   isset($_REQUEST['hs_cert_rqst_caus_cd']) ? $_REQUEST['hs_cert_rqst_caus_cd'] : ''; // 인증요청사유코드 2byte  (00:회원가입, 01:성인인증, 02:회원정보수정, 03:비밀번호찾기, 04:상품구매, 99:기타)
 
-$resultCd               =   $_REQUEST['result_cd'];            // 결과코드
-$resultMsg              =   $_REQUEST['result_msg'];           // 결과메세지
-$certDtTm               =   $_REQUEST['cert_dt_tm'];           // 인증일시
+$resultCd               =   isset($_REQUEST['result_cd']) ? $_REQUEST['result_cd'] : '';            // 결과코드
+$resultMsg              =   isset($_REQUEST['result_msg']) ? $_REQUEST['result_msg'] : '';           // 결과메세지
+$certDtTm               =   isset($_REQUEST['cert_dt_tm']) ? $_REQUEST['cert_dt_tm'] : '';           // 인증일시
 
 if($resultCd != 'B000') {
     alert_close('휴대폰 본인확인 중 오류가 발생했습니다. 오류코드 : '.$resultCd.'\\n\\n문의는 코리아크레딧뷰로 고객센터 02-708-1000 로 해주십시오.');
@@ -38,15 +38,15 @@ if($resultCd != 'B000') {
 /**************************************************************************
  * 모듈 호출    ; 생년월일 본인 확인서비스 결과 데이터를 복호화한다.
  **************************************************************************/
-$encInfo = $_REQUEST['encInfo'];
+$encInfo = isset($_REQUEST['encInfo']) ? $_REQUEST['encInfo'] : '';
 if(preg_match('~[^0-9a-zA-Z+/=]~', $encInfo, $match)) {echo "입력 값 확인이 필요합니다"; exit;}
 
 //KCB서버 공개키
-$WEBPUBKEY = trim($_REQUEST['WEBPUBKEY']);
+$WEBPUBKEY = isset($_REQUEST['WEBPUBKEY']) ? trim($_REQUEST['WEBPUBKEY']) : '';
 if(preg_match('~[^0-9a-zA-Z+/=]~', $WEBPUBKEY, $match)) {echo "입력 값 확인이 필요합니다"; exit;}
 
 //KCB서버 서명값
-$WEBSIGNATURE = trim($_REQUEST['WEBSIGNATURE']);
+$WEBSIGNATURE = isset($_REQUEST['WEBSIGNATURE']) ? trim($_REQUEST['WEBSIGNATURE']) : '';
 if(preg_match('~[^0-9a-zA-Z+/=]~', $WEBSIGNATURE, $match)) {echo "입력 값 확인이 필요합니다"; exit;}
 
 // ########################################################################
@@ -108,20 +108,27 @@ echo "리턴메시지        :$field[16] <br/>";
 $mb_name = $field[7];
 $req_num = $field[12];
 $mb_birth = $field[8];
-$mb_dupinfo = $field[4];
+$di = $field[4];
+$ci = $field[5];
+$mb_dupinfo = md5($ci.$ci); // 간편인증 추가 후 ci로 변경
 $phone_no = hyphen_hp_number($req_num);
+
+// 명의 변경 체크
+if (!empty($member['mb_certify']) && !empty($member['mb_dupinfo']) && strlen($member['mb_dupinfo']) != 64) { // 이미 인증된 계정중에 dupinfo가 di(64 length)가 아닐때
+    if($member['mb_dupinfo'] != $mb_dupinfo) alert_close("해당 계정은 이미 다른명의로 본인인증 되어있는 계정입니다.");
+}
 
 // 중복정보 체크
 $sql = " select mb_id from {$g5['member_table']} where mb_id <> '{$member['mb_id']}' and mb_dupinfo = '{$mb_dupinfo}' ";
 $row = sql_fetch($sql);
-if ($row['mb_id']) {
+if (!empty($row['mb_id'])) {
     alert_close("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원아이디 : ".$row['mb_id']);
 }
 
 // hash 데이터
 $cert_type = 'hp';
 $md5_cert_no = md5($req_num);
-$hash_data   = md5($mb_name.$cert_type.$mb_birth.$md5_cert_no);
+$hash_data   = md5($mb_name.$cert_type.$mb_birth.$phone_no.$md5_cert_no);
 
 // 성인인증결과
 $adult_day = date("Ymd", strtotime("-19 years", G5_SERVER_TIME));
@@ -149,10 +156,14 @@ $(function() {
     $opener.$("input[name=cert_no]").val("<?php echo $md5_cert_no; ?>");
 
     alert("본인의 휴대폰번호로 확인 되었습니다.");
+
+    if($opener.$("form[name=fcertrefreshform]") != undefined){
+        $opener.$("form[name=fcertrefreshform]").submit();
+    }
+    
     window.close();
 });
 </script>
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

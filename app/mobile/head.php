@@ -68,6 +68,9 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
             if ($i == 0) {  ?>
                 <li id="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하세요.<?php } ?></li>
             <?php } ?>
+            <?php if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>
+                <li class="gnb_1dli"><a href="<?php echo G5_SHOP_URL ?>" class="gnb_1da"> 쇼핑몰</a></li>
+            <?php } ?>
             </ul>
             <ul id="hd_nb">
             	<li class="hd_nb1"><a href="<?php echo G5_BBS_URL ?>/faq.php" id="snb_faq"><i class="fa fa-question" aria-hidden="true"></i>FAQ</a></li>
@@ -92,7 +95,8 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
                 <script>
                 function fsearchbox_submit(f)
                 {
-                    if (f.stx.value.length < 2) {
+                    var stx = f.stx.value.trim();
+                    if (stx.length < 2) {
                         alert("검색어는 두글자 이상 입력하십시오.");
                         f.stx.select();
                         f.stx.focus();
@@ -101,8 +105,8 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
 
                     // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
                     var cnt = 0;
-                    for (var i=0; i<f.stx.value.length; i++) {
-                        if (f.stx.value.charAt(i) == ' ')
+                    for (var i = 0; i < stx.length; i++) {
+                        if (stx.charAt(i) == ' ')
                             cnt++;
                     }
 
@@ -112,6 +116,7 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
                         f.stx.focus();
                         return false;
                     }
+                    f.stx.value = stx;
 
                     return true;
                 }
@@ -185,4 +190,4 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
     	<h2 id="container_title" class="top" title="<?php echo get_text($g5['title']); ?>">
     		<a href="javascript:history.back();"><i class="fa fa-chevron-left" aria-hidden="true"></i><span class="sound_only">뒤로가기</span></a> <?php echo get_head_title($g5['title']); ?>
     	</h2>
-    <?php } ?>
+    <?php }

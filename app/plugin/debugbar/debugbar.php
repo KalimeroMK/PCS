@@ -54,7 +54,27 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_PLUGIN_URL.'/debugbar/style.cs
                 ?>
                 <tr>
                     <td scope="row" data-label="실행순서"><?php echo $key; ?></td>
-                    <td class="left" data-label="쿼리문"><?php echo $query['sql']; ?></td>
+                    <td class="left" data-label="쿼리문">
+                        <?php
+                            if(isset($query['source']['class'])) {
+                                $function = "{$query['source']['class']}{$query['source']['type']}{$query['source']['function']}()";
+                            } else if (isset($query['source']['function'])) {
+                                $function = "{$query['source']['function']}()";
+                            } else {
+                                $function = null;
+                            }
+                        ?>
+                        <p class="query_source">
+                            <em><?php echo "{$query['source']['file']}:{$query['source']['line']}" ?></em><br>
+                            <?php if($function) { echo "<em>{$function}</em><br>"; } ?>
+                        </p>
+                        <?php
+                        echo "<p class=\"query_sql\">{$query['sql']}</p>";
+                        if(!$query['success']) {
+                            echo '<p class="query_error_message">오류: [' . $query['error_code'] . '] ' . $query['error_message'] . '</p>';
+                        }
+                        ?>
+                    </td>
                     <td data-label="실행시간"><?php echo $show_excuted_time.' ms'; ?></td>
                 </tr>
                 <?php } ?>
@@ -118,13 +138,30 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_PLUGIN_URL.'/debugbar/style.cs
                             $is_print = $rowspan;
                             
                             foreach($datas as $data){
+                                
+                                $print_function = '';
+
+                                if( $data['function'] && is_array($data['function']) ){
+                                    foreach( (array) $data['function'] as $key=>$fn_name ){
+                                        $str_delimiter = '';
+                                        if($key) $str_delimiter = ' :: ';
+                                        
+                                        if( is_object($fn_name) ){
+                                            $fn_name = get_class($fn_name);
+                                        }
+
+                                        $print_function .= $str_delimiter.(string) $fn_name;
+                                    }
+                                } else {
+                                    $print_function = $data['function'];
+                                }
                         ?>
                         <tr>
                             <?php if ($is_print){ ?>
                             <td scope="row" data-label="event_tag" <?php echo $rowspan; ?>><?php echo $tag.' <span class="hook_count">('.$count.')</span>'; ?></td>
                             <?php } ?>
                             <td data-label="event_function">
-                                <?php echo $data['function']; ?>
+                                <?php echo $print_function; ?>
                             </td>
                             <td data-label="인수의 수"><?php echo $data['arguments']; ?></td>
                             <td data-label="우선 순위"><?php echo $data['priority']; ?></td>
@@ -194,13 +231,30 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_PLUGIN_URL.'/debugbar/style.cs
                             $is_print = $rowspan;
                             
                             foreach($datas as $data){
+                                
+                                $print_function = '';
+
+                                if( $data['function'] && is_array($data['function']) ){
+                                    foreach( (array) $data['function'] as $key=>$fn_name ){
+                                        $str_delimiter = '';
+                                        if($key) $str_delimiter = ' :: ';
+                                        
+                                        if( is_object($fn_name) ){
+                                            $fn_name = get_class($fn_name);
+                                        }
+
+                                        $print_function .= $str_delimiter.(string) $fn_name;
+                                    }
+                                } else {
+                                    $print_function = $data['function'];
+                                }
                         ?>
                         <tr>
                             <?php if ($is_print){ ?>
                             <td scope="row" data-label="replace_tag" <?php echo $rowspan; ?>><?php echo $tag.' <span class="hook_count">('.$count.')</span>'; ?></td>
                             <?php } ?>
                             <td data-label="replace_function">
-                                <?php echo $data['function']; ?>
+                                <?php echo $print_function; ?>
                             </td>
                             <td data-label="인수의 수"><?php echo $data['arguments']; ?></td>
                             <td data-label="우선 순위"><?php echo $data['priority']; ?></td>

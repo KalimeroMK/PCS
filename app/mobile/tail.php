@@ -75,8 +75,27 @@ jQuery(function($) {
 
     });
 });
+
+//상단고정
+$( document ).ready( function() {
+    var jbOffset = $( '.top' ).offset();
+    $( window ).scroll( function() {
+        if ( $( document ).scrollTop() > jbOffset.top ) {
+            $( '.top' ).addClass( 'fixed' );
+        }
+        else {
+            $( '.top' ).removeClass( 'fixed' );
+        }
+    });
+});
+//상단으로
+$(function() {
+    $("#top_btn").on("click", function() {
+        $("html, body").animate({scrollTop:0}, '500');
+        return false;
+    });
+});
 </script>
 
 <?php
 include_once(G5_PATH."/tail.sub.php");
-?>

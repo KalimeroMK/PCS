@@ -4,11 +4,15 @@ include_once('./_common.php');
 $g5['title'] = '이미지 크게보기';
 include_once(G5_PATH.'/head.sub.php');
 
-$filename = preg_replace('/[^A-Za-z0-9 _ .\-\/]/', '', $_GET['fn']);
+$filename = isset($_GET['fn']) ? preg_replace('/[^A-Za-z0-9 _ .\-\/]/', '', $_GET['fn']) : '';
+
+if(function_exists('clean_relative_paths')){
+    $filename = clean_relative_paths($filename);
+}
 
 $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
-if ( ! preg_match('/(jpg|jpeg|png|gif|bmp)$/i', $extension) ){
+if ( ! preg_match('/(jpg|jpeg|png|gif|bmp|webp)$/i', $extension) ){
     alert_close('이미지 확장자가 아닙니다.');
 }
 
@@ -100,6 +104,12 @@ $.fn.imgLoad = function(callback) {
             }
         }
 
+        if(win_w < screen.width) {
+            if(window.outerWidth){
+                win_w = win_w + (window.outerWidth - (document.documentElement.clientWidth || window.innerWidth));
+            }
+        }
+
         window.moveTo(win_l, win_t);
         window.resizeTo(win_w, win_h);
     });
@@ -142,4 +152,3 @@ $.fn.imgLoad = function(callback) {
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

@@ -96,7 +96,7 @@ if (!$is_search_bbs) {
 
         $row = sql_fetch(" select * from {$write_table} where wr_id = '{$arr_notice[$k]}' ");
 
-        if (!$row['wr_id']) continue;
+        if (!isset($row['wr_id']) || !$row['wr_id']) continue;
 
         $notice_array[] = $row['wr_id'];
 
@@ -104,7 +104,14 @@ if (!$is_search_bbs) {
 
         $list[$i] = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
         $list[$i]['is_notice'] = true;
+        $list[$i]['list_content'] = $list[$i]['wr_content'];
 
+        // 비밀글인 경우 리스트에서 내용이 출력되지 않게 글 내용을 지웁니다. 
+        if (strstr($list[$i]['wr_option'], "secret")) {
+            $list[$i]['wr_content'] = '';
+        }
+
+        $list[$i]['num'] = 0;
         $i++;
         $notice_count++;
 
@@ -197,6 +204,13 @@ if($page_rows > 0) {
             $list[$i]['subject'] = search_font($stx, $list[$i]['subject']);
         }
         $list[$i]['is_notice'] = false;
+        $list[$i]['list_content'] = $list[$i]['wr_content'];
+
+        // 비밀글인 경우 리스트에서 내용이 출력되지 않게 글 내용을 지웁니다. 
+        if (strstr($list[$i]['wr_option'], "secret")) {
+            $list[$i]['wr_content'] = '';
+        }
+
         $list_num = $total_count - ($page - 1) * $list_page_rows - $notice_count;
         $list[$i]['num'] = $list_num - $k;
 
@@ -222,14 +236,14 @@ if ($is_search_bbs) {
     if (isset($min_spt) && $prev_spt >= $min_spt) {
         $qstr1 = preg_replace($patterns, '', $qstr);
         $prev_part_href = get_pretty_url($bo_table,0,$qstr1.'&amp;spt='.$prev_spt.'&amp;page=1');
-        $write_pages = page_insertbefore($write_pages, '<a href="'.$prev_part_href.'" class="pg_page pg_prev">이전검색</a>');
+        $write_pages = page_insertbefore($write_pages, '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">이전검색</a>');
     }
 
     $next_spt = $spt + $config['cf_search_part'];
     if ($next_spt < 0) {
         $qstr1 = preg_replace($patterns, '', $qstr);
         $next_part_href = get_pretty_url($bo_table,0,$qstr1.'&amp;spt='.$next_spt.'&amp;page=1');
-        $write_pages = page_insertafter($write_pages, '<a href="'.$next_part_href.'" class="pg_page pg_end">다음검색</a>');
+        $write_pages = page_insertafter($write_pages, '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">다음검색</a>');
     }
 }
 
@@ -253,4 +267,3 @@ if ($board['bo_use_rss_view']) {
 
 $stx = get_text(stripslashes($stx));
 include_once($board_skin_path.'/list.skin.php');
-?>

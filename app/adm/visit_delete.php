@@ -2,7 +2,7 @@
 $sub_menu = "200820";
 include_once('./_common.php');
 
-auth_check($auth[$sub_menu], 'r');
+auth_check_menu($auth, $sub_menu, 'r');
 
 $g5['title'] = '접속자로그삭제';
 include_once('./admin.head.php');
@@ -13,6 +13,9 @@ $row = sql_fetch($sql);
 
 $min_year = (int)substr($row['min_date'], 0, 4);
 $now_year = (int)substr(G5_TIME_YMD, 0, 4);
+if (!$min_year) {
+    $min_year = $now_year;
+}
 ?>
 
 <div class="local_ov01 local_ov">
@@ -92,4 +95,3 @@ function form_submit(f)
 
 <?php
 include_once('./admin.tail.php');
-?>

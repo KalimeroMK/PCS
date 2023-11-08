@@ -19,7 +19,7 @@ Class GML_Hook extends Hook {
 
         $args = $this->getArguments($argsNumber, $args);
 
-        if (! ($class && $method) && function_exists($function)) {
+        if (! ($class && $method) && is_callable($function)) {
             return call_user_func_array($function, $args);
         } elseif ($obj = call_user_func(array($class, $this->singleton))) {
             if ($obj !== false) {
@@ -87,6 +87,9 @@ Class GML_Hook extends Hook {
 
         foreach ($filters as $priority) {
             foreach ($priority as $filter) {
+                if( isset($args[0]) ){
+                    $args[0] = $value;
+                }
                 $replace = $that->runAction($filter, $args);
 
                 if( ! is_null($replace) ) {
@@ -127,10 +130,11 @@ Class GML_Hook extends Hook {
 
         if (isset($that->callback_filters[$tag]) && isset($that->callback_filters[$tag][$priority]) ) {
             
-            $found_key = array_search($func, array_column($that->callback_filters[$tag][$priority], 'function'));
-
-            if( $found_key !== false ){
-                unset($that->callback_filters[$tag][$priority][$found_key]);
+            foreach((array) $that->callback_filters[$tag][$priority] as $key=>$value){
+                if(isset($value['function']) && $value['function'] === $func) {
+                    unset($that->callback_filters[$tag][$priority][$key]);
+                    $is_remove = true;
+                }
             }
         }
 
@@ -145,10 +149,11 @@ Class GML_Hook extends Hook {
 
         if (isset($that->callbacks[$tag]) && isset($that->callbacks[$tag][$priority]) ) {
             
-            $found_key = array_search($func, array_column($that->callbacks[$tag][$priority], 'function'));
-
-            if( $found_key !== false ){
-                unset($that->callbacks[$tag][$priority][$found_key]);
+            foreach((array) $that->callbacks[$tag][$priority] as $key=>$value){
+                if(isset($value['function']) && $value['function'] === $func) {
+                    unset($that->callbacks[$tag][$priority][$key]);
+                    $is_remove = true;
+                }
             }
         }
 
@@ -156,6 +161,4 @@ Class GML_Hook extends Hook {
     }
 }
 
-// end  Hook Class
-
-?>
+// end  Hook Class;

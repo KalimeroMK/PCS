@@ -134,20 +134,7 @@ function no_comma(data)
 function del(href)
 {
     if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
-        var iev = -1;
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            var ua = navigator.userAgent;
-            var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-            if (re.exec(ua) != null)
-                iev = parseFloat(RegExp.$1);
-        }
-
-        // IE6 이하에서 한글깨짐 방지
-        if (iev != -1 && iev < 7) {
-            document.location.href = encodeURI(href);
-        } else {
-            document.location.href = href;
-        }
+        document.location.href = href;
     }
 }
 
@@ -165,33 +152,9 @@ function set_cookie(name, value, expirehours, domain)
 // 쿠키 얻음
 function get_cookie(name)
 {
-    var find_sw = false;
-    var start, end;
-    var i = 0;
-
-    for (i=0; i<= document.cookie.length; i++)
-    {
-        start = i;
-        end = start + name.length;
-
-        if(document.cookie.substring(start, end) == name)
-        {
-            find_sw = true
-            break
-        }
-    }
-
-    if (find_sw == true)
-    {
-        start = end + 1;
-        end = document.cookie.indexOf(";", start);
-
-        if(end < start)
-            end = document.cookie.length;
-
-        return unescape(document.cookie.substring(start, end));
-    }
-    return "";
+	var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	if (match) return unescape(match[2]);
+	return "";
 }
 
 // 쿠키 지움
@@ -392,10 +355,14 @@ var win_homepage = function(href) {
  * 우편번호 창
  **/
 var win_zip = function(frm_name, frm_zip, frm_addr1, frm_addr2, frm_addr3, frm_jibeon) {
-    if(typeof daum === 'undefined'){
-        alert("다음 우편번호 postcode.v2.js 파일이 로드되지 않았습니다.");
+    if(typeof daum === "undefined"){
+        alert("KAKAO 우편번호 서비스 postcode.v2.js 파일이 로드되지 않았습니다.");
         return false;
     }
+
+    // 핀치 줌 현상 제거
+    var vContent = "width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10";
+    $("#meta_viewport").attr("content", vContent + ",user-scalable=no");
 
     var zip_case = 1;   //0이면 레이어, 1이면 페이지에 끼워 넣기, 2이면 새창
 
@@ -442,6 +409,7 @@ var win_zip = function(frm_name, frm_zip, frm_addr1, frm_addr2, frm_addr3, frm_j
         }
         
         setTimeout(function(){
+            $("#meta_viewport").attr("content", vContent);
             of[frm_addr2].focus();
         } , 100);
     };
@@ -455,10 +423,11 @@ var win_zip = function(frm_name, frm_zip, frm_addr1, frm_addr2, frm_addr3, frm_j
                 element_wrap = document.createElement("div");
                 element_wrap.setAttribute("id", daum_pape_id);
                 element_wrap.style.cssText = 'display:none;border:1px solid;left:0;width:100%;height:300px;margin:5px 0;position:relative;-webkit-overflow-scrolling:touch;';
-                element_wrap.innerHTML = '<img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-21px;z-index:1" class="close_daum_juso" alt="접기 버튼">';
+                element_wrap.innerHTML = '<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-21px;z-index:1" class="close_daum_juso" alt="접기 버튼">';
                 jQuery('form[name="'+frm_name+'"]').find('input[name="'+frm_addr1+'"]').before(element_wrap);
                 jQuery("#"+daum_pape_id).off("click", ".close_daum_juso").on("click", ".close_daum_juso", function(e){
                     e.preventDefault();
+                    $("#meta_viewport").attr("content", vContent);
                     jQuery(this).parent().hide();
                 });
             }
@@ -502,6 +471,7 @@ var win_zip = function(frm_name, frm_zip, frm_addr1, frm_addr2, frm_addr3, frm_j
                 document.body.appendChild(element_layer);
                 jQuery("#"+rayer_id).off("click", ".close_daum_juso").on("click", ".close_daum_juso", function(e){
                     e.preventDefault();
+                    $("#meta_viewport").attr("content", vContent);
                     jQuery(this).parent().hide();
                 });
             }
@@ -540,6 +510,15 @@ var win_poll = function(href) {
 }
 
 /**
+ * 쿠폰
+ **/
+var win_coupon = function(href) {
+    var new_win = window.open(href, "win_coupon", "left=100,top=100,width=700, height=600, scrollbars=1");
+    new_win.focus();
+}
+
+
+/**
  * 스크린리더 미사용자를 위한 스크립트 - 지운아빠 2013-04-22
  * alt 값만 갖는 그래픽 링크에 마우스오버 시 title 값 부여, 마우스아웃 시 title 값 제거
  **/
@@ -559,10 +538,12 @@ function font_resize(id, rmv_class, add_class, othis)
 {
     var $el = $("#"+id);
 
-    $el.removeClass(rmv_class).addClass(add_class);
+	if((typeof rmv_class !== "undefined" && rmv_class) || (typeof add_class !== "undefined" && add_class)){
+		$el.removeClass(rmv_class).addClass(add_class);
 
-    set_cookie("ck_font_resize_rmv_class", rmv_class, 1, g5_cookie_domain);
-    set_cookie("ck_font_resize_add_class", add_class, 1, g5_cookie_domain);
+		set_cookie("ck_font_resize_rmv_class", rmv_class, 1, g5_cookie_domain);
+		set_cookie("ck_font_resize_add_class", add_class, 1, g5_cookie_domain);
+	}
 
     if(typeof othis !== "undefined"){
         $(othis).addClass('select').siblings().removeClass('select');
@@ -631,6 +612,11 @@ $(function(){
         return false;
     });
     */
+
+    $(".win_coupon").click(function() {
+        win_coupon(this.href);
+        return false;
+    });
 
     // 사이드뷰
     var sv_hide = false;

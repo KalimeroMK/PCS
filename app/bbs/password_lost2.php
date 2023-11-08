@@ -23,10 +23,11 @@ if ($row['cnt'] > 1)
 
 $sql = " select mb_no, mb_id, mb_name, mb_nick, mb_email, mb_datetime, mb_leave_date from {$g5['member_table']} where mb_email = '$email' ";
 $mb = sql_fetch($sql);
-if (!$mb['mb_id'] || $mb['mb_leave_date'])
+if (empty($mb['mb_id']) || $mb['mb_leave_date']) {
     alert('존재하지 않는 회원입니다.');
-else if (is_admin($mb['mb_id']))
+} elseif (is_admin($mb['mb_id'])) {
     alert('관리자 아이디는 접근 불가합니다.');
+}
 
 // 임시비밀번호 발급
 $change_password = rand(100000, 999999);
@@ -74,4 +75,3 @@ mailer($config['cf_admin_email_name'], $config['cf_admin_email'], $mb['mb_email'
 run_event('password_lost2_after', $mb, $mb_nonce, $mb_lost_certify);
 
 alert_close($email.' 메일로 회원아이디와 비밀번호를 인증할 수 있는 메일이 발송 되었습니다.\\n\\n메일을 확인하여 주십시오.');
-?>

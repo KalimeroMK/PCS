@@ -2,7 +2,7 @@
 $sub_menu = '100410';
 include_once('./_common.php');
 
-auth_check($auth[$sub_menu], 'r');
+auth_check_menu($auth, $sub_menu, 'r');
 
 $g5['title'] = 'DB 업그레이드';
 include_once('./admin.head.php');
@@ -177,6 +177,48 @@ if( !$row ) {
     $is_check = true;
 }
 
+if (defined('G5_USE_SHOP') && G5_USE_SHOP) {
+    // 임시저장 테이블이 없을 경우 생성
+    if(!sql_query(" DESC {$g5['g5_shop_post_log_table']} ", false)) {
+        sql_query(" CREATE TABLE IF NOT EXISTS `{$g5['g5_shop_post_log_table']}` (
+                    `log_id` int(11) NOT NULL AUTO_INCREMENT,
+                    `oid` bigint(20) unsigned NOT NULL,
+                    `mb_id` varchar(255) NOT NULL DEFAULT '',
+                    `post_data` text NOT NULL,
+                    `ol_code` varchar(255) NOT NULL DEFAULT '',
+                    `ol_msg` text NOT NULL,
+                    `ol_datetime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+                    `ol_ip` varchar(25) NOT NULL DEFAULT '',
+                    PRIMARY KEY (`log_id`)
+                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8; ", true);
+
+        $is_check = true;
+    }
+
+    $result = sql_query("describe `{$g5['g5_shop_post_log_table']}`");
+    while ($row = sql_fetch_array($result)){
+        if( isset($row['Field']) && $row['Field'] === 'ol_msg' && $row['Type'] === 'varchar(255)' ){
+            sql_query("ALTER TABLE `{$g5['g5_shop_post_log_table']}` MODIFY ol_msg TEXT NOT NULL;", false);
+            sql_query("ALTER TABLE `{$g5['g5_shop_post_log_table']}` DROP PRIMARY KEY;", false);
+            sql_query("ALTER TABLE `{$g5['g5_shop_post_log_table']}` ADD `log_id` int(11) NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (`log_id`);", false);
+            $is_check = true;
+            break;
+        }
+    }
+}
+
+// auth.au_menu 컬럼 크기 조정
+$sql = " SHOW COLUMNS FROM `{$g5['auth_table']}` LIKE 'au_menu' ";
+$row = sql_fetch($sql);
+if (
+    stripos($row['Type'], 'varchar') !== false
+    && (int) preg_replace('/[^0-9]/', '', $row['Type']) <= 50
+) {
+    sql_query(" ALTER TABLE `{$g5['auth_table']}` CHANGE `au_menu` `au_menu` VARCHAR(50) NOT NULL; ", true);
+
+    $is_check = true;
+}
+
 $is_check = run_replace('admin_dbupgrade', $is_check);
 
 $db_upgrade_msg = $is_check ? 'DB 업그레이드가 완료되었습니다.' : '더 이상 업그레이드 할 내용이 없습니다.<br>현재 DB 업그레이드가 완료된 상태입니다.';
@@ -190,4 +232,3 @@ $db_upgrade_msg = $is_check ? 'DB 업그레이드가 완료되었습니다.' : '
 
 <?php
 include_once ('./admin.tail.php');
-?>

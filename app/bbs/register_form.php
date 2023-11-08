@@ -14,7 +14,7 @@ set_session("ss_cert_type", "");
 
 $is_social_login_modify = false;
 
-if( $provider && function_exists('social_nonce_is_valid') ){   //모바일로 소셜 연결을 했다면
+if( isset($_REQUEST['provider']) && $_REQUEST['provider']  && function_exists('social_nonce_is_valid') ){   //모바일로 소셜 연결을 했다면
     if( social_nonce_is_valid(get_session("social_link_token"), $provider) ){  //토큰값이 유효한지 체크
         $w = 'u';   //회원 수정으로 처리
         $_POST['mb_id'] = $member['mb_id'];
@@ -39,7 +39,7 @@ if ($w == "") {
     }
 
     if (!isset($_POST['agree2']) || !$_POST['agree2']) {
-        alert('개인정보처리방침안내의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
+        alert('개인정보 수집 및 이용의 내용에 동의하셔야 회원가입 하실 수 있습니다.', G5_BBS_URL.'/register.php');
     }
 
     $agree  = preg_replace('#[^0-9]#', '', $_POST['agree']);
@@ -62,7 +62,7 @@ if ($w == "") {
 
 } else if ($w == 'u') {
 
-    if ($is_admin)
+    if ($is_admin == 'super')
         alert('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.', G5_URL);
 
     if (!$is_member)
@@ -87,7 +87,7 @@ if ($w == "") {
 
     if (isset($_POST['mb_password'])) {
         // 수정된 정보를 업데이트후 되돌아 온것이라면 비밀번호가 암호화 된채로 넘어온것임
-        if ($_POST['is_update']) {
+        if (isset($_POST['is_update']) && $_POST['is_update']) {
             $tmp_password = $_POST['mb_password'];
             $pass_check = ($member['mb_password'] === $tmp_password);
         } else {
@@ -131,19 +131,24 @@ include_once('./_head.php');
 
 // 회원아이콘 경로
 $mb_icon_path = G5_DATA_PATH.'/member/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif';
-$mb_icon_url  = G5_DATA_URL.'/member/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif';
+$mb_icon_filemtile = (defined('G5_USE_MEMBER_IMAGE_FILETIME') && G5_USE_MEMBER_IMAGE_FILETIME && file_exists($mb_icon_path)) ? '?'.filemtime($mb_icon_path) : '';
+$mb_icon_url  = G5_DATA_URL.'/member/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif'.$mb_icon_filemtile;
 
 // 회원이미지 경로
 $mb_img_path = G5_DATA_PATH.'/member_image/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif';
-$mb_img_url  = G5_DATA_URL.'/member_image/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif';
+$mb_img_filemtile = (defined('G5_USE_MEMBER_IMAGE_FILETIME') && G5_USE_MEMBER_IMAGE_FILETIME && file_exists($mb_img_path)) ? '?'.filemtime($mb_img_path) : '';
+$mb_img_url  = G5_DATA_URL.'/member_image/'.substr($member['mb_id'],0,2).'/'.get_mb_icon_name($member['mb_id']).'.gif'.$mb_img_filemtile;
 
 $register_action_url = G5_HTTPS_BBS_URL.'/register_form_update.php';
 $req_nick = !isset($member['mb_nick_date']) || (isset($member['mb_nick_date']) && $member['mb_nick_date'] <= date("Y-m-d", G5_SERVER_TIME - ($config['cf_nick_modify'] * 86400)));
 $required = ($w=='') ? 'required' : '';
 $readonly = ($w=='u') ? 'readonly' : '';
+$name_readonly = ($w=='u' || ($config['cf_cert_use'] && $config['cf_cert_req']))? 'readonly' : '';
+$hp_required = ($config['cf_req_hp'] || (($config['cf_cert_use'] && $config['cf_cert_req']) && ($config['cf_cert_hp'] || $config['cf_cert_simple']) && $member['mb_certify'] != "ipin")) ? 'required':'';
+$hp_readonly = (($config['cf_cert_use'] && $config['cf_cert_req']) && ($config['cf_cert_hp'] || $config['cf_cert_simple']) && $member['mb_certify'] != "ipin") ? 'readonly':'';
 
-$agree  = preg_replace('#[^0-9]#', '', $agree);
-$agree2 = preg_replace('#[^0-9]#', '', $agree2);
+$agree  = isset($_REQUEST['agree']) ? preg_replace('#[^0-9]#', '', $_REQUEST['agree']) : '';
+$agree2 = isset($_REQUEST['agree2']) ? preg_replace('#[^0-9]#', '', $_REQUEST['agree2']) : '';
 
 // add_javascript('js 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 if ($config['cf_use_addr'])
@@ -154,4 +159,3 @@ include_once($member_skin_path.'/register_form.skin.php');
 run_event('register_form_after', $w, $agree, $agree2);
 
 include_once('./_tail.php');
-?>

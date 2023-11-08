@@ -19,7 +19,7 @@ include_once('./admin.head.php');
 $directory = array();
 $dl = array('file', 'editor');
 
-if( defined('G5_YOUNGCART_VER') ){
+if (defined('G5_USE_SHOP') && G5_USE_SHOP) {
     $dl[] = 'item';
 }
 
@@ -69,4 +69,3 @@ echo '<div class="local_desc01 local_desc"><p><strong>썸네일 '.$cnt.'건의 �
 
 <?php
 include_once('./admin.tail.php');
-?>

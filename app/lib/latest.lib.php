@@ -9,6 +9,8 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
     global $g5;
 
     if (!$skin_dir) $skin_dir = 'basic';
+    
+    $time_unit = 3600;  // 1시간으로 고정
 
     if(preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         if (G5_IS_MOBILE) {
@@ -35,7 +37,7 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
 
     if(G5_USE_CACHE) {
         $cache_file_name = "latest-{$bo_table}-{$skin_dir}-{$rows}-{$subject_len}-".g5_cache_secret_key();
-        $caches = g5_get_cache($cache_file_name);
+        $caches = g5_get_cache($cache_file_name, (int) $time_unit * (int) $cache_time);
         $cache_list = isset($caches['list']) ? $caches['list'] : array();
         g5_latest_cache_data($bo_table, $cache_list);
     }
@@ -45,6 +47,10 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
         $list = array();
 
         $board = get_board_db($bo_table, true);
+
+        if( ! $board ){
+            return '';
+        }
 
         $bo_subject = get_text($board['bo_subject']);
 
@@ -64,7 +70,7 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
             }
             $list[$i] = get_list($row, $board, $latest_skin_url, $subject_len);
 
-            $list[$i]['first_file_thumb'] = (isset($row['wr_file']) && $row['wr_file']) ? get_board_file_db($bo_table, $row['wr_id'], 'bf_file, bf_content', "and bf_type between '1' and '3'", true) : array('bf_file'=>'', 'bf_content'=>'');
+            $list[$i]['first_file_thumb'] = (isset($row['wr_file']) && $row['wr_file']) ? get_board_file_db($bo_table, $row['wr_id'], 'bf_file, bf_content', "and bf_type in (1, 2, 3, 18) ", true) : array('bf_file'=>'', 'bf_content'=>'');
             $list[$i]['bo_table'] = $bo_table;
             // 썸네일 추가
             if($options && is_string($options)) {
@@ -80,6 +86,8 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
                 //     $img_content = '<img src="'. G5_IMG_URL.'/no_img.png'.'" alt="'.$thumb['alt'].'" width="'.$thumb_width.'" height="'.$thumb_height.'" class="no_img">';
                 }
             }
+
+            if(! isset($list[$i]['icon_file'])) $list[$i]['icon_file'] = '';
         }
         g5_latest_cache_data($bo_table, $list);
 
@@ -90,7 +98,7 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
                 'bo_subject' => sql_escape_string($bo_subject),
             );
 
-            g5_set_cache($cache_file_name, $caches, 3600 * $cache_time);
+            g5_set_cache($cache_file_name, $caches, (int) $time_unit * (int) $cache_time);
         }
     } else {
         $list = $cache_list;
@@ -104,4 +112,3 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
 
     return $content;
 }
-?>

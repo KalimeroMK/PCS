@@ -36,10 +36,10 @@ if($config['cf_cert_use'] == 2) {
 }
 
 $idpCode   = 'V';
-$returnUrl = G5_OKNAME_URL.'/ipin2.php';    // 아이핀 인증을 마치고 돌아올 페이지 주소
+if(!empty($resultPage))
+$returnUrl = G5_OKNAME_URL.$resultPage;    // 아이핀 인증을 마치고 돌아올 페이지 주소
 $keypath = G5_OKNAME_PATH.'/key/okname.key';    // 키파일이 생성될 위치. 웹서버에 해당파일을 생성할 권한 필요.
 $memid = $cpCode;   // 회원사코드
 $reserved1 = '0';   //reserved1
 $reserved2 = '0';   //reserved2
-$logpath = G5_OKNAME_PATH.'/log';   // 로그파일을 남기는 경우 로그파일이 생성될 경로 option에 'L'이 포함된 경우에만 생성
-?>
+$logpath = G5_OKNAME_PATH.'/log';   // 로그파일을 남기는 경우 로그파일이 생성될 경로 option에 'L'이 포함된 경우에만 생성;

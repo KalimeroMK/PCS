@@ -10,7 +10,9 @@ if( !function_exists('json_encode') ) {
     }
 }
 
-ajax_auth_check($auth[$sub_menu], "r");
+ajax_auth_check_menu($auth, $sub_menu, "r");
+
+$fg_no = isset($_REQUEST['fg_no']) ? preg_replace('/[^0-9]/i', '', $_REQUEST['fg_no']) : '';
 
 $page_size = 6;
 
@@ -64,6 +66,8 @@ while($res = sql_fetch_array($qry))
         $group_name = '미분류';
     else
         $group_name = $tmp['fg_name'];
+
+    $res['fo_content'] = html_purifier($res['fo_content']);
     $list_text .="
     <li class=\"screen_list sms5_box\">
         <span class=\"box_ico\"></span>
@@ -83,4 +87,3 @@ $arr_ajax_msg = array(
 );
 
 die( json_encode($arr_ajax_msg) );
-?>

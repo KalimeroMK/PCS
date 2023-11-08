@@ -17,7 +17,17 @@ if($error) {
 
 <script>
 alert("<?php echo $msg; ?>");
-window.close();
+try {
+    window.close();
+} catch(error) {
+    history.back();
+}
+
+setTimeout(function() {
+    if (window.history.length) {
+        window.history.back();
+    }
+}, 500);
 </script>
 
 <noscript>
@@ -60,4 +70,3 @@ window.close();
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

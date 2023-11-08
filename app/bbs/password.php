@@ -3,9 +3,7 @@ include_once('./_common.php');
 
 $g5['title'] = '비밀번호 입력';
 
-if( isset($comment_id) ){
-    $comment_id = (int) $comment_id;
-}
+$comment_id = isset($_REQUEST['comment_id']) ? preg_replace('/[^0-9]/', '', $_REQUEST['comment_id']) : 0;
 
 switch ($w) {
     case 'u' :
@@ -51,13 +49,15 @@ include_once(G5_PATH.'/head.sub.php');
 //if ($board['bo_content_head']) { echo html_purifier(stripslashes($board['bo_content_head'])); }
 
 /* 비밀글의 제목을 가져옴 지운아빠 2013-01-29 */
-$sql = " select wr_subject from {$write_table}
-                      where wr_num = '{$write['wr_num']}'
-                      and wr_reply = ''
-                      and wr_is_comment = 0 ";
-$row = sql_fetch($sql);
+if (isset($write['wr_num'])) {
+    $sql = " select wr_subject from {$write_table}
+                        where wr_num = '{$write['wr_num']}'
+                        and wr_reply = ''
+                        and wr_is_comment = 0 ";
+    $row = sql_fetch($sql);
 
-$g5['title'] = get_text($row['wr_subject']);
+    $g5['title'] = get_text((string)$row['wr_subject']);
+}
 
 include_once($member_skin_path.'/password.skin.php');
 
@@ -65,4 +65,3 @@ include_once($member_skin_path.'/password.skin.php');
 //if ($board['bo_include_tail'] && is_include_path_check($board['bo_content_tail'])) { @include ($board['bo_include_tail']); }
 
 include_once(G5_PATH.'/tail.sub.php');
-?>

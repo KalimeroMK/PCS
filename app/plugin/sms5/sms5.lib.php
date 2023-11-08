@@ -47,6 +47,12 @@ function sms5_sub_paging($write_pages, $cur_page, $total_page, $url, $add="", $s
         return "";
 }
 
+// php8 버전 호환 권한 검사 함수
+function ajax_auth_check_menu($auth, $sub_menu, $attr){
+    $check_auth = isset($auth[$sub_menu]) ? $auth[$sub_menu] : '';
+    return ajax_auth_check($check_auth, $attr);
+}
+
 // 권한 검사
 function ajax_auth_check($auth, $attr)
 {
@@ -92,7 +98,7 @@ if ( ! function_exists('get_hp')) {
         $hp = str_replace('-', '', trim($hp));
         $hp = preg_replace("/^(01[016789])([0-9]{3,4})([0-9]{4})$/", $preg, $hp);
 
-        if ($g5['sms5_demo'])
+        if (isset($g5['sms5_demo']) && $g5['sms5_demo'])
             $hp = '0100000000';
 
         return $hp;
@@ -145,21 +151,26 @@ if($config['cf_sms_type'] == 'LMS') {
     include_once(G5_LIB_PATH.'/icode.lms.lib.php');
 
     class SMS5 extends LMS {
-        var $icode_id;
-        var $icode_pw;
-        var $socket_host;
-        var $socket_port;
-        var $socket_portcode;
-        var $send_type;
-        var $Data = array();
-        var $Result = array();
-        var $Log = array();
+        public $icode_id;
+        public $icode_pw;
+        public $socket_host;
+        public $socket_port;
+        public $socket_portcode;
+        public $send_type;
+        public $Data = array();
+        public $Result = array();
+        public $Log = array();
 
         function Add($strDest, $strCallBack, $strCaller, $strSubject, $strURL, $strData, $strDate="", $nCount) {
-            // EUC-KR로 변환
-            $strCaller  = iconv_euckr($strCaller);
-            $strSubject = iconv_euckr($strSubject);
-            $strData    = iconv_euckr($strData);
+            global $config;
+
+            // 아이코드 JSON 모듈은 UTF-8 을 사용하며, sms 또는 lms 는 euc-kr 로 사용한다.
+            if(! (isset($config['cf_icode_token_key']) && $config['cf_icode_token_key'])){
+                // EUC-KR로 변환
+                $strCaller  = iconv_euckr($strCaller);
+                $strSubject = iconv_euckr($strSubject);
+                $strData    = iconv_euckr($strData);
+            }
 
             return parent::Add($strDest, $strCallBack, $strCaller, $strSubject, $strURL, $strData, $strDate, $nCount);
         }
@@ -167,7 +178,7 @@ if($config['cf_sms_type'] == 'LMS') {
         function Send() {
             global $g5;
 
-            if ($g5['sms5_demo_send']) {
+            if (isset($g5['sms5_demo_send']) && $g5['sms5_demo_send']) {
                 foreach($this->Data as $puts) {
                     if (rand(0,10)) {
                         $phone = substr($puts,26,11);
@@ -231,7 +242,7 @@ if($config['cf_sms_type'] == 'LMS') {
         function CheckCommonTypeDate($strDate) {
             $strDate=preg_replace("/[^0-9]/","",$strDate);
             if ($strDate) {
-                if (!checkdate(substr($strDate,4,2),substr($strDate,6,2),substr($rsvTime,0,4))) return "예약날짜가 잘못되었습니다";
+                if (!checkdate(substr($strDate,4,2),substr($strDate,6,2),substr($strDate,0,4))) return "예약날짜가 잘못되었습니다";
                 if (substr($strDate,8,2)>23 || substr($strDate,10,2)>59) return "예약시간이 잘못되었습니다";
             }
         }
@@ -416,10 +427,6 @@ if($config['cf_sms_type'] == 'LMS') {
                 if (!$fsocket) return false;
                 set_time_limit(300);
 
-                ## php4.3.10일경우
-                ## zend 최신버전으로 업해주세요..
-                ## 또는 69번째 줄을 $this->Data as $tmp => $puts 로 변경해 주세요.
-
                 foreach($this->Data as $puts) {
                     $dest = substr($puts,26,11);
                     fputs($fsocket, $puts);
@@ -445,4 +452,3 @@ if($config['cf_sms_type'] == 'LMS') {
         }
     }
 }
-?>

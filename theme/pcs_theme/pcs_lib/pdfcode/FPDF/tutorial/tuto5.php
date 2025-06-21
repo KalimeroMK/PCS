@@ -1,10 +1,13 @@
 <?php
-require('../fpdf.php');
+require(__DIR__ . '/../fpdf.php');
 
 class PDF extends FPDF
 {
 // Load data
-function LoadData($file)
+/**
+ * @return list<list<string>>
+ */
+function LoadData($file): array
 {
 	// Read file lines
 	$lines = file($file);
@@ -15,7 +18,7 @@ function LoadData($file)
 }
 
 // Simple table
-function BasicTable($header, $data)
+function BasicTable($header, $data): void
 {
 	// Header
 	foreach($header as $col)
@@ -31,12 +34,14 @@ function BasicTable($header, $data)
 }
 
 // Better table
-function ImprovedTable($header, $data)
+function ImprovedTable($header, $data): void
 {
 	// Column widths
 	$w = array(40, 35, 40, 45);
+    // Header
+    $counter = count($header);
 	// Header
-	for($i=0;$i<count($header);$i++)
+	for($i=0;$i<$counter;$i++)
 		$this->Cell($w[$i],7,$header[$i],1,0,'C');
 	$this->Ln();
 	// Data
@@ -53,7 +58,7 @@ function ImprovedTable($header, $data)
 }
 
 // Colored table
-function FancyTable($header, $data)
+function FancyTable($header, $data): void
 {
 	// Colors, line width and bold font
 	$this->SetFillColor(255,0,0);
@@ -63,7 +68,8 @@ function FancyTable($header, $data)
 	$this->SetFont('','B');
 	// Header
 	$w = array(40, 35, 40, 45);
-	for($i=0;$i<count($header);$i++)
+    $counter = count($header);
+	for($i=0;$i<$counter;$i++)
 		$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
 	$this->Ln();
 	// Color and font restoration

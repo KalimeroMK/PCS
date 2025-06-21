@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if ($is_guest) {
     alert('회원이시라면 로그인 후 이용해 주십시오.', G5_URL);
@@ -19,7 +19,7 @@ if (!($token && $delete_token === $token)) {
 
 $tmp_array = [];
 $deleted = [];
-if ($qa_id) // 건별삭제
+if ($qa_id !== 0) // 건별삭제
 {
     $tmp_array[0] = $qa_id;
 } else // 일괄삭제
@@ -28,7 +28,7 @@ if ($qa_id) // 건별삭제
 }
 
 $count = count($tmp_array);
-if (!$count) {
+if ($count === 0) {
     alert('삭제할 게시글을 하나이상 선택해 주십시오.');
 }
 

@@ -10,9 +10,11 @@ else{
 	$sql_pnc_up = sql_query ($query_pnc_up);
 	$sql_pnc_up_arr = sql_fetch_array ($sql_pnc_up);
 	
-	if($pc_no*1<10){$punchFile = $pkg_no.'_00'.$pc_no;}
-	else if($_POST['s_no']*1<100){$punchFile = $pkg_no.'_0'.$pc_no;}
-	else {$punchFile = $pkg_no.'_'.$pc_no;}
+	if ($pc_no*1<10) {
+        $punchFile = $pkg_no.'_00'.$pc_no;
+    } elseif ($_POST['s_no']*1<100) {
+        $punchFile = $pkg_no.'_0'.$pc_no;
+    } else {$punchFile = $pkg_no.'_'.$pc_no;}
 
 	$pncURL = PCS_PKG_URL.'/'.$pkg_no.'/'.$punchFile;
 	
@@ -26,8 +28,11 @@ else{
 <input type='hidden' name='s_no' value='<?php echo $pc_no; ?>'>
 <input type='hidden' name='dwg_no' value='<?php echo $issued_dwg; ?>'>
 <?php
-if($_POST['mode'] == 'issue') {echo '<input type="hidden" name="pcs_img_str1" id="pcs_img_str1" value="">';}
-else if($_POST['mode'] == 'clear') {echo '<input type="hidden" name="pcs_img_str2" id="pcs_img_str2" value="">';}
+if ($_POST['mode'] == 'issue') {
+    echo '<input type="hidden" name="pcs_img_str1" id="pcs_img_str1" value="">';
+} elseif ($_POST['mode'] == 'clear') {
+    echo '<input type="hidden" name="pcs_img_str2" id="pcs_img_str2" value="">';
+}
 
 if(!G5_IS_MOBILE){
 ?>
@@ -115,9 +120,13 @@ else {echo $sql_pnc_up_arr['category'];}
 	<td class="main_td" style="height:60px" colspan="2"><a id="sbm" href = 'javascript:document.punch.submit()' <?php if($_POST['mode'] != 'remove') {echo 'hidden';} ?>>
 <?php
 	if($member['mb_7']){
-		if($_POST['mode'] == 'issue'||$_POST['mode'] == 'clear') {echo '<font color = blue><b> UPDATE </b></font>';}
-		else if($_POST['mode'] == 'remove' && $rmv_ok) {echo '<font color = orange><b> REMOVE </b></font>';} 
-		else if($_POST['mode'] == 'u_desc') {echo '<font color = green><b> UPDATE </b></font>';} 
+		if ($_POST['mode'] == 'issue'||$_POST['mode'] == 'clear') {
+            echo '<font color = blue><b> UPDATE </b></font>';
+        } elseif ($_POST['mode'] == 'remove' && $rmv_ok) {
+            echo '<font color = orange><b> REMOVE </b></font>';
+        } elseif ($_POST['mode'] == 'u_desc') {
+            echo '<font color = green><b> UPDATE </b></font>';
+        } 
 	}
 ?>
 
@@ -219,8 +228,11 @@ if($_POST['mode'] == 'clear') { echo '<img id="pcs_prev2" width="300px" src="'.$
 <tr>
 	<td class="jnt_td" style="width:50%; height:60px" colspan="2"><a id="sbm" href = 'javascript:document.punch.submit()' <?php if($_POST['mode'] != 'remove') {echo 'hidden';} ?>>
 <?php
-		if($_POST['mode'] == 'issue'||$_POST['mode'] == 'clear') {echo '<font color = blue><b> UPDATE </b></font>';}
-		else if($_POST['mode'] == 'remove' && $rmv_ok) {echo '<font color = orange><b> REMOVE </b></font>';} 
+		if ($_POST['mode'] == 'issue'||$_POST['mode'] == 'clear') {
+    echo '<font color = blue><b> UPDATE </b></font>';
+} elseif ($_POST['mode'] == 'remove' && $rmv_ok) {
+    echo '<font color = orange><b> REMOVE </b></font>';
+} 
 ?>
 
 	</a></td>

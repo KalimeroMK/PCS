@@ -1,13 +1,13 @@
 <?php
-include_once('./_common.php');
-include_once('./pcs_config.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
 
 use setasign\Fpdi\Tcpdf\Fpdi;
 
-require_once('../pdfcode/FPDF/fpdf.php');
-require_once('../pdfcode/TCPDF/tcpdf_import.php');
-require_once('../pdfcode/FPDI/src/autoload.php');
-require_once('../pdfcode/TCPDF/tcpdf_barcodes_2d.php');
+require_once(__DIR__ . '/../pdfcode/FPDF/fpdf.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_import.php');
+require_once(__DIR__ . '/../pdfcode/FPDI/src/autoload.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_barcodes_2d.php');
 
 
 

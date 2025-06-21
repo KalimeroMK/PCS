@@ -1,5 +1,5 @@
 <?php
-	if(!$_POST['result'] or $_POST['log_type']=='') {
+	if(!$_POST['result'] || $_POST['log_type'] == '') {
 		
 		$query_field = "DESCRIBE ".G5_TABLE_PREFIX."pcs_info_jnt_sbc";
 		$field_enum_value = enum_value($query_field);
@@ -139,8 +139,9 @@
 <caption> <?php echo $_POST[log_type];?> LOG STATUS </caption>
 <tbody>
 <tr>
-<?php
-			for($i=0;$i<count($log_welding_th);$i++){
+
+ $counter = count($log_welding_th);<?php
+			for($i=0;$i<$counter;$i++){
 ?>
 
 <td class="main_td jnt_th" style="width: <?php echo $log_welding_width[$i];?>%;" ><?php echo $log_welding_th[$i];?></td>
@@ -162,8 +163,9 @@
 <tr>
 <td class="jnt_td"><?php echo ++$no ?></td>
 
-<?php
-				for($i=0;$i<count($log_welding_field);$i++){
+
+$counter = count($log_welding_field);<?php
+				for($i=0;$i<$counter;$i++){
 ?>
 
 <td class="jnt_td" style="width: <?php echo $log_welding_width[$i+1];?>px;" > <?php echo z_rem_jno($sql_jnt_arr["$log_welding_field[$i]"]);?></td>

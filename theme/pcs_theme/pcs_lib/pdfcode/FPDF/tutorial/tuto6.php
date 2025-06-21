@@ -1,5 +1,5 @@
 <?php
-require('../fpdf.php');
+require(__DIR__ . '/../fpdf.php');
 
 class PDF extends FPDF
 {
@@ -8,27 +8,23 @@ protected $I = 0;
 protected $U = 0;
 protected $HREF = '';
 
-function WriteHTML($html)
+function WriteHTML($html): void
 {
 	// HTML parser
 	$html = str_replace("\n",' ',$html);
 	$a = preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
 	foreach($a as $i=>$e)
 	{
-		if($i%2==0)
-		{
-			// Text
-			if($this->HREF)
+		if ($i%2==0) {
+            // Text
+            if($this->HREF)
 				$this->PutLink($this->HREF,$e);
 			else
 				$this->Write(5,$e);
-		}
-		else
-		{
-			// Tag
-			if($e[0]=='/')
-				$this->CloseTag(strtoupper(substr($e,1)));
-			else
+        } elseif ($e[0]=='/') {
+            // Tag
+            $this->CloseTag(strtoupper(substr($e,1)));
+        } else
 			{
 				// Extract attributes
 				$a2 = explode(' ',$e);
@@ -41,11 +37,10 @@ function WriteHTML($html)
 				}
 				$this->OpenTag($tag,$attr);
 			}
-		}
 	}
 }
 
-function OpenTag($tag, $attr)
+function OpenTag($tag, array $attr): void
 {
 	// Opening tag
 	if($tag=='B' || $tag=='I' || $tag=='U')
@@ -56,7 +51,7 @@ function OpenTag($tag, $attr)
 		$this->Ln(5);
 }
 
-function CloseTag($tag)
+function CloseTag($tag): void
 {
 	// Closing tag
 	if($tag=='B' || $tag=='I' || $tag=='U')
@@ -65,7 +60,7 @@ function CloseTag($tag)
 		$this->HREF = '';
 }
 
-function SetStyle($tag, $enable)
+function SetStyle($tag, $enable): void
 {
 	// Modify style and select corresponding font
 	$this->$tag += ($enable ? 1 : -1);
@@ -78,7 +73,7 @@ function SetStyle($tag, $enable)
 	$this->SetFont('',$style);
 }
 
-function PutLink($URL, $txt)
+function PutLink($URL, $txt): void
 {
 	// Put a hyperlink
 	$this->SetTextColor(0,0,255);

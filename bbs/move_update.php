@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $act = isset($act) ? strip_tags($act) : '';
 $count_chk_bo_table = (isset($_POST['chk_bo_table']) && is_array($_POST['chk_bo_table'])) ? count($_POST['chk_bo_table']) : 0;
@@ -14,7 +14,7 @@ if ($sw != 'move' && $sw != 'copy') {
     alert('sw 값이 제대로 넘어오지 않았습니다.');
 }
 
-if (!$count_chk_bo_table) {
+if ($count_chk_bo_table === 0) {
     alert('게시물을 '.$act.'할 게시판을 한개 이상 선택해 주십시오.', $url);
 }
 
@@ -229,7 +229,8 @@ while ($row = sql_fetch_array($result)) {
 delete_cache_latest($bo_table);
 
 if ($sw == 'move') {
-    for ($i = 0; $i < count($save); $i++) {
+    $counter = count($save);
+    for ($i = 0; $i < $counter; $i++) {
         if (isset($save[$i]['bf_file']) && $save[$i]['bf_file']) {
             for ($k = 0; $k < count($save[$i]['bf_file']); $k++) {
                 $del_file = run_replace('delete_file_path', clean_relative_paths($save[$i]['bf_file'][$k]), $save[$i]);
@@ -257,7 +258,8 @@ if ($sw == 'move') {
     $sql = " select bo_notice from {$g5['board_table']} where bo_table = '{$bo_table}' ";
     $row = sql_fetch($sql);
     $arr_notice = explode(',', $row['bo_notice']);
-    for ($i = 0; $i < count($arr_notice); $i++) {
+    $counter = count($arr_notice);
+    for ($i = 0; $i < $counter; $i++) {
         $move_id = (int)$arr_notice[$i];
         // 게시판에 wr_id 가 있다면 이동한게 아니므로 bo_notice 에 다시 넣음
         $row2 = sql_fetch(" select count(*) as cnt from $write_table where wr_id = '{$move_id}' ");

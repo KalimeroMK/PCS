@@ -1,7 +1,7 @@
 <?php
 
 define('G5_CERT_IN_PROG', true);
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (function_exists('social_provider_logout')) {
     social_provider_logout();
@@ -17,10 +17,9 @@ set_cookie('ck_auto', '', 0);
 // 자동로그인 해제 end --------------------------------
 
 if ($url) {
-    if (substr($url, 0, 2) == '//') {
+    if (substr($url, 0, 2) === '//') {
         $url = 'http:'.$url;
     }
-
     $p = @parse_url(urldecode($url));
     /*
         // OpenRediect 취약점관련, PHP 5.3 이하버전에서는 parse_url 버그가 있음 ( Safflower 님 제보 ) 아래 url 예제
@@ -29,18 +28,11 @@ if ($url) {
     if (preg_match('/^https?:\/\//i', $url) || $p['scheme'] || $p['host']) {
         alert('url에 도메인을 지정할 수 없습니다.', G5_URL);
     }
-
-    if ($url == 'shop') {
-        $link = G5_SHOP_URL;
-    } else {
-        $link = $url;
-    }
+    $link = $url == 'shop' ? G5_SHOP_URL : $url;
+} elseif ($bo_table) {
+    $link = get_pretty_url($bo_table);
 } else {
-    if ($bo_table) {
-        $link = get_pretty_url($bo_table);
-    } else {
-        $link = G5_URL;
-    }
+    $link = G5_URL;
 }
 
 run_event('member_logout', $link);

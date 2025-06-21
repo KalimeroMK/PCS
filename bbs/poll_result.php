@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 $po_id = isset($_REQUEST['po_id']) ? (int)$_REQUEST['po_id'] : '';
@@ -114,14 +114,12 @@ if (preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         $poll_skin_url = str_replace(G5_PATH, G5_URL, $poll_skin_path);
     }
     //$skin_dir = $match[1];
+} elseif (G5_IS_MOBILE) {
+    $poll_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
+    $poll_skin_url = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
 } else {
-    if (G5_IS_MOBILE) {
-        $poll_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
-        $poll_skin_url = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
-    } else {
-        $poll_skin_path = G5_SKIN_PATH.'/poll/'.$skin_dir;
-        $poll_skin_url = G5_SKIN_URL.'/poll/'.$skin_dir;
-    }
+    $poll_skin_path = G5_SKIN_PATH.'/poll/'.$skin_dir;
+    $poll_skin_url = G5_SKIN_URL.'/poll/'.$skin_dir;
 }
 
 include_once(G5_PATH.'/head.sub.php');

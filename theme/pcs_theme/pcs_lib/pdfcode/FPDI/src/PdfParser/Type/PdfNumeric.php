@@ -19,9 +19,8 @@ class PdfNumeric extends PdfType
      * Helper method to create an instance.
      *
      * @param int|float $value
-     * @return PdfNumeric
      */
-    public static function create($value)
+    public static function create($value): self
     {
         $v = new self();
         $v->value = $value + 0;

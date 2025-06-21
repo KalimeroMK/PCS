@@ -20,10 +20,7 @@ use setasign\Fpdi\PdfParser\Type\PdfTypeException;
  */
 abstract class AbstractReader
 {
-    /**
-     * @var PdfParser
-     */
-    protected $parser;
+    protected \setasign\Fpdi\PdfParser\PdfParser $parser;
 
     /**
      * @var PdfDictionary
@@ -33,7 +30,6 @@ abstract class AbstractReader
     /**
      * AbstractReader constructor.
      *
-     * @param PdfParser $parser
      * @throws CrossReferenceException
      * @throws PdfTypeException
      */

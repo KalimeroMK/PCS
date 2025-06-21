@@ -1,10 +1,10 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 $g5['title'] = '메일인증 메일주소 변경';
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 
 $mb_id = isset($_GET['mb_id']) ? substr(clean_xss_tags($_GET['mb_id']), 0, 20) : '';
 $sql = " select mb_email, mb_datetime, mb_ip, mb_email_certify, mb_id from {$g5['member_table']} where mb_id = '{$mb_id}' ";
@@ -21,7 +21,7 @@ if (substr($mb['mb_email_certify'], 0, 1) != 0) {
 $ckey = isset($_GET['ckey']) ? trim($_GET['ckey']) : '';
 $key = md5($mb['mb_ip'].$mb['mb_datetime']);
 
-if (!$ckey || $ckey != $key) {
+if (!$ckey || $ckey !== $key) {
     alert('올바른 방법으로 이용해 주십시오.', G5_URL);
 }
 ?>
@@ -66,4 +66,4 @@ if (!$ckey || $ckey != $key) {
         }
     </script>
 <?php
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if ($is_guest) {
     alert('회원이시라면 로그인 후 이용해 보십시오.', './login.php?url='.urlencode(G5_BBS_URL.'/qalist.php'));
@@ -15,10 +15,10 @@ if ($is_admin) {
 }
 
 $g5['title'] = $qaconfig['qa_title'];
-include_once('./qahead.php');
+include_once(__DIR__ . '/qahead.php');
 
 $skin_file = $qa_skin_path.'/list.skin.php';
-$is_auth = $is_admin ? true : false;
+$is_auth = (bool) $is_admin;
 
 $category_option = '';
 
@@ -31,10 +31,12 @@ if ($qaconfig['qa_category']) {
     }
     $category_option .= '>전체</a></li>';
 
-    $categories = explode('|', $qaconfig['qa_category']); // 구분자가 | 로 되어 있음
-    for ($i = 0; $i < count($categories); $i++) {
+    $categories = explode('|', $qaconfig['qa_category']);
+    // 구분자가 | 로 되어 있음
+    $counter = count($categories); // 구분자가 | 로 되어 있음
+    for ($i = 0; $i < $counter; $i++) {
         $category = trim($categories[$i]);
-        if ($category == '') {
+        if ($category === '') {
             continue;
         }
         $category_msg = '';
@@ -64,9 +66,9 @@ if (is_file($skin_file)) {
     }
 
     $stx = trim($stx);
-    if ($stx) {
+    if ($stx !== '' && $stx !== '0') {
         $sfl = trim($sfl);
-        if ($sfl) {
+        if ($sfl !== '' && $sfl !== '0') {
             switch ($sfl) {
                 case "qa_subject" :
                 case "qa_content" :
@@ -119,7 +121,7 @@ if (is_file($skin_file)) {
 
         $list[$i]['category'] = get_text($row['qa_category']);
         $list[$i]['subject'] = conv_subject($row['qa_subject'], $subject_len, '…');
-        if ($stx) {
+        if ($stx !== '' && $stx !== '0') {
             $list[$i]['subject'] = search_font($stx, $list[$i]['subject']);
         }
 
@@ -158,4 +160,4 @@ if (is_file($skin_file)) {
     echo '<div>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</div>';
 }
 
-include_once('./qatail.php');
+include_once(__DIR__ . '/qatail.php');

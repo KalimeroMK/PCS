@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 include_once(G5_LIB_PATH.'/mailer.lib.php');
 
@@ -47,10 +47,8 @@ if ($type) {
 mailer($fnick, $fmail, $to, $subject, $mail_content, $type, $file);
 
 // 임시 첨부파일 삭제
-if (!empty($file)) {
-    foreach ($file as $f) {
-        @unlink($f['path']);
-    }
+foreach ($file as $f) {
+    @unlink($f['path']);
 }
 
 //$html_title = $tmp_to . "님께 메일발송";

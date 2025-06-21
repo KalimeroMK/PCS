@@ -1,6 +1,6 @@
 <?php
-include_once('../../../../../common.php');
-include_once('../../pcs_core/pcs_config.php');
+include_once(__DIR__ . '/../../../../../common.php');
+include_once(__DIR__ . '/../../pcs_core/pcs_config.php');
 if (!defined('_GNUBOARD_')) exit;
 if(isset($_POST['rev'])){$pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'_'.$_POST['rev'].'.pdf';}
 else {$pdf_url = PCS_DATA_URL.'/'.$_POST['folder'].'/'.$_POST['file'].'.pdf';}

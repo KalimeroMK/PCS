@@ -107,17 +107,23 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_CSS_URL.'/style.css">', 0
 	            </colgroup>
 	            <tbody>
 	            
-	            <?php if (!$it['it_use']) { // 판매가능이 아닐 경우 ?>
+	            <?php if (!$it['it_use']) {
+                // 판매가능이 아닐 경우 
+                ?>
 	            <tr>
 	                <th scope="row">판매가격</th>
 	                <td>판매중지</td>
 	            </tr>
-	            <?php } else if ($it['it_tel_inq']) { // 전화문의일 경우 ?>
+	            <?php 
+            } elseif ($it['it_tel_inq']) {
+                // 전화문의일 경우 
+                ?>
 	            <tr>
 	                <th scope="row">판매가격</th>
 	                <td>전화문의</td>
 	            </tr>
-	            <?php } else { // 전화문의가 아닐 경우?>
+	            <?php 
+            } else { // 전화문의가 아닐 경우?>
 	            <?php if ($it['it_cust_price']) { ?>
 	            <tr>
 	                <th scope="row">시중가격</th>
@@ -189,21 +195,18 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_CSS_URL.'/style.css">', 0
 	            <?php
 	            $ct_send_cost_label = '배송비결제';
 	
-	            if($it['it_sc_type'] == 1)
-	                $sc_method = '무료배송';
-	            else {
-	                if($it['it_sc_method'] == 1)
-	                    $sc_method = '수령후 지불';
-	                else if($it['it_sc_method'] == 2) {
-	                    $ct_send_cost_label = '<label for="ct_send_cost">배송비결제</label>';
-	                    $sc_method = '<select name="ct_send_cost" id="ct_send_cost">
+	            if ($it['it_sc_type'] == 1) {
+                    $sc_method = '무료배송';
+                } elseif ($it['it_sc_method'] == 1) {
+                    $sc_method = '수령후 지불';
+                } elseif ($it['it_sc_method'] == 2) {
+                    $ct_send_cost_label = '<label for="ct_send_cost">배송비결제</label>';
+                    $sc_method = '<select name="ct_send_cost" id="ct_send_cost">
 	                                      <option value="0">주문시 결제</option>
 	                                      <option value="1">수령후 지불</option>
 	                                  </select>';
-	                }
-	                else
+                } else
 	                    $sc_method = '주문시 결제';
-	            }
 	            ?>
 	            <tr>
 	                <th><?php echo $ct_send_cost_label; ?></th>

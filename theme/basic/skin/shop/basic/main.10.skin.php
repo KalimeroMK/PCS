@@ -18,9 +18,11 @@ foreach((array) $list as $row){
     $is_soldout = is_soldout($row['it_id'], true);   // 품절인지 체크
 
     if ($this->list_mod >= 2) { // 1줄 이미지 : 2개 이상
-        if ($i%$this->list_mod == 0) $sct_last = 'sct_last'; // 줄 마지막
-        else if ($i%$this->list_mod == 1) $sct_last = 'sct_clear'; // 줄 첫번째
-        else $sct_last = '';
+        if ($i%$this->list_mod == 0) {
+            $sct_last = 'sct_last';
+        } elseif ($i%$this->list_mod == 1) {
+            $sct_last = 'sct_clear';
+        } else $sct_last = '';
     } else { // 1줄 이미지 : 1개
         $sct_last = 'sct_clear';
     }
@@ -49,11 +51,9 @@ foreach((array) $list as $row){
         echo "</a>\n";
     }
 
-	if ($this->view_it_icon) {
-        // 품절
-        if ($is_soldout) {
-            echo '<span class="shop_icon_soldout h160"><span class="soldout_txt">SOLD OUT</span></span>';
-        }
+	// 품절
+    if ($this->view_it_icon && $is_soldout) {
+        echo '<span class="shop_icon_soldout h160"><span class="soldout_txt">SOLD OUT</span></span>';
     }
 
     echo "</div>\n";

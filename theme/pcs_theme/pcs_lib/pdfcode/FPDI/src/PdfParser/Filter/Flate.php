@@ -20,10 +20,9 @@ class Flate implements FilterInterface
      *
      * Used for testing purpose.
      *
-     * @return boolean
      * @internal
      */
-    protected function extensionLoaded()
+    protected function extensionLoaded(): bool
     {
         return \extension_loaded('zlib');
     }
@@ -35,7 +34,7 @@ class Flate implements FilterInterface
      * @return string
      * @throws FlateException
      */
-    public function decode($data)
+    public function decode($data): string|false
     {
         if ($this->extensionLoaded()) {
             $oData = $data;

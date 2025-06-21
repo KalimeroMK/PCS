@@ -1,9 +1,9 @@
 <?php
-require('../fpdf.php');
+require(__DIR__ . '/../fpdf.php');
 
 class PDF extends FPDF
 {
-function Header()
+function Header(): void
 {
 	global $title;
 
@@ -24,7 +24,7 @@ function Header()
 	$this->Ln(10);
 }
 
-function Footer()
+function Footer(): void
 {
 	// Position at 1.5 cm from bottom
 	$this->SetY(-15);
@@ -36,7 +36,7 @@ function Footer()
 	$this->Cell(0,10,'Page '.$this->PageNo(),0,0,'C');
 }
 
-function ChapterTitle($num, $label)
+function ChapterTitle($num, $label): void
 {
 	// Arial 12
 	$this->SetFont('Arial','',12);
@@ -48,7 +48,7 @@ function ChapterTitle($num, $label)
 	$this->Ln(4);
 }
 
-function ChapterBody($file)
+function ChapterBody($file): void
 {
 	// Read text file
 	$txt = file_get_contents($file);
@@ -63,7 +63,7 @@ function ChapterBody($file)
 	$this->Cell(0,5,'(end of excerpt)');
 }
 
-function PrintChapter($num, $title, $file)
+function PrintChapter($num, $title, $file): void
 {
 	$this->AddPage();
 	$this->ChapterTitle($num,$title);

@@ -75,8 +75,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$new_skin_url.'/style.css">', 0);
     </tr>
     </thead>
     <tbody>
-    <?php
-    for ($i=0; $i<count($list); $i++)
+    
+$counter = count($list);<?php
+    for ($i=0; $i<$counter; $i++)
     {
         $num = $total_count - ($page - 1) * $config['cf_page_rows'] - $i;
         $gr_subject = cut_str($list[$i]['gr_subject'], 20);

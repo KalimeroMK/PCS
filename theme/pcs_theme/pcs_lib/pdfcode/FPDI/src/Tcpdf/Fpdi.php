@@ -145,7 +145,7 @@ class Fpdi extends \TCPDF
     {
         $out = parent::_getxobjectdict();
 
-        foreach ($this->importedPages as $key => $pageData) {
+        foreach ($this->importedPages as $pageData) {
             $out .= '/' . $pageData['id'] . ' ' . $pageData['objectNumber'] . ' 0 R ';
         }
 
@@ -233,7 +233,6 @@ class Fpdi extends \TCPDF
     /**
      * Writes a PdfType object to the resulting buffer.
      *
-     * @param PdfType $value
      * @throws PdfTypeException
      */
     protected function writePdfType(PdfType $value)

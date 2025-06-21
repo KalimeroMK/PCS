@@ -19,9 +19,8 @@ class PdfBoolean extends PdfType
      * Helper method to create an instance.
      *
      * @param bool $value
-     * @return self
      */
-    public static function create($value)
+    public static function create($value): self
     {
         $v = new self();
         $v->value = (bool) $value;

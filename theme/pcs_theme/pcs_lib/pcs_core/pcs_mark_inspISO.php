@@ -21,16 +21,16 @@ $compressed = gzcompress('Compress me', 9);
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-include_once('./_common.php');
-include_once('./pcs_config.php');
-include_once('./pcs_common_function.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
+include_once(__DIR__ . '/pcs_common_function.php');
 
 use setasign\Fpdi\Tcpdf\Fpdi;
-require_once('../pdfcode/FPDF/fpdf.php');
-require_once('../pdfcode/TCPDF/tcpdf_import.php');
-require_once('../pdfcode/FPDI/src/autoload.php');
+require_once(__DIR__ . '/../pdfcode/FPDF/fpdf.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_import.php');
+require_once(__DIR__ . '/../pdfcode/FPDI/src/autoload.php');
 
-require_once('../pdfcode/TCPDF/tcpdf_barcodes_2d.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_barcodes_2d.php');
 
 
 $pcs_markedPDF = new Fpdi('L','mm','A3', true, 'UTF-8', false);
@@ -39,7 +39,7 @@ $pcs_markedPDF->setPrintFooter(false);
 
 $temp_i = count($_POST['sel_dwg']);
 for($i=0; $i<$temp_i; $i++){
-	
+
 	$query_total_pkg = 'SELECT DISTINCT dwg_no, rev_no, shop_dwg FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE dwg_no = "'.$_POST['sel_dwg'][$i].'"';
 	$sql_total_pkg = sql_query ($query_total_pkg);
 	$sql_total_pkg_array = sql_fetch_array ($sql_total_pkg);
@@ -62,7 +62,7 @@ for($i=0; $i<$temp_i; $i++){
 
 
 	pcsqrcode($pcs_markedPDF,'dwg_',$sql_total_pkg_array['dwg_no'],$sql_total_pkg_array['shop_dwg']);
-	
+
 
 
 ////////////////도면시작
@@ -72,8 +72,8 @@ for($i=0; $i<$temp_i; $i++){
 	$sql_dwg_coor_array = sql_fetch_array ($sql_dwg_coor_check);
 	$dwg_coor_info = $sql_dwg_coor_array['joint_info'];
 	$jointcoor = explode(';',$dwg_coor_info);
-	
-	
+
+
 	$temp_j = count($jointcoor)-1;
 	for($j=0;$j<$temp_j;$j++){PDFjointmarking($pcs_markedPDF, $sql_total_pkg_array['dwg_no'], $jointcoor[$j], $_POST['chk_by'][$sql_total_pkg_array['dwg_no']], $_POST['curr_jnt'][$sql_total_pkg_array['dwg_no']]);}
 

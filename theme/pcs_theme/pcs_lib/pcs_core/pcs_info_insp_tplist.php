@@ -1,40 +1,40 @@
 <?php
-	$date_1f = $_POST['sel_1f'];
-	$date_1t = $_POST['sel_1t'];
-	$date_2f = $_POST['sel_2f'];
-	$date_2t = $_POST['sel_2t'];
-	$date_3f = $_POST['sel_3f'];
-	$date_3t = $_POST['sel_3t'];
 
-	$query_insp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_tp AS A JOIN '.G5_TABLE_PREFIX.'pcs_info_tp_stat AS B ON A.tp_no = B.tp_no WHERE ';
-	$and_check=0;
-	for($i=0; $mysql_field_array[$i]; $i++){
+$date_1f = $_POST['sel_1f'];
+$date_1t = $_POST['sel_1t'];
+$date_2f = $_POST['sel_2f'];
+$date_2t = $_POST['sel_2t'];
+$date_3f = $_POST['sel_3f'];
+$date_3t = $_POST['sel_3t'];
+$query_insp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_tp AS A JOIN '.G5_TABLE_PREFIX.'pcs_info_tp_stat AS B ON A.tp_no = B.tp_no WHERE ';
+$and_check=0;
+for($i=0; $mysql_field_array[$i]; $i++){
 		
 		switch($i) {
 
 			case 1 :
 				if($_POST[$mysql_field_array[$i]]) {
-					if($and_check){$query_insp_spl .= ' AND ';}
+					if($and_check !== 0){$query_insp_spl .= ' AND ';}
 					$query_insp_spl .= $mysql_field_array[$i].' LIKE "%'.$_POST[$mysql_field_array[$i]].'%"';$and_check++;}
 				break;
 				
 			case 3 : 
 				if($date_1f){
-					if($and_check){$query_insp_spl .= ' AND ';}
+					if($and_check !== 0){$query_insp_spl .= ' AND ';}
 					$query_insp_spl .= '( "'.$date_1f.' 00:00:00" <= '.$mysql_field_array[$i].' AND '.$mysql_field_array[$i].' <= "'.$date_1t.' 23:59:59" )';$and_check++;
 				}
 				break;
 
 			case 5 : 
 				if($date_2f){
-					if($and_check){$query_insp_spl .= ' AND ';}
+					if($and_check !== 0){$query_insp_spl .= ' AND ';}
 					$query_insp_spl .= '( "'.$date_2f.' 00:00:00" <= '.$mysql_field_array[$i].' AND '.$mysql_field_array[$i].' <= "'.$date_2t.' 23:59:59" )';$and_check++;
 				}
 				break;
 
 			case 7 : 
 				if($date_3f){
-					if($and_check){$query_insp_spl .= ' AND ';}
+					if($and_check !== 0){$query_insp_spl .= ' AND ';}
 					$query_insp_spl .= '( "'.$date_3f.' 00:00:00" <= '.$mysql_field_array[$i].' AND '.$mysql_field_array[$i].' <= "'.$date_3t.' 23:59:59" )';
 				}
 				break;
@@ -42,13 +42,13 @@
 
 			default:
 				if($_POST[$mysql_field_array[$i]]) {
-					if($and_check){$query_insp_spl .= ' AND ';}
+					if($and_check !== 0){$query_insp_spl .= ' AND ';}
 					$query_insp_spl .= $mysql_field_array[$i].' = "'.$_POST[$mysql_field_array[$i]].'" ';$and_check++;
 				}
 				break;
 		}
 	}
-	$query_insp_spl .= ' ORDER BY A.tp_no';
+$query_insp_spl .= ' ORDER BY A.tp_no';
 //	echo $query_insp_spl;
 ?>
 <table class="main">
@@ -65,13 +65,9 @@
 	<td class="jnt_td jnt_th" style="width: 15%"> Photo 3 </td>
 </tr>
 
-<?php
-
-	$no == 0;
-
-	$sql_insp_spl = sql_query ($query_insp_spl);
-
-	while ($sql_insp_spl_arr = sql_fetch_array ($sql_insp_spl))	{
+<?php 
+$sql_insp_spl = sql_query ($query_insp_spl);
+while ($sql_insp_spl_arr = sql_fetch_array ($sql_insp_spl))	{
 	
 		$no++;
 		$query_g5_spl = 'SELECT wr_id FROM '.G5_TABLE_PREFIX.'write_tp WHERE wr_subject = "'.$sql_insp_spl_arr['tp_no'].'"';
@@ -96,3 +92,4 @@
 </table>
 
 <p>&nbsp;
+<?php 

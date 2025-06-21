@@ -1,17 +1,15 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $sw = isset($_REQUEST['sw']) ? clean_xss_tags($_REQUEST['sw'], 1, 1) : '';
 
 if ($sw === 'move') {
     $act = '이동';
+} elseif ($sw === 'copy') {
+    $act = '복사';
 } else {
-    if ($sw === 'copy') {
-        $act = '복사';
-    } else {
-        alert('sw 값이 제대로 넘어오지 않았습니다.');
-    }
+    alert('sw 값이 제대로 넘어오지 않았습니다.');
 }
 
 // 게시판 관리자 이상 복사, 이동 가능
@@ -42,10 +40,8 @@ if ($wr_id) {
 $sql = " select * from {$g5['board_table']} a, {$g5['group_table']} b where a.gr_id = b.gr_id ";
 if ($is_admin == 'group') {
     $sql .= " and b.gr_admin = '{$member['mb_id']}' ";
-} else {
-    if ($is_admin == 'board') {
-        $sql .= " and a.bo_admin = '{$member['mb_id']}' ";
-    }
+} elseif ($is_admin == 'board') {
+    $sql .= " and a.bo_admin = '{$member['mb_id']}' ";
 }
 $sql .= " order by a.gr_id, a.bo_order, a.bo_table ";
 $result = sql_query($sql);
@@ -101,8 +97,9 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    for ($i = 0; $i < count($list); $i++) {
+                    
+$counter = count($list);<?php
+                    for ($i = 0; $i < $counter; $i++) {
                         $atc_mark = '';
                         $atc_bg = '';
                         if ($list[$i]['bo_table'] == $bo_table) { // 게시물이 현재 속해 있는 게시판이라면

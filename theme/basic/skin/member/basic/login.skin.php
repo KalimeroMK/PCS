@@ -42,13 +42,16 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <?php if ($default['de_level_sell'] == 1) { // 상품구입 권한 ?>
 
 	<!-- 주문하기, 신청하기 -->
-	<?php if (preg_match("/orderform.php/", $url)) { ?>
+	<?php if (preg_match("/orderform.php/", $url)) {
+    ?>
     <section id="mb_login_notmb">
         <h2>비회원 구매</h2>
         <p>비회원으로 주문하시는 경우 포인트는 지급하지 않습니다.</p>
 
         <div id="guest_privacy">
-            <?php echo conv_content($default['de_guest_privacy'], $config['cf_editor']); ?>
+            <?php 
+    echo conv_content($default['de_guest_privacy'], $config['cf_editor']);
+    ?>
         </div>
 		
 		<div class="chk_box">
@@ -70,24 +73,34 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 }
             }
 
-            f.url.value = "<?php echo $url; ?>";
-            f.action = "<?php echo $url; ?>";
+            f.url.value = "<?php 
+    echo $url;
+    ?>";
+            f.action = "<?php 
+    echo $url;
+    ?>";
             f.submit();
         }
         </script>
     </section>
 
-    <?php } else if (preg_match("/orderinquiry.php$/", $url)) { ?>
+    <?php 
+} elseif (preg_match("/orderinquiry.php$/", $url)) {
+    ?>
     <div id="mb_login_od_wr">
         <h2>비회원 주문조회 </h2>
 
         <fieldset id="mb_login_od">
             <legend>비회원 주문조회</legend>
 
-            <form name="forderinquiry" method="post" action="<?php echo urldecode($url); ?>" autocomplete="off">
+            <form name="forderinquiry" method="post" action="<?php 
+    echo urldecode($url);
+    ?>" autocomplete="off">
 
             <label for="od_id" class="od_id sound_only">주문서번호<strong class="sound_only"> 필수</strong></label>
-            <input type="text" name="od_id" value="<?php echo get_text($od_id); ?>" id="od_id" required class="frm_input required" size="20" placeholder="주문서번호">
+            <input type="text" name="od_id" value="<?php 
+    echo get_text($od_id);
+    ?>" id="od_id" required class="frm_input required" size="20" placeholder="주문서번호">
             <label for="od_pwd" class="od_pwd sound_only">비밀번호 <strong>필수</strong></label>
             <input type="password" name="od_pwd" size="20" id="od_pwd" required class="frm_input required" placeholder="비밀번호">
             <button type="submit" class="btn_submit">확인</button>
@@ -100,7 +113,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         </section>
 
     </div>
-    <?php } ?>
+    <?php 
+} ?>
 
     <?php } ?>
     <?php // 쇼핑몰 사용시 여기까지 반드시 복사해 넣으세요 ?>

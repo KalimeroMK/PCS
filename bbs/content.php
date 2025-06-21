@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $co_id = isset($_GET['co_id']) ? preg_replace('/[^a-z0-9_]/i', '', $_GET['co_id']) : 0;
 $co_seo_title = isset($_GET['co_seo_title']) ? clean_xss_tags($_GET['co_seo_title'], 1, 1) : '';
@@ -36,7 +36,7 @@ $g5['title'] = $co['co_subject'];
 if ($co['co_include_head'] && is_include_path_check($co['co_include_head'])) {
     @include_once($co['co_include_head']);
 } else {
-    include_once('./_head.php');
+    include_once(__DIR__ . '/_head.php');
 }
 
 // KVE-2019-0828 취약점 내용
@@ -76,7 +76,7 @@ if (isset($default) && isset($default['de_admin_company_name'])) {
 $str = preg_replace($src, $dst, $str);
 
 // 스킨경로
-if (trim($co['co_skin']) == '') {
+if (trim($co['co_skin']) === '') {
     $co['co_skin'] = 'basic';
 }
 
@@ -115,5 +115,5 @@ if (is_file($skin_file)) {
 if ($co['co_include_tail'] && is_include_path_check($co['co_include_tail'])) {
     @include_once($co['co_include_tail']);
 } else {
-    include_once('./_tail.php');
+    include_once(__DIR__ . '/_tail.php');
 }

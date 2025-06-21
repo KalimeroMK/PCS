@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 if (!$config['cf_email_use']) {
@@ -46,11 +46,7 @@ if (!$email) {
 
 $email = $email_enc->encrypt($email);
 
-if (!$name) {
-    $name = $email;
-} else {
-    $name = get_text(stripslashes($name), true);
-}
+$name = $name ? get_text(stripslashes($name), true) : $email;
 
 if (!isset($type)) {
     $type = 0;

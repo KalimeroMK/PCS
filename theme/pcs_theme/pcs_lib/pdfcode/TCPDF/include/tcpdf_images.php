@@ -70,15 +70,15 @@ class TCPDF_IMAGES {
 	 */
 	public static function getImageFileType($imgfile, $iminfo=array()) {
 		$type = '';
-		if (isset($iminfo['mime']) AND !empty($iminfo['mime'])) {
+		if (isset($iminfo['mime']) && !empty($iminfo['mime'])) {
 			$mime = explode('/', $iminfo['mime']);
-			if ((count($mime) > 1) AND ($mime[0] == 'image') AND (!empty($mime[1]))) {
+			if (count($mime) > 1 && $mime[0] == 'image' && !empty($mime[1])) {
 				$type = strtolower(trim($mime[1]));
 			}
 		}
 		if (empty($type)) {
 			$fileinfo = pathinfo($imgfile);
-			if (isset($fileinfo['extension']) AND (!TCPDF_STATIC::empty_string($fileinfo['extension']))) {
+			if (isset($fileinfo['extension']) && !TCPDF_STATIC::empty_string($fileinfo['extension'])) {
 				$type = strtolower(trim($fileinfo['extension']));
 			}
 		}
@@ -102,7 +102,7 @@ class TCPDF_IMAGES {
 		// transparency index
 		$tid = imagecolortransparent($image);
 		$palletsize = imagecolorstotal($image);
-		if (($tid >= 0) AND ($tid < $palletsize)) {
+		if ($tid >= 0 && $tid < $palletsize) {
 			// get the colors for the transparency index
 			$tcol = imagecolorsforindex($image, $tid);
 		}
@@ -176,30 +176,22 @@ class TCPDF_IMAGES {
 		// bits per pixel
 		$bpc = isset($a['bits']) ? intval($a['bits']) : 8;
 		// number of image channels
-		if (!isset($a['channels'])) {
-			$channels = 3;
-		} else {
-			$channels = intval($a['channels']);
-		}
+		$channels = isset($a['channels']) ? intval($a['channels']) : 3;
 		// default colour space
 		switch ($channels) {
-			case 1: {
-				$colspace = 'DeviceGray';
-				break;
-			}
-			case 3: {
-				$colspace = 'DeviceRGB';
-				break;
-			}
-			case 4: {
-				$colspace = 'DeviceCMYK';
-				break;
-			}
-			default: {
-				$channels = 3;
-				$colspace = 'DeviceRGB';
-				break;
-			}
+			case 1:
+                $colspace = 'DeviceGray';
+                break;
+			case 3:
+                $colspace = 'DeviceRGB';
+                break;
+			case 4:
+                $colspace = 'DeviceCMYK';
+                break;
+			default:
+                $channels = 3;
+                $colspace = 'DeviceRGB';
+                break;
 		}
 		// get file content
 		$data = file_get_contents($file);
@@ -222,7 +214,7 @@ class TCPDF_IMAGES {
 		if (count($icc) > 0) {
 			ksort($icc);
 			$icc = implode('', $icc);
-			if ((ord($icc[36]) != 0x61) OR (ord($icc[37]) != 0x63) OR (ord($icc[38]) != 0x73) OR (ord($icc[39]) != 0x70)) {
+			if (ord($icc[36]) != 0x61 || ord($icc[37]) != 0x63 || ord($icc[38]) != 0x73 || ord($icc[39]) != 0x70) {
 				// invalid ICC profile
 				$icc = false;
 			}
@@ -307,14 +299,13 @@ class TCPDF_IMAGES {
 					$trns = array(ord($t[1]));
 				} elseif ($ct == 2) { // DeviceRGB
 					$trns = array(ord($t[1]), ord($t[3]), ord($t[5]));
-				} else { // Indexed
-					if ($n > 0) {
-						$trns = array();
-						for ($i = 0; $i < $n; ++ $i) {
+				} elseif ($n > 0) {
+                    // Indexed
+                    $trns = array();
+                    for ($i = 0; $i < $n; ++ $i) {
 							$trns[] = ord($t{$i});
 						}
-					}
-				}
+                }
 				fread($f, 4);
 			} elseif ($type == 'IDAT') {
 				// read image data block
@@ -323,7 +314,7 @@ class TCPDF_IMAGES {
 			} elseif ($type == 'iCCP') {
 				// skip profile name
 				$len = 0;
-				while ((ord(fread($f, 1)) != 0) AND ($len < 80)) {
+				while (ord(fread($f, 1)) != 0 && $len < 80) {
 					++$len;
 				}
 				// get compression method
@@ -344,7 +335,7 @@ class TCPDF_IMAGES {
 			}
 			$n = TCPDF_STATIC::_freadint($f);
 		} while ($n);
-		if (($colspace == 'Indexed') AND (empty($pal))) {
+		if ($colspace == 'Indexed' && empty($pal)) {
 			// Missing palette
 			fclose($f);
 			return false;

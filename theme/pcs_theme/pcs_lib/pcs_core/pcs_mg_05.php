@@ -6,7 +6,8 @@
 	<caption> PACKAGE STATUS </caption>
 	<tbody>
 	<tr>';
-	for($i=0;$i<count($table_field_array);$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';}
+    $counter = count($table_field_array);
+	for($i=0;$i<$counter;$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';}
 	echo '</tr>';
 
 	switch ($pkg_seq)	{

@@ -11,8 +11,9 @@ if ($_GET['wdr_select']=='welder_by')	{
 <tbody>
 <tr>
 <td class="jnt_td jnt_th" style="width:200px" rowspan='2'>Welder no</td>
-<?php
-	for($i=0;$i<count($rt_arr);$i++){
+
+$counter = count($rt_arr);<?php
+	for($i=0;$i<$counter;$i++){
 ?>
 <td class="jnt_td jnt_th" colspan='5'><?php echo $rt_arr[$i]; ?>%</td>
 <?php
@@ -20,8 +21,9 @@ if ($_GET['wdr_select']=='welder_by')	{
 ?>
 </tr>
 <tr>
-<?php
-	for($i=0;$i<count($rt_arr);$i++){
+
+$counter = count($rt_arr);<?php
+	for($i=0;$i<$counter;$i++){
 ?>
 <td class="jnt_td jnt_th" style="width:100px">Welded</td>
 <td class="jnt_td jnt_th" style="width:100px">RT Req</td>
@@ -37,8 +39,9 @@ if ($_GET['wdr_select']=='welder_by')	{
 <td class="jnt_td" style="width:200px"><font style="font-size:25px;"> <?php echo $_GET['wdno']; ?> </font></td>
 
 
-<?php
-	for($i=0;$i<count($rt_arr);$i++){
+
+$counter = count($rt_arr);<?php
+	for($i=0;$i<$counter;$i++){
 		$query_rt = "SELECT count(j_no) FROM ".G5_TABLE_PREFIX."pcs_info_joint WHERE welder_1 = '".$_GET['wdno']."' AND j_type = 'BW' AND rt_rate = '".$rt_arr[$i]."' ";
 		$rt_shoot = pcs_sql_value ($query_rt);
 		echo '<td class="jnt_td" >'.$rt_shoot.'</td>';

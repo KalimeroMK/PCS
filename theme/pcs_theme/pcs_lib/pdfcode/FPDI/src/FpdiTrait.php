@@ -95,7 +95,7 @@ trait FpdiTrait
      *
      * @param bool $allReaders
      */
-    public function cleanUp($allReaders = false)
+    public function cleanUp($allReaders = false): void
     {
         $readers = $allReaders ? array_keys($this->readers) : $this->createdReaders;
         foreach ($readers as $id) {
@@ -121,11 +121,8 @@ trait FpdiTrait
     /** @noinspection PhpUndefinedClassInspection */
     /**
      * Get a new pdf parser instance.
-     *
-     * @param StreamReader $streamReader
-     * @return PdfParser|FpdiPdfParser
      */
-    protected function getPdfParserInstance(StreamReader $streamReader)
+    protected function getPdfParserInstance(StreamReader $streamReader): \setasign\FpdiPdfParser\PdfParser\PdfParser|\setasign\Fpdi\PdfParser\PdfParser
     {
         // note: if you get an exception here - turn off errors/warnings on not found for your autoloader.
         // psr-4 (https://www.php-fig.org/psr/psr-4/) says: Autoloader implementations MUST NOT throw
@@ -144,9 +141,8 @@ trait FpdiTrait
      *
      * @param string|resource|PdfReader|StreamReader $file An open file descriptor, a path to a file, a PdfReader
      *                                                     instance or a StreamReader instance.
-     * @return string
      */
-    protected function getPdfReaderId($file)
+    protected function getPdfReaderId($file): string
     {
         if (\is_resource($file)) {
             $id = (string) $file;
@@ -233,7 +229,7 @@ trait FpdiTrait
      * @throws PdfReaderException
      * @see PageBoundaries
      */
-    public function importPage($pageNumber, $box = PageBoundaries::CROP_BOX, $groupXObject = true)
+    public function importPage($pageNumber, $box = PageBoundaries::CROP_BOX, $groupXObject = true): string
     {
         if (null === $this->currentReaderId) {
             throw new \BadMethodCallException('No reader initiated. Call setSourceFile() first.');
@@ -343,9 +339,6 @@ trait FpdiTrait
             || ($contents instanceof PdfArray && \count($contents->value) === 1)
         ) {
             if ($contentsIsStream) {
-                /**
-                 * @var PdfIndirectObject $contentsObject
-                 */
                 $stream = $contents;
             } else {
                 $stream = PdfType::resolve($contents->value[0], $reader->getParser());
@@ -408,9 +401,7 @@ trait FpdiTrait
             unset($x['pageId']);
             \extract($x, EXTR_IF_EXISTS);
             /** @noinspection NotOptimalIfConditionsInspection */
-            if (\is_array($x)) {
-                $x = 0;
-            }
+            $x = 0;
         }
 
         if (!isset($this->importedPages[$pageId])) {
@@ -451,7 +442,7 @@ trait FpdiTrait
      * @param float|int|null $height The height.
      * @return array|bool An array with following keys: width, height, 0 (=width), 1 (=height), orientation (L or P)
      */
-    public function getImportedPageSize($tpl, $width = null, $height = null)
+    public function getImportedPageSize($tpl, $width = null, $height = null): array|false
     {
         if (isset($this->importedPages[$tpl])) {
             $importedPage = $this->importedPages[$tpl];
@@ -486,7 +477,6 @@ trait FpdiTrait
     /**
      * Writes a PdfType object to the resulting buffer.
      *
-     * @param PdfType $value
      * @throws PdfTypeException
      */
     protected function writePdfType(PdfType $value)

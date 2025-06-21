@@ -29,20 +29,14 @@ use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
  */
 class Page
 {
-    /**
-     * @var PdfIndirectObject
-     */
-    protected $pageObject;
+    protected \setasign\Fpdi\PdfParser\Type\PdfIndirectObject $pageObject;
 
     /**
      * @var PdfDictionary
      */
     protected $pageDictionary;
 
-    /**
-     * @var PdfParser
-     */
-    protected $parser;
+    protected \setasign\Fpdi\PdfParser\PdfParser $parser;
 
     /**
      * Inherited attributes
@@ -53,9 +47,6 @@ class Page
 
     /**
      * Page constructor.
-     *
-     * @param PdfIndirectObject $page
-     * @param PdfParser $parser
      */
     public function __construct(PdfIndirectObject $page, PdfParser $parser)
     {
@@ -112,7 +103,7 @@ class Page
         if ($inherited && \in_array($name, $inheritedKeys, true)) {
             if ($this->inheritedAttributes === null) {
                 $this->inheritedAttributes = [];
-                $inheritedKeys = \array_filter($inheritedKeys, function ($key) use ($dict) {
+                $inheritedKeys = \array_filter($inheritedKeys, function ($key) use ($dict): bool {
                     return !isset($dict->value[$key]);
                 });
 
@@ -147,12 +138,11 @@ class Page
     /**
      * Get the rotation value.
      *
-     * @return int
      * @throws PdfParserException
      * @throws PdfTypeException
      * @throws CrossReferenceException
      */
-    public function getRotation()
+    public function getRotation(): int
     {
         $rotation = $this->getAttribute('Rotate');
         if (null === $rotation) {
@@ -208,12 +198,11 @@ class Page
      *
      * @param string $box
      * @param bool $fallback
-     * @return array|bool
      * @throws PdfParserException
      * @throws PdfTypeException
      * @throws CrossReferenceException
      */
-    public function getWidthAndHeight($box = PageBoundaries::CROP_BOX, $fallback = true)
+    public function getWidthAndHeight($box = PageBoundaries::CROP_BOX, $fallback = true): false|array
     {
         $boundary = $this->getBoundary($box, $fallback);
         if ($boundary === false) {
@@ -224,8 +213,8 @@ class Page
         $interchange = ($rotation / 90) % 2;
 
         return [
-            $interchange ? $boundary->getHeight() : $boundary->getWidth(),
-            $interchange ? $boundary->getWidth() : $boundary->getHeight()
+            $interchange !== 0 ? $boundary->getHeight() : $boundary->getWidth(),
+            $interchange !== 0 ? $boundary->getWidth() : $boundary->getHeight()
         ];
     }
 

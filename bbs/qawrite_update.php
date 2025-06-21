@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 /*==========================
 $w == a : 답변
@@ -28,7 +28,7 @@ if (!($token && $write_token === $token)) {
 $qaconfig = get_qa_config();
 $qa_id = isset($_POST['qa_id']) ? (int)$_POST['qa_id'] : 0;
 
-if (trim($qaconfig['qa_category'])) {
+if (trim($qaconfig['qa_category']) !== '' && trim($qaconfig['qa_category']) !== '0') {
     if ($w != 'a') {
         $category = explode('|', $qaconfig['qa_category']);
         if (!in_array($qa_category, $category)) {
@@ -189,11 +189,9 @@ for ($i = 1; $i <= $upload_count; $i++) {
         if ($_FILES['bf_file']['error'][$i] == 1) {
             $file_upload_msg .= '\"'.$filename.'\" 파일의 용량이 서버에 설정('.$upload_max_filesize.')된 값보다 크므로 업로드 할 수 없습니다.\\n';
             continue;
-        } else {
-            if ($_FILES['bf_file']['error'][$i] != 0) {
-                $file_upload_msg .= '\"'.$filename.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
-                continue;
-            }
+        } elseif ($_FILES['bf_file']['error'][$i] != 0) {
+            $file_upload_msg .= '\"'.$filename.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
+            continue;
         }
     }
 
@@ -211,12 +209,9 @@ for ($i = 1; $i <= $upload_count; $i++) {
         //-----------------------------------------------------------------
         $timg = @getimagesize($tmp_file);
         // image type
-        if (preg_match("/\.({$config['cf_image_extension']})$/i", $filename) ||
-            preg_match("/\.({$config['cf_flash_extension']})$/i", $filename)) {
-            // webp 파일의 type 이 18 이므로 업로드가 가능하도록 수정
-            if ($timg['2'] < 1 || $timg['2'] > 18) {
-                continue;
-            }
+        // webp 파일의 type 이 18 이므로 업로드가 가능하도록 수정
+        if ((preg_match("/\.({$config['cf_image_extension']})$/i", $filename) || preg_match("/\.({$config['cf_flash_extension']})$/i", $filename)) && ($timg['2'] < 1 || $timg['2'] > 18)) {
+            continue;
         }
         //=================================================================
 
@@ -246,7 +241,9 @@ for ($i = 1; $i <= $upload_count; $i++) {
         $dest_file = G5_DATA_PATH.'/qa/'.$upload[$i]['file'];
 
         // 업로드가 안된다면 에러메세지 출력하고 죽어버립니다.
-        $error_code = move_uploaded_file($tmp_file, $dest_file) or die($_FILES['bf_file']['error'][$i]);
+        if (!$error_code = move_uploaded_file($tmp_file, $dest_file)) {
+            die($_FILES['bf_file']['error'][$i]);
+        }
 
         // 올라간 파일의 퍼미션을 변경합니다.
         chmod($dest_file, G5_FILE_PERMISSION);
@@ -258,7 +255,6 @@ if ($w == '' || $w == 'a' || $w == 'r') {
         $row = sql_fetch(" select MIN(qa_num) as min_qa_num from {$g5['qa_content_table']} ");
         $qa_num = $row['min_qa_num'] - 1;
     }
-
     if ($w == 'a') {
         $qa_num = $write['qa_num'];
         $qa_parent = $write['qa_id'];
@@ -267,12 +263,10 @@ if ($w == '' || $w == 'a' || $w == 'r') {
         $qa_type = 1;
         $qa_status = 1;
     }
-
     $insert_qa_file1 = isset($upload[1]['file']) ? $upload[1]['file'] : '';
     $insert_qa_source1 = isset($upload[1]['source']) ? $upload[1]['source'] : '';
     $insert_qa_file2 = isset($upload[2]['file']) ? $upload[2]['file'] : '';
     $insert_qa_source2 = isset($upload[2]['source']) ? $upload[2]['source'] : '';
-
     $sql = " insert into {$g5['qa_content_table']}
                 set qa_num          = '$qa_num',
                     mb_id           = '{$member['mb_id']}',
@@ -301,15 +295,10 @@ if ($w == '' || $w == 'a' || $w == 'r') {
                     qa_4            = '$qa_4',
                     qa_5            = '$qa_5' ";
     sql_query($sql);
-
     if ($w == '' || $w == 'r') {
         $qa_id = sql_insert_id();
 
-        if ($w == 'r' && $write['qa_related']) {
-            $qa_related = $write['qa_related'];
-        } else {
-            $qa_related = $qa_id;
-        }
+        $qa_related = $w == 'r' && $write['qa_related'] ? $write['qa_related'] : $qa_id;
 
         $sql = " update {$g5['qa_content_table']}
                     set qa_parent   = '$qa_id',
@@ -317,7 +306,6 @@ if ($w == '' || $w == 'a' || $w == 'r') {
                     where qa_id = '$qa_id' ";
         sql_query($sql);
     }
-
     if ($w == 'a') {
         $answer_id = (int)sql_insert_id();
         $sql = " update {$g5['qa_content_table']}
@@ -325,19 +313,16 @@ if ($w == '' || $w == 'a' || $w == 'r') {
                     where qa_id = '{$write['qa_parent']}' ";
         sql_query($sql);
     }
-} else {
-    if ($w == 'u') {
-        if (!$upload[1]['file'] && !$upload[1]['del_check']) {
-            $upload[1]['file'] = $write['qa_file1'];
-            $upload[1]['source'] = $write['qa_source1'];
-        }
-
-        if (!$upload[2]['file'] && !$upload[2]['del_check']) {
-            $upload[2]['file'] = $write['qa_file2'];
-            $upload[2]['source'] = $write['qa_source2'];
-        }
-
-        $sql = " update {$g5['qa_content_table']}
+} elseif ($w == 'u') {
+    if (!$upload[1]['file'] && !$upload[1]['del_check']) {
+        $upload[1]['file'] = $write['qa_file1'];
+        $upload[1]['source'] = $write['qa_source1'];
+    }
+    if (!$upload[2]['file'] && !$upload[2]['del_check']) {
+        $upload[2]['file'] = $write['qa_file2'];
+        $upload[2]['source'] = $write['qa_source2'];
+    }
+    $sql = " update {$g5['qa_content_table']}
                 set qa_email    = '$qa_email',
                     qa_hp       = '$qa_hp',
                     qa_category = '$qa_category',
@@ -353,12 +338,11 @@ if ($w == '' || $w == 'a' || $w == 'r') {
                     qa_3        = '$qa_3',
                     qa_4        = '$qa_4',
                     qa_5        = '$qa_5' ";
-        if ($qa_sms_recv) {
-            $sql .= ", qa_sms_recv = '$qa_sms_recv' ";
-        }
-        $sql .= " where qa_id = '$qa_id' ";
-        sql_query($sql);
+    if ($qa_sms_recv !== 0) {
+        $sql .= ", qa_sms_recv = '$qa_sms_recv' ";
     }
+    $sql .= " where qa_id = '$qa_id' ";
+    sql_query($sql);
 }
 
 /**
@@ -501,15 +485,13 @@ if (($w == '' || $w == 'r') && trim($qaconfig['qa_admin_email'])) {
 
 if ($w == 'a') {
     $result_url = G5_BBS_URL.'/qaview.php?qa_id='.$qa_id.$qstr;
+} elseif ($w == 'u' && $write['qa_type']) {
+    $result_url = G5_BBS_URL.'/qaview.php?qa_id='.$write['qa_parent'].$qstr;
 } else {
-    if ($w == 'u' && $write['qa_type']) {
-        $result_url = G5_BBS_URL.'/qaview.php?qa_id='.$write['qa_parent'].$qstr;
-    } else {
-        $result_url = G5_BBS_URL.'/qalist.php'.preg_replace('/^&amp;/', '?', $qstr);
-    }
+    $result_url = G5_BBS_URL.'/qalist.php'.preg_replace('/^&amp;/', '?', $qstr);
 }
 
-if ($file_upload_msg) {
+if ($file_upload_msg !== '' && $file_upload_msg !== '0') {
     alert($file_upload_msg, $result_url);
 } else {
     goto_url($result_url);

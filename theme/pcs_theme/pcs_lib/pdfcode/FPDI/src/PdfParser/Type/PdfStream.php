@@ -29,13 +29,10 @@ class PdfStream extends PdfType
     /**
      * Parses a stream from a stream reader.
      *
-     * @param PdfDictionary $dictionary
-     * @param StreamReader $reader
      * @param PdfParser $parser Optional to keep backwards compatibility
-     * @return self
      * @throws PdfTypeException
      */
-    public static function parse(PdfDictionary $dictionary, StreamReader $reader, PdfParser $parser = null)
+    public static function parse(PdfDictionary $dictionary, StreamReader $reader, PdfParser $parser = null): self
     {
         $v = new self();
         $v->value = $dictionary;
@@ -61,9 +58,7 @@ class PdfStream extends PdfType
         }
 
         $sndByte = $reader->getByte($offset + 1);
-        if ($firstByte === "\n" || $firstByte === "\r") {
-            $offset++;
-        }
+        $offset++;
 
         if ($sndByte === "\n" && $firstByte !== "\n") {
             $offset++;
@@ -79,11 +74,9 @@ class PdfStream extends PdfType
     /**
      * Helper method to create an instance.
      *
-     * @param PdfDictionary $dictionary
      * @param string $stream
-     * @return self
      */
-    public static function create(PdfDictionary $dictionary, $stream)
+    public static function create(PdfDictionary $dictionary, $stream): self
     {
         $v = new self();
         $v->value = $dictionary;
@@ -174,10 +167,9 @@ class PdfStream extends PdfType
     /**
      * Extract the stream "manually".
      *
-     * @return string
      * @throws PdfTypeException
      */
-    protected function extractStream()
+    protected function extractStream(): string
     {
         while (true) {
             $buffer = $this->reader->getBuffer(false);
@@ -232,18 +224,10 @@ class PdfStream extends PdfType
             return $stream;
         }
 
-        if ($filters instanceof PdfArray) {
-            $filters = $filters->value;
-        } else {
-            $filters = [$filters];
-        }
+        $filters = $filters instanceof PdfArray ? $filters->value : [$filters];
 
         $decodeParams = PdfDictionary::get($this->value, 'DecodeParms');
-        if ($decodeParams instanceof PdfArray) {
-            $decodeParams = $decodeParams->value;
-        } else {
-            $decodeParams = [$decodeParams];
-        }
+        $decodeParams = $decodeParams instanceof PdfArray ? $decodeParams->value : [$decodeParams];
 
         foreach ($filters as $key => $filter) {
             if (!($filter instanceof PdfName)) {

@@ -132,7 +132,7 @@ class Fpdi extends FpdfTpl
      */
     protected function _putxobjectdict()
     {
-        foreach ($this->importedPages as $key => $pageData) {
+        foreach ($this->importedPages as $pageData) {
             $this->_put('/' . $pageData['id'] . ' ' . $pageData['objectNumber'] . ' 0 R');
         }
 

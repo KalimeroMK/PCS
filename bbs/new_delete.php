@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 //print_r2($_POST); exit;
 
@@ -102,23 +102,22 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
         $notice_array = explode(",", trim($board['bo_notice']));
         $bo_notice = "";
         $lf = '';
-        for ($k = 0; $k < count($notice_array); $k++) {
-            if ((int)$write['wr_id'] != (int)$notice_array[$k]) {
+        $counter = count($notice_array);
+        for ($k = 0; $k < $counter; $k++) {
+            if ((int)$write['wr_id'] !== (int)$notice_array[$k]) {
                 $bo_notice .= $lf.$notice_array[$k];
             }
 
-            if ($bo_notice) {
+            if ($bo_notice !== '' && $bo_notice !== '0') {
                 $lf = ',';
             }
         }
         $bo_notice = trim($bo_notice);
         sql_query(" update {$g5['board_table']} set bo_notice = '$bo_notice' where bo_table = '$bo_table' ");
 
-        if ($pressed == '선택삭제') {
-            // 글숫자 감소
-            if ($count_write > 0 || $count_comment > 0) {
-                sql_query(" update {$g5['board_table']} set bo_count_write = bo_count_write - '$count_write', bo_count_comment = bo_count_comment - '$count_comment' where bo_table = '$bo_table' ");
-            }
+        // 글숫자 감소
+        if ($pressed == '선택삭제' && ($count_write > 0 || $count_comment > 0)) {
+            sql_query(" update {$g5['board_table']} set bo_count_write = bo_count_write - '$count_write', bo_count_comment = bo_count_comment - '$count_comment' where bo_table = '$bo_table' ");
         }
     } else // 코멘트 삭제
     {
@@ -159,7 +158,7 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
     }
 }
 
-foreach ($save_bo_table as $key => $value) {
+foreach ($save_bo_table as $value) {
     delete_cache_latest($value);
 }
 

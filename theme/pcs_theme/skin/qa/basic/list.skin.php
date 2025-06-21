@@ -95,10 +95,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
         </tr>
         </thead>
         <tbody>
-        <?php
-        for ($i=0; $i<count($list); $i++) {
-        	if ($i%2==0) $lt_class = "even";
-        	else $lt_class = "";
+        
+$counter = count($list);<?php
+        for ($i=0; $i<$counter; $i++) {
+        	$lt_class = $i % 2 == 0 ? "even" : "";
         ?>
         <tr class="<?php echo $lt_class ?>">
             <?php if ($is_checkbox) { ?>

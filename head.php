@@ -8,11 +8,6 @@ if(defined('G5_THEME_PATH')) {
     return;
 }
 
-if (G5_IS_MOBILE) {
-    include_once(G5_MOBILE_PATH.'/head.php');
-    return;
-}
-
 include_once(G5_PATH.'/head.sub.php');
 include_once(G5_LIB_PATH.'/latest.lib.php');
 include_once(G5_LIB_PATH.'/outlogin.lib.php');
@@ -35,7 +30,7 @@ include_once(G5_LIB_PATH.'/popular.lib.php');
     ?>
     <div id="tnb">
         <div class="inner">
-            <?php if(defined('G5_COMMUNITY_USE') == false || G5_COMMUNITY_USE) { ?>
+            <?php if(!defined('G5_COMMUNITY_USE') || G5_COMMUNITY_USE) { ?>
     		<ul id="hd_define">
     			<li class="active"><a href="<?php echo G5_URL ?>/">커뮤니티</a></li>
                 <?php if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>

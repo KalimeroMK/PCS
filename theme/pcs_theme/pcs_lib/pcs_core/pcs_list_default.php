@@ -127,7 +127,11 @@
 					sql_query ('INSERT INTO `'.G5_TABLE_PREFIX.'write_daily` (`wr_id`, `wr_num`, `wr_reply`, `wr_parent`, `wr_is_comment`, `wr_comment`, `wr_comment_reply`, `ca_name`, `wr_option`, `wr_subject`, `wr_content`, `wr_link1`, `wr_link2`, `wr_link1_hit`, `wr_link2_hit`, `wr_hit`, `wr_good`, `wr_nogood`, `mb_id`, `wr_password`, `wr_name`, `wr_email`, `wr_homepage`, `wr_datetime`, `wr_file`, `wr_last`, `wr_ip`, `wr_facebook_user`, `wr_twitter_user`, `wr_1`, `wr_2`, `wr_3`, `wr_4`, `wr_5`, `wr_6`, `wr_7`, `wr_8`, `wr_9`, `wr_10`)
 								VALUES ('.$cnt_inc.', -'.$cnt_inc.', "", '.$cnt_inc.', 0, 0, "", "", "", "'.G5_TIME_YMD.'", ";", "", "", 0, 0, 0, 0, 0, "", "", "", "", "", "'.G5_TIME_YMDHIS.'", 0, "", "", "", "", 0, ";", ";", "", "", "", "", "", "", "")');
 					sql_query('UPDATE '.G5_TABLE_PREFIX.'board set bo_count_write = '.$cnt_inc.' WHERE bo_table = "daily"');
-					mkdir(PCS_DATA_DAILY.'/'.G5_TIME_YMD.'/', 0707); 
+					$dir = PCS_DATA_DAILY.'/'.G5_TIME_YMD.'/';
+if (!is_dir($dir)) {
+    @mkdir($dir, 0707, true);
+}
+
 				}
 ?>
 				
@@ -146,9 +150,10 @@
        </tr>
         </thead>
         <tbody>
-        <?php
-		
-        for ($i=0; $i<count($list); $i++) {
+        
+        <?php $counter = isset($list) && is_array($list) ? count($list) : 0; ?>
+<?php		
+        for ($i=0; $i<$counter; $i++) {
 			
 			$or_sub = str_replace("<b class=\"sch_word\">","",$list[$i]['subject']) ;
 			$or_sub = str_replace("</b>","",$or_sub) ;
@@ -157,12 +162,13 @@
         <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?>">
             <td class="td_num2">
             <?php
-            if ($list[$i]['is_notice']) // 공지사항
-                echo '<strong class="notice_icon"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="sound_only">공지</span></strong>';
-            else if ($wr_id == $list[$i]['wr_id'])
-                echo "<span class=\"bo_current\">열람중</span>";
-            else
-                echo $list[$i]['num'];
+            if ($list[$i]['is_notice']) {
+             // 공지사항
+             echo '<strong class="notice_icon"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="sound_only">공지</span></strong>';
+         } elseif ($wr_id == $list[$i]['wr_id']) {
+             echo "<span class=\"bo_current\">열람중</span>";
+         } else
+             echo $list[$i]['num'];
              ?>
             </td>
 
@@ -219,21 +225,25 @@
 //			echo $query_time;
 ?>
 			<td class="pcs_td_spl">
-			<?php //echo $sql_spl_arr['state'] ?>
-<?php 			switch($sql_spl_arr['state']){
+<?php 			$state = $sql_spl_arr['state'] ?? null;
+				switch($state){
 					case 'On_going'		:	echo '<font color = orange><strong>On welding</strong></font>';break;
 					case 'Finished' 	:	echo '<font color = green><strong>Finished</strong></font>';break;
 					default				:	echo '<font color = red><strong>Not start</strong></font>';	break;
 				}
 ?>
 			</td>
-			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_weld'] ?></td>
-			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_pwht'] ?></td>
-			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_pmi'] ?></td>
-			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_paint'] ?></td>
-			<td class="pcs_td_spl"><?php echo $sql_spl_arr['location'] ?></td>
+			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_weld'] ?? ''; ?></td>
+			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_pwht'] ?? ''; ?></td>
+			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_pmi'] ?? ''; ?></td>
+			<td class="pcs_td_spl"><?php echo $sql_spl_arr['st_paint'] ?? ''; ?></td>
+			<td class="pcs_td_spl"><?php echo $sql_spl_arr['location'] ?? ''; ?></td>
 			<td class="pcs_td_spl"><?php if($lastdays){echo 'D +<b><font size = 4>'.$lastdays;} ?></td>
-			<td class="pcs_td_spl"><?php if(substr($sql_spl_arr['chk_tm'],0,2)!='00'){$tmset = explode(' ',$sql_spl_arr['chk_tm']); echo $tmset[0].'<br>'.$tmset[1];} ?></td>
+			<td class="pcs_td_spl"><?php 
+				$chk_tm = $sql_spl_arr['chk_tm'] ?? '';
+				$tmset = explode(' ', $chk_tm);
+				echo ($tmset[0] ?? '') . (isset($tmset[1]) ? '<br>'.$tmset[1] : '');
+			?></td>
 
 <?php							break;
 
@@ -250,9 +260,14 @@
 				$sql_dwg_coor_check = sql_query ($query_dwg_coor_check);
 				$sql_dwg_coor_array = sql_fetch_array ($sql_dwg_coor_check);
 			
-				if($sql_dwg_coor_array['dwg_state']=='Marked'){$state_info = '<font color = "blue">'.$sql_dwg_coor_array['dwg_state'].'</font>';}
-				else if($sql_dwg_coor_array['dwg_state']=='Approved'){$state_info = '<font color = "green"><b>'.$sql_dwg_coor_array['dwg_state'].'</b></font>';}
-				else {$state_info = 'Not Yet';}
+				$dwg_state = $sql_dwg_coor_array['dwg_state'] ?? null;
+                if ($dwg_state === 'Marked') {
+                    $state_info = '<font color = "blue">'.$dwg_state.'</font>';
+                } elseif ($dwg_state === 'Approved') {
+                    $state_info = '<font color = "green"><b>'.$dwg_state.'</b></font>';
+                } else {
+                    $state_info = 'Not Yet';
+                }
 
 ?>
 			<td class="pcs_td_pkg">
@@ -291,7 +306,7 @@
 				$sql_pnid_coor_check = sql_query ($query_pnid_coor_check);
 				$sql_pnid_coor_array = sql_fetch_array ($sql_pnid_coor_check);
 			
-				$joint_coor_info = $sql_pnid_coor_array['joint_info'];
+				$joint_coor_info = $sql_pnid_coor_array['joint_info'] ?? '';
 
 ?>
 			<td class="pcs_td_nor">
@@ -399,12 +414,23 @@
 				
 <?php 
 				for($tpi=0;$tpi<3;$tpi++){
-					$query_tpdwg = 'SELECT dwg_no, rev_no, state FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE dwg_no = "'.$tp_dwg[$tpi].'"';
+					$tp_dwg_no = isset($tp_dwg[$tpi]) ? $tp_dwg[$tpi] : '';
+                    $query_tpdwg = 'SELECT dwg_no, rev_no, state FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE dwg_no = "'.$tp_dwg_no.'"';
 					$sql_tpdwg = sql_query ($query_tpdwg);
 					$sql_tpdwg_arr = sql_fetch_array ($sql_tpdwg);
 ?>
 			<td class="pcs_td_pkg">
-<?php 			if($member['mb_1']&&$tp_dwg[$tpi]){echo '<a href = "javascript:document.marked'.$i.$tpi.'.submit()" >'.substr($tp_dwg[$tpi],-2,2).' - '.$sql_tpdwg_arr['state'].'</a>';	viewPDF('marked'.$i.$tpi, 'fab', $sql_tpdwg_arr['dwg_no'], $sql_tpdwg_arr['rev_no']); } else {echo $sql_tpdwg_arr['dwg_no'];}?>
+<?php 
+    $dwg_no = $sql_tpdwg_arr['dwg_no'] ?? '';
+    $rev_no = $sql_tpdwg_arr['rev_no'] ?? '';
+    $state = $sql_tpdwg_arr['state'] ?? '';
+    if($member['mb_1'] && isset($tp_dwg[$tpi]) && $tp_dwg[$tpi]){
+        echo '<a href = "javascript:document.marked'.$i.$tpi.'.submit()" >'.substr($tp_dwg[$tpi],-2,2).' - '.$state.'</a>';
+        viewPDF('marked'.$i.$tpi, 'fab', $dwg_no, $rev_no);
+    } else {
+        echo $dwg_no;
+    }
+?>
 			</td>
 <?php 
 				}
@@ -412,17 +438,17 @@
 
 			<td class="pcs_td_nor"> 
 <?php 
-			if($sql_tp_pt_arr['tp_photo1']){photo_thumb('tp', $sql_tp_pt_arr['tp_photo1'], 'photo1', 80, 'thumb_');}
+			if(($sql_tp_pt_arr['tp_photo1'] ?? null)){photo_thumb('tp', $sql_tp_pt_arr['tp_photo1'], 'photo1', 80, 'thumb_');}
 ?>
 			</td>
 			<td class="pcs_td_nor"> 
 <?php 
-			if($sql_tp_pt_arr['tp_photo2']){photo_thumb('tp', $sql_tp_pt_arr['tp_photo2'], 'photo1', 80, 'thumb_');}
+			if(($sql_tp_pt_arr['tp_photo2'] ?? null)){photo_thumb('tp', $sql_tp_pt_arr['tp_photo2'], 'photo1', 80, 'thumb_');}
 ?>
 			</td>
 			<td class="pcs_td_nor"> 
 <?php 
-			if($sql_tp_pt_arr['tp_photo3']){photo_thumb('tp', $sql_tp_pt_arr['tp_photo3'], 'photo1', 80, 'thumb_');}
+			if(($sql_tp_pt_arr['tp_photo3'] ?? null)){photo_thumb('tp', $sql_tp_pt_arr['tp_photo3'], 'photo1', 80, 'thumb_');}
 ?>
 			</td>
 
@@ -436,17 +462,17 @@
 				$sql_pkg = sql_query ($query_pkg);
 				$sql_pkg_arr = sql_fetch_array ($sql_pkg);
 ?>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['test_type'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['class'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_wd'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_spt'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_pwht'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_pmi'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_a'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_b'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_c'] ?></td>
-			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_rt'] ?></td>
-			<td class="pcs_td_pkg"><?php if($sql_pkg_arr['last_chk'] == '0000-00-00') {echo '-';} else {echo $sql_pkg_arr['last_chk'];} ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['test_type'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['class'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_wd'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_spt'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_pwht'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_pmi'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_a'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_b'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_c'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo $sql_pkg_arr['total_rt'] ?? '' ?></td>
+			<td class="pcs_td_pkg"><?php echo (isset($sql_pkg_arr['last_chk']) && $sql_pkg_arr['last_chk'] == '0000-00-00') ? '-' : ($sql_pkg_arr['last_chk'] ?? ''); ?></td>
 
 <?php							break;
 

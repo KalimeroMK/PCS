@@ -1,14 +1,14 @@
 <?php
 ini_set('display_errors', '0');
 
-include_once('./_common.php');
-include_once('./pcs_config.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
 
 use setasign\Fpdi\Tcpdf\Fpdi;
 
-require_once('../pdfcode/FPDF/fpdf.php');
-require_once('../pdfcode/TCPDF/tcpdf_import.php');
-require_once('../pdfcode/FPDI/src/autoload.php');
+require_once(__DIR__ . '/../pdfcode/FPDF/fpdf.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_import.php');
+require_once(__DIR__ . '/../pdfcode/FPDI/src/autoload.php');
 
 $pcs_markedPDF = new Fpdi('L','mm','A3', true, 'UTF-8', false);
 $pcs_markedPDF->setPrintHeader(false);
@@ -52,17 +52,15 @@ $pkg_page_line = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' 
 	$pcs_markedPDF->SetAlpha(0.7);
 	$pcs_markedPDF->SetLineStyle($pkg_page_line);
 	$pcs_markedPDF->RegularPolygon($pg_x,$pg_y,7,3,60);
-	if($page_no<10){
-		$pcs_markedPDF->SetFont('helvetica', '', 20);
-		$text_x = $pg_x-3;
-		$text_y = $pg_y-5;
-	}
-	else if($page_no<100){
-		$pcs_markedPDF->SetFont('helvetica', '', 17);
-		$text_x = $pg_x-4.2;
-		$text_y = $pg_y-3;
-	}
-	else {
+	if ($page_no<10) {
+        $pcs_markedPDF->SetFont('helvetica', '', 20);
+        $text_x = $pg_x-3;
+        $text_y = $pg_y-5;
+    } elseif ($page_no<100) {
+        $pcs_markedPDF->SetFont('helvetica', '', 17);
+        $text_x = $pg_x-4.2;
+        $text_y = $pg_y-3;
+    } else {
 		$pcs_markedPDF->SetFont('helvetica', '', 14);
 		$text_x = $pg_x-5;
 		$text_y = $pg_y-2;
@@ -98,17 +96,15 @@ $pkg_page_line = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' 
 					$pcs_markedPDF->SetAlpha(0.7);
 					$pcs_markedPDF->SetLineStyle($pkg_page_line);
 					$pcs_markedPDF->RegularPolygon($xt,$yt,7,3,60);
-					if($jointcoor_val[7]<10){
-						$pcs_markedPDF->SetFont('helvetica', '', 20);
-						$text_x = $xt-3;
-						$text_y = $yt-5;
-					}
-					else if($jointcoor_val[7]<100){
-						$pcs_markedPDF->SetFont('helvetica', '', 17);
-						$text_x = $xt-4.2;
-						$text_y = $yt-3;
-					}
-					else {
+					if ($jointcoor_val[7]<10) {
+                        $pcs_markedPDF->SetFont('helvetica', '', 20);
+                        $text_x = $xt-3;
+                        $text_y = $yt-5;
+                    } elseif ($jointcoor_val[7]<100) {
+                        $pcs_markedPDF->SetFont('helvetica', '', 17);
+                        $text_x = $xt-4.2;
+                        $text_y = $yt-3;
+                    } else {
 						$pcs_markedPDF->SetFont('helvetica', '', 14);
 						$text_x = $xt-5;
 						$text_y = $yt-2;
@@ -134,19 +130,17 @@ $pkg_page_line = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' 
 					$pcs_markedPDF->SetFont('helvetica', '', 17);
 					$pcs_markedPDF->SetTextColor(0,0,255);
 					$pcs_markedPDF->Text($xt-4.5,$yt-6,'TB');
-					$jointcoor_val[7] = $jointcoor_val[7]+$tb_qty;
-					if($jointcoor_val[7]<10){
-						$pcs_markedPDF->SetFont('helvetica', '', 17);
-						$text_x = $xt-4;
-						$text_y = $yt-1;
-						$jointcoor_val[7] = '0'.$jointcoor_val[7];
-					}
-					else if($jointcoor_val[7]<100){
-						$pcs_markedPDF->SetFont('helvetica', '', 17);
-						$text_x = $xt-4;
-						$text_y = $yt-1;
-					}
-					else {
+					$jointcoor_val[7] += $tb_qty;
+					if ($jointcoor_val[7]<10) {
+                        $pcs_markedPDF->SetFont('helvetica', '', 17);
+                        $text_x = $xt-4;
+                        $text_y = $yt-1;
+                        $jointcoor_val[7] = '0'.$jointcoor_val[7];
+                    } elseif ($jointcoor_val[7]<100) {
+                        $pcs_markedPDF->SetFont('helvetica', '', 17);
+                        $text_x = $xt-4;
+                        $text_y = $yt-1;
+                    } else {
 						$pcs_markedPDF->SetFont('helvetica', '', 14);
 						$text_x = $xt-5;
 						$text_y = $yt-1;
@@ -166,13 +160,13 @@ $pkg_page_line = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' 
 			}
 		}
 	}
-	$tb_qty = $tb_qty + $sql_pkg_coor_array['tb_qty'];
+	$tb_qty += $sql_pkg_coor_array['tb_qty'];
 
 }
 $pcs_markedPDF->Output($_POST['pkg'].'.pdf');
 
 
-function compass($x,$y){
+function compass($x,$y): int|float{
 	if($x==0 ){ if($y>0){return 0;} else {return 180;} } 
 	return ($x < 0)
 	? rad2deg(atan2($x,$y)) + 360

@@ -5,39 +5,35 @@ add_event('memo_list', 'g54_user_memo_insert', 10, 3);
 add_event('password_is_wrong', 'g54_check_bbs_password', 10, 3);
 add_replace('invalid_password', 'g54_return_invalid_password', 10, 3);
 
-function g54_return_invalid_password($bool, $type, $wr){
-    if($type === 'write' && $bool === false && $wr['wr_password'] && isset($_POST['wr_password'])) {
-        if(G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16)) {
-            if( sql_password($_POST['wr_password']) === $wr['wr_password'] ){
-                $bool = true;
-            }
+function g54_return_invalid_password($bool, $type, array $wr){
+    if($type === 'write' && $bool === false && $wr['wr_password'] && isset($_POST['wr_password']) && (G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16))) {
+        if( sql_password($_POST['wr_password']) === $wr['wr_password'] ){
+            $bool = true;
         }
     }
 
     return $bool;
 }
 
-function g54_check_bbs_password($type, $wr, $qstr=''){
+function g54_check_bbs_password($type, $wr, string $qstr=''): void{
     if($type === 'bbs' && (isset($wr['wr_password']) && $wr['wr_password']) && isset($_POST['wr_password'])) {
 
         global $bo_table, $w;
 
-        if(G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16)) {
-            if( sql_password($_POST['wr_password']) === $wr['wr_password'] ){
-                if ($w == 's') {
-                    $ss_name = 'ss_secret_'.$bo_table.'_'.$wr['wr_num'];
-                    set_session($ss_name, TRUE);
-                } else if ($w == 'sc'){
-                    $ss_name = 'ss_secret_comment_'.$bo_table.'_'.$wr['wr_id'];
-                    set_session($ss_name, TRUE);
-                }
-                goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?'.$qstr));
+        if (G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16) && sql_password($_POST['wr_password']) === $wr['wr_password']) {
+            if ($w == 's') {
+                $ss_name = 'ss_secret_'.$bo_table.'_'.$wr['wr_num'];
+                set_session($ss_name, TRUE);
+            } elseif ($w == 'sc') {
+                $ss_name = 'ss_secret_comment_'.$bo_table.'_'.$wr['wr_id'];
+                set_session($ss_name, TRUE);
             }
+            goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?'.$qstr));
         }
     }
 }
 
-function g54_user_memo_insert($kind, $unkind, $page=1){
+function g54_user_memo_insert($kind, $unkind, $page=1): void{
     global $g5, $is_member, $member;
 
     if( ! $is_member || $kind !== 'send' ) return;

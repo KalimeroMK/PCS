@@ -31,7 +31,6 @@ class LineReader extends AbstractReader implements ReaderInterface
     /**
      * LineReader constructor.
      *
-     * @param PdfParser $parser
      * @throws CrossReferenceException
      */
     public function __construct(PdfParser $parser)
@@ -65,11 +64,9 @@ class LineReader extends AbstractReader implements ReaderInterface
     /**
      * Extracts the cross reference data from the stream reader.
      *
-     * @param StreamReader $reader
-     * @return string
      * @throws CrossReferenceException
      */
-    protected function extract(StreamReader $reader)
+    protected function extract(StreamReader $reader): string
     {
         $bytesPerCycle = 100;
         $reader->reset(null, $bytesPerCycle);

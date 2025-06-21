@@ -7,7 +7,7 @@
 <div id="mapholder" style="width:100%; height:100vh;"></div>
 
 <script src="https://maps.google.com/maps/api/js?key=<?php
-    include_once('./pcs_config.php');
+    include_once(__DIR__ . '/pcs_config.php');
     echo PCS_GGL_API; ?>"></script>
 <script>
     const no = [];

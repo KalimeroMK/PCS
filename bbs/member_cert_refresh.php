@@ -1,7 +1,7 @@
 <?php
 
 define('G5_CERT_IN_PROG', true);
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (!$is_member) {
     alert("잘못된 접근입니다.", G5_URL);

@@ -90,7 +90,7 @@ else {
 <td class="jnt_td">
  
 <?php
-			if($col){
+			if($col !== 0){
 				$jnt_type = $sql_ref_dwg_arr[$field_arr[4]];
 				echo '<input name="txt'.$row.'_'.$col.'" id="txt'.$row.'_'.$col.'" list="jnt'.$col.'"';
 				if($col==1||$col==2){echo 'onchange="fill_Jinfo('.$row.')" onclick=\'javascript:this.value="";\' ';}
@@ -154,8 +154,9 @@ var mainDwg = '<?php echo $main_dwg; ?>';
 		
 		
 		$java_var_bmarray = 'bmarray["'.$sql_bm_arr['dwg_no'].'"]["'.$sql_bm_arr['p_no'].'"] = new Array(); ';
+        $counter = count($field_name);
 		
-		for($i=2; $i<count($field_name) ; $i++){
+		for($i=2; $i<$counter ; $i++){
 			$java_var_bmarray .= 'bmarray["'.$sql_bm_arr['dwg_no'].'"]["'.$sql_bm_arr['p_no'].'"]["'.$i.'"] = "'.$sql_bm_arr[$field_name[$i]].'"; ';
 		}
 

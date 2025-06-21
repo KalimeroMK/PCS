@@ -1,13 +1,13 @@
 <?php
-include_once('./_common.php');
-include_once('./pcs_config.php');
-include_once('./pcs_common_function.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
+include_once(__DIR__ . '/pcs_common_function.php');
 
 use setasign\Fpdi\Tcpdf\Fpdi;
 
-require_once('../pdfcode/FPDF/fpdf.php');
-require_once('../pdfcode/TCPDF/tcpdf_import.php');
-require_once('../pdfcode/FPDI/src/autoload.php');
+require_once(__DIR__ . '/../pdfcode/FPDF/fpdf.php');
+require_once(__DIR__ . '/../pdfcode/TCPDF/tcpdf_import.php');
+require_once(__DIR__ . '/../pdfcode/FPDI/src/autoload.php');
 
 $pnid_dwg = $_POST['mapped_pnid'];
 $pnid_rev = $_POST['rev_pnid'];
@@ -44,15 +44,15 @@ $pcs_markedPDF->Circle(500,500, 2,0,360,'F',$dwg_mark_line,array(255,255,255));
 	$temp_j = count($jointcoor)-1;
 if(!$_POST['pkg_no']){	
 	for($j=0;$j<$temp_j;$j++){
-		
+
 		$jointcoor_val = explode(',',$jointcoor[$j]);
-		
+
 		$xf = round($jointcoor_val[3]/5);
 		$yf = round($jointcoor_val[4]/5);
 		$xt = round($jointcoor_val[5]/5);
 		$yt = round($jointcoor_val[6]/5);
-		
-		
+
+
 		$query_officialPKG = 'SELECT offi_no FROM '.G5_TABLE_PREFIX.'pcs_info_package WHERE pkg_no = "'.$jointcoor_val[1].'"';
 		$sql_officialPKG = sql_query ($query_officialPKG);
 		$sql_officialPKGNO = sql_fetch_array ($sql_officialPKG);
@@ -76,10 +76,27 @@ if(!$_POST['pkg_no']){
 
 				case 'pkg' :
 					$angle = compass($xt-$xf,$yt-$yf);
-					if($angle<90)		{$FX = $xt-18 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<180)	{$FX = $xt-18 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<270)	{$FX = $xt+22 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<360)	{$FX = $xt+22 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
+					if ($angle<90) {
+                        $FX = $xt-18 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<180) {
+                        $FX = $xt-18 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<270) {
+                        $FX = $xt+22 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<360) {
+                        $FX = $xt+22 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    }
 
 					$pcs_markedPDF->SetFont('helvetica', '', 8);
 					$text_x = $xt-17;
@@ -151,10 +168,27 @@ else {
 
 				case 'pkg' :
 					$angle = compass($xt-$xf,$yt-$yf);
-					if($angle<90)		{$FX = $xt-18 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<180)	{$FX = $xt-18 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<270)	{$FX = $xt+22 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<360)	{$FX = $xt+22 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
+					if ($angle<90) {
+                        $FX = $xt-18 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<180) {
+                        $FX = $xt-18 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<270) {
+                        $FX = $xt+22 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<360) {
+                        $FX = $xt+22 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    }
 
 					$pcs_markedPDF->SetFont('helvetica', '', 8);
 					$text_x = $xt-17;

@@ -63,11 +63,9 @@ foreach((array) $list as $row){
 
 	echo "<div class=\"cart-layer\"></div>\n";
 	
-	if ($this->view_it_icon) {
-        // 품절
-        if ($is_soldout) {
-            echo '<span class="shop_icon_soldout"><span class="soldout_txt">SOLD OUT</span></span>';
-        }
+	// 품절
+    if ($this->view_it_icon && $is_soldout) {
+        echo '<span class="shop_icon_soldout"><span class="soldout_txt">SOLD OUT</span></span>';
     }
     echo "</div>\n";
 	

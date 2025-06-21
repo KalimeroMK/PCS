@@ -1,7 +1,7 @@
 <?php
 
-    if ($_POST['mb_nick'] or $_POST['mb_1'] or $_POST['mb_2'] or $_POST['mb_3'] or $_POST['mb_4'] or $_POST['mb_5'] or $_POST['mb_6'] or $_POST['mb_7']) {
-    $query_update = 'UPDATE '.G5_TABLE_PREFIX.'member SET mb_nick = "'.$_POST['mb_nick'].'", mb_1 = "'.$_POST['mb_1'].'", mb_2 = "'.$_POST['mb_2'].'", mb_3 = "'.$_POST['mb_3'].'", mb_4 = "'.$_POST['mb_4'].'", mb_5 = "'.$_POST['mb_5'].'", mb_6 = "'.$_POST['mb_6'].'", mb_7 = "'.$_POST['mb_7'].'" WHERE mb_no = "'.$_POST['mb_no'].'"';
+    if (!empty($_POST['mb_nick']) || !empty($_POST['mb_1']) || !empty($_POST['mb_2']) || !empty($_POST['mb_3']) || !empty($_POST['mb_4']) || !empty($_POST['mb_5']) || !empty($_POST['mb_6']) || !empty($_POST['mb_7'])) {
+    $query_update = 'UPDATE '.G5_TABLE_PREFIX.'member SET mb_nick = "'.($_POST['mb_nick'] ?? '').'", mb_1 = "'.($_POST['mb_1'] ?? '').'", mb_2 = "'.($_POST['mb_2'] ?? '').'", mb_3 = "'.($_POST['mb_3'] ?? '').'", mb_4 = "'.($_POST['mb_4'] ?? '').'", mb_5 = "'.($_POST['mb_5'] ?? '').'", mb_6 = "'.($_POST['mb_6'] ?? '').'", mb_7 = "'.($_POST['mb_7'] ?? '').'" WHERE mb_no = "'.($_POST['mb_no'] ?? '').'"';
     sql_query($query_update);
     echo '<script type="text/javascript"> location.href="'.G5_URL.'" </script>';
 }
@@ -32,8 +32,8 @@
     <tr>
 
         <?php
-            for ($i = 0; $table_field_array[$i]; $i++) {
-                echo '<td class="jnt_td jnt_th" style="width: '.$table_width_array[$i].'%;">'.$table_field_array[$i].'</td>';
+            for ($i = 0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++) {
+                echo '<td class="jnt_td jnt_th" style="width: '.$table_width_array[$i].'%">'.$table_field_array[$i].'</td>';
             }
         ?>
 
@@ -52,7 +52,7 @@
                         echo $sql_member_arr['mb_no']; ?>>
 
                     <?php
-                        for ($i = 0; $table_field_array[$i]; $i++) {
+                        for ($i = 0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++) {
                             echo '<td class="jnt_td" style="width:'.$table_width_array[$i].'px;">';
                             if ($i == 0) {
                                 echo ++$j;
@@ -72,9 +72,7 @@
                                     case 6    :
                                         sel_option_arr($photo_option_array, $sql_member_arr[$mysql_field_array[$i]]);
                                         break;
-                                    case 8    :
-                                        sel_option_arr($nde_option_array, $sql_member_arr[$mysql_field_array[$i]]);
-                                        break;
+                                    case 8:
                                     case 9    :
                                         sel_option_arr($nde_option_array, $sql_member_arr[$mysql_field_array[$i]]);
                                         break;

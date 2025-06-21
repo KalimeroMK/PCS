@@ -36,7 +36,6 @@ class FixedReader extends AbstractReader implements ReaderInterface
     /**
      * FixedReader constructor.
      *
-     * @param PdfParser $parser
      * @throws CrossReferenceException
      */
     public function __construct(PdfParser $parser)
@@ -59,7 +58,7 @@ class FixedReader extends AbstractReader implements ReaderInterface
     /**
      * @inheritdoc
      */
-    public function getOffsetFor($objectNumber)
+    public function getOffsetFor($objectNumber): false|int
     {
         foreach ($this->subSections as $offset => list($startObject, $objectCount)) {
             /**
@@ -172,10 +171,8 @@ class FixedReader extends AbstractReader implements ReaderInterface
      * </code>
      *
      * It shall only be called on the first table.
-     *
-     * @return bool
      */
-    public function fixFaultySubSectionShift()
+    public function fixFaultySubSectionShift(): bool
     {
         $subSections = $this->getSubSections();
         if (\count($subSections) > 1) {

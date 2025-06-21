@@ -1,11 +1,10 @@
 <?php
 
-	if ($_POST['tp_select']=='yes')	{
-	
-	$table_field_array = array('No.','Dwg no.','Rev no.','AG/UG','Unit','j_size','Class','Material','NDE','PMI','PWHT','Paint','Insulation');
-	$table_width_array = array(60,200,60,60,60,60,60,60,60,60,60,60,60);
-	$sql_field_array = array('rev_no','ag_ug','unit','line_size','line_class','material','nde_rate','pmi','pwht','paint_code','line_insul');
-?>
+	if (!empty($_POST['tp_select']) && $_POST['tp_select']=='yes') {
+        $table_field_array = array('No.','Dwg no.','Rev no.','AG/UG','Unit','j_size','Class','Material','NDE','PMI','PWHT','Paint','Insulation');
+        $table_width_array = array(60,200,60,60,60,60,60,60,60,60,60,60,60);
+        $sql_field_array = array('rev_no','ag_ug','unit','line_size','line_class','material','nde_rate','pmi','pwht','paint_code','line_insul');
+        ?>
 <table class="main">
 <caption> Tie-in Point STATUS </caption>
 <tbody>
@@ -20,45 +19,39 @@
 	<td class="jnt_td jnt_th" style="width: 15%"> Photo 3 </td>
 </tr>
 
-<?php
-
-	$no == 0;
-	$query_tp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_tp AS A JOIN '.G5_TABLE_PREFIX.'pcs_info_tp_stat AS B ON A.tp_no = B.tp_no WHERE tp_photo'.$_POST['tp_num'].'_tm != "0000-00-00 00:00:00" AND unit = "'.$_POST['tp_unit'].'"';
-
-	$sql_tp_spl = sql_query ($query_tp_spl);
-
-	while ($sql_tp_spl_arr = sql_fetch_array ($sql_tp_spl))	{
-	
-		$no++;
-	
-		$query_g5_spl = 'SELECT wr_id FROM '.G5_TABLE_PREFIX.'write_tp WHERE wr_subject = "'.$sql_tp_spl_arr['tp_no'].'"';
-		$sql_g5_spl = sql_query ($query_g5_spl);
-		$sql_g5_spl_arr = sql_fetch_array ($sql_g5_spl);
-?>
-<tr>
-<td class="jnt_td"><?php echo $no; ?></td>
-<td class="jnt_td"><a href=<?php echo G5_URL.'/bbs/board.php?bo_table=tp&wr_id='.$sql_g5_spl_arr['wr_id']; ?> target='_self'> <font style='font-size:25px;'> <b> <?php echo $sql_tp_spl_arr['tp_no']; ?></b></font></a></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo1_by']){echo $sql_tp_spl_arr['tp_photo1_by'].'<br>'.$sql_tp_spl_arr['tp_photo1_tm'];} ?></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo1_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo1'], '', 150);} ?></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo2_by']){echo $sql_tp_spl_arr['tp_photo2_by'].'<br>'.$sql_tp_spl_arr['tp_photo2_tm'];} ?></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo2_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo2'], '', 150);} ?></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo3_by']){echo $sql_tp_spl_arr['tp_photo3_by'].'<br>'.$sql_tp_spl_arr['tp_photo3_tm'];} ?></td>
-<td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo3_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo3'], '', 150);} ?></td>
-</tr>
-
 <?php 
- 	}
-?>
+        $query_tp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_tp AS A JOIN '.G5_TABLE_PREFIX.'pcs_info_tp_stat AS B ON A.tp_no = B.tp_no WHERE tp_photo'.$_POST['tp_num'].'_tm != "0000-00-00 00:00:00" AND unit = "'.$_POST['tp_unit'].'"';
+        $sql_tp_spl = sql_query ($query_tp_spl);
+        while ($sql_tp_spl_arr = sql_fetch_array ($sql_tp_spl))	{
+    	
+    		$no++;
+    	
+    		$query_g5_spl = 'SELECT wr_id FROM '.G5_TABLE_PREFIX.'write_tp WHERE wr_subject = "'.$sql_tp_spl_arr['tp_no'].'"';
+    		$sql_g5_spl = sql_query ($query_g5_spl);
+    		$sql_g5_spl_arr = sql_fetch_array ($sql_g5_spl);
+    ?>
+    <tr>
+    <td class="jnt_td"><?php echo $no; ?></td>
+    <td class="jnt_td"><a href=<?php echo G5_URL.'/bbs/board.php?bo_table=tp&wr_id='.$sql_g5_spl_arr['wr_id']; ?> target='_self'> <font style='font-size:25px;'> <b> <?php echo $sql_tp_spl_arr['tp_no']; ?></b></font></a></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo1_by']){echo $sql_tp_spl_arr['tp_photo1_by'].'<br>'.$sql_tp_spl_arr['tp_photo1_tm'];} ?></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo1_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo1'], '', 150);} ?></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo2_by']){echo $sql_tp_spl_arr['tp_photo2_by'].'<br>'.$sql_tp_spl_arr['tp_photo2_tm'];} ?></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo2_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo2'], '', 150);} ?></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo3_by']){echo $sql_tp_spl_arr['tp_photo3_by'].'<br>'.$sql_tp_spl_arr['tp_photo3_tm'];} ?></td>
+    <td class="jnt_td"><?php if($sql_tp_spl_arr['tp_photo3_by']){photo_thumb('tp', $sql_tp_spl_arr['tp_photo3'], '', 150);} ?></td>
+    </tr>
+    
+    <?php 
+     	}
+        ?>
 </tbody>
 </table>
 
 <p>&nbsp;
 
 
-<?php
-	}
-	
-	else {
+<?php 
+    } else {
 
 
 	$field_query = 'DESCRIBE '.G5_TABLE_PREFIX.'pcs_info_tp';
@@ -139,7 +132,7 @@
 
 <?php }
 
-function tp_chk_stat($un, $num) {
+function tp_chk_stat(string $un, string $num): void {
 	
 	$query_tp_qty = 'SELECT COUNT(*) FROM '.G5_TABLE_PREFIX.'pcs_info_tp AS A LEFT JOIN '.G5_TABLE_PREFIX.'pcs_info_tp_stat AS B ON A.tp_no = B.tp_no WHERE tp_photo'.$num.'_tm != "0000-00-00 00:00:00" AND unit = "'.$un.'"';
 	

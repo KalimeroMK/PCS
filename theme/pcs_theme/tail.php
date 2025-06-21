@@ -1,6 +1,7 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
+if (!defined('_GNUBOARD_')) exit;
+// Individual page access not allowed
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
@@ -9,9 +10,15 @@ if (G5_IS_MOBILE) {
 
     </div>
     <div id="aside">
-        <?php echo outlogin('theme/basic'); // External login, to use the theme's skin, specify the skin as theme/basic ?>
+        <?php 
+echo outlogin('theme/basic');
+// External login, to use the theme's skin, specify the skin as theme/basic 
+?>
 
-        <?php echo poll('theme/basic'); // Poll, to use the theme's skin, specify the skin as theme/basic ?>
+        <?php 
+echo poll('theme/basic');
+// Poll, to use the theme's skin, specify the skin as theme/basic 
+?>
     </div>
 </div>
 
@@ -25,19 +32,31 @@ if (G5_IS_MOBILE) {
 
     <div id="ft_wr">
         <div id="ft_link" class="ft_cnt">
-        	<a href="<?php echo get_pretty_url('content', 'company'); ?>">About Us</a>
+        	<a href="<?php 
+echo get_pretty_url('content', 'company');
+?>">About Us</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-			<a href="<?php echo get_pretty_url('content', 'privacy'); ?>">Privacy Policy</a>
+			<a href="<?php 
+echo get_pretty_url('content', 'privacy');
+?>">Privacy Policy</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_pretty_url('content', 'provision'); ?>">Terms of Service</a>
+            <a href="<?php 
+echo get_pretty_url('content', 'provision');
+?>">Terms of Service</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_device_change_url(); ?>">Mobile Version</a>
+            <a href="<?php 
+echo get_device_change_url();
+?>">Mobile Version</a>
         </div>
 	</div>      
-        <!-- <div id="ft_catch"><img src="<?php echo G5_IMG_URL; ?>/ft_logo.png" alt="<?php echo G5_VERSION ?>"></div> -->
+        <!-- <div id="ft_catch"><img src="<?php 
+echo G5_IMG_URL;
+?>/ft_logo.png" alt="<?php 
+echo G5_VERSION ?>
+?>"></div> -->
         <div id="ft_copy">Copyright &copy; <b><a href="https://www.pcsbymd.com" target="_blank">www.pcsbymd.com</a></b> All rights reserved.</div>
     
     
@@ -54,11 +73,7 @@ if (G5_IS_MOBILE) {
     </script>
 </div>
 
-<?php
-if(G5_DEVICE_BUTTON_DISPLAY && !G5_IS_MOBILE) { ?>
-<?php
-}
-
+<?php 
 if ($config['cf_analytics']) {
     echo $config['cf_analytics'];
 }
@@ -73,6 +88,5 @@ $(function() {
 });
 </script>
 
-<?php
+<?php 
 include_once(G5_THEME_PATH."/tail.sub.php");
-?>

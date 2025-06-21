@@ -4,8 +4,8 @@ ini_set("display_errors", 1);
 
 
 
-include_once('./_common.php');
-include_once('./pcs_config.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
 
 	
 	$query_pkg_coor_check = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_pkg_coor";
@@ -29,7 +29,7 @@ while ($sql_pkg_coor_array = sql_fetch_array ($sql_pkg_coor_check))	{
 
 			$row_value = $row_value.$jointcoor_val[$j].',';
 		}
-		$row_value = $row_value.';';
+		$row_value .= ';';
 	}
 
 	$query_pkg_coor = "UPDATE ".G5_TABLE_PREFIX."pcs_info_pkg_coor SET joint_info = '".$row_value."' WHERE dwg_no = '".$sql_pkg_coor_array['dwg_no']."' AND pkg_no = '".$sql_pkg_coor_array['pkg_no']."' AND rev_no = '".$sql_pkg_coor_array['rev_no']."'";

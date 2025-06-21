@@ -70,20 +70,28 @@ add_stylesheet('<link rel="stylesheet" href="'.$search_skin_url.'/style.css">', 
 
 <div id="sch_result">
     <?php
-    if ($stx) {
-        if ($board_count) {
+    if ($stx && $board_count) {
     ?>
     <section id="sch_res_ov">
-        <h2><strong><?php echo $stx ?></strong> 전체검색 결과</h2>
+        <h2><strong><?php 
+    echo $stx ?>
+    ?></strong> 전체검색 결과</h2>
         <ul>
-            <li>게시판 <?php echo $board_count ?>개</li>
-            <li>게시물 <?php echo number_format($total_count) ?>개</li>
-        	<li><?php echo number_format($page) ?>/<?php echo number_format($total_page) ?> 페이지 열람 중</li>
+            <li>게시판 <?php 
+    echo $board_count ?>
+    ?>개</li>
+            <li>게시물 <?php 
+    echo number_format($total_count) ?>
+    ?>개</li>
+        	<li><?php 
+    echo number_format($page) ?>
+    ?>/<?php 
+    echo number_format($total_page) ?>
+    ?> 페이지 열람 중</li>
         </ul>
     </section>
-    <?php
-        }
-    }
+    <?php 
+}
     ?>
 
     <?php

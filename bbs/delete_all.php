@@ -36,48 +36,34 @@ if ($chk_count > (G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page
 for ($i = $chk_count - 1; $i >= 0; $i--) {
     $write = sql_fetch(" select * from $write_table where wr_id = '$tmp_array[$i]' ");
 
-    if ($is_admin == 'super') // 최고관리자 통과
-    {
-    } else {
-        if ($is_admin == 'group') // 그룹관리자
-        {
+    if ($is_admin != 'super') {
+        if ($is_admin == 'group') {
             $mb = get_member($write['mb_id']);
             if ($member['mb_id'] == $group['gr_admin']) // 자신이 관리하는 그룹인가?
             {
-                if ($member['mb_level'] >= $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-                {
-                } else {
+                if ($member['mb_level'] < $mb['mb_level']) {
                     continue;
                 }
             } else {
                 continue;
             }
-        } else {
-            if ($is_admin == 'board') // 게시판관리자이면
+        } elseif ($is_admin == 'board') {
+            $mb = get_member($write['mb_id']);
+            if ($member['mb_id'] == $board['bo_admin']) // 자신이 관리하는 게시판인가?
             {
-                $mb = get_member($write['mb_id']);
-                if ($member['mb_id'] == $board['bo_admin']) // 자신이 관리하는 게시판인가?
-                {
-                    if ($member['mb_level'] >= $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-                    {
-                    } else {
-                        continue;
-                    }
-                } else {
+                if ($member['mb_level'] < $mb['mb_level']) {
                     continue;
                 }
             } else {
-                if ($member['mb_id'] && $member['mb_id'] == $write['mb_id']) // 자신의 글이라면
-                {
-                } else {
-                    if ($wr_password && !$write['mb_id'] && check_password($wr_password,
-                            $write['wr_password'])) // 비밀번호가 같다면
-                    {
-                    } else {
-                        continue;
-                    }
-                }
+                continue;
             }
+        } elseif ($member['mb_id'] && $member['mb_id'] == $write['mb_id']) {
+            
+        } elseif ($wr_password && !$write['mb_id'] && check_password($wr_password,
+                $write['wr_password'])) {
+            
+        } else {
+            continue;
         }
     }   // 나머지는 삭제 불가
 

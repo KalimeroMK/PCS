@@ -26,10 +26,7 @@ use setasign\Fpdi\PdfParser\Type\PdfTypeException;
  */
 class PdfReader
 {
-    /**
-     * @var PdfParser
-     */
-    protected $parser;
+    protected \setasign\Fpdi\PdfParser\PdfParser $parser;
 
     /**
      * @var int
@@ -45,8 +42,6 @@ class PdfReader
 
     /**
      * PdfReader constructor.
-     *
-     * @param PdfParser $parser
      */
     public function __construct(PdfParser $parser)
     {
@@ -76,10 +71,9 @@ class PdfReader
     /**
      * Get the PDF version.
      *
-     * @return string
      * @throws PdfParserException
      */
-    public function getPdfVersion()
+    public function getPdfVersion(): string
     {
         return \implode('.', $this->parser->getPdfVersion());
     }
@@ -110,13 +104,12 @@ class PdfReader
      * Get a page instance.
      *
      * @param int $pageNumber
-     * @return Page
      * @throws PdfTypeException
      * @throws CrossReferenceException
      * @throws PdfParserException
      * @throws \InvalidArgumentException
      */
-    public function getPage($pageNumber)
+    public function getPage($pageNumber): \setasign\Fpdi\PdfReader\Page
     {
         if (!\is_numeric($pageNumber)) {
             throw new \InvalidArgumentException(
@@ -202,7 +195,7 @@ class PdfReader
             return;
         }
 
-        $readPages = function ($kids, $count) use (&$readPages, $readAll) {
+        $readPages = function ($kids, $count) use (&$readPages, $readAll): void {
             $kids = PdfArray::ensure($kids);
             $isLeaf = ($count->value === \count($kids->value));
 

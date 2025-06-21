@@ -23,7 +23,7 @@ if($member['mb_id']) {
 	}
 
 	if( $board['bo_table'] == 'package' ) {
-		switch ($_POST['p_page']) {
+		switch ($_POST['p_page'] ?? '') {
 			case 'p_list'	: include_once (PCS_LIB.'/pcs_pkg_punch_list.php');		break;
 			case 'p_cont'	: include_once (PCS_LIB.'/pcs_pkg_punch_control.php');		break;
 			case 'p_upda'	: include_once (PCS_LIB.'/pcs_pkg_punch_update.php');		break;
@@ -32,9 +32,8 @@ if($member['mb_id']) {
 		}
 	}
 
-	if( $board['bo_table'] == 'status' && $member['mb_1']>2) {
-		if(!G5_IS_MOBILE) {	
-			switch ($wr_id) {
+	if( $board['bo_table'] == 'status' && $member['mb_1'] > 2 && !G5_IS_MOBILE) {
+		switch ($wr_id) {
 				case 1 :	include_once (PCS_LIB.'/pcs_mg_01.php');		break;
 				case 2 :	include_once (PCS_LIB.'/pcs_mg_02.php');		break;
 				case 3 :	include_once (PCS_LIB.'/pcs_mg_03.php');		break;
@@ -44,11 +43,10 @@ if($member['mb_id']) {
 				case 7 :	include_once (PCS_LIB.'/pcs_mg_07.php');		break;
 				default :	break;
 			}
-		}
 	}
 	
 	if( $board['bo_table'] == 'admin' && $member['mb_1']>3) {
-		if($_GET['rlt']) {
+		if(!empty($_GET['rlt'])) {
 			include_once (PCS_LIB.'/pcs_DB_result.php');
 		}
 		else {

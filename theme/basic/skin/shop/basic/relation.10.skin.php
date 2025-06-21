@@ -12,9 +12,11 @@ for ($i=1; $row=sql_fetch_array($result); $i++) {
 
 	$item_link_href = shop_item_url($row['it_id']);
     if ($this->list_mod >= 2) { // 1줄 이미지 : 2개 이상
-        if ($i%$this->list_mod == 0) $sct_last = ' sct_last'; // 줄 마지막
-        else if ($i%$this->list_mod == 1) $sct_last = ' sct_clear'; // 줄 첫번째
-        else $sct_last = '';
+        if ($i%$this->list_mod == 0) {
+            $sct_last = ' sct_last';
+        } elseif ($i%$this->list_mod == 1) {
+            $sct_last = ' sct_clear';
+        } else $sct_last = '';
     } else { // 1줄 이미지 : 1개
         $sct_last = ' sct_clear';
     }

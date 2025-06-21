@@ -19,10 +19,9 @@ class Ascii85 implements FilterInterface
      * Decode ASCII85 encoded string.
      *
      * @param string $data The input string
-     * @return string
      * @throws Ascii85Exception
      */
-    public function decode($data)
+    public function decode($data): string
     {
         $out = '';
         $state = 0;
@@ -37,7 +36,7 @@ class Ascii85 implements FilterInterface
             $ch = \ord($data[$k]) & 0xff;
 
             //Start <~
-            if ($k === 0 && $ch === 60 && isset($data[$k + 1]) && (\ord($data[$k + 1]) & 0xFF) === 126) {
+            if ($k === 0 && $ch === 60 && isset($data[1]) && (\ord($data[1]) & 0xFF) === 126) {
                 $k++;
                 continue;
             }
@@ -66,7 +65,7 @@ class Ascii85 implements FilterInterface
                 $r = 0;
                 for ($j = 0; $j < 5; ++$j) {
                     /** @noinspection UnnecessaryCastingInspection */
-                    $r = (int)($r * 85 + $chn[$j]);
+                    $r = $r * 85 + $chn[$j];
                 }
 
                 $out .= \chr($r >> 24)

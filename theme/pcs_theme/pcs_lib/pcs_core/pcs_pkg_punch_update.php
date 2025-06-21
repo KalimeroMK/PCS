@@ -2,9 +2,11 @@
 if($_POST['p_page'] == 'p_upda'){
 	$filepath  = PCS_DWG_PKG.'/'.$_POST['pkg_no'].'/';
 
-	if($_POST['s_no']*1<10){$punchFile = $_POST['pkg_no'].'_00'.$_POST['s_no'];}
-	else if($_POST['s_no']*1<100){$punchFile = $_POST['pkg_no'].'_0'.$_POST['s_no'];}
-	else {$punchFile = $_POST['pkg_no'].'_'.$_POST['s_no'];}
+	if ($_POST['s_no']*1<10) {
+        $punchFile = $_POST['pkg_no'].'_00'.$_POST['s_no'];
+    } elseif ($_POST['s_no']*1<100) {
+        $punchFile = $_POST['pkg_no'].'_0'.$_POST['s_no'];
+    } else {$punchFile = $_POST['pkg_no'].'_'.$_POST['s_no'];}
 	
 	if($_POST['punch']=='issue'){				
 		$punch_sql = 'INSERT INTO '.G5_TABLE_PREFIX.'pcs_info_punch SET

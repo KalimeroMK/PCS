@@ -22,13 +22,9 @@ class PdfDictionary extends PdfType
     /**
      * Parses a dictionary of the passed tokenizer, stream-reader and parser.
      *
-     * @param Tokenizer $tokenizer
-     * @param StreamReader $streamReader
-     * @param PdfParser $parser
-     * @return bool|self
      * @throws PdfTypeException
      */
-    public static function parse(Tokenizer $tokenizer, StreamReader $streamReader, PdfParser $parser)
+    public static function parse(Tokenizer $tokenizer, StreamReader $streamReader, PdfParser $parser): false|\setasign\Fpdi\PdfParser\Type\PdfDictionary
     {
         $entries = [];
 
@@ -88,9 +84,8 @@ class PdfDictionary extends PdfType
      * Helper method to create an instance.
      *
      * @param PdfType[] $entries The keys are the name entries of the dictionary.
-     * @return self
      */
-    public static function create(array $entries = [])
+    public static function create(array $entries = []): self
     {
         $v = new self();
         $v->value = $entries;

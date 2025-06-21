@@ -1,7 +1,7 @@
 <?php
 
 define('G5_CAPTCHA', true);
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 // 토큰체크
@@ -93,8 +93,7 @@ if ($is_member) {
     $wr_password = get_encrypt_string($wr_password);
 }
 
-if ($w == 'c') // 댓글 입력
-{
+if ($w == 'c') {
     /*
     if ($member[mb_point] + $board[bo_comment_point] < 0 && !$is_admin)
         alert('보유하신 포인트('.number_format($member[mb_point]).')가 없거나 모자라서 댓글쓰기('.number_format($board[bo_comment_point]).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 댓글을 써 주십시오.');
@@ -104,7 +103,6 @@ if ($w == 'c') // 댓글 입력
     if ($tmp_point + $board['bo_comment_point'] < 0 && !$is_admin) {
         alert('보유하신 포인트('.number_format($member['mb_point']).')가 없거나 모자라서 댓글쓰기('.number_format($board['bo_comment_point']).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 댓글을 써 주십시오.');
     }
-
     // 댓글 답변
     if ($comment_id) {
         $reply_array = get_write($write_table, $comment_id, true);
@@ -149,13 +147,10 @@ if ($w == 'c') // 댓글 입력
 
         if (!$row['reply']) {
             $reply_char = $begin_reply_char;
+        } elseif ($row['reply'] == $end_reply_char) {
+            alert('더 이상 답변하실 수 없습니다.\\n\\n답변은 26개 까지만 가능합니다.');
         } else {
-            if ($row['reply'] == $end_reply_char) // A~Z은 26 입니다.
-            {
-                alert('더 이상 답변하실 수 없습니다.\\n\\n답변은 26개 까지만 가능합니다.');
-            } else {
-                $reply_char = chr(ord($row['reply']) + $reply_number);
-            }
+            $reply_char = chr(ord($row['reply']) + $reply_number);
         }
 
         $tmp_comment_reply = $reply_array['wr_comment_reply'].$reply_char;
@@ -168,9 +163,7 @@ if ($w == 'c') // 댓글 입력
         $tmp_comment = $row['max_comment'];
         $tmp_comment_reply = '';
     }
-
     $wr_subject = get_text(stripslashes($wr['wr_subject']));
-
     $sql = " insert into $write_table
                 set ca_name = '{$wr['ca_name']}',
                      wr_option = '$wr_secret',
@@ -201,22 +194,16 @@ if ($w == 'c') // 댓글 입력
                      wr_9 = '$wr_9',
                      wr_10 = '$wr_10' ";
     sql_query($sql);
-
     $comment_id = sql_insert_id();
-
     // 원글에 댓글수 증가 & 마지막 시간 반영
     sql_query(" update $write_table set wr_comment = wr_comment + 1, wr_last = '".G5_TIME_YMDHIS."' where wr_id = '$wr_id' ");
-
     // 새글 INSERT
     sql_query(" insert into {$g5['board_new_table']} ( bo_table, wr_id, wr_parent, bn_datetime, mb_id ) values ( '$bo_table', '$comment_id', '$wr_id', '".G5_TIME_YMDHIS."', '{$member['mb_id']}' ) ");
-
     // 댓글 1 증가
     sql_query(" update {$g5['board_table']} set bo_count_comment = bo_count_comment + 1 where bo_table = '$bo_table' ");
-
     // 포인트 부여
     insert_point($member['mb_id'], $board['bo_comment_point'], "{$board['bo_subject']} {$wr_id}-{$comment_id} 댓글쓰기",
         $bo_table, $comment_id, '댓글');
-
     // 메일발송 사용
     if ($config['cf_email_use'] && $board['bo_use_email']) {
         // 관리자의 정보를 얻고
@@ -236,7 +223,7 @@ if ($w == 'c') // 댓글 입력
         include_once(G5_LIB_PATH.'/mailer.lib.php');
 
         ob_start();
-        include_once('./write_update_mail.php');
+        include_once(__DIR__ . '/write_update_mail.php');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -273,13 +260,13 @@ if ($w == 'c') // 댓글 입력
         // 중복된 메일 주소는 제거
         $unique_email = array_unique($array_email);
         $unique_email = array_values($unique_email);
-        for ($i = 0; $i < count($unique_email); $i++) {
+        $counter = count($unique_email);
+        for ($i = 0; $i < $counter; $i++) {
             mailer($wr_name, $wr_email, $unique_email[$i], $subject, $content, 1);
         }
     }
-
     // SNS 등록
-    include_once("./write_comment_update.sns.php");
+    include_once(__DIR__ . "/write_comment_update.sns.php");
     if ($wr_facebook_user || $wr_twitter_user) {
         $sql = " update $write_table
                     set wr_facebook_user = '$wr_facebook_user',
@@ -287,81 +274,62 @@ if ($w == 'c') // 댓글 입력
                     where wr_id = '$comment_id' ";
         sql_query($sql);
     }
-} else {
-    if ($w == 'cu') // 댓글 수정
-    {
-        $sql = " select mb_id, wr_password, wr_comment, wr_comment_reply from $write_table
+} elseif ($w == 'cu') {
+    $sql = " select mb_id, wr_password, wr_comment, wr_comment_reply from $write_table
                 where wr_id = '$comment_id' ";
-        $comment = $reply_array = sql_fetch($sql);
-        $tmp_comment = $reply_array['wr_comment'];
-
-        $len = strlen($reply_array['wr_comment_reply']);
-        if ($len < 0) {
-            $len = 0;
-        }
-        $comment_reply = substr($reply_array['wr_comment_reply'], 0, $len);
-        //print_r2($GLOBALS); exit;
-
-        if ($is_admin == 'super') // 최고관리자 통과
-        {
-        } else {
-            if ($is_admin == 'group') { // 그룹관리자
-                $mb = get_member($comment['mb_id']);
-                if ($member['mb_id'] === $group['gr_admin']) { // 자신이 관리하는 그룹인가?
-                    if ($member['mb_level'] >= $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-                    {
-                    } else {
-                        alert('그룹관리자의 권한보다 높은 회원의 댓글이므로 수정할 수 없습니다.');
-                    }
-                } else {
-                    alert('자신이 관리하는 그룹의 게시판이 아니므로 댓글을 수정할 수 없습니다.');
-                }
-            } else {
-                if ($is_admin == 'board') { // 게시판관리자이면
-                    $mb = get_member($comment['mb_id']);
-                    if ($member['mb_id'] === $board['bo_admin']) { // 자신이 관리하는 게시판인가?
-                        if ($member['mb_level'] >= $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-                        {
-                        } else {
-                            alert('게시판관리자의 권한보다 높은 회원의 댓글이므로 수정할 수 없습니다.');
-                        }
-                    } else {
-                        alert('자신이 관리하는 게시판이 아니므로 댓글을 수정할 수 없습니다.');
-                    }
-                } else {
-                    if ($member['mb_id']) {
-                        if ($member['mb_id'] !== $comment['mb_id']) {
-                            alert('자신의 글이 아니므로 수정할 수 없습니다.');
-                        }
-                    } else {
-                        if (!($comment['mb_id'] === '' && $comment['wr_password'] && check_password($post_wr_password,
-                                $comment['wr_password']))) {
-                            alert('댓글을 수정할 권한이 없습니다.');
-                        }
-                    }
-                }
+    $comment = $reply_array = sql_fetch($sql);
+    $tmp_comment = $reply_array['wr_comment'];
+    $len = strlen($reply_array['wr_comment_reply']);
+    if ($len < 0) {
+        $len = 0;
+    }
+    $comment_reply = substr($reply_array['wr_comment_reply'], 0, $len);
+    //print_r2($GLOBALS); exit;
+    if ($is_admin == 'super') {
+    } elseif ($is_admin == 'group') {
+        // 그룹관리자
+        $mb = get_member($comment['mb_id']);
+        if ($member['mb_id'] === $group['gr_admin']) { // 자신이 관리하는 그룹인가?
+            if ($member['mb_level'] < $mb['mb_level']) {
+                alert('그룹관리자의 권한보다 높은 회원의 댓글이므로 수정할 수 없습니다.');
             }
+        } else {
+            alert('자신이 관리하는 그룹의 게시판이 아니므로 댓글을 수정할 수 없습니다.');
         }
-
-        $sql = " select count(*) as cnt from $write_table
+    } elseif ($is_admin == 'board') {
+        // 게시판관리자이면
+        $mb = get_member($comment['mb_id']);
+        if ($member['mb_id'] === $board['bo_admin']) { // 자신이 관리하는 게시판인가?
+            if ($member['mb_level'] < $mb['mb_level']) {
+                alert('게시판관리자의 권한보다 높은 회원의 댓글이므로 수정할 수 없습니다.');
+            }
+        } else {
+            alert('자신이 관리하는 게시판이 아니므로 댓글을 수정할 수 없습니다.');
+        }
+    } elseif ($member['mb_id']) {
+        if ($member['mb_id'] !== $comment['mb_id']) {
+            alert('자신의 글이 아니므로 수정할 수 없습니다.');
+        }
+    } elseif (!($comment['mb_id'] === '' && $comment['wr_password'] && check_password($post_wr_password,
+            $comment['wr_password']))) {
+        alert('댓글을 수정할 권한이 없습니다.');
+    }
+    $sql = " select count(*) as cnt from $write_table
                 where wr_comment_reply like '$comment_reply%'
                 and wr_id <> '$comment_id'
                 and wr_parent = '$wr_id'
                 and wr_comment = '$tmp_comment'
                 and wr_is_comment = 1 ";
-        $row = sql_fetch($sql);
-        if ($row['cnt'] && !$is_admin) {
-            alert('이 댓글와 관련된 답변댓글이 존재하므로 수정 할 수 없습니다.');
-        }
-
-        $sql_ip = "";
-        if (!$is_admin) {
-            $sql_ip = " , wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
-        }
-
-        $sql_secret = " , wr_option = '$wr_secret' ";
-
-        $sql = " update $write_table
+    $row = sql_fetch($sql);
+    if ($row['cnt'] && !$is_admin) {
+        alert('이 댓글와 관련된 답변댓글이 존재하므로 수정 할 수 없습니다.');
+    }
+    $sql_ip = "";
+    if (!$is_admin) {
+        $sql_ip = " , wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+    }
+    $sql_secret = " , wr_option = '$wr_secret' ";
+    $sql = " update $write_table
                 set wr_subject = '$wr_subject',
                      wr_content = '$wr_content',
                      wr_1 = '$wr_1',
@@ -377,9 +345,7 @@ if ($w == 'c') // 댓글 입력
                      $sql_ip
                      $sql_secret
               where wr_id = '$comment_id' ";
-
-        sql_query($sql);
-    }
+    sql_query($sql);
 }
 
 // 사용자 코드 실행

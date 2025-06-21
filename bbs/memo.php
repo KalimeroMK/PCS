@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if ($is_guest) {
     alert_close('회원만 이용하실 수 있습니다.');
@@ -15,12 +15,10 @@ $kind = isset($_GET['kind']) ? clean_xss_tags($_GET['kind'], 0, 1) : 'recv';
 
 if ($kind == 'recv') {
     $unkind = 'send';
+} elseif ($kind == 'send') {
+    $unkind = 'recv';
 } else {
-    if ($kind == 'send') {
-        $unkind = 'recv';
-    } else {
-        alert("kind 변수 값이 올바르지 않습니다.");
-    }
+    alert("kind 변수 값이 올바르지 않습니다.");
 }
 
 if ($page < 1) {
@@ -60,11 +58,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
     $mb_id = $row["me_{$unkind}_mb_id"];
 
-    if ($row['mb_nick']) {
-        $mb_nick = $row['mb_nick'];
-    } else {
-        $mb_nick = '정보없음';
-    }
+    $mb_nick = $row['mb_nick'] ? $row['mb_nick'] : '정보없음';
 
     $name = get_sideview($row['mb_id'], $row['mb_nick'], $row['mb_email'], $row['mb_homepage']);
 

@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $mb_id = isset($_REQUEST['mb_id']) ? clean_xss_tags($_REQUEST['mb_id'], 1, 1) : '';
 

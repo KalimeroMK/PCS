@@ -92,10 +92,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </tr>
         </thead>
         <tbody>
-        <?php
-        for ($i=0; $i<count($list); $i++) {
-        	if ($i%2==0) $lt_class = "even";
-        	else $lt_class = "";
+        
+$counter = count($list);<?php
+        for ($i=0; $i<$counter; $i++) {
+        	$lt_class = $i % 2 == 0 ? "even" : "";
 		?>
         <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?> <?php echo $lt_class ?>">
             <?php if ($is_checkbox) { ?>
@@ -109,12 +109,13 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             <?php } ?>
             <td class="td_num2">
             <?php
-            if ($list[$i]['is_notice']) // 공지사항
-                echo '<strong class="notice_icon">공지</strong>';
-            else if ($wr_id == $list[$i]['wr_id'])
-                echo "<span class=\"bo_current\">열람중</span>";
-            else
-                echo $list[$i]['num'];
+            if ($list[$i]['is_notice']) {
+            // 공지사항
+            echo '<strong class="notice_icon">공지</strong>';
+        } elseif ($wr_id == $list[$i]['wr_id']) {
+            echo "<span class=\"bo_current\">열람중</span>";
+        } else
+            echo $list[$i]['num'];
              ?>
             </td>
 

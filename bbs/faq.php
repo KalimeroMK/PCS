@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 //dbconfig파일에 $g5['faq_table'] , $g5['faq_master_table'] 배열변수가 있는지 체크
 if (!isset($g5['faq_table']) || !isset($g5['faq_master_table'])) {
@@ -35,7 +35,7 @@ $g5['title'] = $fm['fm_subject'];
 
 $skin_file = $faq_skin_path.'/list.skin.php';
 
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 
 if (is_file($skin_file)) {
     $admin_href = '';
@@ -64,7 +64,7 @@ if (is_file($skin_file)) {
     $stx = trim($stx);
     $sql_search = '';
 
-    if ($stx) {
+    if ($stx !== '' && $stx !== '0') {
         $sql_search = " and ( INSTR(fa_subject, '$stx') > 0 or INSTR(fa_content, '$stx') > 0 ) ";
     }
 
@@ -93,7 +93,7 @@ if (is_file($skin_file)) {
     $result = sql_query($sql);
     for ($i = 0; $row = sql_fetch_array($result); $i++) {
         $faq_list[] = $row;
-        if ($stx) {
+        if ($stx !== '' && $stx !== '0') {
             $faq_list[$i]['fa_subject'] = search_font($stx, conv_content($faq_list[$i]['fa_subject'], 1));
             $faq_list[$i]['fa_content'] = search_font($stx, conv_content($faq_list[$i]['fa_content'], 1));
         }
@@ -103,4 +103,4 @@ if (is_file($skin_file)) {
     echo '<p>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</p>';
 }
 
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

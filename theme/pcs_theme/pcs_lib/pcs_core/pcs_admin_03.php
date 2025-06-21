@@ -1,5 +1,5 @@
 <?php
-    if ( ! $_POST['form_type']) {
+    if (empty($_POST['form_type'])) {
         switch ($_GET['wr_id']) {
             case 2 :
                 $pcs_typ = 'joint';
@@ -117,14 +117,14 @@
         <?php
     }
 
-    if ($_POST['form_type'] == 'zip') {
+    if (!empty($_POST['form_type']) && $_POST['form_type'] == 'zip') {
         echo '<div style="font-size:30px; padding:30px;">';
 
         $dir = PCS_DATA.'/';
 
         $zip_file_name = $_FILES['zip_file']['name'];
         if (str_replace('.zip', '', $zip_file_name) == $_POST['form_name']) {
-            if ($_FILES['zip_file']['type'] = 'application/x-zip-compressed') {
+            if (($_FILES['zip_file']['type'] = 'application/x-zip-compressed') !== '') {
                 if ($_FILES['zip_file']['size'] < 5000000) {
                     if (move_uploaded_file($_FILES['zip_file']['tmp_name'], $dir.$zip_file_name)) {
                         chmod($dir.$zip_file_name, G5_FILE_PERMISSION);
@@ -200,7 +200,7 @@
         echo "</div>";
     }
 
-    if ($_POST['form_type'] == 'pdf') {
+    if (!empty($_POST['form_type']) && $_POST['form_type'] == 'pdf') {
         echo '<div style="font-size:30px; padding:30px;">';
         if ($_POST['form_name'] == 'joint') {
             $dir = PCS_REP_PDF.'/';
@@ -227,11 +227,10 @@
         $temp_i = count($pdf_file_name);
         for ($i = 0; $i < $temp_i; $i++) {
             if ($_POST['form_name'] != 'joint') {
-                $query_file   = 'SELECT '.$fld.' FROM '.G5_TABLE_PREFIX.'pcs_info_'.$_POST['form_name'].' WHERE '.$fld.' = "'.preg_replace('/_[0-9].pdf/',
+                $query_file   = 'SELECT '.$fld.' FROM '.G5_TABLE_PREFIX.'pcs_info_'.$_POST['form_name'].' WHERE '.$fld.' = "'.preg_replace('/_\d.pdf/',
                         '', $pdf_file_name[$i]).'"';
                 $sql_file     = sql_query($query_file);
                 $sql_file_arr = sql_fetch_array($sql_file);
-
                 if ($sql_file_arr[$fld]) {
                     if ( ! $_FILES['pdf_file']['error'][$i]) {
                         if ($_FILES['pdf_file']['type'][$i] == 'application/pdf') {
@@ -254,23 +253,21 @@
                 } else {
                     echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Not in DATABASE.</font> <br/>';
                 }
-            } else {
-                if ( ! $_FILES['pdf_file']['error'][$i]) {
-                    if ($_FILES['pdf_file']['type'][$i] == 'application/pdf') {
-                        if ($_FILES['pdf_file']['size'][$i] < 5000000) {
-                            if (move_uploaded_file($_FILES['pdf_file']['tmp_name'][$i], $dir.$pdf_file_name[$i])) {
-                                $upload_success++;
-                                chmod($dir.$pdf_file_name[$i], 0777);
+            } elseif (! $_FILES['pdf_file']['error'][$i]) {
+                if ($_FILES['pdf_file']['type'][$i] == 'application/pdf') {
+                    if ($_FILES['pdf_file']['size'][$i] < 5000000) {
+                        if (move_uploaded_file($_FILES['pdf_file']['tmp_name'][$i], $dir.$pdf_file_name[$i])) {
+                            $upload_success++;
+                            chmod($dir.$pdf_file_name[$i], 0777);
 //								echo ($i+1).'. '.$pdf_file_name[$i]." : <font color='blue'>Upload finished.</font> <br/>";
-                            } else {
-                                echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Error Update Data.</font> <br/>';
-                            }
                         } else {
-                            echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Not allowed <b>over 5 Mb</b> pdf file.</font> <br/>';
+                            echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Error Update Data.</font> <br/>';
                         }
                     } else {
-                        echo ($i + 1).'. '.$pdf_file_name[$i].' :<font color="red"> Not pdf file.</font> <br/>';
+                        echo ($i + 1).'. '.$pdf_file_name[$i].' : <font color="red">Not allowed <b>over 5 Mb</b> pdf file.</font> <br/>';
                     }
+                } else {
+                    echo ($i + 1).'. '.$pdf_file_name[$i].' :<font color="red"> Not pdf file.</font> <br/>';
                 }
             }
         }

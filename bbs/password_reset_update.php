@@ -1,15 +1,15 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $mb_id = isset($_SESSION['ss_cert_mb_id']) ? trim(get_session('ss_cert_mb_id')) : '';
 $mb_dupinfo = isset($_SESSION['ss_cert_dupinfo']) ? trim(get_session('ss_cert_dupinfo')) : '';
 
-if (!$mb_id) {
+if ($mb_id === '' || $mb_id === '0') {
     alert('회원아이디 값이 없습니다. 올바른 방법으로 이용해 주십시오.', G5_URL);
 }
 
-if (!$mb_dupinfo) {
+if ($mb_dupinfo === '' || $mb_dupinfo === '0') {
     alert('잘못된 접근입니다.', G5_URL);
 }
 
@@ -23,10 +23,10 @@ $mb_password = isset($_POST['mb_password']) ? trim($_POST['mb_password_re']) : '
 $mb_password_re = isset($_POST['mb_password_re']) ? trim($_POST['mb_password_re']) : '';
 
 
-if (!$mb_password) {
+if ($mb_password === '' || $mb_password === '0') {
     alert('비밀번호가 넘어오지 않았습니다.');
 }
-if ($mb_password != $mb_password_re) {
+if ($mb_password !== $mb_password_re) {
     alert('비밀번호가 일치하지 않습니다.');
 }
 

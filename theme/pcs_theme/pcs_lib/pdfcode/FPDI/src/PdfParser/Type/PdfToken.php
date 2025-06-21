@@ -19,9 +19,8 @@ class PdfToken extends PdfType
      * Helper method to create an instance.
      *
      * @param string $token
-     * @return self
      */
-    public static function create($token)
+    public static function create($token): self
     {
         $v = new self();
         $v->value = $token;

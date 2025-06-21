@@ -27,7 +27,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$poll_skin_url.'/style.css">', 0)
                 </li>
                 <!-- *** 투표수가 가장 많은 것은 li이에 클래스 poll_1st를 붙여주세요 / 수정후 삭제 -->
                 
-            	<?php for ($i=1; $i<=count($list); $i++) {  ?>
+            	
+$counter = count($list);<?php for ($i=1; $i<=$counter; $i++) {  ?>
                 <li>
                     <span><?php echo $list[$i]['content'] ?></span>   
                     <div class="poll_result_graph">
@@ -48,7 +49,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$poll_skin_url.'/style.css">', 0)
         <section id="poll_result_cmt">
             <h2>이 설문에 대한 기타의견</h2>
 
-            <?php for ($i=0; $i<count($list2); $i++) {  ?>
+            
+$counter = count($list2);<?php for ($i=0; $i<$counter; $i++) {  ?>
             <article>
                 <header>
                     <h2><?php echo $list2[$i]['pc_name'] ?><span class="sound_only">님의 의견</span></h2>
@@ -94,7 +96,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$poll_skin_url.'/style.css">', 0)
         <aside id="poll_result_oth">
             <h2>다른 투표 결과 보기</h2>
             <ul>
-                <?php for ($i=0; $i<count($list3); $i++) {  ?>
+                
+$counter = count($list3);<?php for ($i=0; $i<$counter; $i++) {  ?>
                 <li><a href="./poll_result.php?po_id=<?php echo $list3[$i]['po_id'] ?>&amp;skin_dir=<?php echo urlencode($skin_dir); ?>"> <?php echo $list3[$i]['subject'] ?> </a><span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $list3[$i]['date'] ?></span></li>
                 <?php }  ?>
             </ul>

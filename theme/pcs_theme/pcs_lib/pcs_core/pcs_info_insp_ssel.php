@@ -14,7 +14,7 @@
 <tbody>
 <tr>
 <?php
-	for($i=0; $table_field_array[$i]; $i++){
+	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
 		echo '<td class="jnt_td jnt_th" style="width: '.$table_width_array[$i].'%">'.$table_field_array[$i].'</td>'; 
 	}
 ?>
@@ -23,7 +23,7 @@
 <tr>
 <input type='hidden' name='btn_check' value='<?php echo $_GET['wr_id']; ?>'>
 <?php
-	for($i=0; $table_field_array[$i]; $i++){
+	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
 		switch ($i)	{
 			case 0 :
 ?>
@@ -41,18 +41,7 @@
 <td class="jnt_td" ><input type='text' name='<?php echo $mysql_field_array[$i]; ?>' style='padding:0px 0px 0px 5px; text-align:left;width:95%;height:30px;font-size:15px;background-color:bisque;'></td>
 <?php		Break;
 
-			case 6 :
-?>
-			
-<td class="jnt_td" >
-	<select name='<?php echo $mysql_field_array[$i]; ?>' style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
-		<option value=''>-</option>
-		<option value='<?php echo $member['mb_nick'];?>'>Myself</option>
-	</select>
-</td>
-
-<?php
-			Break;	
+			case 6:	
 			case 8 : 
 ?>
 			

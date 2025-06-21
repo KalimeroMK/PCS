@@ -23,37 +23,23 @@ use setasign\Fpdi\PdfParser\Type\PdfTypeException;
  */
 class Rectangle
 {
-    /**
-     * @var int|float
-     */
-    protected $llx;
+    protected float|int $llx;
 
-    /**
-     * @var int|float
-     */
-    protected $lly;
+    protected float|int $lly;
 
-    /**
-     * @var int|float
-     */
-    protected $urx;
+    protected float|int $urx;
 
-    /**
-     * @var int|float
-     */
-    protected $ury;
+    protected float|int $ury;
 
     /**
      * Create a rectangle instance by a PdfArray.
      *
      * @param PdfArray|mixed $array
-     * @param PdfParser $parser
-     * @return Rectangle
      * @throws PdfTypeException
      * @throws CrossReferenceException
      * @throws PdfParserException
      */
-    public static function byPdfArray($array, PdfParser $parser)
+    public static function byPdfArray(array $array, PdfParser $parser): self
     {
         $array = PdfArray::ensure(PdfType::resolve($array, $parser), 4)->value;
         $ax = PdfNumeric::ensure(PdfType::resolve($array[0], $parser))->value;
@@ -82,20 +68,16 @@ class Rectangle
 
     /**
      * Get the width of the rectangle.
-     *
-     * @return float|int
      */
-    public function getWidth()
+    public function getWidth(): int|float
     {
         return $this->urx - $this->llx;
     }
 
     /**
      * Get the height of the rectangle.
-     *
-     * @return float|int
      */
-    public function getHeight()
+    public function getHeight(): int|float
     {
         return $this->ury - $this->lly;
     }
@@ -142,10 +124,8 @@ class Rectangle
 
     /**
      * Get the rectangle as an array.
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             $this->llx,
@@ -157,10 +137,8 @@ class Rectangle
 
     /**
      * Get the rectangle as a PdfArray.
-     *
-     * @return PdfArray
      */
-    public function toPdfArray()
+    public function toPdfArray(): \setasign\Fpdi\PdfParser\Type\PdfArray
     {
         $array = new PdfArray();
         $array->value[] = PdfNumeric::create($this->llx);

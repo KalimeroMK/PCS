@@ -3,13 +3,9 @@
 global $lo_location;
 global $lo_url;
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
-if ($error) {
-    $g5['title'] = "오류안내 페이지";
-} else {
-    $g5['title'] = "결과안내 페이지";
-}
+$g5['title'] = $error ? "오류안내 페이지" : "결과안내 페이지";
 include_once(G5_PATH.'/head.sub.php');
 // 필수 입력입니다.
 // 양쪽 공백 없애기
@@ -43,11 +39,7 @@ $url = preg_replace('/\r\n|\r|\n|[^\x20-\x7e]/', '', $url);
 // url 체크
 check_url_host($url, $msg);
 
-if ($error) {
-    $header2 = "다음 항목에 오류가 있습니다.";
-} else {
-    $header2 = "다음 내용을 확인해 주세요.";
-}
+$header2 = $error ? "다음 항목에 오류가 있습니다." : "다음 내용을 확인해 주세요.";
 ?>
 
     <script>

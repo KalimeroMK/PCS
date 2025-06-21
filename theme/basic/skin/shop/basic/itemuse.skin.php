@@ -32,9 +32,9 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_SKIN_URL.'/style.css">', 
         $is_name    = get_text($row['is_name']);
         $is_subject = conv_subject($row['is_subject'],50,"…");
         $is_content = get_view_thumbnail(conv_content($row['is_content'], 1), $thumbnail_width);
-        $is_reply_name = !empty($row['is_reply_name']) ? get_text($row['is_reply_name']) : '';
-        $is_reply_subject = !empty($row['is_reply_subject']) ? conv_subject($row['is_reply_subject'],50,"…") : '';
-        $is_reply_content = !empty($row['is_reply_content']) ? get_view_thumbnail(conv_content($row['is_reply_content'], 1), $thumbnail_width) : '';
+        $is_reply_name = empty($row['is_reply_name']) ? '' : get_text($row['is_reply_name']);
+        $is_reply_subject = empty($row['is_reply_subject']) ? '' : conv_subject($row['is_reply_subject'],50,"…");
+        $is_reply_content = empty($row['is_reply_content']) ? '' : get_view_thumbnail(conv_content($row['is_reply_content'], 1), $thumbnail_width);
         $is_time    = substr($row['is_time'], 2, 8);
 
         $hash = md5($row['is_id'].$row['is_time'].$row['is_ip']);
@@ -87,7 +87,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_SKIN_URL.'/style.css">', 
 
     if ($i > 0) echo '</ol>';
 
-    if (!$i) echo '<p class="sit_empty">사용후기가 없습니다.</p>';
+    if ($i === 0) echo '<p class="sit_empty">사용후기가 없습니다.</p>';
     ?>
 </section>
 

@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 // clean the output buffer
 ob_end_clean();
@@ -29,10 +29,8 @@ if (!$file['bf_file']) {
 
 $nonce = isset($_REQUEST['nonce']) ? preg_replace('/[^0-9a-z\|]/i', '', $_REQUEST['nonce']) : '';
 
-if (function_exists('download_file_nonce_is_valid') && !defined('G5_DOWNLOAD_NONCE_CHECK')) {
-    if (!download_file_nonce_is_valid($nonce, $bo_table, $wr_id)) {
-        alert('토큰 유효시간이 지났거나 토큰이 유효하지 않습니다.\\n브라우저를 새로고침 후 다시 시도해 주세요.', G5_URL);
-    }
+if (function_exists('download_file_nonce_is_valid') && !defined('G5_DOWNLOAD_NONCE_CHECK') && !download_file_nonce_is_valid($nonce, $bo_table, $wr_id)) {
+    alert('토큰 유효시간이 지났거나 토큰이 유효하지 않습니다.\\n브라우저를 새로고침 후 다시 시도해 주세요.', G5_URL);
 }
 
 // JavaScript 불가일 때
@@ -78,19 +76,14 @@ $ss_name = 'ss_down_'.$bo_table.'_'.$wr_id;
 if (!get_session($ss_name)) {
     // 자신의 글이라면 통과
     // 관리자인 경우 통과
-    if (($write['mb_id'] && $write['mb_id'] == $member['mb_id']) || $is_admin) {
-    } else {
-        if ($board['bo_download_level'] >= 1) // 회원이상 다운로드가 가능하다면
-        {
-            // 다운로드 포인트가 음수이고 회원의 포인트가 0 이거나 작다면
-            if ($member['mb_point'] + $board['bo_download_point'] < 0) {
-                alert('보유하신 포인트('.number_format($member['mb_point']).')가 없거나 모자라서 다운로드('.number_format($board['bo_download_point']).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 다운로드 해 주십시오.');
-            }
-
-            // 게시물당 한번만 차감하도록 수정
-            insert_point($member['mb_id'], $board['bo_download_point'], "{$board['bo_subject']} $wr_id 파일 다운로드",
-                $bo_table, $wr_id, "다운로드");
+    if (!($write['mb_id'] && $write['mb_id'] == $member['mb_id']) && !$is_admin && $board['bo_download_level'] >= 1) {
+        // 다운로드 포인트가 음수이고 회원의 포인트가 0 이거나 작다면
+        if ($member['mb_point'] + $board['bo_download_point'] < 0) {
+            alert('보유하신 포인트('.number_format($member['mb_point']).')가 없거나 모자라서 다운로드('.number_format($board['bo_download_point']).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 다운로드 해 주십시오.');
         }
+        // 게시물당 한번만 차감하도록 수정
+        insert_point($member['mb_id'], $board['bo_download_point'], "{$board['bo_subject']} $wr_id 파일 다운로드",
+            $bo_table, $wr_id, "다운로드");
     }
 
     set_session($ss_name, true);
@@ -130,19 +123,17 @@ if (preg_match("/msie/i", $_SERVER['HTTP_USER_AGENT']) && preg_match("/5\.5/", $
     header("content-length: ".filesize($filepath));
     header("content-disposition: attachment; filename=\"$original\"");
     header("content-transfer-encoding: binary");
+} elseif (preg_match("/Firefox/i", $_SERVER['HTTP_USER_AGENT'])) {
+    header("content-type: file/unknown");
+    header("content-length: ".filesize($filepath));
+    //header("content-disposition: attachment; filename=\"".basename($file['bf_source'])."\"");
+    header("content-disposition: attachment; filename=\"".$original."\"");
+    header("content-description: php generated data");
 } else {
-    if (preg_match("/Firefox/i", $_SERVER['HTTP_USER_AGENT'])) {
-        header("content-type: file/unknown");
-        header("content-length: ".filesize($filepath));
-        //header("content-disposition: attachment; filename=\"".basename($file['bf_source'])."\"");
-        header("content-disposition: attachment; filename=\"".$original."\"");
-        header("content-description: php generated data");
-    } else {
-        header("content-type: file/unknown");
-        header("content-length: ".filesize($filepath));
-        header("content-disposition: attachment; filename=\"$original\"");
-        header("content-description: php generated data");
-    }
+    header("content-type: file/unknown");
+    header("content-length: ".filesize($filepath));
+    header("content-disposition: attachment; filename=\"$original\"");
+    header("content-description: php generated data");
 }
 header("pragma: no-cache");
 header("expires: 0");

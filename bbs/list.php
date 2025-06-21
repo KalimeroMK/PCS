@@ -17,10 +17,12 @@ if ($board['bo_use_category']) {
     }
     $category_option .= '>전체</a></li>';
 
-    $categories = explode('|', $board['bo_category_list']); // 구분자가 , 로 되어 있음
-    for ($i = 0; $i < count($categories); $i++) {
+    $categories = explode('|', $board['bo_category_list']);
+    // 구분자가 , 로 되어 있음
+    $counter = count($categories); // 구분자가 , 로 되어 있음
+    for ($i = 0; $i < $counter; $i++) {
         $category = trim($categories[$i]);
-        if ($category == '') {
+        if ($category === '') {
             continue;
         }
         $category_option .= '<li><a href="'.(get_pretty_url($bo_table, '', 'sca='.urlencode($category))).'"';
@@ -34,7 +36,7 @@ if ($board['bo_use_category']) {
 }
 
 $sop = strtolower($sop);
-if ($sop != 'and' && $sop != 'or') {
+if ($sop !== 'and' && $sop !== 'or') {
     $sop = 'and';
 }
 
@@ -104,7 +106,7 @@ if (!$is_search_bbs) {
     $board_notice_count = count($arr_notice);
 
     for ($k = 0; $k < $board_notice_count; $k++) {
-        if (trim($arr_notice[$k]) == '') {
+        if (trim($arr_notice[$k]) === '') {
             continue;
         }
 
@@ -257,7 +259,7 @@ $next_part_href = '';
 if ($is_search_bbs) {
     $list_href = get_pretty_url($bo_table);
 
-    $patterns = ['#&amp;page=[0-9]*#', '#&amp;spt=[0-9\-]*#'];
+    $patterns = ['#&amp;page=\d*#', '#&amp;spt=[0-9\-]*#'];
 
     //if ($prev_spt >= $min_spt)
     $prev_spt = $spt - $config['cf_search_part'];

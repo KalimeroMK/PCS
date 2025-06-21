@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (defined('G5_THEME_PATH')) {
     $group_file = G5_THEME_PATH.'/group.php';
@@ -21,7 +21,7 @@ if (!$is_admin && $group['gr_device'] == 'mobile') {
 }
 
 $g5['title'] = $group['gr_subject'];
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 include_once(G5_LIB_PATH.'/latest.lib.php');
 ?>
 
@@ -41,25 +41,21 @@ include_once(G5_LIB_PATH.'/latest.lib.php');
         $sql .= " order by bo_order ";
         $result = sql_query($sql);
         for ($i = 0; $row = sql_fetch_array($result); $i++) {
-            $lt_style = "";
-            if ($i % 3 !== 0) {
-                $lt_style = "margin-left:2%";
-            } else {
-                $lt_style = "";
-            }
+            $lt_style = $i % 3 !== 0 ? "margin-left:2%" : "";
             ?>
-            <div style="float:left;<?php
-            echo $lt_style ?>" class="lt_wr">
-                <?php
-                // 이 함수가 바로 최신글을 추출하는 역할을 합니다.
-                // 사용방법 : latest(스킨, 게시판아이디, 출력라인, 글자수);
-                echo latest('basic', $row['bo_table'], 6, 25);
-                ?>
+            <div style="float:left;<?php 
+            echo $lt_style ?>
+            ?>" class="lt_wr">
+                <?php 
+            // 이 함수가 바로 최신글을 추출하는 역할을 합니다.
+            // 사용방법 : latest(스킨, 게시판아이디, 출력라인, 글자수);
+            echo latest('basic', $row['bo_table'], 6, 25);
+            ?>
             </div>
-            <?php
+            <?php 
         }
         ?>
         <!-- 메인화면 최신글 끝 -->
     </div>
 <?php
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

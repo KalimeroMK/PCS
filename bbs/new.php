@@ -1,14 +1,14 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $g5['title'] = '새글';
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 
 $sql_common = " from {$g5['board_new_table']} a, {$g5['board_table']} b, {$g5['group_table']} c where a.bo_table = b.bo_table and b.gr_id = c.gr_id and b.bo_use_search = 1 ";
 
 $gr_id = isset($_GET['gr_id']) ? substr(preg_replace('#[^a-z0-9_]#i', '', $_GET['gr_id']), 0, 10) : '';
-if ($gr_id) {
+if ($gr_id !== '' && $gr_id !== '0') {
     $sql_common .= " and b.gr_id = '$gr_id' ";
 }
 
@@ -16,18 +16,16 @@ $view = isset($_GET['view']) ? $_GET['view'] : "";
 
 if ($view == "w") {
     $sql_common .= " and a.wr_id = a.wr_parent ";
+} elseif ($view == "c") {
+    $sql_common .= " and a.wr_id <> a.wr_parent ";
 } else {
-    if ($view == "c") {
-        $sql_common .= " and a.wr_id <> a.wr_parent ";
-    } else {
-        $view = '';
-    }
+    $view = '';
 }
 
 $mb_id = isset($_GET['mb_id']) ? ($_GET['mb_id']) : '';
 $mb_id = substr(preg_replace('#[^a-z0-9_]#i', '', $mb_id), 0, 20);
 
-if ($mb_id) {
+if ($mb_id !== '' && $mb_id !== '0') {
     $sql_common .= " and a.mb_id = '{$mb_id}' ";
 }
 $sql_order = " order by a.bn_id desc ";
@@ -69,11 +67,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
         // 당일인 경우 시간으로 표시함
         $datetime = substr($row2['wr_datetime'], 0, 10);
         $datetime2 = $row2['wr_datetime'];
-        if ($datetime == G5_TIME_YMD) {
-            $datetime2 = substr($datetime2, 11, 5);
-        } else {
-            $datetime2 = substr($datetime2, 5, 5);
-        }
+        $datetime2 = $datetime == G5_TIME_YMD ? substr($datetime2, 11, 5) : substr($datetime2, 5, 5);
     } else {
         // 코멘트
         $comment = '[코] ';
@@ -92,11 +86,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
         // 당일인 경우 시간으로 표시함
         $datetime = substr($row3['wr_datetime'], 0, 10);
         $datetime2 = $row3['wr_datetime'];
-        if ($datetime == G5_TIME_YMD) {
-            $datetime2 = substr($datetime2, 11, 5);
-        } else {
-            $datetime2 = substr($datetime2, 5, 5);
-        }
+        $datetime2 = $datetime == G5_TIME_YMD ? substr($datetime2, 11, 5) : substr($datetime2, 5, 5);
     }
 
     $list[$i]['gr_id'] = $row['gr_id'];
@@ -117,4 +107,4 @@ $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['c
 
 include_once($new_skin_path.'/new.skin.php');
 
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

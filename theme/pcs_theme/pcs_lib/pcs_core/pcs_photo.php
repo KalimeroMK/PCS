@@ -1,6 +1,6 @@
 <?php
 
-    if ($_POST['ph']) {
+    if (!empty($_POST['ph'])) {
         $thw = 120;
         $thh = 90;
         if ($_POST['fn_itm'] == 'tp') {
@@ -155,52 +155,93 @@
                         } ?>;
                         var picY = 540;
                         <?php
-                        if($_POST['folder'] == 'spool'){
-                        ?>
+                        if ($_POST['folder'] == 'spool') {
+                            ?>
 //			canvasContext.font = '10px verdana';
-//			canvasContext.fillText ("<?php echo $_POST['sbjt']; ?>",picX+1,picY+1);
+//			canvasContext.fillText ("<?php 
+                            echo $_POST['sbjt'];
+                            ?>",picX+1,picY+1);
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo $_POST['sbjt']; ?>", picX + 1, picY + 16);
-                        canvasContext.fillText("<?php echo $_POST['j_no']; ?>", picX + 91, picY + 16);
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX + 1, picY + 31);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX + 1, picY + 46);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['sbjt'];
+                            ?>", picX + 1, picY + 16);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['j_no'];
+                            ?>", picX + 91, picY + 16);
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX + 1, picY + 31);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX + 1, picY + 46);
                         canvasContext.fillStyle = 'rgb(0,0,0)';
 //			canvasContext.font = '10px verdana';
-//			canvasContext.fillText ("<?php echo $_POST['sbjt']; ?>",picX,picY);
+//			canvasContext.fillText ("<?php 
+                            echo $_POST['sbjt'];
+                            ?>",picX,picY);
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo $_POST['sbjt']; ?>", picX, picY + 15);
-                        canvasContext.fillText("<?php echo $_POST['j_no']; ?>", picX + 90, picY + 15);
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX, picY + 30);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX, picY + 45);
-                        <?php
-                        }
-                        else if($_POST['folder'] == 'tp'){
-                        ?>
+                        canvasContext.fillText("<?php 
+                            echo $_POST['sbjt'];
+                            ?>", picX, picY + 15);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['j_no'];
+                            ?>", picX + 90, picY + 15);
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX, picY + 30);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX, picY + 45);
+                        <?php 
+                        } elseif ($_POST['folder'] == 'tp') {
+                            ?>
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo $_POST['sbjt']; ?>", picX + 1, picY + 16);
-                        canvasContext.fillText("<?php echo $_POST['j_no']; ?>", picX + 91, picY + 16);
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX + 1, picY + 31);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX + 1, picY + 46);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['sbjt'];
+                            ?>", picX + 1, picY + 16);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['j_no'];
+                            ?>", picX + 91, picY + 16);
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX + 1, picY + 31);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX + 1, picY + 46);
                         canvasContext.fillStyle = 'rgb(0,0,0)';
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo $_POST['sbjt']; ?>", picX, picY + 15);
-                        canvasContext.fillText("<?php echo $_POST['j_no']; ?>", picX + 90, picY + 15);
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX, picY + 30);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX, picY + 45);
-                        <?php
-                        }
-                        else if($_POST['folder'] == 'daily'){
-                        ?>
+                        canvasContext.fillText("<?php 
+                            echo $_POST['sbjt'];
+                            ?>", picX, picY + 15);
+                        canvasContext.fillText("<?php 
+                            echo $_POST['j_no'];
+                            ?>", picX + 90, picY + 15);
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX, picY + 30);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX, picY + 45);
+                        <?php 
+                        } elseif ($_POST['folder'] == 'daily') {
+                            ?>
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX + 1, picY + 31);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX + 1, picY + 46);
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX + 1, picY + 31);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX + 1, picY + 46);
                         canvasContext.fillStyle = 'rgb(0,0,0)';
                         canvasContext.font = '12px verdana';
-                        canvasContext.fillText("<?php echo 'Photoed by : '.$member['mb_nick']; ?>", picX, picY + 30);
-                        canvasContext.fillText("<?php echo 'At '.G5_TIME_YMDHIS; ?>", picX, picY + 45);
-                        <?php
-                        }
-                        else{
+                        canvasContext.fillText("<?php 
+                            echo 'Photoed by : '.$member['mb_nick'];
+                            ?>", picX, picY + 30);
+                        canvasContext.fillText("<?php 
+                            echo 'At '.G5_TIME_YMDHIS;
+                            ?>", picX, picY + 45);
+                        <?php 
+                        } else{
                         ?>
                         canvasContext.font = '8px verdana';
                         canvasContext.fillText("<?php echo $_POST['sbjt']; ?>", picX + 1, picY + 1);

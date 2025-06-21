@@ -1,9 +1,9 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $g5['title'] = '현재접속자';
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 
 $list = [];
 
@@ -19,12 +19,10 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     if ($row['mb_id']) {
         $list[$i]['name'] = get_sideview($row['mb_id'], cut_str($row['mb_nick'], $config['cf_cut_name']),
             $row['mb_email'], $row['mb_homepage']);
+    } elseif ($is_admin) {
+        $list[$i]['name'] = $row['lo_ip'];
     } else {
-        if ($is_admin) {
-            $list[$i]['name'] = $row['lo_ip'];
-        } else {
-            $list[$i]['name'] = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", G5_IP_DISPLAY, $row['lo_ip']);
-        }
+        $list[$i]['name'] = preg_replace("/(\\d+).(\\d+).(\\d+).(\\d+)/", G5_IP_DISPLAY, $row['lo_ip']);
     }
 
     $list[$i]['num'] = sprintf('%03d', $i + 1);
@@ -32,4 +30,4 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
 include_once($connect_skin_path.'/current_connect.skin.php');
 
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

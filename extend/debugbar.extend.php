@@ -3,7 +3,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 add_event('tail_sub', 'show_debug_bar');
 
-function show_debug_bar() {
+function show_debug_bar(): void {
 
     global $g5, $g5_debug, $is_admin;
     

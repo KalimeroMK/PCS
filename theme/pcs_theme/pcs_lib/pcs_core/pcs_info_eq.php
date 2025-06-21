@@ -5,7 +5,7 @@
 	$sql_equipment_arr = sql_fetch_array ($sql_equipment);
 
 
-function pdf_v($sq,$eqdw,$eqcn){
+function pdf_v(string $sq,string $eqdw,string $eqcn): void{
 	echo '<a href = "javascript:document.submit_'.$sq.'.submit()"> '.$eqcn.' </a>';
 	echo '<form name="submit_'.$sq.'" action="'.PCS_WPV_URL.'/viewer.php" method="post" target="result" onSubmit="return doSumbit()">';
 	echo '<input type="hidden" name="folder" value="equipment">';
@@ -56,7 +56,7 @@ function pdf_v($sq,$eqdw,$eqcn){
 		
 			if($j%6==0){echo'</tr><tr>';}	
 		}
-		if($j%6){for($k=0;$k<6-($j%6);$k++){echo '<td class="main_td"></td>';}}
+		if($j % 6 !== 0){for($k=0;$k<6-($j%6);$k++){echo '<td class="main_td"></td>';}}
 	}
 ?>
 </tr>

@@ -28,13 +28,13 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 		$c_edit_href = $comment_common_url.'&amp;c_id='.$comment_id.'&amp;w=cu#bo_vc_w';
 	?>
 
-	<article id="c_<?php echo $comment_id ?>" <?php if ($cmt_depth) { ?>style="margin-left:<?php echo $cmt_depth ?>px;border-top-color:#e0e0e0"<?php } ?>>
+	<article id="c_<?php echo $comment_id ?>" <?php if ($cmt_depth !== 0) { ?>style="margin-left:<?php echo $cmt_depth ?>px;border-top-color:#e0e0e0"<?php } ?>>
         <div class="pf_img"><?php echo get_member_profile_img($list[$i]['mb_id']) ?></div>
         
         <div class="cm_wrap">
 
             <header style="z-index:<?php echo $cmt_sv; ?>">
-	            <h2><?php echo get_text($list[$i]['wr_name']); ?>님의 <?php if ($cmt_depth) { ?><span class="sound_only">댓글의</span><?php } ?> 댓글</h2>
+	            <h2><?php echo get_text($list[$i]['wr_name']); ?>님의 <?php if ($cmt_depth !== 0) { ?><span class="sound_only">댓글의</span><?php } ?> 댓글</h2>
 	            <?php echo $list[$i]['name'] ?>
 	            <?php if ($is_ip_view) { ?>
 	            <span class="sound_only">아이피</span>
@@ -57,7 +57,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	                if($w == 'cu') {
 	                    $sql = " select wr_id, wr_content, mb_id from $write_table where wr_id = '$c_id' and wr_is_comment = '1' ";
 	                    $cmt = sql_fetch($sql);
-	                    if (!($is_admin || ($member['mb_id'] == $cmt['mb_id'] && $cmt['mb_id'])))
+	                    if (!$is_admin && !($member['mb_id'] == $cmt['mb_id'] && $cmt['mb_id']))
 	                        $cmt['wr_content'] = '';
 	                    $c_wr_content = $cmt['wr_content'];
 	                }

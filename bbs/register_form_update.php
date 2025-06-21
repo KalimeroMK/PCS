@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 include_once(G5_LIB_PATH.'/register.lib.php');
 include_once(G5_LIB_PATH.'/mailer.lib.php');
@@ -9,14 +9,12 @@ include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 // 리퍼러 체크
 referer_check();
 
-if (!($w == '' || $w == 'u')) {
+if ($w != '' && $w != 'u') {
     alert('w 값이 제대로 넘어오지 않았습니다.');
 }
 
-if ($w == 'u' && $is_admin == 'super') {
-    if (file_exists(G5_PATH.'/DEMO')) {
-        alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
-    }
+if ($w == 'u' && $is_admin == 'super' && file_exists(G5_PATH.'/DEMO')) {
+    alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
 }
 
 if (run_replace('register_member_chk_captcha', !chk_captcha(), $w)) {
@@ -25,12 +23,10 @@ if (run_replace('register_member_chk_captcha', !chk_captcha(), $w)) {
 
 if ($w == 'u') {
     $mb_id = isset($_SESSION['ss_mb_id']) ? trim($_SESSION['ss_mb_id']) : '';
+} elseif ($w == '') {
+    $mb_id = isset($_POST['mb_id']) ? trim($_POST['mb_id']) : '';
 } else {
-    if ($w == '') {
-        $mb_id = isset($_POST['mb_id']) ? trim($_POST['mb_id']) : '';
-    } else {
-        alert('잘못된 접근입니다', G5_URL);
-    }
+    alert('잘못된 접근입니다', G5_URL);
 }
 
 if (!$mb_id) {
@@ -112,7 +108,7 @@ if ($w == '' || $w == 'u') {
         if ($w == '' && !$mb_password) {
             alert('비밀번호가 넘어오지 않았습니다.');
         }
-        if ($w == '' && $mb_password != $mb_password_re) {
+        if ($w == '' && $mb_password !== $mb_password_re) {
             alert('비밀번호가 일치하지 않습니다.');
         }
     }
@@ -145,10 +141,8 @@ if ($w == '' || $w == 'u') {
     }
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
-    if (($config['cf_use_hp'] || $config['cf_cert_hp'] || $config['cf_cert_simple']) && $config['cf_req_hp']) {
-        if ($msg = valid_mb_hp($mb_hp)) {
-            alert($msg, "", true, true);
-        }
+    if (($config['cf_use_hp'] || $config['cf_cert_hp'] || $config['cf_cert_simple']) && $config['cf_req_hp'] && $msg = valid_mb_hp($mb_hp)) {
+        alert($msg, "", true, true);
     }
 
     if ($w == '') {
@@ -172,13 +166,11 @@ if ($w == '' || $w == 'u') {
             }
         }
 
-        if ($config['cf_use_recommend'] && $mb_recommend) {
-            if (!exist_mb_id($mb_recommend)) {
-                alert("추천인이 존재하지 않습니다.");
-            }
+        if ($config['cf_use_recommend'] && $mb_recommend && !exist_mb_id($mb_recommend)) {
+            alert("추천인이 존재하지 않습니다.");
         }
 
-        if (strtolower($mb_id) == strtolower($mb_recommend)) {
+        if (strtolower($mb_id) === strtolower($mb_recommend)) {
             alert('본인을 추천할 수 없습니다.');
         }
     } else {
@@ -222,7 +214,19 @@ $md5_cert_no = get_session('ss_cert_no');
 $cert_type = get_session('ss_cert_type');
 if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
     // 해시값이 같은 경우에만 본인확인 값을 저장한다.
-    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함
+    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) {
+        // 아이핀일때 hash 값 체크 hp미포함
+        $sql_certify .= " , mb_hp = '{$mb_hp}' ";
+        $sql_certify .= " , mb_certify  = '{$cert_type}' ";
+        $sql_certify .= " , mb_adult = '".get_session('ss_cert_adult')."' ";
+        $sql_certify .= " , mb_birth = '".get_session('ss_cert_birth')."' ";
+        $sql_certify .= " , mb_sex = '".get_session('ss_cert_sex')."' ";
+        $sql_certify .= " , mb_dupinfo = '".get_session('ss_cert_dupinfo')."' ";
+        if ($w == 'u') {
+            $sql_certify .= " , mb_name = '{$mb_name}' ";
+        }
+    } elseif ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) {
+        // 간편인증, 휴대폰일때 hash 값 체크 hp포함
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
         $sql_certify .= " , mb_certify  = '{$cert_type}' ";
         $sql_certify .= " , mb_adult = '".get_session('ss_cert_adult')."' ";
@@ -233,28 +237,14 @@ if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
             $sql_certify .= " , mb_name = '{$mb_name}' ";
         }
     } else {
-        if ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
-            $sql_certify .= " , mb_hp = '{$mb_hp}' ";
-            $sql_certify .= " , mb_certify  = '{$cert_type}' ";
-            $sql_certify .= " , mb_adult = '".get_session('ss_cert_adult')."' ";
-            $sql_certify .= " , mb_birth = '".get_session('ss_cert_birth')."' ";
-            $sql_certify .= " , mb_sex = '".get_session('ss_cert_sex')."' ";
-            $sql_certify .= " , mb_dupinfo = '".get_session('ss_cert_dupinfo')."' ";
-            if ($w == 'u') {
-                $sql_certify .= " , mb_name = '{$mb_name}' ";
-            }
-        } else {
-            alert('본인인증된 정보와 입력된 회원정보가 일치하지않습니다. 다시시도 해주세요');
-        }
+        alert('본인인증된 정보와 입력된 회원정보가 일치하지않습니다. 다시시도 해주세요');
     }
-} else {
-    if (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
-        $sql_certify .= " , mb_hp = '{$mb_hp}' ";
-        $sql_certify .= " , mb_certify = '' ";
-        $sql_certify .= " , mb_adult = 0 ";
-        $sql_certify .= " , mb_birth = '' ";
-        $sql_certify .= " , mb_sex = '' ";
-    }
+} elseif (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
+    $sql_certify .= " , mb_hp = '{$mb_hp}' ";
+    $sql_certify .= " , mb_certify = '' ";
+    $sql_certify .= " , mb_adult = 0 ";
+    $sql_certify .= " , mb_birth = '' ";
+    $sql_certify .= " , mb_sex = '' ";
 }
 //===============================================================
 if ($w == '') {
@@ -296,22 +286,18 @@ if ($w == '') {
                      mb_9 = '{$mb_9}',
                      mb_10 = '{$mb_10}'
                      {$sql_certify} ";
-
     // 이메일 인증을 사용하지 않는다면 이메일 인증시간을 바로 넣는다
     if (!$config['cf_use_email_certify']) {
         $sql .= " , mb_email_certify = '".G5_TIME_YMDHIS."' ";
     }
     sql_query($sql);
-
     // 회원가입 포인트 부여
     insert_point($mb_id, $config['cf_register_point'], '회원가입 축하', '@member', $mb_id, '회원가입');
-
     // 추천인에게 포인트 부여
     if ($config['cf_use_recommend'] && $mb_recommend) {
         insert_point($mb_recommend, $config['cf_recommend_point'], $mb_id.'의 추천인', '@member', $mb_recommend,
             $mb_id.' 추천');
     }
-
     // 회원님께 메일 발송
     if ($config['cf_email_mb_member']) {
         $subject = '['.$config['cf_title'].'] 회원가입을 축하드립니다.';
@@ -324,7 +310,7 @@ if ($w == '') {
         }
 
         ob_start();
-        include_once('./register_form_update_mail1.php');
+        include_once(__DIR__ . '/register_form_update_mail1.php');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -340,14 +326,13 @@ if ($w == '') {
             $old_email = $mb_email;
         }
     }
-
     // 최고관리자님께 메일 발송
     if ($config['cf_email_mb_super_admin']) {
         $subject = run_replace('register_form_update_mail_admin_subject',
             '['.$config['cf_title'].'] '.$mb_nick.' 님께서 회원으로 가입하셨습니다.', $mb_id, $mb_nick);
 
         ob_start();
-        include_once('./register_form_update_mail2.php');
+        include_once(__DIR__ . '/register_form_update_mail2.php');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -358,7 +343,6 @@ if ($w == '') {
         run_event('register_form_update_send_admin_mail', $mb_nick, $mb_email, $config['cf_admin_email'], $subject,
             $content);
     }
-
     // 메일인증 사용하지 않는 경우에만 로그인
     if (!$config['cf_use_email_certify']) {
         set_session('ss_mb_id', $mb_id);
@@ -366,50 +350,43 @@ if ($w == '') {
             update_auth_session_token(G5_TIME_YMDHIS);
         }
     }
-
     set_session('ss_mb_reg', $mb_id);
-
-    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함)
+    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) {
+        // 아이핀일때 hash 값 체크 hp미포함)
         insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
-            get_session('ss_cert_type'));                                                                                            // 본인인증 후 정보 수정 시 내역 기록
-    } else {
-        if ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
-            insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
-                get_session('ss_cert_type'));                                                                                                   // 본인인증 후 정보 수정 시 내역 기록
-        }
+            get_session('ss_cert_type'));
+        // 본인인증 후 정보 수정 시 내역 기록
+    } elseif ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) {
+        // 간편인증, 휴대폰일때 hash 값 체크 hp포함
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
+            get_session('ss_cert_type'));
+        // 본인인증 후 정보 수정 시 내역 기록
     }
-} else {
-    if ($w == 'u') {
-        if (!trim(get_session('ss_mb_id'))) {
-            alert('로그인 되어 있지 않습니다.');
-        }
-
-        if (trim($_POST['mb_id']) != $mb_id) {
-            alert("로그인된 정보와 수정하려는 정보가 틀리므로 수정할 수 없습니다.\\n만약 올바르지 않은 방법을 사용하신다면 바로 중지하여 주십시오.");
-        }
-
-        $sql_password = "";
-        if ($mb_password) {
-            $sql_password = " , mb_password = '".get_encrypt_string($mb_password)."' ";
-        }
-
-        $sql_nick_date = "";
-        if ($mb_nick_default != $mb_nick) {
-            $sql_nick_date = " , mb_nick_date = '".G5_TIME_YMD."' ";
-        }
-
-        $sql_open_date = "";
-        if ($mb_open_default != $mb_open) {
-            $sql_open_date = " , mb_open_date = '".G5_TIME_YMD."' ";
-        }
-
-        // 이전 메일주소와 수정한 메일주소가 틀리다면 인증을 다시 해야하므로 값을 삭제
-        $sql_email_certify = '';
-        if ($old_email != $mb_email && $config['cf_use_email_certify']) {
-            $sql_email_certify = " , mb_email_certify = '' ";
-        }
-
-        $sql = " update {$g5['member_table']}
+} elseif ($w == 'u') {
+    if (trim(get_session('ss_mb_id')) === '' || trim(get_session('ss_mb_id')) === '0') {
+        alert('로그인 되어 있지 않습니다.');
+    }
+    if (trim($_POST['mb_id']) != $mb_id) {
+        alert("로그인된 정보와 수정하려는 정보가 틀리므로 수정할 수 없습니다.\\n만약 올바르지 않은 방법을 사용하신다면 바로 중지하여 주십시오.");
+    }
+    $sql_password = "";
+    if ($mb_password !== '' && $mb_password !== '0') {
+        $sql_password = " , mb_password = '".get_encrypt_string($mb_password)."' ";
+    }
+    $sql_nick_date = "";
+    if ($mb_nick_default != $mb_nick) {
+        $sql_nick_date = " , mb_nick_date = '".G5_TIME_YMD."' ";
+    }
+    $sql_open_date = "";
+    if ($mb_open_default != $mb_open) {
+        $sql_open_date = " , mb_open_date = '".G5_TIME_YMD."' ";
+    }
+    // 이전 메일주소와 수정한 메일주소가 틀리다면 인증을 다시 해야하므로 값을 삭제
+    $sql_email_certify = '';
+    if ($old_email != $mb_email && $config['cf_use_email_certify']) {
+        $sql_email_certify = " , mb_email_certify = '' ";
+    }
+    $sql = " update {$g5['member_table']}
                 set mb_nick = '{$mb_nick}',
                     mb_mailling = '{$mb_mailling}',
                     mb_sms = '{$mb_sms}',
@@ -441,17 +418,17 @@ if ($w == '') {
                     {$sql_email_certify}
                     {$sql_certify}
               where mb_id = '$mb_id' ";
-        sql_query($sql);
-
-        if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함)
-            insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
-                get_session('ss_cert_type'));                                                                                            // 본인인증 후 정보 수정 시 내역 기록
-        } else {
-            if ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
-                insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
-                    get_session('ss_cert_type'));                                                                                                   // 본인인증 후 정보 수정 시 내역 기록
-            }
-        }
+    sql_query($sql);
+    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) {
+        // 아이핀일때 hash 값 체크 hp미포함)
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
+            get_session('ss_cert_type'));
+        // 본인인증 후 정보 수정 시 내역 기록
+    } elseif ($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) {
+        // 간편인증, 휴대폰일때 hash 값 체크 hp포함
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'),
+            get_session('ss_cert_type'));
+        // 본인인증 후 정보 수정 시 내역 기록
     }
 }
 
@@ -487,24 +464,23 @@ if (isset($_FILES['mb_icon']) && is_uploaded_file($_FILES['mb_icon']['tmp_name']
                 // 에러메세지는 출력하지 않는다.
                 //-----------------------------------------------------------------
                 $size = @getimagesize($dest_path);
-                if (!($size[2] === 1 || $size[2] === 2 || $size[2] === 3)) { // jpg, gif, png 파일이 아니면 올라간 이미지를 삭제한다.
+                if (!($size[2] === 1 || $size[2] === 2 || $size[2] === 3)) {
+                    // jpg, gif, png 파일이 아니면 올라간 이미지를 삭제한다.
                     @unlink($dest_path);
-                } else {
-                    if ($size[0] > $config['cf_member_icon_width'] || $size[1] > $config['cf_member_icon_height']) {
-                        $thumb = null;
-                        if ($size[2] === 2 || $size[2] === 3) {
-                            //jpg 또는 png 파일 적용
-                            $thumb = thumbnail($mb_icon_img, $mb_dir, $mb_dir, $config['cf_member_icon_width'],
-                                $config['cf_member_icon_height'], true, true);
-                            if ($thumb) {
-                                @unlink($dest_path);
-                                rename($mb_dir.'/'.$thumb, $dest_path);
-                            }
-                        }
-                        if (!$thumb) {
-                            // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+                } elseif ($size[0] > $config['cf_member_icon_width'] || $size[1] > $config['cf_member_icon_height']) {
+                    $thumb = null;
+                    if ($size[2] === 2 || $size[2] === 3) {
+                        //jpg 또는 png 파일 적용
+                        $thumb = thumbnail($mb_icon_img, $mb_dir, $mb_dir, $config['cf_member_icon_width'],
+                            $config['cf_member_icon_height'], true, true);
+                        if ($thumb) {
                             @unlink($dest_path);
+                            rename($mb_dir.'/'.$thumb, $dest_path);
                         }
+                    }
+                    if (!$thumb) {
+                        // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+                        @unlink($dest_path);
                     }
                 }
                 //=================================================================\
@@ -534,7 +510,7 @@ if ($config['cf_member_img_size'] && $config['cf_member_img_width'] && $config['
     // 회원 프로필 이미지 업로드
     $mb_img = '';
     if (isset($_FILES['mb_img']) && is_uploaded_file($_FILES['mb_img']['tmp_name'])) {
-        $msg = $msg ? $msg."\\r\\n" : '';
+        $msg = $msg !== '' && $msg !== '0' ? $msg."\\r\\n" : '';
 
         if (preg_match($image_regex, $_FILES['mb_img']['name'])) {
             // 아이콘 용량이 설정값보다 이하만 업로드 가능
@@ -546,24 +522,23 @@ if ($config['cf_member_img_size'] && $config['cf_member_img_width'] && $config['
                 chmod($dest_path, G5_FILE_PERMISSION);
                 if (file_exists($dest_path)) {
                     $size = @getimagesize($dest_path);
-                    if (!($size[2] === 1 || $size[2] === 2 || $size[2] === 3)) { // gif jpg png 파일이 아니면 올라간 이미지를 삭제한다.
+                    if (!($size[2] === 1 || $size[2] === 2 || $size[2] === 3)) {
+                        // gif jpg png 파일이 아니면 올라간 이미지를 삭제한다.
                         @unlink($dest_path);
-                    } else {
-                        if ($size[0] > $config['cf_member_img_width'] || $size[1] > $config['cf_member_img_height']) {
-                            $thumb = null;
-                            if ($size[2] === 2 || $size[2] === 3) {
-                                //jpg 또는 png 파일 적용
-                                $thumb = thumbnail($mb_icon_img, $mb_dir, $mb_dir, $config['cf_member_img_width'],
-                                    $config['cf_member_img_height'], true, true);
-                                if ($thumb) {
-                                    @unlink($dest_path);
-                                    rename($mb_dir.'/'.$thumb, $dest_path);
-                                }
-                            }
-                            if (!$thumb) {
-                                // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+                    } elseif ($size[0] > $config['cf_member_img_width'] || $size[1] > $config['cf_member_img_height']) {
+                        $thumb = null;
+                        if ($size[2] === 2 || $size[2] === 3) {
+                            //jpg 또는 png 파일 적용
+                            $thumb = thumbnail($mb_icon_img, $mb_dir, $mb_dir, $config['cf_member_img_width'],
+                                $config['cf_member_img_height'], true, true);
+                            if ($thumb) {
                                 @unlink($dest_path);
+                                rename($mb_dir.'/'.$thumb, $dest_path);
                             }
+                        }
+                        if (!$thumb) {
+                            // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+                            @unlink($dest_path);
                         }
                     }
                     //=================================================================\
@@ -589,7 +564,7 @@ if ($config['cf_use_email_certify'] && $old_email != $mb_email) {
     $certify_href = G5_BBS_URL.'/email_certify.php?mb_id='.$mb_id.'&amp;mb_md5='.$mb_md5;
 
     ob_start();
-    include_once('./register_form_update_mail3.php');
+    include_once(__DIR__ . '/register_form_update_mail3.php');
     $content = ob_get_contents();
     ob_end_clean();
 
@@ -616,10 +591,8 @@ if ($w == '' && $default['de_member_reg_coupon_use'] && $default['de_member_reg_
         if (!$row3['cnt']) {
             $create_coupon = true;
             break;
-        } else {
-            if ($j > 20) {
-                break;
-            }
+        } elseif ($j > 20) {
+            break;
         }
     } while (1);
 
@@ -668,7 +641,7 @@ if (isset($_SESSION['ss_cert_adult'])) {
     unset($_SESSION['ss_cert_adult']);
 }
 
-if ($msg) {
+if ($msg !== '' && $msg !== '0') {
     echo '<script>alert(\''.$msg.'\');</script>';
 }
 
@@ -676,16 +649,14 @@ run_event('register_form_update_after', $mb_id, $w);
 
 if ($w == '') {
     goto_url(G5_HTTP_BBS_URL.'/register_result.php');
-} else {
-    if ($w == 'u') {
-        $row = sql_fetch(" select mb_password from {$g5['member_table']} where mb_id = '{$member['mb_id']}' ");
-        $tmp_password = $row['mb_password'];
-
-        if ($old_email != $mb_email && $config['cf_use_email_certify']) {
-            set_session('ss_mb_id', '');
-            alert('회원 정보가 수정 되었습니다.\n\nE-mail 주소가 변경되었으므로 다시 인증하셔야 합니다.', G5_URL);
-        } else {
-            echo '
+} elseif ($w == 'u') {
+    $row = sql_fetch(" select mb_password from {$g5['member_table']} where mb_id = '{$member['mb_id']}' ");
+    $tmp_password = $row['mb_password'];
+    if ($old_email != $mb_email && $config['cf_use_email_certify']) {
+        set_session('ss_mb_id', '');
+        alert('회원 정보가 수정 되었습니다.\n\nE-mail 주소가 변경되었으므로 다시 인증하셔야 합니다.', G5_URL);
+    } else {
+        echo '
         <!doctype html>
         <html lang="ko">
         <head>
@@ -704,6 +675,5 @@ if ($w == '') {
         </script>
         </body>
         </html>';
-        }
     }
 }

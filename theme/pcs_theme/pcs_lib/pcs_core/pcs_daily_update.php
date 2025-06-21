@@ -61,9 +61,13 @@ if($_POST['issue_mode'] == 'issue') {echo '<input type="file" name="myFile1" id=
 	<td class="main_td" style="height:60px" colspan="2"><a id="sbm" href = 'javascript:document.daily.submit()' <?php if($_POST['issue_mode'] != 'remove') {echo 'hidden';} ?>>
 <?php
 	if($member['mb_7']){
-		if($_POST['issue_mode'] == 'issue'||$_POST['issue_mode'] == 'clear') {echo '<font color = blue><b> UPDATE </b></font>';}
-		else if($_POST['issue_mode'] == 'remove' && $rmv_ok) {echo '<font color = orange><b> REMOVE </b></font>';} 
-		else if($_POST['issue_mode'] == 'u_desc') {echo '<font color = green><b> UPDATE </b></font>';} 
+		if ($_POST['issue_mode'] == 'issue'||$_POST['issue_mode'] == 'clear') {
+            echo '<font color = blue><b> UPDATE </b></font>';
+        } elseif ($_POST['issue_mode'] == 'remove' && $rmv_ok) {
+            echo '<font color = orange><b> REMOVE </b></font>';
+        } elseif ($_POST['issue_mode'] == 'u_desc') {
+            echo '<font color = green><b> UPDATE </b></font>';
+        } 
 	}
 ?>
 

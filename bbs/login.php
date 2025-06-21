@@ -1,13 +1,13 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (function_exists('social_check_login_before')) {
     $social_login_html = social_check_login_before();
 }
 
 $g5['title'] = '로그인';
-include_once('./_head.sub.php');
+include_once(__DIR__ . '/_head.sub.php');
 
 $url = isset($_GET['url']) ? strip_tags($_GET['url']) : '';
 $od_id = isset($_POST['od_id']) ? safe_replace_regex($_POST['od_id'], 'od_id') : '';
@@ -17,7 +17,7 @@ check_url_host($url);
 
 // 이미 로그인 중이라면
 if ($is_member) {
-    if ($url) {
+    if ($url !== '' && $url !== '0') {
         goto_url($url);
     } else {
         goto_url(G5_URL);
@@ -37,4 +37,4 @@ include_once($member_skin_path.'/login.skin.php');
 
 run_event('member_login_tail', $login_url, $login_action_url, $member_skin_path, $url);
 
-include_once('./_tail.sub.php');
+include_once(__DIR__ . '/_tail.sub.php');

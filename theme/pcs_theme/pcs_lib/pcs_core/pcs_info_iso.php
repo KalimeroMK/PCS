@@ -11,12 +11,12 @@ $query_pkg2 = 'SELECT wr_id FROM ' . G5_TABLE_PREFIX . 'write_package WHERE wr_s
 $sql_pkg2 = sql_query($query_pkg2);
 $sql_pkg2_arr = sql_fetch_array($sql_pkg2);
 
-spl_ins_qry($_POST['field_id'], $_POST['btn_stat']);
+spl_ins_qry($_POST['field_id'] ?? null, $_POST['btn_stat'] ?? null);
 
-if ($_POST['folder'] || $_POST['ph']) {
-	include_once(PCS_LIB . '/pcs_photo.php');
-} else if ($_POST['j_mode']) {
-	include_once(PCS_LIB . '/pcs_info_jnt_edit.php');
+if (($_POST['folder'] ?? null) || ($_POST['ph'] ?? null)) {
+    include_once(PCS_LIB . '/pcs_photo.php');
+} elseif ($_POST['j_mode'] ?? null) {
+    include_once(PCS_LIB . '/pcs_info_jnt_edit.php');
 } else {
 
 	$con_dwg_array = explode(";", $sql_dwg_arr['con_dwg']);
@@ -26,14 +26,14 @@ if ($_POST['folder'] || $_POST['ph']) {
 
 	if (!G5_IS_MOBILE) { /////////// PC 버전 시작
 
-		if ($_POST['dwg']) {
+		if ($_POST['dwg'] ?? null) {
 			$query_pkg = 'UPDATE ' . G5_TABLE_PREFIX . 'pcs_info_iso SET pkg_no1 = "' . $_POST['pkg1'] . '" ,pkg_no2 = "' . $_POST['pkg2'] . '" WHERE dwg_no = "' . $_POST['dwg'] . '"';
 			sql_query($query_pkg);
 		}
 
 
 
-		if ($_POST['num_app']) {
+		if ($_POST['num_app'] ?? null) {
 			$query_approve = 'UPDATE ' . G5_TABLE_PREFIX . 'pcs_info_iso_coor SET dwg_state = "' . $_POST['num_app'] . '" WHERE dwg_no = "' . $view['wr_subject'] . '" AND rev_no = "' . $sql_dwg_arr['rev_no'] . '"';
 			sql_query($query_approve);
 		}
@@ -42,11 +42,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 		$sql_dwg_coor_check = sql_query($query_dwg_coor_check);
 		$sql_dwg_coor_array = sql_fetch_array($sql_dwg_coor_check);
 
-		$spl_array = explode(';', $sql_dwg_coor_array['joint_info']);
+		$spl_array = explode(';', $sql_dwg_coor_array['joint_info'] ?? '');
 ?>
 		<p style="text-align:center; font-size:50px;" onclick="dom_hide('spec');">SPECIFICATION</p>
 		<table class="main" id="spec">
-<?php var_dump($sql_dwg_coor_array['dwg_state'])?>
+<?php var_dump($sql_dwg_coor_array['dwg_state'] ?? null)?>
 			<tbody>
 				<td class="main_td td_sub" style="height:80px;" colspan="6"> <a href='javascript:document.shopdwg.submit()'> <b> DRAWING INFORMATION </b> </a> </td>
 				<?php viewPDF('shopdwg', 'shop', $view['wr_subject'], $sql_dwg_arr['shop_dwg']);  ?>
@@ -87,22 +87,25 @@ if ($_POST['folder'] || $_POST['ph']) {
 					</td>
 
 					<td class="main_td">
-						<?php
-						if ($sql_dwg_coor_array['dwg_state'] == 'Approved') {
-							$txt_color = 'green';
-							$txt_value = 'Marked';
-						} else if ($sql_dwg_coor_array['dwg_state'] == 'Marked') {
-							$txt_color = 'blue';
-							$txt_value = 'Approved';
-						}
-						if ($member['mb_3'] > 2) {
-							echo '
-		<a href = "javascript:submit_mark.submit()" ><font color = "' . $txt_color . '"><b>' . $sql_dwg_coor_array['dwg_state'] . '</b></font></a>
+							<?php
+							$dwg_state = $sql_dwg_coor_array['dwg_state'] ?? '';
+                            $txt_color = 'black'; // default color
+                            $txt_value = '';
+                            if ($dwg_state == 'Approved') {
+                                $txt_color = 'green';
+                                $txt_value = 'Marked';
+                            } elseif ($dwg_state == 'Marked') {
+                                $txt_color = 'blue';
+                                $txt_value = 'Approved';
+                            }
+							if ($member['mb_3'] > 2) {
+								echo '
+		<a href = "javascript:submit_mark.submit()" ><font color = "' . $txt_color . '"><b>' . $dwg_state . '</b></font></a>
 		<form name="submit_mark" method="post" onSubmit="return doSumbit()">
 		<input type="hidden" name="num_app" value="' . $txt_value . '">
 		</form>';
-						} else {
-							echo '<font color = "' . $txt_color . '"><b>' . $sql_dwg_coor_array['dwg_state'] . '</b></font>';
+							} else {
+								echo '<font color = "' . $txt_color . '"><b>' . $dwg_state . '</b></font>';
 						}
 						?>
 					</td>
@@ -130,7 +133,8 @@ if ($_POST['folder'] || $_POST['ph']) {
 							echo '<input type="text" name="pkg2" style="padding:0px 0px 0px 15px; text-align:center;width:90%;height:50px;font-size:30px;border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;" value="' . $sql_dwg_arr['pkg_no2'] . '">';
 							echo '</form>';
 						} else {
-							echo '<a href=' . G5_BBS_URL . '/board.php?bo_table=package&wr_id=' . $sql_pkg2_arr['wr_id'] . '>' . $sql_dwg_arr['pkg_no2'] . '</a>';
+							$wr_id = $sql_pkg2_arr['wr_id'] ?? '';
+							echo '<a href=' . G5_BBS_URL . '/board.php?bo_table=package&wr_id=' . $wr_id . '>' . $sql_dwg_arr['pkg_no2'] . '</a>';
 						}
 						?>
 
@@ -191,7 +195,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 
 							<td class="jnt_td" style='height:80px;font-size:15px;'>
 								<?php
-								if ($con_dwg_array[$i]) {
+								if ($con_dwg_array[$i] !== '' && $con_dwg_array[$i] !== '0') {
 									$j++;
 									$con_no = $i + 1;
 									if ($sql_con_dwg_arr['wr_id']) {
@@ -212,7 +216,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 								echo '</tr><tr>';
 							}
 						}
-						if ($j % 6) {
+						if ($j % 6 !== 0) {
 							for ($k = 0; $k < 6 - ($j % 6); $k++) { ?>
 								<td class="main_td"></td>
 					<?php
@@ -241,7 +245,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 
 							<td class="jnt_td" style='height:80px;font-size:15px;'>
 								<?php
-								if ($inc_tp_array[$i]) {
+								if ($inc_tp_array[$i] !== '' && $inc_tp_array[$i] !== '0') {
 									$j++;
 									$con_no = $i + 1;
 									if ($sql_inc_tp_arr['wr_id']) {
@@ -258,7 +262,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 								echo '</tr><tr>';
 							}
 						}
-						if ($j % 6) {
+						if ($j % 6 !== 0) {
 							for ($k = 0; $k < 6 - ($j % 6); $k++) { ?>
 								<td class="main_td"></td>
 					<?php
@@ -276,7 +280,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 				<tr>
 					<?php
 
-					if (strstr($sql_dwg_coor_array['joint_info'], 'spool')) {
+					if (strstr($sql_dwg_coor_array['joint_info'] ?? '', 'spool')) {
 						echo '<td class="main_td" colspan=6 style="background-color: #BCF5A9; height:80px;"><b>INCLUDED SPOOL</td></tr>';
 					}
 					$j = 0;
@@ -307,7 +311,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 							}
 						}
 					}
-					if ($j % 6) {
+					if ($j % 6 !== 0) {
 						for ($k = 0; $k < 6 - ($j % 6); $k++) { ?>
 							<td class="main_td"></td>
 					<?php
@@ -327,7 +331,8 @@ if ($_POST['folder'] || $_POST['ph']) {
 		<p style="text-align:center; font-size:50px;" onclick="dom_hide('joint');">JOINT STATUS</p>
 		<caption>
 			<?php
-			if ($sql_dwg_coor_array['dwg_state'] == 'Marked' || $member['mb_3'] > 2) {
+			$dwg_state = $sql_dwg_coor_array['dwg_state'] ?? '';
+			if ($dwg_state == 'Marked' || $member['mb_3'] > 2) {
 				echo '
 		<a href = "javascript:jEdit.submit()" ><p style="text-align:right; font-size:30px;"> Joint information match up </p></a>
 		<form name="jEdit" method="post" onSubmit="return doSumbit()">
@@ -385,9 +390,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 						$query_con = 'SELECT * FROM ' . $temptbl . ' WHERE j_key = "' . $sql_ref_sbc_arr['j_key'] . '"';
 						$sql_ref_con = sql_query($query_con, true);
 						$sql_ref_con_arr = sql_fetch_array($sql_ref_con);
+                        $counter = count($field_name_sbc);
 
-						for ($i = 0; $i < count($field_name_sbc); $i++) {
-							if (substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 4, 1) == '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 7, 1) == '-') {
+						for ($i = 0; $i < $counter; $i++) {
+							if (substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 4, 1) === '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 7, 1) === '-') {
 								if ($sql_ref_sbc_arr[$field_name_sbc[$i]] == '0000-00-00 00:00:00') {
 									$sql_ref_sbc_arr[$field_name_sbc[$i]] = false;
 								} else {
@@ -395,17 +401,12 @@ if ($_POST['folder'] || $_POST['ph']) {
 								}
 							}
 						}
-						if ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
-							$PCS_DEL = "<del><font color = red>";
-						} else {
-							$PCS_DEL = '';
-						}
+                        $PCS_DEL = $sql_ref_sbc_arr['j_stat'] == 'DEL' ? "<del><font color = red>" : '';
+                        $counter = count($field_name_con);
 
-						for ($i = 0; $i < count($field_name_con); $i++) {
-							if (substr($sql_ref_con_arr[$field_name_con[$i]], 4, 1) == '-' && substr($sql_ref_con_arr[$field_name_con[$i]], 7, 1) == '-') {
-								if ($sql_ref_con_arr[$field_name_con[$i]] == '0000-00-00') {
-									$sql_ref_con_arr[$field_name_con[$i]] = false;
-								}
+						for ($i = 0; $i < $counter; $i++) {
+							if (substr($sql_ref_con_arr[$field_name_con[$i]], 4, 1) === '-' && substr($sql_ref_con_arr[$field_name_con[$i]], 7, 1) === '-' && $sql_ref_con_arr[$field_name_con[$i]] == '0000-00-00') {
+								$sql_ref_con_arr[$field_name_con[$i]] = false;
 							}
 						}
 						//	echo $query_sbc;
@@ -431,10 +432,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 								echo $PCS_DEL;
 								photo_thumb('photo_1', $sql_ref_sbc_arr['photo_1'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
 								if (!$sql_ref_sbc_arr['photo_1'] && $member['mb_2'] > 1) {
-									photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-								} else if ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2'] == 3)) {
-									photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-								}
+                                    photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+                                } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2'] == 3)) {
+                                    photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+                                }
 								echo '<br>' . $sql_ref_sbc_arr['item_1_type'];
 								rep_view('heat_1' . $idx, 'report/heat', '',	$sql_ref_con_arr['heat_1']);
 								?>
@@ -446,10 +447,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 								echo $PCS_DEL;
 								photo_thumb('photo_2', $sql_ref_sbc_arr['photo_2'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
 								if (!$sql_ref_sbc_arr['photo_2'] && $member['mb_2'] > 1) {
-									photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-								} else if ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2'] == 3)) {
-									photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-								}
+                                    photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+                                } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2'] == 3)) {
+                                    photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+                                }
 								echo '<br>' . $sql_ref_sbc_arr['item_2_type'];
 								rep_view('heat_2' . $idx, 'report/heat', '',	$sql_ref_con_arr['heat_2']);
 								?>
@@ -459,14 +460,12 @@ if ($_POST['folder'] || $_POST['ph']) {
 								<?php
 								echo $PCS_DEL;
 								if ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
-									echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
-								} else {
-									if ($member['mb_4'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] != '') {
-										echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
-									} else {
+                                    echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
+                                } elseif ($member['mb_4'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] != '') {
+                                    echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
+                                } else {
 										insp_fitup($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_4'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_fitup_req_date'], $sql_ref_sbc_arr['pcs_fitup_rlt'], $sql_ref_sbc_arr['pcs_fitup_rlt_date'], $sql_ref_sbc_arr['pcs_vi_req_date']);
 									}
-								}
 								?>
 							</td>
 
@@ -499,13 +498,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 										echo 'Not yet<br>VI accepted';
 									} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 										echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
-									} else {
-										if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] != '') {
-											echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
-										} else {
+									} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] != '') {
+                                        echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
+                                    } else {
 											insp_pmi($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pmi_req_date'], $sql_ref_sbc_arr['pcs_pmi_rlt'], $sql_ref_sbc_arr['pcs_pmi_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);
 										}
-									}
 								} else {
 									echo 'N/A';
 								}
@@ -522,13 +519,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 										echo 'Not yet<br>VI accepted';
 									} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 										echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
-									} else {
-										if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] != '') {
-											echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
-										} else {
+									} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] != '') {
+                                        echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
+                                    } else {
 											insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);
 										}
-									}
 								} else {
 									echo 'N/A';
 								}
@@ -546,13 +541,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 									echo 'Not yet<br>PWHT accepted';
 								} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 									echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
-								} else {
-									if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] != '') {
-										echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
-									} else {
+								} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] != '') {
+                                    echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
+                                } else {
 										insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);
 									}
-								}
 
 								?>
 							</td>
@@ -636,7 +629,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 								<tr>
 									<td class="jnt_td" style='height:80px;font-size:15px;'>
 										<?php
-										if ($inc_tp_array[$i]) {
+										if ($inc_tp_array[$i] !== '' && $inc_tp_array[$i] !== '0') {
 											$j++;
 											$con_no = $i + 1;
 											if ($sql_inc_tp_arr['wr_id']) {
@@ -679,9 +672,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 
 						while ($sql_ref_sbc_arr = sql_fetch_array($sql_ref_sbc)) {
 							$idx++;
+                            $counter = count($field_name_sbc);
 
-							for ($i = 0; $i < count($field_name_sbc); $i++) {
-								if (substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 4, 1) == '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 7, 1) == '-') {
+							for ($i = 0; $i < $counter; $i++) {
+								if (substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 4, 1) === '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]], 7, 1) === '-') {
 									if ($sql_ref_sbc_arr[$field_name_sbc[$i]] == '0000-00-00 00:00:00') {
 										$sql_ref_sbc_arr[$field_name_sbc[$i]] = false;
 									} else {
@@ -715,10 +709,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 										echo $PCS_DEL;
 										photo_thumb('photo_1', $sql_ref_sbc_arr['photo_1'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
 										if (!$sql_ref_sbc_arr['photo_1'] && $member['mb_2'] > 1) {
-											photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-										} else if ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2'] == 3)) {
-											photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-										}
+                                            photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+                                        } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2'] == 3)) {
+                                            photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+                                        }
 										echo '<br>' . $sql_ref_sbc_arr['item_1_type'];
 										rep_view('heat_1' . $idx, 'report/heat', '',	$sql_ref_con_arr['heat_1']);
 										?>
@@ -728,10 +722,10 @@ if ($_POST['folder'] || $_POST['ph']) {
 										echo $PCS_DEL;
 										photo_thumb('photo_2', $sql_ref_sbc_arr['photo_2'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
 										if (!$sql_ref_sbc_arr['photo_2'] && $member['mb_2'] > 1) {
-											photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-										} else if ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2'] == 3)) {
-											photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-										}
+                                            photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+                                        } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2'] != 3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2'] == 3)) {
+                                            photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+                                        }
 										echo '<br>' . $sql_ref_sbc_arr['item_2_type'];
 										rep_view('heat_2' . $idx, 'report/heat', '',	$sql_ref_con_arr['heat_2']);
 										?>
@@ -746,14 +740,12 @@ if ($_POST['folder'] || $_POST['ph']) {
 										<?php
 										echo $PCS_DEL;
 										if ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
-											echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
-										} else {
-											if ($member['mb_4'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] != '') {
-												echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
-											} else {
+                                            echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
+                                        } elseif ($member['mb_4'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] != '') {
+                                            echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_fitup_rlt'];
+                                        } else {
 												insp_fitup($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_4'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_fitup_req_date'], $sql_ref_sbc_arr['pcs_fitup_rlt'], $sql_ref_sbc_arr['pcs_fitup_rlt_date'], $sql_ref_sbc_arr['pcs_vi_req_date']);
 											}
-										}
 										?>
 									</td>
 									<td class='jnt_td' style="width: 50%;" colspan="2">
@@ -793,13 +785,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 													echo 'Not yet<br>VI accepted';
 												} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 													echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
-												} else {
-													if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] != '') {
-														echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
-													} else {
+												} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] != '') {
+                                                    echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pmi_rlt'];
+                                                } else {
 														insp_pmi($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pmi_req_date'], $sql_ref_sbc_arr['pcs_pmi_rlt'], $sql_ref_sbc_arr['pcs_pmi_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);
 													}
-												}
 											} else {
 												echo 'N/A';
 											}
@@ -814,13 +804,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 													echo 'Not yet<br>VI accepted';
 												} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 													echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
-												} else {
-													if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] != '') {
-														echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
-													} else {
+												} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] != '') {
+                                                    echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_pwht_rlt'];
+                                                } else {
 														insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);
 													}
-												}
 											} else {
 												echo 'N/A';
 											}
@@ -844,13 +832,11 @@ if ($_POST['folder'] || $_POST['ph']) {
 											echo 'Not yet<br>PWHT accepted';
 										} elseif ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
 											echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
-										} else {
-											if ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] != '') {
-												echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
-											} else {
+										} elseif ($member['mb_5'] < 2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] != '') {
+                                            echo $sql_ref_sbc_arr['pcs_nde_rlt_date'] . '<br>' . $sql_ref_sbc_arr['pcs_nde_rlt'];
+                                        } else {
 												insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);
 											}
-										}
 
 										?>
 									</td>

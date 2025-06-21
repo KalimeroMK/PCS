@@ -19,11 +19,8 @@ class PdfHexString extends PdfType
 {
     /**
      * Parses a hexadecimal string object from the stream reader.
-     *
-     * @param StreamReader $streamReader
-     * @return bool|self
      */
-    public static function parse(StreamReader $streamReader)
+    public static function parse(StreamReader $streamReader): false|\setasign\Fpdi\PdfParser\Type\PdfHexString
     {
         $bufferOffset = $streamReader->getOffset();
 
@@ -53,9 +50,8 @@ class PdfHexString extends PdfType
      * Helper method to create an instance.
      *
      * @param string $string The hex encoded string.
-     * @return self
      */
-    public static function create($string)
+    public static function create($string): self
     {
         $v = new self();
         $v->value = $string;

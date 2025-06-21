@@ -90,7 +90,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_CSS_URL.'/style.css">', 0
         $coupon .= '</li>'.PHP_EOL;
     }
 
-    if($coupon)
+    if($coupon !== '' && $coupon !== '0')
         echo '<ul>'.PHP_EOL.$coupon.'</ul>'.PHP_EOL;
     else
         echo '<p class="no_coupon">사용할 수 있는 쿠폰이 없습니다.</p>';
@@ -183,7 +183,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_CSS_URL.'/style.css">', 0
         $coupon .= '</li>'.PHP_EOL;
     }
 
-    if($coupon)
+    if($coupon !== '' && $coupon !== '0')
         echo '<ul>'.PHP_EOL.$coupon.'</ul>'.PHP_EOL;
     else
         echo '<p class="no_coupon">사용할 수 있는 쿠폰이 없습니다.</p>';

@@ -6,7 +6,7 @@ if (!defined('_GNUBOARD_')) {
 
 // 게시판에서 두단어 이상 검색 후 검색된 게시물에 코멘트를 남기면 나오던 오류 수정
 $sop = strtolower($sop);
-if ($sop != 'and' && $sop != 'or') {
+if ($sop !== 'and' && $sop !== 'or') {
     $sop = 'and';
 }
 
@@ -83,11 +83,10 @@ if (($member['mb_id'] && ($member['mb_id'] === $write['mb_id'])) || $is_admin) {
     $update_href = short_url_clean(G5_BBS_URL.'/write.php?w=u&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr);
     set_session('ss_delete_token', $token = uniqid(time()));
     $delete_href = G5_BBS_URL.'/delete.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;token='.$token.'&amp;page='.$page.urldecode($qstr);
-} else {
-    if (!$write['mb_id']) { // 회원이 쓴 글이 아니라면
-        $update_href = G5_BBS_URL.'/password.php?w=u&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
-        $delete_href = G5_BBS_URL.'/password.php?w=d&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
-    }
+} elseif (!$write['mb_id']) {
+    // 회원이 쓴 글이 아니라면
+    $update_href = G5_BBS_URL.'/password.php?w=u&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
+    $delete_href = G5_BBS_URL.'/password.php?w=d&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
 }
 
 // 최고, 그룹관리자라면 글 복사, 이동 가능
@@ -124,10 +123,8 @@ if (strstr($sfl, 'subject')) {
 $html = 0;
 if (strstr($view['wr_option'], 'html1')) {
     $html = 1;
-} else {
-    if (strstr($view['wr_option'], 'html2')) {
-        $html = 2;
-    }
+} elseif (strstr($view['wr_option'], 'html2')) {
+    $html = 2;
 }
 
 $view['content'] = conv_content($view['wr_content'], $html);

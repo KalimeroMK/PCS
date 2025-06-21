@@ -4,11 +4,7 @@ if (!defined("_GNUBOARD_")) {
     exit;
 } // 개별 페이지 접근 불가
 
-if (!defined('_SHOP_')) {
-    $pop_division = 'comm';
-} else {
-    $pop_division = 'shop';
-}
+$pop_division = defined('_SHOP_') ? 'shop' : 'comm';
 
 $sql = " select * from {$g5['new_win_table']}
           where '".G5_TIME_YMDHIS."' between nw_begin_time and nw_end_time

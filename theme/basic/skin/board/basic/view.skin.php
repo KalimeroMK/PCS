@@ -90,7 +90,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <?php
         // 파일 출력
         $v_img_count = count($view['file']);
-        if($v_img_count) {
+        if($v_img_count !== 0) {
             echo "<div id=\"bo_v_img\">\n";
 
             foreach($view['file'] as $view_file) {
@@ -110,31 +110,39 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
 
         <!--  추천 비추천 시작 { -->
-        <?php if ( $good_href || $nogood_href) { ?>
+        <?php if ($good_href || $nogood_href) {
+             ?>
         <div id="bo_v_act">
-            <?php if ($good_href) { ?>
-            <span class="bo_v_act_gng">
-                <a href="<?php echo $good_href.'&amp;'.$qstr ?>" id="good_button" class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></a>
-                <b id="bo_v_act_good"></b>
-            </span>
-            <?php } ?>
-            <?php if ($nogood_href) { ?>
-            <span class="bo_v_act_gng">
-                <a href="<?php echo $nogood_href.'&amp;'.$qstr ?>" id="nogood_button" class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></a>
-                <b id="bo_v_act_nogood"></b>
-            </span>
-            <?php } ?>
+            <?php 
+             if ($good_href) { ?>
+                <span class="bo_v_act_gng">
+                    <a href="<?php echo $good_href.'&amp;'.$qstr ?>" id="good_button" class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></a>
+                    <b id="bo_v_act_good"></b>
+                </span>
+                <?php }
+             ?>
+            <?php 
+             if ($nogood_href) { ?>
+                <span class="bo_v_act_gng">
+                    <a href="<?php echo $nogood_href.'&amp;'.$qstr ?>" id="nogood_button" class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></a>
+                    <b id="bo_v_act_nogood"></b>
+                </span>
+                <?php }
+             ?>
         </div>
-        <?php } else {
-            if($board['bo_use_good'] || $board['bo_use_nogood']) {
-        ?>
+        <?php 
+         } elseif ($board['bo_use_good'] || $board['bo_use_nogood']) {
+             ?>
         <div id="bo_v_act">
-            <?php if($board['bo_use_good']) { ?><span class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></span><?php } ?>
-            <?php if($board['bo_use_nogood']) { ?><span class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></span><?php } ?>
+            <?php 
+             if($board['bo_use_good']) { ?><span class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></span><?php }
+             ?>
+            <?php 
+             if($board['bo_use_nogood']) { ?><span class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></span><?php }
+             ?>
         </div>
-        <?php
-            }
-        }
+        <?php 
+         }
         ?>
         <!-- }  추천 비추천 끝 -->
     </section>
@@ -142,21 +150,24 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <?php
     $cnt = 0;
     if ($view['file']['count']) {
-        for ($i=0; $i<count($view['file']); $i++) {
+        $counter = count($view['file']);
+        for ($i=0; $i<$counter; $i++) {
             if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view'])
                 $cnt++;
         }
     }
 	?>
 
-    <?php if($cnt) { ?>
+    <?php if($cnt !== 0) { ?>
     <!-- 첨부파일 시작 { -->
     <section id="bo_v_file">
         <h2>첨부파일</h2>
         <ul>
-        <?php
+        
+    // 가변 파일
+    $counter = count($view['file']);<?php
         // 가변 파일
-        for ($i=0; $i<count($view['file']); $i++) {
+        for ($i=0; $i<$counter; $i++) {
             if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view']) {
          ?>
             <li>
@@ -184,7 +195,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <?php
         // 링크
         $cnt = 0;
-        for ($i=1; $i<=count($view['link']); $i++) {
+        $counter = count($view['link']);
+        for ($i=1; $i<=$counter; $i++) {
             if ($view['link'][$i]) {
                 $cnt++;
                 $link = cut_str($view['link'][$i], 70);

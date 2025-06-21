@@ -23,13 +23,13 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
         $banner = '';
         $size = getimagesize($bimg);
         echo '<li>'.PHP_EOL;
-        if ($row['bn_url'][0] == '#')
+        if ($row['bn_url'][0] == '#') {
             $banner .= '<a href="'.$row['bn_url'].'">';
-        else if ($row['bn_url'] && $row['bn_url'] != 'http://') {
+        } elseif ($row['bn_url'] && $row['bn_url'] != 'http://') {
             $banner .= '<a href="'.G5_SHOP_URL.'/bannerhit.php?bn_id='.$row['bn_id'].'"'.$bn_new_win.'>';
         }
         echo $banner.'<img src="'.G5_DATA_URL.'/banner/'.$row['bn_id'].'?'.preg_replace('/[^0-9]/i', '', $row['bn_time']).'" alt="'.get_text($row['bn_alt']).'" width="'.$size[0].'" height="'.$size[1].'"'.$bn_border.'>';
-        if($banner)
+        if($banner !== '' && $banner !== '0')
             echo '</a>'.PHP_EOL;
         echo '</li>'.PHP_EOL;
     }

@@ -45,7 +45,7 @@ trait FpdfTplTrait
      * @param string $orientation "L" for landscape, "P" for portrait.
      * @throws \BadMethodCallException
      */
-    public function setPageFormat($size, $orientation)
+    public function setPageFormat($size, $orientation): void
     {
         if ($this->currentTemplateId !== null) {
             throw new \BadMethodCallException('The page format cannot be changed when writing to a template.');
@@ -110,9 +110,7 @@ trait FpdfTplTrait
             \extract($x, EXTR_IF_EXISTS);
             /** @noinspection NotOptimalIfConditionsInspection */
             /** @noinspection PhpConditionAlreadyCheckedInspection */
-            if (\is_array($x)) {
-                $x = 0;
-            }
+            $x = 0;
         }
 
         $template = $this->templates[$tpl];
@@ -149,7 +147,7 @@ trait FpdfTplTrait
      * @param float|int|null $height The height.
      * @return array|bool An array with following keys: width, height, 0 (=width), 1 (=height), orientation (L or P)
      */
-    public function getTemplateSize($tpl, $width = null, $height = null)
+    public function getTemplateSize($tpl, $width = null, $height = null): false|array
     {
         if (!isset($this->templates[$tpl])) {
             return false;
@@ -295,7 +293,7 @@ trait FpdfTplTrait
         $this->underline = $state['underline'];
 
         $fontKey = $this->FontFamily . $this->FontStyle;
-        if ($fontKey) {
+        if ($fontKey !== '' && $fontKey !== '0') {
             $this->CurrentFont =& $this->fonts[$fontKey];
         } else {
             unset($this->CurrentFont);
@@ -321,7 +319,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function AddPage($orientation = '', $size = '', $rotation = 0)
+    public function AddPage($orientation = '', $size = '', $rotation = 0): void
     {
         if ($this->currentTemplateId !== null) {
             throw new \BadMethodCallException('Pages cannot be added when writing to a template.');
@@ -332,7 +330,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function Link($x, $y, $w, $h, $link)
+    public function Link($x, $y, $w, $h, $link): void
     {
         if ($this->currentTemplateId !== null) {
             throw new \BadMethodCallException('Links cannot be set when writing to a template.');
@@ -354,7 +352,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function SetDrawColor($r, $g = null, $b = null)
+    public function SetDrawColor($r, $g = null, $b = null): void
     {
         parent::SetDrawColor($r, $g, $b);
         if ($this->page === 0 && $this->currentTemplateId !== null) {
@@ -365,7 +363,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function SetFillColor($r, $g = null, $b = null)
+    public function SetFillColor($r, $g = null, $b = null): void
     {
         parent::SetFillColor($r, $g, $b);
         if ($this->page === 0 && $this->currentTemplateId !== null) {
@@ -376,7 +374,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function SetLineWidth($width)
+    public function SetLineWidth($width): void
     {
         parent::SetLineWidth($width);
         if ($this->page === 0 && $this->currentTemplateId !== null) {
@@ -387,7 +385,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function SetFont($family, $style = '', $size = 0)
+    public function SetFont($family, $style = '', $size = 0): void
     {
         parent::SetFont($family, $style, $size);
         if ($this->page === 0 && $this->currentTemplateId !== null) {
@@ -398,7 +396,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function SetFontSize($size)
+    public function SetFontSize($size): void
     {
         parent::SetFontSize($size);
         if ($this->page === 0 && $this->currentTemplateId !== null) {
@@ -449,7 +447,7 @@ trait FpdfTplTrait
      */
     protected function _putxobjectdict()
     {
-        foreach ($this->templates as $key => $template) {
+        foreach ($this->templates as $template) {
             $this->_put('/' . $template['id'] . ' ' . $template['objectNumber'] . ' 0 R');
         }
 
@@ -459,7 +457,7 @@ trait FpdfTplTrait
     /**
      * @inheritdoc
      */
-    public function _out($s)
+    public function _out(string $s): void
     {
         if ($this->currentTemplateId !== null) {
             $this->templates[$this->currentTemplateId]['buffer'] .= $s . "\n";

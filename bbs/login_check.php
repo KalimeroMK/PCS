@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $g5['title'] = "로그인 검사";
 
@@ -45,13 +45,13 @@ if (!$is_need_not_password && (!(isset($mb['mb_id']) && $mb['mb_id']) || !login_
 
 // 차단된 아이디인가?
 if ($mb['mb_intercept_date'] && $mb['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
-    $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "\\1년 \\2월 \\3일", $mb['mb_intercept_date']);
+    $date = preg_replace("/(\\d{4})(\\d{2})(\\d{2})/", "\\1년 \\2월 \\3일", $mb['mb_intercept_date']);
     alert('회원님의 아이디는 접근이 금지되어 있습니다.\n처리일 : '.$date);
 }
 
 // 탈퇴한 아이디인가?
 if ($mb['mb_leave_date'] && $mb['mb_leave_date'] <= date("Ymd", G5_SERVER_TIME)) {
-    $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "\\1년 \\2월 \\3일", $mb['mb_leave_date']);
+    $date = preg_replace("/(\\d{4})(\\d{2})(\\d{2})/", "\\1년 \\2월 \\3일", $mb['mb_leave_date']);
     alert('탈퇴한 아이디이므로 접근하실 수 없습니다.\n탈퇴일 : '.$date);
 }
 
@@ -112,11 +112,7 @@ if ($url) {
 
     $link = urldecode($url);
     // 2003-06-14 추가 (다른 변수들을 넘겨주기 위함)
-    if (preg_match("/\?/", $link)) {
-        $split = "&amp;";
-    } else {
-        $split = "?";
-    }
+    $split = preg_match("/\?/", $link) ? "&amp;" : "?";
 
     // $_POST 배열변수에서 아래의 이름을 가지지 않은 것만 넘김
     $post_check_keys = ['mb_id', 'mb_password', 'x', 'y', 'url'];
@@ -164,10 +160,8 @@ run_event('member_login_check', $mb, $link, $is_social_login);
 if (is_admin($mb['mb_id']) && is_dir(G5_DATA_PATH.'/tmp/')) {
     $tmp_data_file = G5_DATA_PATH.'/tmp/tmp-write-test-'.time();
     $tmp_data_check = @fopen($tmp_data_file, 'w');
-    if ($tmp_data_check) {
-        if (!@fwrite($tmp_data_check, G5_URL)) {
-            $tmp_data_check = false;
-        }
+    if ($tmp_data_check && !@fwrite($tmp_data_check, G5_URL)) {
+        $tmp_data_check = false;
     }
     if (is_resource($tmp_data_check)) {
         @fclose($tmp_data_check);

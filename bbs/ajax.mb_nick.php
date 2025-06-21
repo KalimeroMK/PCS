@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_LIB_PATH.'/register.lib.php');
 
 $mb_nick = isset($_POST['reg_mb_nick']) ? trim($_POST['reg_mb_nick']) : '';

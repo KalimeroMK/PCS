@@ -20,15 +20,16 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
         
         <div class="memo_list">
             <ul>
-	            <?php
-                for ($i=0; $i<count($list); $i++) {
+	            
+$counter = count($list);<?php
+                for ($i=0; $i<$counter; $i++) {
                 $readed = (substr($list[$i]['me_read_datetime'],0,1) == 0) ? '' : 'read';
                 $memo_preview = utf8_strcut(strip_tags($list[$i]['me_memo']), 30, '..');
                 ?>
 	            <li class="<?php echo $readed; ?>">
 	            	<div class="memo_li profile_big_img">
 	            		<?php echo get_member_profile_img($list[$i]['mb_id']); ?>
-	            		<?php if (! $readed){ ?><span class="no_read">안 읽은 쪽지</span><?php } ?>
+	            		<?php if ($readed === '' || $readed === '0'){ ?><span class="no_read">안 읽은 쪽지</span><?php } ?>
 	            	</div>
 	                <div class="memo_li memo_name">
 	                	<?php echo $list[$i]['name']; ?> <span class="memo_datetime"><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $list[$i]['send_datetime']; ?></span>

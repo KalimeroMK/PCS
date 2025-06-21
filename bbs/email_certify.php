@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 // 봇의 메일 링크 크롤링을 방지합니다.
 if (function_exists('check_mail_bot')) {
@@ -23,7 +23,7 @@ if ($row['mb_leave_date'] || $row['mb_intercept_date']) {
 // 인증 링크는 한번만 처리가 되게 한다.
 sql_query(" update {$g5['member_table']} set mb_email_certify2 = '' where mb_id = '$mb_id' ");
 
-if ($mb_md5) {
+if ($mb_md5 !== '' && $mb_md5 !== '0') {
     if ($mb_md5 == $row['mb_email_certify2']) {
         sql_query(" update {$g5['member_table']} set mb_email_certify = '".G5_TIME_YMDHIS."' where mb_id = '{$mb_id}' ");
 

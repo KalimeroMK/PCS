@@ -15,10 +15,7 @@ namespace setasign\Fpdi\PdfParser;
  */
 class Tokenizer
 {
-    /**
-     * @var StreamReader
-     */
-    protected $streamReader;
+    protected \setasign\Fpdi\PdfParser\StreamReader $streamReader;
 
     /**
      * A token stack.
@@ -29,8 +26,6 @@ class Tokenizer
 
     /**
      * Tokenizer constructor.
-     *
-     * @param StreamReader $streamReader
      */
     public function __construct(StreamReader $streamReader)
     {
@@ -50,7 +45,7 @@ class Tokenizer
     /**
      * Clear the token stack.
      */
-    public function clearStack()
+    public function clearStack(): void
     {
         $this->stack = [];
     }
@@ -60,7 +55,7 @@ class Tokenizer
      *
      * @param string $token
      */
-    public function pushStack($token)
+    public function pushStack($token): void
     {
         $this->stack[] = $token;
     }
@@ -132,10 +127,8 @@ class Tokenizer
 
     /**
      * Leap white spaces.
-     *
-     * @return boolean
      */
-    public function leapWhiteSpaces()
+    public function leapWhiteSpaces(): bool
     {
         do {
             if (!$this->streamReader->ensureContent()) {

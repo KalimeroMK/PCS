@@ -24,8 +24,6 @@ class PdfType
      *
      * This method is used to evaluate indirect and direct object references until a final value is reached.
      *
-     * @param PdfType $value
-     * @param PdfParser $parser
      * @param bool $stopAtIndirectObject
      * @return PdfType
      * @throws CrossReferenceException

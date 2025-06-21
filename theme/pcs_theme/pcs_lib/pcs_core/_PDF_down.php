@@ -1,6 +1,6 @@
 <?php
-include_once('./_common.php');
-include_once('./pcs_config.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
 
 switch ($_GET['flde']) {
 

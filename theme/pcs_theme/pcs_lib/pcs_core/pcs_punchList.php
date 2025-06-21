@@ -25,9 +25,11 @@
 </tr>
 <?php
 		while ($sql_pkg_Pchk_arr = sql_fetch_array ($sql_pkg_Pchk)) {
-			if($sql_pkg_Pchk_arr['s_no']*1<10){$jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_00'.$sql_pkg_Pchk_arr['s_no'];}
-			else if($sql_pkg_Pchk_arr['s_no']*1<100){$jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_0'.$sql_pkg_Pchk_arr['s_no'];}
-			else {$jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_'.$sql_pkg_Pchk_arr['s_no'];}
+			if ($sql_pkg_Pchk_arr['s_no']*1<10) {
+                $jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_00'.$sql_pkg_Pchk_arr['s_no'];
+            } elseif ($sql_pkg_Pchk_arr['s_no']*1<100) {
+                $jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_0'.$sql_pkg_Pchk_arr['s_no'];
+            } else {$jpgfile = PCS_URL_PKG.'/'.$sql_pkg_Pchk_arr['pkg_no'].'_'.$sql_pkg_Pchk_arr['s_no'];}
 
 ?>
 <tr>
@@ -63,23 +65,31 @@
 </td>
 <td class="jnt_td" style="height:45px; width:46%" colspan="2">
 <?php
-	if($sql_pkg_Pchk_arr['cleared_by']){
-		echo '<a onclick=\'window.open("'.$jpgfile.'_AF.jpg","'.$jn.$photoType.'","width=650, height=500, left=200, top=100");\'>';
-		echo $sql_pkg_Pchk_arr['cleared_by'].'<br>'.$sql_pkg_Pchk_arr['cleared_date'].'</a>';
-	}
-	else if($member['mb_7']>1){
-?>
-	<a href = 'javascript:document.punch_clear<?php echo $sql_pkg_Pchk_arr['s_no']; ?>.submit()'><font color = blue><b>CLEAR PUNCH</b></font></a>
-	<form name='punch_clear<?php echo $sql_pkg_Pchk_arr['s_no']; ?>' method="post" target="_self" onSubmit="return doSumbit()"> 
+	if ($sql_pkg_Pchk_arr['cleared_by']) {
+    echo '<a onclick=\'window.open("'.$jpgfile.'_AF.jpg","'.$jn.$photoType.'","width=650, height=500, left=200, top=100");\'>';
+    echo $sql_pkg_Pchk_arr['cleared_by'].'<br>'.$sql_pkg_Pchk_arr['cleared_date'].'</a>';
+} elseif ($member['mb_7']>1) {
+    ?>
+	<a href = 'javascript:document.punch_clear<?php 
+    echo $sql_pkg_Pchk_arr['s_no'];
+    ?>.submit()'><font color = blue><b>CLEAR PUNCH</b></font></a>
+	<form name='punch_clear<?php 
+    echo $sql_pkg_Pchk_arr['s_no'];
+    ?>' method="post" target="_self" onSubmit="return doSumbit()"> 
 	<input type="hidden" name="p_page" value="p_cont">
 	<input type="hidden" name="mode" value="clear">
-	<input type="hidden" name="t_no" value="<?php echo $sql_pkg_Pchk_arr['s_no']; ?>">
-	<input type="hidden" name="dwg" value="<?php echo $sql_pkg_Pchk_arr['dwg_no'];?>">
-	<input type="hidden" name="pkg" value="<?php echo $view['wr_subject'];?>">
+	<input type="hidden" name="t_no" value="<?php 
+    echo $sql_pkg_Pchk_arr['s_no'];
+    ?>">
+	<input type="hidden" name="dwg" value="<?php 
+    echo $sql_pkg_Pchk_arr['dwg_no'];
+    ?>">
+	<input type="hidden" name="pkg" value="<?php 
+    echo $view['wr_subject'];
+    ?>">
 	</form>
-<?php
-	}
-	else {echo '<font color = red><b> Not yet cleared </b></font>';}
+<?php 
+} else {echo '<font color = red><b> Not yet cleared </b></font>';}
 ?>
 </td>
 </tr>

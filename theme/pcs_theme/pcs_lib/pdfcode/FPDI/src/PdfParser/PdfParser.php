@@ -31,15 +31,9 @@ use setasign\Fpdi\PdfParser\Type\PdfType;
  */
 class PdfParser
 {
-    /**
-     * @var StreamReader
-     */
-    protected $streamReader;
+    protected \setasign\Fpdi\PdfParser\StreamReader $streamReader;
 
-    /**
-     * @var Tokenizer
-     */
-    protected $tokenizer;
+    protected \setasign\Fpdi\PdfParser\Tokenizer $tokenizer;
 
     /**
      * The file header.
@@ -69,8 +63,6 @@ class PdfParser
 
     /**
      * PdfParser constructor.
-     *
-     * @param StreamReader $streamReader
      */
     public function __construct(StreamReader $streamReader)
     {
@@ -83,7 +75,7 @@ class PdfParser
      *
      * @internal
      */
-    public function cleanUp()
+    public function cleanUp(): void
     {
         $this->xref = null;
     }
@@ -166,7 +158,7 @@ class PdfParser
      * @return int[] An array of major and minor version.
      * @throws PdfParserException
      */
-    public function getPdfVersion()
+    public function getPdfVersion(): array
     {
         $this->resolveFileHeader();
 
@@ -356,10 +348,9 @@ class PdfParser
      *
      * @param string $token
      * @param string|null $expectedType
-     * @return bool
      * @throws Type\PdfTypeException
      */
-    private function ensureExpectedType($token, $expectedType)
+    private function ensureExpectedType(string|bool $token, $expectedType): bool
     {
         static $mapping = [
             '(' => PdfString::class,

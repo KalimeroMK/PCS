@@ -20,12 +20,8 @@ class PdfName extends PdfType
 {
     /**
      * Parses a name object from the passed tokenizer and stream-reader.
-     *
-     * @param Tokenizer $tokenizer
-     * @param StreamReader $streamReader
-     * @return self
      */
-    public static function parse(Tokenizer $tokenizer, StreamReader $streamReader)
+    public static function parse(Tokenizer $tokenizer, StreamReader $streamReader): self
     {
         $v = new self();
         if (\strspn($streamReader->getByte(), "\x00\x09\x0A\x0C\x0D\x20()<>[]{}/%") === 0) {
@@ -49,7 +45,7 @@ class PdfName extends PdfType
             return $value;
         }
 
-        return preg_replace_callback('/#([a-fA-F\d]{2})/', function ($matches) {
+        return preg_replace_callback('/#([a-fA-F\d]{2})/', function ($matches): string {
             return chr(hexdec($matches[1]));
         }, $value);
     }
@@ -58,9 +54,8 @@ class PdfName extends PdfType
      * Helper method to create an instance.
      *
      * @param string $string
-     * @return self
      */
-    public static function create($string)
+    public static function create($string): self
     {
         $v = new self();
         $v->value = $string;

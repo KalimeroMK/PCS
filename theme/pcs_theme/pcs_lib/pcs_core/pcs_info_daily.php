@@ -1,25 +1,21 @@
 <?php
-if($_POST['folder'] || $_POST['ph']){include_once (PCS_LIB.'/pcs_photo.php');}
-else if($_POST['mode']=='edit'){
-
-
-
-	$query_daily = 'SELECT * FROM '.G5_TABLE_PREFIX.'write_daily WHERE wr_subject = "'.$view['wr_subject'].'"';
-	$sql_daily = sql_query ($query_daily);
-	$sql_daily_arr = sql_fetch_array ($sql_daily);
-	
-	$daily_cont = explode(';',$sql_daily_arr['wr_content']);
-	$daily_isur = explode(';',$sql_daily_arr['wr_2']);
-	$daily_time = explode(';',$sql_daily_arr['wr_3']);
-	
-	$issue_idx = $sql_daily_arr['wr_1'];
-	
-	$desc_no = $_POST['no'];
-
-?>
+if ($_POST['folder'] || $_POST['ph']) {
+    include_once (PCS_LIB.'/pcs_photo.php');
+} elseif ($_POST['mode']=='edit') {
+    $query_daily = 'SELECT * FROM '.G5_TABLE_PREFIX.'write_daily WHERE wr_subject = "'.$view['wr_subject'].'"';
+    $sql_daily = sql_query ($query_daily);
+    $sql_daily_arr = sql_fetch_array ($sql_daily);
+    $daily_cont = explode(';',$sql_daily_arr['wr_content']);
+    $daily_isur = explode(';',$sql_daily_arr['wr_2']);
+    $daily_time = explode(';',$sql_daily_arr['wr_3']);
+    $issue_idx = $sql_daily_arr['wr_1'];
+    $desc_no = $_POST['no'];
+    ?>
 <form name="desc" method="post" onSubmit="return doSumbit()">
 <input type="hidden" name="mode" value="update">
-<input type="hidden" name="desc_before" value="<?php echo $daily_cont[$desc_no];?>">
+<input type="hidden" name="desc_before" value="<?php 
+    echo $daily_cont[$desc_no];
+    ?>">
 <table class="main">
 <caption>
 <p style="text-align:center; font-size:50px;" ><a href = "javascript:document.desc.submit()" >REPORT Description Edit</a></p>
@@ -32,37 +28,38 @@ else if($_POST['mode']=='edit'){
 	<td class="main_td td_sub" style="width:15%"> Issued by/time </td>
 </tr>
 <tr>
-<td class="jnt_td"><?php echo $desc_no; ?></td>
-<td class="jnt_td"><input type="text" name="desc_after" autocomplete="off" style="padding:0px 0px 0px 15px; text-align:left;width:98%;height:50px;font-size:20px;border:none;" value="<?php echo $daily_cont[$desc_no];?>"></td>
+<td class="jnt_td"><?php 
+    echo $desc_no;
+    ?></td>
+<td class="jnt_td"><input type="text" name="desc_after" autocomplete="off" style="padding:0px 0px 0px 15px; text-align:left;width:98%;height:50px;font-size:20px;border:none;" value="<?php 
+    echo $daily_cont[$desc_no];
+    ?>"></td>
 <td class="jnt_td">
-<?php
-			photo_thumb('daily', $view['wr_subject'], $desc_no-1, 180);
-			
-?>
+<?php 
+    photo_thumb('daily', $view['wr_subject'], $desc_no-1, 180);
+    ?>
 </td>
-<td class="jnt_td"><?php echo $daily_isur[$desc_no].'<br>/<br>'.$daily_time[$desc_no]; ?></td>
+<td class="jnt_td"><?php 
+    echo $daily_isur[$desc_no].'<br>/<br>'.$daily_time[$desc_no];
+    ?></td>
 
 </tr>
 			
-<?php
-		
-
-?>
+<?php 
+    ?>
 </tbody>
 </table>
 </form>
 
-<?php
-/*
-				<input type="hidden" name="mode" value="edit">
-				<input type="hidden" name="no" value="'.$desc_count.'">
-				<input type="hidden" name="page" value="'.$_GET['wr_id'].'">
-				</form>
-				';
-*/
-
-}
-else{
+<?php 
+    /*
+    				<input type="hidden" name="mode" value="edit">
+    				<input type="hidden" name="no" value="'.$desc_count.'">
+    				<input type="hidden" name="page" value="'.$_GET['wr_id'].'">
+    				</form>
+    				';
+    */
+} else{
 	if($_POST['mode'] == 'update'){
 		$query_daily = 'SELECT * FROM '.G5_TABLE_PREFIX.'write_daily WHERE wr_subject = "'.$view['wr_subject'].'"';
 		$sql_daily = sql_query ($query_daily);
@@ -124,7 +121,7 @@ else{
 			photo_thumb('daily', $view['wr_subject'], $i, 180);
 			
 			if($view['wr_subject']==G5_TIME_YMD && $member['mb_2']>1 && $i>=$sql_daily_arr['wr_1']-1){
-				if($daily_isur[$i+1]){
+				if($daily_isur[$i+1] !== '' && $daily_isur[$i+1] !== '0'){
 					if($member['mb_nick'] == $daily_isur[$i+1]){photo_up('daily', $view['wr_subject'], $i, $sql_daily_arr['wr_1'], $sql_daily_arr['wr_2']);}
 				}
 				else {photo_up('daily', $view['wr_subject'], $i, $sql_daily_arr['wr_1'], $sql_daily_arr['wr_2']);}
@@ -176,7 +173,7 @@ else{
 			photo_thumb('daily', $view['wr_subject'], $i, 180);
 			
 			if($view['wr_subject']==G5_TIME_YMD && $member['mb_2']>1 && $i>=$sql_daily_arr['wr_1']-1){
-				if($daily_isur[$i+1]){
+				if($daily_isur[$i+1] !== '' && $daily_isur[$i+1] !== '0'){
 					if($member['mb_nick'] == $daily_isur[$i+1]){photo_up('daily', $view['wr_subject'], $i, $sql_daily_arr['wr_1'], $sql_daily_arr['wr_2']);}
 				}
 				else {photo_up('daily', $view['wr_subject'], $i, $sql_daily_arr['wr_1'], $sql_daily_arr['wr_2']);}

@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 if ($is_guest) {
@@ -18,8 +18,9 @@ $error_list = [];
 $member_list = ['id' => [], 'nick' => []];
 
 run_event('memo_form_update_before', $recv_list);
+$counter = count($recv_list);
 
-for ($i = 0; $i < count($recv_list); $i++) {
+for ($i = 0; $i < $counter; $i++) {
     $row = sql_fetch(" select mb_id, mb_nick, mb_open, mb_leave_date, mb_intercept_date from {$g5['member_table']} where mb_id = '{$recv_list[$i]}' ");
     if ($row) {
         if ($is_admin || ($row['mb_open'] && (!$row['mb_leave_date'] && !$row['mb_intercept_date']))) {
@@ -51,18 +52,15 @@ if (!count($member_list['id'])) {
     alert('해당 회원이 존재하지 않습니다.');
 }
 
-if (!$is_admin) {
-    if (count($member_list['id'])) {
-        $point = (int)$config['cf_memo_send_point'] * count($member_list['id']);
-        if ($point) {
-            if ($member['mb_point'] - $point < 0) {
-                alert('보유하신 포인트('.number_format($member['mb_point']).'점)가 모자라서 쪽지를 보낼 수 없습니다.');
-            }
-        }
+if (!$is_admin && count($member_list['id'])) {
+    $point = (int)$config['cf_memo_send_point'] * count($member_list['id']);
+    if ($point !== 0 && $member['mb_point'] - $point < 0) {
+        alert('보유하신 포인트('.number_format($member['mb_point']).'점)가 모자라서 쪽지를 보낼 수 없습니다.');
     }
 }
+$counter = count($member_list['id']);
 
-for ($i = 0; $i < count($member_list['id']); $i++) {
+for ($i = 0; $i < $counter; $i++) {
     $tmp_row = sql_fetch(" select max(me_id) as max_me_id from {$g5['memo_table']} ");
     $me_id = $tmp_row['max_me_id'] + 1;
 
@@ -92,7 +90,7 @@ for ($i = 0; $i < count($member_list['id']); $i++) {
     }
 }
 
-if ($member_list) {
+if ($member_list !== []) {
     $redirect_url = G5_HTTP_BBS_URL."/memo.php?kind=send";
     $str_nick_list = implode(',', $member_list['nick']);
 

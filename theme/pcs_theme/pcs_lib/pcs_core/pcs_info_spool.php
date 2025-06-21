@@ -1,8 +1,10 @@
 <?php
 
-if($_POST['folder'] || $_POST['ph']){include_once (PCS_LIB.'/pcs_photo.php');}
+if ((isset($_POST['folder']) && $_POST['folder']) || (isset($_POST['ph']) && $_POST['ph'])) {
+    include_once (PCS_LIB.'/pcs_photo.php');
+}
 else {
-	spl_ins_qry($_POST['field_id'], $_POST['btn_stat']);
+	spl_ins_qry($_POST['field_id'] ?? null, $_POST['btn_stat'] ?? null);
 
 	$query_spl_stat_set = 'INSERT INTO '.G5_TABLE_PREFIX.'pcs_info_spl_stat (spool_no) VALUES ("'.$view['wr_subject'].'")';
 	sql_query ($query_spl_stat_set);
@@ -16,7 +18,7 @@ else {
 		WHERE spool_no = "'.$view['wr_subject'].'" AND w_type = "WELD" ORDER BY dwg_no, j_no';
 	$sql_view_spool = sql_query ($query_view_spool);
 
-	if($_POST['spl_location']){
+	if(isset($_POST['spl_location'])){
 		$query_spl_loc = 'UPDATE '.G5_TABLE_PREFIX.'pcs_info_spl_stat SET location = "'.$_POST['spl_location'].'" WHERE spool_no = "'.$view['wr_subject'].'"';
 		sql_query ($query_spl_loc);
 	}
@@ -35,9 +37,11 @@ else {
 	$pmi_done = pcs_sql_value ($query_pmi_done);
 	
 	$query_spl_stat = 'UPDATE '.G5_TABLE_PREFIX.'pcs_info_spl_stat SET st_weld = "'.$weld_done.' / '.$weld_total.'", state = ';
-	if($weld_total&&$weld_done==$weld_total){$query_spl_stat .= '"Finished"';}
-	else if($weld_done){$query_spl_stat .= '"On_going"';}
-	else {$query_spl_stat .= '"Not_started"';}
+	if ($weld_total&&$weld_done==$weld_total) {
+        $query_spl_stat .= '"Finished"';
+    } elseif ($weld_done) {
+        $query_spl_stat .= '"On_going"';
+    } else {$query_spl_stat .= '"Not_started"';}
 	$query_spl_stat .= ', st_pwht = ';
 	
 	if($pwht_total){$query_spl_stat .= '"'.$pwht_done.' / '.$pwht_total.'"';}
@@ -49,7 +53,9 @@ else {
 	$query_spl_stat .= ' WHERE spool_no = "'.$view['wr_subject'].'"';
 	sql_query ($query_spl_stat,true);
 	
-	spl_ins_qry($_POST['field_id'], $_POST['btn_stat']);
+	if (isset($_POST['field_id']) && isset($_POST['btn_stat'])) {
+		spl_ins_qry($_POST['field_id'] ?? null, $_POST['btn_stat'] ?? null);
+	}
 	
 //	$query_spl_info = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_info_spool WHERE spool_no = "'.$view['wr_subject'].'"';
 	$query_spl_info =  'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_spool AS A LEFT JOIN '.G5_TABLE_PREFIX.'pcs_info_spl_stat AS B ON A.spool_no = B.spool_no
@@ -140,7 +146,7 @@ else {
 <a onclick='window.open("<?php echo PCS_CORE_URL.'/pcs_googlemap.php?spl='.$view['wr_subject'].'&lat='.$sql_spl_info_arr['gps_lat'].'&lon='.$sql_spl_info_arr['gps_lon']; ?>","w","width=1000, height=900, left=200, top=100");'>LOCATION<br><span style="font-weight: bold; font-size: 20px;">(GOOGLE MAP)</span> </a> </td>
 <td class="main_td" >
 <?php
-	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !$_POST['spl_location']){
+	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !(isset($_POST['spl_location']) && $_POST['spl_location'])){
 		echo '<form name="spool_location" method="post" onSubmit="return doSumbit()"><select name="spl_location" style="height:50px; width:100%; font-size:30px; padding:0 20px; border:none;">';
 		sel_option_enum($field_enum_value['location'], $sql_spl_info_arr['location']);
 		echo '</select>';
@@ -151,7 +157,7 @@ else {
 <td class="main_td" style='background-color: gold; height:80px;'>FABRICATION<br>STATE</td>
 <td class="main_td" >
 <?php 
-	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !$_POST['spl_location']){
+	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !(isset($_POST['spl_location']) && $_POST['spl_location'])){
 		echo '
 		<a href = "javascript:spool_location.submit()" ><font color = blue><b>Finished</b></font></a>
 		</form>';
@@ -163,10 +169,11 @@ else {
 <td class="main_td" >
 <?php
  	photo_thumb('spool', $sql_spl_info_arr['photo'], '', 180,$sql_spl_info_arr['dwg1']);
-	if(!$sql_spl_info_arr['photo_by'] && $member['mb_2']>1){photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_spl_info_arr['photo_by'] && G5_TIME_YMD == substr($sql_spl_info_arr['photo_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
-	}
+	if (!$sql_spl_info_arr['photo_by'] && $member['mb_2']>1) {
+        photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_spl_info_arr['photo_by'] && G5_TIME_YMD == substr($sql_spl_info_arr['photo_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
+    }
 ?>
 </td>
 </tr>
@@ -204,20 +211,29 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	$query_con = 'SELECT * FROM '.$temptbl2.' WHERE j_key = "'.$sql_ref_sbc_arr['j_key'].'"';
 	$sql_ref_con = sql_query ($query_con, true);
 	$sql_ref_con_arr = sql_fetch_array ($sql_ref_con);
+    $counter = count($field_name_sbc);
 	
-	for ($i=0; $i<count($field_name_sbc); $i++) {
-		if(substr($sql_ref_sbc_arr[$field_name_sbc[$i]],4,1)=='-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]],7,1)=='-'){
+	for ($i=0; $i<$counter; $i++) {
+		if(substr($sql_ref_sbc_arr[$field_name_sbc[$i]],4,1) === '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]],7,1) === '-'){
 			if ($sql_ref_sbc_arr[$field_name_sbc[$i]] == '0000-00-00 00:00:00') {$sql_ref_sbc_arr[$field_name_sbc[$i]] = false ;}
 			else {$sql_ref_sbc_arr[$field_name_sbc[$i]] = substr($sql_ref_sbc_arr[$field_name_sbc[$i]],0,10);}
 		}
 	}
+    $counter = count($field_name_con);
 
-	for ($i=0; $i<count($field_name_con); $i++) {
-		if(substr($sql_ref_con_arr[$field_name_con[$i]],4,1)=='-' && substr($sql_ref_con_arr[$field_name_con[$i]],7,1)=='-'){
-			if ($sql_ref_con_arr[$field_name_con[$i]] == '0000-00-00') {$sql_ref_con_arr[$field_name_con[$i]] = false ;}
+	for ($i=0; $i<$counter; $i++) {
+		$key = $field_name_con[$i];
+		$val = $sql_ref_con_arr[$key] ?? null;
+		if (
+			is_string($val) &&
+			substr($val,4,1) === '-' &&
+			substr($val,7,1) === '-' &&
+			$val == '0000-00-00'
+		) {
+			$sql_ref_con_arr[$key] = false ;
 		}
 	}
-	if($sql_ref_sbc_arr['j_stat'] == 'DEL') { $PCS_DEL = "<del><font color = red>";} else {$PCS_DEL = '';}
+	$PCS_DEL = $sql_ref_sbc_arr['j_stat'] == 'DEL' ? "<del><font color = red>" : '';
 //	echo $query_sbc;
 ?>
 	
@@ -237,11 +253,13 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 <?php
 	echo $PCS_DEL;
 	photo_thumb('photo_1', $sql_ref_sbc_arr['photo_1'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
-	if(!$sql_ref_sbc_arr['photo_1'] && $member['mb_2']>1){photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);}
-	else if($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2']==3)){
-		photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-	}
-	echo '<br>'.$sql_ref_sbc_arr['item_1_type']; rep_view('heat_1'.$idx,'report/heat','',	$sql_ref_con_arr['heat_1']);
+	if (!$sql_ref_sbc_arr['photo_1'] && $member['mb_2']>1) {
+        photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+    } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2']==3)) {
+        photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+    }
+	$heat_1 = $sql_ref_con_arr['heat_1'] ?? '';
+	echo '<br>'.$sql_ref_sbc_arr['item_1_type']; rep_view('heat_1'.$idx,'report/heat','',	(string)$heat_1);
 ?>
 
 </td>
@@ -250,11 +268,12 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 <?php
 	echo $PCS_DEL;
 	photo_thumb('photo_2', $sql_ref_sbc_arr['photo_2'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
-	if(!$sql_ref_sbc_arr['photo_2'] && $member['mb_2']>1){photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);}
-	else if($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2']==3)){
-		photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-	}
-	echo '<br>'.$sql_ref_sbc_arr['item_2_type']; rep_view('heat_2'.$idx,'report/heat','',	$sql_ref_con_arr['heat_2']);
+	if (!$sql_ref_sbc_arr['photo_2'] && $member['mb_2']>1) {
+        photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+    } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2']==3)) {
+        photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+    }
+	echo '<br>'.$sql_ref_sbc_arr['item_2_type']; rep_view('heat_2'.$idx,'report/heat','',	$sql_ref_con_arr['heat_2'] ?? '');
 ?>
 </td>
 
@@ -298,8 +317,11 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	echo $PCS_DEL;
 	
 	if($sql_ref_sbc_arr['pwht_yn']=='YES') {
-		if ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept')	{echo 'Not yet<br>VI accepted';}
-			else { if($sql_ref_sbc_arr['j_stat'] != 'DEL'){insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);}}
+		if ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept') {
+            echo 'Not yet<br>VI accepted';
+        } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL') {
+            insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);
+        }
 	}
 	else {echo 'N/A';}
 ?>
@@ -310,22 +332,23 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	echo $PCS_DEL;
 	if($sql_ref_sbc_arr['w_type']!='WELD'){echo 'N/A';} 
 	elseif ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept')	{echo 'Not yet<br>VI accepted';}
-	elseif ($sql_ref_sbc_arr['pwht_yn']=='YES' && $sql_ref_sbc_arr['pcs_pwht_rlt']!='Accept')	{echo 'Not yet<br>PWHT accepted';}
-	else {if($sql_ref_sbc_arr['j_stat'] != 'DEL'){insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);}}
+	elseif ($sql_ref_sbc_arr['pwht_yn']=='YES' && $sql_ref_sbc_arr['pcs_pwht_rlt']!='Accept')	{echo 'Not yet<br>PWHT accepted';} elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL') {
+        insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);
+    }
 ?>
 </td>
 
 </tr>
 
 <tr>
-<td class="td_lower"><?php echo $sql_ref_con_arr['j_type']; ?></td>
-<td class="td_lower"><?php echo $sql_ref_con_arr['s_f']; ?></td>
-<td class="td_lower"><?php echo $sql_ref_con_arr['nps']; ?></td>
-<td class="td_lower"><?php echo $sql_ref_con_arr['ft_date']; ?></td>
-<td class="td_lower"><?php rep_view('vi'.$idx,'report/vi',		$sql_ref_con_arr['vi_date'],	substr($sql_ref_con_arr['vi_rep'], -11)); ?></td>
-<td class="td_lower"><?php rep_view('pmi'.$idx,'report/pmi',	$sql_ref_con_arr['pmi_date'],	$sql_ref_con_arr['pmi_rep']); ?></td>
-<td class="td_lower"><?php rep_view('pwht'.$idx,'report/pwht',	$sql_ref_con_arr['pwht_date'],	$sql_ref_con_arr['pwht_rep']); ?></td>
-<td class="td_lower"><?php rep_view('nde'.$idx,'report/nde',	$sql_ref_con_arr['nde_date'],	$sql_ref_con_arr['nde_rep']); ?></td>
+<td class="td_lower"><?php echo $sql_ref_con_arr['j_type'] ?? ''; ?></td>
+<td class="td_lower"><?php echo $sql_ref_con_arr['s_f'] ?? ''; ?></td>
+<td class="td_lower"><?php echo $sql_ref_con_arr['nps'] ?? ''; ?></td>
+<td class="td_lower"><?php echo $sql_ref_con_arr['ft_date'] ?? ''; ?></td>
+<td class="td_lower"><?php rep_view('vi'.$idx,'report/vi', $sql_ref_con_arr['vi_date'] ?? '', isset($sql_ref_con_arr['vi_rep']) ? substr($sql_ref_con_arr['vi_rep'], -11) : ''); ?></td>
+<td class="td_lower"><?php rep_view('pmi'.$idx,'report/pmi', $sql_ref_con_arr['pmi_date'] ?? '', $sql_ref_con_arr['pmi_rep'] ?? ''); ?></td>
+<td class="td_lower"><?php rep_view('pwht'.$idx,'report/pwht', $sql_ref_con_arr['pwht_date'] ?? '', $sql_ref_con_arr['pwht_rep'] ?? ''); ?></td>
+<td class="td_lower"><?php rep_view('nde'.$idx,'report/nde', $sql_ref_con_arr['nde_date'] ?? '', $sql_ref_con_arr['nde_rep'] ?? ''); ?></td>
 <?php
 	}
 }
@@ -385,7 +408,7 @@ else {  ////////////////////////////////////////////////////////////////////////
 <td class="main_td td_sub"> FABRICATION</td>
 <td class="main_td">
 <?php 
-	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !$_POST['spl_location']){
+	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !(isset($_POST['spl_location']) && $_POST['spl_location'])){
 		echo '<form name="spool_location" method="post" onSubmit="return doSumbit()">
 		<a href = "javascript:spool_location.submit()" ><font color = blue><b>Finished</b></font></a>
 		';
@@ -397,7 +420,7 @@ else {  ////////////////////////////////////////////////////////////////////////
 <td class="main_td td_sub"> <a href=<?php echo PCS_CORE_URL.'/pcs_googlemap.php?lon='.$sql_spl_info_arr['gps_lon'].'&lat='.$sql_spl_info_arr['gps_lat']; ?> target='_blank'> <b>LOCATION</b></a> </td>
 <td class="main_td">
 <?php 
-	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !$_POST['spl_location']){
+	if($member['mb_2']>1 && $sql_spl_info_arr['state']=='Finished' && !(isset($_POST['spl_location']) && $_POST['spl_location'])){
 		echo '<select name="spl_location" style="height:50px; width:100%; font-size:25px; padding:0 20px; border:none;">';
 		sel_option_enum($field_enum_value['location'], $sql_spl_info_arr['location']);
 		echo '</select></form>';
@@ -410,10 +433,11 @@ else {  ////////////////////////////////////////////////////////////////////////
 <td class="main_td" colspan="2">
 <?php
  	photo_thumb('spool', $sql_spl_info_arr['photo'], '', 180,$sql_spl_info_arr['dwg1']);
-	if(!$sql_spl_info_arr['photo_by'] && $member['mb_2']>1){photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_spl_info_arr['photo_by'] && G5_TIME_YMD == substr($sql_spl_info_arr['photo_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
-	}
+	if (!$sql_spl_info_arr['photo_by'] && $member['mb_2']>1) {
+        photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_spl_info_arr['photo_by'] && G5_TIME_YMD == substr($sql_spl_info_arr['photo_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('spool', $sql_spl_info_arr['spool_no'], $sql_spl_info_arr['location'], $sql_spl_info_arr['photo'],$sql_spl_info_arr['dwg1']);
+    }
 ?>
 </td>
 </tr>
@@ -432,15 +456,16 @@ else {  ////////////////////////////////////////////////////////////////////////
 while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	if($sql_ref_sbc_arr['j_stat'] != 'REM' && $sql_ref_sbc_arr['j_type'] != 'SPL'){ 
 	$idx++;
+    $counter = count($field_name_sbc);
 
-	for ($i=0; $i<count($field_name_sbc); $i++) {
-		if(substr($sql_ref_sbc_arr[$field_name_sbc[$i]],4,1)=='-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]],7,1)=='-'){
+	for ($i=0; $i<$counter; $i++) {
+		if(substr($sql_ref_sbc_arr[$field_name_sbc[$i]],4,1) === '-' && substr($sql_ref_sbc_arr[$field_name_sbc[$i]],7,1) === '-'){
 			if ($sql_ref_sbc_arr[$field_name_sbc[$i]] == '0000-00-00 00:00:00') {$sql_ref_sbc_arr[$field_name_sbc[$i]] = false ;}
 			else {$sql_ref_sbc_arr[$field_name_sbc[$i]] = substr($sql_ref_sbc_arr[$field_name_sbc[$i]],0,10);}
 		}
 	}
 	
-	if($sql_ref_sbc_arr['j_stat'] == 'DEL') { $PCS_DEL = "<del><font color = red>";} else {$PCS_DEL = '';}
+	$PCS_DEL = $sql_ref_sbc_arr['j_stat'] == 'DEL' ? "<del><font color = red>" : '';
 
 	$query_ref_rev = "SELECT rev_no FROM ".G5_TABLE_PREFIX."pcs_info_iso WHERE dwg_no = '".$sql_ref_sbc_arr['dwg_no']."'";
 	$sql_ref_rev = sql_query ($query_ref_rev);
@@ -465,10 +490,11 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 <?php
 	echo $PCS_DEL;
 	photo_thumb('photo_1', $sql_ref_sbc_arr['photo_1'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
-	if(!$sql_ref_sbc_arr['photo_1'] && $member['mb_2']>1){photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);}
-	else if($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2']==3)){
-		photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
-	}
+	if (!$sql_ref_sbc_arr['photo_1'] && $member['mb_2']>1) {
+        photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+    } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_1_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_1_tm']) || $member['mb_2']==3)) {
+        photo_up('photo_1', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_1']);
+    }
 	echo '<br>'.$sql_ref_sbc_arr['item_1_type']
 ?>
 	</td>
@@ -476,10 +502,11 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 <?php
 	echo $PCS_DEL;
 	photo_thumb('photo_2', $sql_ref_sbc_arr['photo_2'], $sql_ref_sbc_arr['j_no'], 120, $sql_ref_sbc_arr['dwg_no']);
-	if(!$sql_ref_sbc_arr['photo_2'] && $member['mb_2']>1){photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);}
-	else if($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2']==3)){
-		photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
-	}
+	if (!$sql_ref_sbc_arr['photo_2'] && $member['mb_2']>1) {
+        photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+    } elseif ($sql_ref_sbc_arr['j_stat'] != 'DEL' && (($member['mb_2']!=3 && $member['mb_nick'] == $sql_ref_sbc_arr['photo_2_by'] && G5_TIME_YMD == $sql_ref_sbc_arr['photo_2_tm']) || $member['mb_2']==3)) {
+        photo_up('photo_2', $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $sql_ref_sbc_arr['photo_2']);
+    }
 	echo '<br>'.$sql_ref_sbc_arr['item_2_type']
 ?>
 	</td>
@@ -492,11 +519,11 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	<td class='jnt_td' style="width: 50%;" colspan="2">
 <?php
 	echo $PCS_DEL;	
-	if($sql_ref_sbc_arr['j_stat'] == 'DEL'){ echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_fitup_rlt'];} 
-	else {
-		if($member['mb_4']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] !='') {echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_fitup_rlt'];}
-		else {insp_fitup($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_4'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_fitup_req_date'], $sql_ref_sbc_arr['pcs_fitup_rlt'], $sql_ref_sbc_arr['pcs_fitup_rlt_date'], $sql_ref_sbc_arr['pcs_vi_req_date']);}
-	}
+	if ($sql_ref_sbc_arr['j_stat'] == 'DEL') {
+        echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_fitup_rlt'];
+    } elseif ($member['mb_4']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_fitup_rlt_by'] && $sql_ref_sbc_arr['pcs_fitup_rlt_by'] !='') {
+        echo $sql_ref_sbc_arr['pcs_fitup_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_fitup_rlt'];
+    } else {insp_fitup($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_4'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_fitup_req_date'], $sql_ref_sbc_arr['pcs_fitup_rlt'], $sql_ref_sbc_arr['pcs_fitup_rlt_date'], $sql_ref_sbc_arr['pcs_vi_req_date']);}
 ?>
 	</td>
 	<td class='jnt_td' style="width: 50%;" colspan="2">
@@ -527,11 +554,10 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	
 	if($sql_ref_sbc_arr['pmi_yn']=='YES') {
 		if ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept')	{echo 'Not yet<br>VI accepted';}
-		elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pmi_rlt'];}
-		else{
-			if($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] !='') {echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pmi_rlt'];}
-			else {insp_pmi($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pmi_req_date'], $sql_ref_sbc_arr['pcs_pmi_rlt'], $sql_ref_sbc_arr['pcs_pmi_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);}
-		}
+		elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pmi_rlt'];} elseif ($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pmi_rlt_by'] && $sql_ref_sbc_arr['pcs_pmi_rlt_by'] !='') {
+            echo $sql_ref_sbc_arr['pcs_pmi_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pmi_rlt'];
+        }
+		else {insp_pmi($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pmi_req_date'], $sql_ref_sbc_arr['pcs_pmi_rlt'], $sql_ref_sbc_arr['pcs_pmi_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);}
 	}
 	else {echo 'N/A';}
 ?>
@@ -542,11 +568,10 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	
 	if($sql_ref_sbc_arr['pwht_yn']=='YES') {
 		if ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept')	{echo 'Not yet<br>VI accepted';}
-		elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pwht_rlt'];}
-		else {
-			if($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] !='') {echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pwht_rlt'];}
-			else {insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);}
-		}
+		elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pwht_rlt'];} elseif ($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_pwht_rlt_by'] && $sql_ref_sbc_arr['pcs_pwht_rlt_by'] !='') {
+            echo $sql_ref_sbc_arr['pcs_pwht_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_pwht_rlt'];
+        }
+		else {insp_pwht($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_5'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_pwht_req_date'], $sql_ref_sbc_arr['pcs_pwht_rlt'], $sql_ref_sbc_arr['pcs_pwht_rlt_date'], $sql_ref_sbc_arr['pcs_nde_req_date']);}
 	}
 	else {echo 'N/A';}
 ?>
@@ -565,11 +590,10 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 	if($sql_ref_sbc_arr['w_type']!='WELD'){echo 'N/A';} 
 	elseif ($sql_ref_sbc_arr['pcs_vi_rlt']!='Accept')	{echo 'Not yet<br>VI accepted';}
 	elseif ($sql_ref_sbc_arr['pwht_yn']=='YES' && $sql_ref_sbc_arr['pcs_pwht_rlt']!='Accept')	{echo 'Not yet<br>PWHT accepted';}
-	elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_nde_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_nde_rlt'];}
-	else {
-		if($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] !='') {echo $sql_ref_sbc_arr['pcs_nde_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_nde_rlt'];}
-		else {insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);}
-	}
+	elseif($sql_ref_sbc_arr['j_stat'] == 'DEL'){echo $sql_ref_sbc_arr['pcs_nde_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_nde_rlt'];} elseif ($member['mb_5']<2 && $member['mb_nick'] != $sql_ref_sbc_arr['pcs_nde_rlt_by'] && $sql_ref_sbc_arr['pcs_nde_rlt_by'] !='') {
+        echo $sql_ref_sbc_arr['pcs_nde_rlt_date'].'<br>'.$sql_ref_sbc_arr['pcs_nde_rlt'];
+    }
+	else {insp_nde($idx, $sql_ref_sbc_arr['dwg_no'], $sql_ref_sbc_arr['j_no'], $member['mb_6'], $member['mb_nick'], $sql_ref_sbc_arr['pcs_nde_type'], $sql_ref_sbc_arr['pcs_nde_req_date'], $sql_ref_sbc_arr['pcs_nde_rlt']);}
 	
 ?>
 	</td>

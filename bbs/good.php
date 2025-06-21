@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 run_event('bbs_good_before', $bo_table, $wr_id, $good);
 
@@ -10,10 +10,10 @@ run_event('bbs_good_before', $bo_table, $wr_id, $good);
 if (isset($_POST['js']) && $_POST['js'] === "on") {
     $error = $count = "";
 
-    function print_result($error, $count)
+    function print_result(string $error, string $count): void
     {
         echo '{ "error": "'.$error.'", "count": "'.$count.'" }';
-        if ($error) {
+        if ($error !== '' && $error !== '0') {
             exit;
         }
     }
@@ -63,11 +63,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
                     and bg_flag in ('good', 'nogood') ";
         $row = sql_fetch($sql);
         if (isset($row['bg_flag']) && $row['bg_flag']) {
-            if ($row['bg_flag'] == 'good') {
-                $status = '추천';
-            } else {
-                $status = '비추천';
-            }
+            $status = $row['bg_flag'] == 'good' ? '추천' : '비추천';
 
             $error = "이미 $status 하신 글 입니다.";
             print_result($error, $count);
@@ -130,11 +126,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
                     and bg_flag in ('good', 'nogood') ";
         $row = sql_fetch($sql);
         if (isset($row['bg_flag']) && $row['bg_flag']) {
-            if ($row['bg_flag'] == 'good') {
-                $status = '추천';
-            } else {
-                $status = '비추천';
-            }
+            $status = $row['bg_flag'] == 'good' ? '추천' : '비추천';
 
             alert("이미 $status 하신 글 입니다.");
         } else {
@@ -143,11 +135,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
             // 내역 생성
             sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
 
-            if ($good == 'good') {
-                $status = '추천';
-            } else {
-                $status = '비추천';
-            }
+            $status = $good == 'good' ? '추천' : '비추천';
 
             $href = get_pretty_url($bo_table, $wr_id);
 

@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_EDITOR_LIB);
 
 if ($w != '' && $w != 'u' && $w != 'r') {
@@ -19,7 +19,7 @@ $token = _token();
 set_session('ss_qa_write_token', $token);
 
 $g5['title'] = $qaconfig['qa_title'];
-include_once('./qahead.php');
+include_once(__DIR__ . '/qahead.php');
 
 $skin_file = $qa_skin_path.'/write.skin.php';
 
@@ -57,9 +57,10 @@ if (is_file($skin_file)) {
 
     // 분류
     $category_option = '';
-    if (trim($qaconfig['qa_category'])) {
+    if (trim($qaconfig['qa_category']) !== '' && trim($qaconfig['qa_category']) !== '0') {
         $category = explode('|', $qaconfig['qa_category']);
-        for ($i = 0; $i < count($category); $i++) {
+        $counter = count($category);
+        for ($i = 0; $i < $counter; $i++) {
             $category_option .= option_selected($category[$i], $write['qa_category']);
         }
     } else {
@@ -79,22 +80,19 @@ if (is_file($skin_file)) {
     $content = '';
     if ($w == '') {
         $content = html_purifier($qaconfig['qa_insert_content']);
-    } else {
-        if ($w == 'r') {
-            if ($is_dhtml_editor) {
-                $content = '<div><br><br><br>====== 이전 답변내용 =======<br></div>';
-            } else {
-                $content = "\n\n\n\n====== 이전 답변내용 =======\n";
-            }
-
-            // KISA 취약점 권고사항 Stored XSS (210624)
-            $content .= get_text(html_purifier($write['qa_content']), 0);
+    } elseif ($w == 'r') {
+        if ($is_dhtml_editor) {
+            $content = '<div><br><br><br>====== 이전 답변내용 =======<br></div>';
         } else {
-            //$content = get_text($write['qa_content'], 0);
-
-            // KISA 취약점 권고사항 Stored XSS
-            $content = get_text(html_purifier($write['qa_content']), 0);
+            $content = "\n\n\n\n====== 이전 답변내용 =======\n";
         }
+        // KISA 취약점 권고사항 Stored XSS (210624)
+        $content .= get_text(html_purifier($write['qa_content']), 0);
+    } else {
+        //$content = get_text($write['qa_content'], 0);
+
+        // KISA 취약점 권고사항 Stored XSS
+        $content = get_text(html_purifier($write['qa_content']), 0);
     }
 
     $editor_html = editor_html('qa_content', $content, $is_dhtml_editor);
@@ -160,4 +158,4 @@ if (is_file($skin_file)) {
     echo '<div>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</div>';
 }
 
-include_once('./qatail.php');
+include_once(__DIR__ . '/qatail.php');

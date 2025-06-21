@@ -2,10 +2,7 @@
 
 	switch ($prg_sel)	{
 	
-		case PMI 	:
-			$pkg_rep = 'pwht_rep';
-			$query_pkg = 'SELECT DISTINCT dwg_no, j_no, '.$pkg_rep.' FROM '.G5_TABLE_PREFIX.'pcs_info_joint WHERE j_stat = "ACT" AND pwht_yn = "Y" AND pwht_rep <> "" ';
-			break;
+		case PMI:
 
 		case PWHT 	:
 			$pkg_rep = 'pwht_rep';

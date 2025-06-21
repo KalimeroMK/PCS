@@ -1,5 +1,5 @@
 <?php 
-if($_POST['folder'] || $_POST['ph']){include_once (PCS_LIB.'/pcs_photo.php');}
+if(($_POST['folder'] ?? null) || ($_POST['ph'] ?? null)){include_once (PCS_LIB.'/pcs_photo.php');}
 else {
 
 	$query_tp_stat_set = 'INSERT INTO '.G5_TABLE_PREFIX.'pcs_info_tp_stat (tp_no) VALUES ("'.$view['wr_subject'].'")';
@@ -39,7 +39,7 @@ if(!G5_IS_MOBILE) { /////////// PC 버전 시작
 	<form name='submit_for' action="<?php echo PCS_WPV_URL; ?>/viewer.php" method="post" target="<?php echo $view['wr_subject'];?>" onSubmit="return doSumbit()"> 
 	<input type="hidden" name="folder" value="tp">
 	<input type="hidden" name="file" value="<?php echo $view['wr_subject'];?>">
-	<input type="hidden" name="rev" value="<?php echo $sql_tp_arr['rev_no'];?>">
+	<input type="hidden" name="rev" value="<?php echo $sql_tp_arr['rev_no'] ?? '';?>">
 	</form>
 </tr>
 <tr>
@@ -71,28 +71,31 @@ if(!G5_IS_MOBILE) { /////////// PC 버전 시작
 <td class="main_td " colspan="2" style="width:33%;height:200px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo1'], 'photo1', 180);
-	if(!$sql_tp_info_arr['tp_photo1_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo1_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo1_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
-	}
+	if (!$sql_tp_info_arr['tp_photo1_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo1_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo1_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
+    }
 ?>
 </td>
 <td class="main_td " colspan="2" style="width:33%;height:200px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo2'], 'photo2', 180, 'thumb_');
-	if(!$sql_tp_info_arr['tp_photo2_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo2_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo2_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
-	}
+	if (!$sql_tp_info_arr['tp_photo2_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo2_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo2_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
+    }
 ?>
 </td>
 <td class="main_td " colspan="2" style="width:33%;height:200px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo3'], 'photo3', 180, 'thumb_');
-	if(!$sql_tp_info_arr['tp_photo3_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo3_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo3_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
-	}
+	if (!$sql_tp_info_arr['tp_photo3_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo3_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo3_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
+    }
 ?>
 </td>
 </tr>
@@ -117,17 +120,18 @@ echo '<td class="main_td" colspan=3 style="background-color: #F6D8CE; height:80p
 
 <td class="jnt_td" style='width:33%;height:150px;font-size:20px;'>
 <?php
-		if($Dwg_array[$i]){
+		if($Dwg_array[$i] !== '' && $Dwg_array[$i] !== '0'){
 			$j++;
 			$con_no = $i+1;
-			if($sql_con_dwg_arr['wr_id']){
+			if(isset($sql_con_dwg_arr['wr_id']) && $sql_con_dwg_arr['wr_id']){
 				echo '<a href='.G5_BBS_URL.'/board.php?bo_table=drawing&wr_id='.$sql_con_dwg_arr['wr_id'].'> <b>'.$con_no.'. '.$Dwg_array[$i].'</b></a></br>';
 				echo $sql_con_dwg_info_arr['line_size'].' - '.$sql_con_dwg_info_arr['test_type'].' - '.$sql_con_dwg_info_arr['pressure'].'</br>';
 				echo "<a href = 'javascript:document.submit_for".$i.$j.".submit()'> <b> View ISO Drawing </b> </a>";
 			}
 			else {echo '<mark>'.$con_no.'. '.$Dwg_array[$i].'</mark>';}
 			
-			viewPDF('submit_for'.$i.$j,'fab',$Dwg_array[$i],$sql_con_dwg_info_arr['rev_no']);
+			$rev_no = isset($sql_con_dwg_info_arr['rev_no']) && $sql_con_dwg_info_arr['rev_no'] !== null ? (string)$sql_con_dwg_info_arr['rev_no'] : '';
+            viewPDF('submit_for'.$i.$j,'fab',$Dwg_array[$i], $rev_no);
 		}
 ?>
 </td>
@@ -135,7 +139,7 @@ echo '<td class="main_td" colspan=3 style="background-color: #F6D8CE; height:80p
 		if($j%3==0){echo'</tr><tr>';}	
 		
 	}
-	if($j%3){
+	if($j % 3 !== 0){
 		for($k=0;$k<3-($j%3);$k++){ ?>
 <td class="jnt_td" ></td>
 <?php		
@@ -162,7 +166,7 @@ else{  /////////////////////////////////////////////////////////////////////////
 	<form name='submit_for' action="<?php echo PCS_WPV_URL; ?>/viewer.php" method="post" target="<?php echo $view['wr_subject'];?>" onSubmit="return doSumbit()"> 
 	<input type="hidden" name="folder" value="tp">
 	<input type="hidden" name="file" value="<?php echo $view['wr_subject'];?>">
-	<input type="hidden" name="rev" value="<?php echo $sql_tp_arr['rev_no'];?>">
+	<input type="hidden" name="rev" value="<?php echo $sql_tp_arr['rev_no'] ?? '';?>">
 	</form>
 </tr>
 <tr>
@@ -188,10 +192,11 @@ else{  /////////////////////////////////////////////////////////////////////////
 <td class="main_td " colspan="4" style="height:300px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo1'], 'photo1', 300);
-	if(!$sql_tp_info_arr['tp_photo1_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo1_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo1_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
-	}
+	if (!$sql_tp_info_arr['tp_photo1_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo1_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo1_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo1', $sql_tp_info_arr['tp_photo1']);
+    }
 ?>
 </td>
 </tr>
@@ -203,19 +208,21 @@ else{  /////////////////////////////////////////////////////////////////////////
 <td class="main_td " colspan="2" style="width:50%;height:150px;font-size:20px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo2'], 'photo2', 100, 'thumb_');
-	if(!$sql_tp_info_arr['tp_photo2_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo2_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo2_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
-	}
+	if (!$sql_tp_info_arr['tp_photo2_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo2_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo2_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo2', $sql_tp_info_arr['tp_photo2']);
+    }
 ?>
 </td>
 <td class="main_td " colspan="2" style="width:50%;height:150px;font-size:20px;">
 <?php
  	photo_thumb('tp', $sql_tp_info_arr['tp_photo3'], 'photo3', 100, 'thumb_');
-	if(!$sql_tp_info_arr['tp_photo3_by'] && $member['mb_2']>1){photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);}
-	else if((($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo3_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo3_tm'],0,10)) || $member['mb_2']==3)){
-		photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
-	}
+	if (!$sql_tp_info_arr['tp_photo3_by'] && $member['mb_2']>1) {
+        photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
+    } elseif (($member['mb_2']!=3 && $member['mb_nick'] == $sql_tp_info_arr['tp_photo3_by'] && G5_TIME_YMD == substr($sql_tp_info_arr['tp_photo3_tm'],0,10)) || $member['mb_2']==3) {
+        photo_up('tp', $view['wr_subject'], 'photo3', $sql_tp_info_arr['tp_photo3']);
+    }
 ?>
 </td>
 </tr>
@@ -241,17 +248,18 @@ echo '<td class="main_td" style="background-color: #F6D8CE; height:50px;"><b>INC
 
 <td class="jnt_td" style='width:33%;height:150px;font-size:20px;'>
 <?php
-		if($Dwg_array[$i]){
+		if($Dwg_array[$i] !== '' && $Dwg_array[$i] !== '0'){
 			$j++;
 			$con_no = $i+1;
-			if($sql_con_dwg_arr['wr_id']){
+			if(isset($sql_con_dwg_arr['wr_id']) && $sql_con_dwg_arr['wr_id']){
 				echo '<a href='.G5_BBS_URL.'/board.php?bo_table=drawing&wr_id='.$sql_con_dwg_arr['wr_id'].'> <b>'.$con_no.'. '.$Dwg_array[$i].'</b></a></br>';
 				echo $sql_con_dwg_info_arr['line_size'].' - '.$sql_con_dwg_info_arr['test_type'].' - '.$sql_con_dwg_info_arr['pressure'].'</br>';
 				echo "<a href = 'javascript:document.submit_for".$i.$j.".submit()'> <b> View ISO Drawing </b> </a>";
 			}
 			else {echo '<mark>'.$con_no.'. '.$Dwg_array[$i].'</mark>';}
 			
-			viewPDF('submit_for'.$i.$j,'fab',$Dwg_array[$i],$sql_con_dwg_info_arr['rev_no']);
+			$rev_no = isset($sql_con_dwg_info_arr['rev_no']) && $sql_con_dwg_info_arr['rev_no'] !== null ? (string)$sql_con_dwg_info_arr['rev_no'] : '';
+            viewPDF('submit_for'.$i.$j,'fab',$Dwg_array[$i], $rev_no);
 		}
 ?>
 </td>

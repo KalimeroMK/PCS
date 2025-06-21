@@ -67,7 +67,7 @@ class Lzw implements FilterInterface
      * @return string The uncompressed data
      * @throws LzwException
      */
-    public function decode($data)
+    public function decode($data): string
     {
         if ($data[0] === "\x00" && $data[1] === "\x01") {
             throw new LzwException(
@@ -95,28 +95,23 @@ class Lzw implements FilterInterface
             if ($code === 256) {
                 $this->initsTable();
                 $code = $this->getNextCode();
-
                 if ($code === 257) {
                     break;
                 }
-
                 $uncompData .= $this->sTable[$code];
                 $oldCode = $code;
+            } elseif ($code < $this->tIdx) {
+                $string = $this->sTable[$code];
+                $uncompData .= $string;
+                $this->addStringToTable($this->sTable[$oldCode], $string[0]);
+                $oldCode = $code;
             } else {
-                if ($code < $this->tIdx) {
-                    $string = $this->sTable[$code];
-                    $uncompData .= $string;
+                $string = $this->sTable[$oldCode];
+                $string .= $string[0];
+                $uncompData .= $string;
 
-                    $this->addStringToTable($this->sTable[$oldCode], $string[0]);
-                    $oldCode = $code;
-                } else {
-                    $string = $this->sTable[$oldCode];
-                    $string .= $string[0];
-                    $uncompData .= $string;
-
-                    $this->addStringToTable($string);
-                    $oldCode = $code;
-                }
+                $this->addStringToTable($string);
+                $oldCode = $code;
             }
         }
 
@@ -140,11 +135,8 @@ class Lzw implements FilterInterface
 
     /**
      * Add a new string to the string table.
-     *
-     * @param string $oldString
-     * @param string $newString
      */
-    protected function addStringToTable($oldString, $newString = '')
+    protected function addStringToTable(string $oldString, string $newString = '')
     {
         $string = $oldString . $newString;
 
@@ -162,10 +154,8 @@ class Lzw implements FilterInterface
 
     /**
      * Returns the next 9, 10, 11 or 12 bits.
-     *
-     * @return integer
      */
-    protected function getNextCode()
+    protected function getNextCode(): int
     {
         if ($this->bytePointer === $this->dataLength) {
             return 257;

@@ -29,13 +29,13 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
         $is_comment_reply_edit = ($list[$i]['is_reply'] || $list[$i]['is_edit'] || $list[$i]['is_del']) ? 1 : 0;
 	?>
 
-	<article id="c_<?php echo $comment_id ?>" <?php if ($cmt_depth) { ?>style="margin-left:<?php echo $cmt_depth ?>px;border-top-color:#e0e0e0"<?php } ?>>
+	<article id="c_<?php echo $comment_id ?>" <?php if ($cmt_depth !== 0) { ?>style="margin-left:<?php echo $cmt_depth ?>px;border-top-color:#e0e0e0"<?php } ?>>
         <div class="pf_img"><?php echo get_member_profile_img($list[$i]['mb_id']) ?></div>
         
         <div class="cm_wrap">
 
             <header style="z-index:<?php echo $cmt_sv; ?>">
-	            <h2><?php echo get_text($list[$i]['wr_name']); ?>님의 <?php if ($cmt_depth) { ?><span class="sound_only">댓글의</span><?php } ?> 댓글</h2>
+	            <h2><?php echo get_text($list[$i]['wr_name']); ?>님의 <?php if ($cmt_depth !== 0) { ?><span class="sound_only">댓글의</span><?php } ?> 댓글</h2>
 	            <?php echo $list[$i]['name'] ?>
 	            <?php if ($is_ip_view) { ?>
 	            <span class="sound_only">아이피</span>
@@ -54,12 +54,12 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	                <?php if (strstr($list[$i]['wr_option'], "secret")) { ?><img src="<?php echo $board_skin_url; ?>/img/icon_secret.gif" alt="비밀글"><?php } ?>
 	                <?php echo $comment ?>
 	            </p>
-	            <?php if($is_comment_reply_edit) {
+	            <?php if($is_comment_reply_edit !== 0) {
 	                if($w == 'cu') {
 	                    $sql = " select wr_id, wr_content, mb_id from $write_table where wr_id = '$c_id' and wr_is_comment = '1' ";
 	                    $cmt = sql_fetch($sql);
                         if (isset($cmt)) {
-                            if (!($is_admin || ($member['mb_id'] == $cmt['mb_id'] && $cmt['mb_id']))) {
+                            if (!$is_admin && !($member['mb_id'] == $cmt['mb_id'] && $cmt['mb_id'])) {
                                 $cmt['wr_content'] = '';
                             }
                             $c_wr_content = $cmt['wr_content'];
@@ -74,7 +74,7 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	        <input type="hidden" value="<?php echo strstr($list[$i]['wr_option'],"secret") ?>" id="secret_comment_<?php echo $comment_id ?>">
 	        <textarea id="save_comment_<?php echo $comment_id ?>" style="display:none"><?php echo get_text($list[$i]['content1'], 0) ?></textarea>
 		</div>
-        <?php if($is_comment_reply_edit){ ?>
+        <?php if($is_comment_reply_edit !== 0){ ?>
 		<div class="bo_vl_opt">
             <button type="button" class="btn_cm_opt btn_b01 btn"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sound_only">댓글 옵션</span></button>
         	<ul class="bo_vc_act">

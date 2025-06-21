@@ -1,5 +1,5 @@
 <?php
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 // 특수문자 변환
 function specialchars_replace($str, $len=0) {
@@ -7,15 +7,13 @@ function specialchars_replace($str, $len=0) {
         $str = substr($str, 0, $len);
     }
 
-    $str = str_replace(["&", "<", ">"], ["&amp;", "&lt;", "&gt;"], $str);
-
     /*
     $str = preg_replace("/&/", "&amp;", $str);
     $str = preg_replace("/</", "&lt;", $str);
     $str = preg_replace("/>/", "&gt;", $str);
     */
 
-    return $str;
+    return str_replace(["&", "<", ">"], ["&amp;", "&lt;", "&gt;"], $str);
 }
 
 $sql = " select gr_id, bo_subject, bo_page_rows, bo_read_level, bo_use_rss_view from {$g5['board_table']} where bo_table = '$bo_table' ";
@@ -60,10 +58,7 @@ $result = sql_query($sql);
 for ($i=0; $row=sql_fetch_array($result); $i++) {
     $file = '';
 
-    if (strstr($row['wr_option'], 'html'))
-        {$html = 1;}
-    else
-        {$html = 0;}
+    $html = strstr($row['wr_option'], 'html') ? 1 : 0;
 
 if ($i === 0) {
     echo '<description>'. specialchars_replace($subj2). ' ('. $row['wr_datetime'] .')</description>'.PHP_EOL;

@@ -8,8 +8,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$connect_skin_url.'/style.css">',
 <!-- 현재접속자 목록 시작 { -->
 <div id="current_connect">
     <ul>
-    <?php
-    for ($i=0; $i<count($list); $i++) {
+    
+$counter = count($list);<?php
+    for ($i=0; $i<$counter; $i++) {
         //$location = conv_content($list[$i]['lo_location'], 0);
         $location = $list[$i]['lo_location'];
         // 최고관리자에게만 허용

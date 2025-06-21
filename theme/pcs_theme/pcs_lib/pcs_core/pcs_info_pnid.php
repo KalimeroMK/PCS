@@ -7,7 +7,7 @@ if(!G5_IS_MOBILE) {
 	$pnid_array = explode(';',$sql_pnid_arr['con_pnid']);
 	$EQ_array = explode(';',$sql_pnid_arr['m_item']);
 
-	if($_POST['num_app']){
+	if($_POST['num_app'] ?? null){
 		$query_approve = 'UPDATE '.G5_TABLE_PREFIX.'pcs_info_pnid_coor SET pnid_state = "'.$_POST['num_app'].'" WHERE pnid_no = "'.$view['wr_subject'].'" ';
 		sql_query ($query_approve);
 	}
@@ -16,10 +16,11 @@ if(!G5_IS_MOBILE) {
 	$sql_dwg_coor_check = sql_query ($query_dwg_coor_check);
 	$sql_dwg_coor_array = sql_fetch_array ($sql_dwg_coor_check);
 
-	$pnid_txt = explode(';',$sql_dwg_coor_array['pnid_coor']);
+	$pkg_array = array();
+	$pnid_txt = explode(';',$sql_dwg_coor_array['pnid_coor'] ?? '');
 	foreach($pnid_txt as $pkg_txt){
 		$pkg = explode(',',$pkg_txt);
-		if($pkg[1]){$pkg_array[$pkg[1]] = $pkg[1];}
+		if(isset($pkg[1]) && $pkg[1] !== '' && $pkg[1] !== '0'){$pkg_array[$pkg[1]] = $pkg[1];}
 	}
 ?>
 
@@ -38,7 +39,8 @@ if(!G5_IS_MOBILE) {
 <tr>
 <td class="main_td td_sub" style="height:80px;"> P&ID No. </td>
 <td class="main_td" colspan="2">
-<?php	if($sql_dwg_coor_array['pnid_state']!='Approved' && $member['mb_3']>0) { ?>
+<?php	$pnid_state = $sql_dwg_coor_array['pnid_state'] ?? '';
+if($pnid_state!='Approved' && $member['mb_3']>0) { ?>
 	<a href = 'javascript:document.numbering_form.submit()'> <?php echo $view['wr_subject']; ?> </a>
 	<form name="numbering_form" action="<?php echo PCS_CORE_URL; ?>/pcs_mark_pnid_pdf.php" method="post" target="result" onSubmit="return doSumbit()"> 
 	<input type="hidden" name="key" value="key">
@@ -56,23 +58,24 @@ if(!G5_IS_MOBILE) {
 </td>
 <td class="main_td">
 <?php
-	if($sql_dwg_coor_array['pnid_state']=='Approved'){
-		$txt_color = 'green';
-		$txt_value = 'Marked';
-	}
-	else if($sql_dwg_coor_array['pnid_state']=='Marked'){
-		$txt_color = 'blue';
-		$txt_value = 'Approved';
-	}
+	$txt_color = 'black';
+$txt_value = '';
+if ($pnid_state=='Approved') {
+    $txt_color = 'green';
+    $txt_value = 'Marked';
+} elseif ($pnid_state=='Marked') {
+    $txt_color = 'blue';
+    $txt_value = 'Approved';
+}
 if($member['mb_3']>2){
 	echo '
-		<a href = "javascript:submit_mark.submit()" ><font color = "'.$txt_color.'"><b>'.$sql_dwg_coor_array['pnid_state'].'</b></font></a>
+		<a href = "javascript:submit_mark.submit()" ><font color = "'.$txt_color.'"><b>'.$pnid_state.'</b></font></a>
 		<form name="submit_mark" method="post" onSubmit="return doSumbit()">
 		<input type="hidden" name="num_app" value="'.$txt_value.'">
 		</form>';
 }
 else {
-	echo '<font color = "'.$txt_color.'"><b>'.$sql_dwg_coor_array['pnid_state'].'</b></font>';
+	echo '<font color = "'.$txt_color.'"><b>'.$pnid_state.'</b></font>';
 }
 ?>
 </td>
@@ -106,7 +109,7 @@ else {
 				if($j%6==0){echo'</tr><tr>';}	
 		
 			}
-			if($j%6){for($k=0;$k<6-($j%6);$k++){ echo '<td class="main_td" style="height:80px;font-size:18px;"></td>';}	}
+			if($j % 6 !== 0){for($k=0;$k<6-($j%6);$k++){ echo '<td class="main_td" style="height:80px;font-size:18px;"></td>';}	}
 		}
 		echo '</tr>';
 	}

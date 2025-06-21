@@ -1,9 +1,9 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $g5['title'] = '전체검색 결과';
-include_once('./_head.php');
+include_once(__DIR__ . '/_head.php');
 
 $search_table = [];
 $table_index = 0;
@@ -17,11 +17,11 @@ $stx = get_search_string($stx); // 특수문자 제거
 if ($stx) {
     $stx = preg_replace('/\//', '\/', trim($stx));
     $sop = strtolower($sop);
-    if (!$sop || !($sop == 'and' || $sop == 'or')) {
+    if (!$sop || $sop !== 'and' && $sop !== 'or') {
         $sop = 'and';
     } // 연산자 and , or
     $srows = isset($_GET['srows']) ? (int)preg_replace('#[^0-9]#', '', $_GET['srows']) : 10;
-    if (!$srows) {
+    if ($srows === 0) {
         $srows = 10;
     } // 한페이지에 출력하는 검색 행수
 
@@ -44,15 +44,12 @@ if ($stx) {
             $sql2 = " select gr_use_access, gr_admin from {$g5['group_table']} where gr_id = '{$row['gr_id']}' ";
             $row2 = sql_fetch($sql2);
             // 그룹접근을 사용한다면
-            if ($row2['gr_use_access']) {
-                // 그룹관리자가 있으며 현재 회원이 그룹관리자라면 통과
-                if ($row2['gr_admin'] && $row2['gr_admin'] == $member['mb_id']) {
-                } else {
-                    $sql3 = " select count(*) as cnt from {$g5['group_member_table']} where gr_id = '{$row['gr_id']}' and mb_id = '{$member['mb_id']}' and mb_id <> '' ";
-                    $row3 = sql_fetch($sql3);
-                    if (!$row3['cnt']) {
-                        continue;
-                    }
+            // 그룹관리자가 있으며 현재 회원이 그룹관리자라면 통과
+            if ($row2['gr_use_access'] && !($row2['gr_admin'] && $row2['gr_admin'] == $member['mb_id'])) {
+                $sql3 = " select count(*) as cnt from {$g5['group_member_table']} where gr_id = '{$row['gr_id']}' and mb_id = '{$member['mb_id']}' and mb_id <> '' ";
+                $row3 = sql_fetch($sql3);
+                if (!$row3['cnt']) {
+                    continue;
                 }
             }
         }
@@ -78,8 +75,9 @@ if ($stx) {
     $field = explode('||', trim($sfl));
 
     $str = '(';
-    for ($i = 0; $i < count($s); $i++) {
-        if (trim($s[$i]) == '') {
+    $counter = count($s);
+    for ($i = 0; $i < $counter; $i++) {
+        if (trim($s[$i]) === '') {
             continue;
         }
 
@@ -128,7 +126,8 @@ if ($stx) {
     $time1 = get_microtime();
 
     $total_count = 0;
-    for ($i = 0; $i < count($g5_search['tables']); $i++) {
+    $counter = count($g5_search['tables']);
+    for ($i = 0; $i < $counter; $i++) {
         $tmp_write_table = $g5['write_prefix'].$g5_search['tables'][$i];
 
         $sql = " select wr_id from {$tmp_write_table} where {$sql_search} ";
@@ -160,12 +159,14 @@ if ($stx) {
     if ($page < 1) {
         $page = 1;
     }                                          // 페이지가 없으면 첫 페이지 (1 페이지)
-    $from_record = ($page - 1) * $rows;        // 시작 열을 구함
+    $from_record = ($page - 1) * $rows;
+    // 시작 열을 구함
+    $counter = count($search_table);        // 시작 열을 구함
 
-    for ($i = 0; $i < count($search_table); $i++) {
+    for ($i = 0; $i < $counter; $i++) {
         if ($from_record < $search_table_count[$i]) {
             $table_index = $i;
-            $from_record = $from_record - ($i > 0 ? $search_table_count[$i - 1] : 0);
+            $from_record -= $i > 0 ? $search_table_count[$i - 1] : 0;
             break;
         }
     }
@@ -174,7 +175,8 @@ if ($stx) {
     $list = [];
 
     $k = 0;
-    for ($idx = $table_index; $idx < count($search_table); $idx++) {
+    $counter = count($search_table);
+    for ($idx = $table_index; $idx < $counter; $idx++) {
         $sql = " select bo_subject, bo_mobile_subject from {$g5['board_table']} where bo_table = '{$search_table[$idx]}' ";
         $row = sql_fetch($sql);
         $bo_subject[$idx] = ((G5_IS_MOBILE && $row['bo_mobile_subject']) ? $row['bo_mobile_subject'] : $row['bo_subject']);
@@ -261,4 +263,4 @@ if (!$sop) {
 
 include_once($search_skin_path.'/search.skin.php');
 
-include_once('./_tail.php');
+include_once(__DIR__ . '/_tail.php');

@@ -66,7 +66,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     // 관리자가 아니라면 중간 IP 주소를 감춘후 보여줍니다.
     $list[$i]['ip'] = $row['wr_ip'];
     if (!$is_admin) {
-        $list[$i]['ip'] = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", G5_IP_DISPLAY, $row['wr_ip']);
+        $list[$i]['ip'] = preg_replace("/(\\d+).(\\d+).(\\d+).(\\d+)/", G5_IP_DISPLAY, $row['wr_ip']);
     }
 
     $list[$i]['is_reply'] = false;
@@ -82,11 +82,9 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
                 $list[$i]['is_edit'] = true;
                 $list[$i]['is_del'] = true;
             }
-        } else {
-            if (!$row['mb_id']) {
-                $list[$i]['del_link'] = G5_BBS_URL.'/password.php?w=x&amp;bo_table='.$bo_table.'&amp;comment_id='.$row['wr_id'].'&amp;page='.$page.$qstr;
-                $list[$i]['is_del'] = true;
-            }
+        } elseif (!$row['mb_id']) {
+            $list[$i]['del_link'] = G5_BBS_URL.'/password.php?w=x&amp;bo_table='.$bo_table.'&amp;comment_id='.$row['wr_id'].'&amp;page='.$page.$qstr;
+            $list[$i]['is_del'] = true;
         }
 
         if (strlen($row['wr_comment_reply']) < 5) {
@@ -96,13 +94,11 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
     // 05.05.22
     // 답변있는 코멘트는 수정, 삭제 불가
-    if ($i > 0 && !$is_admin) {
-        if ($row['wr_comment_reply']) {
-            $tmp_comment_reply = substr($row['wr_comment_reply'], 0, strlen($row['wr_comment_reply']) - 1);
-            if ($tmp_comment_reply == $list[$i - 1]['wr_comment_reply']) {
-                $list[$i - 1]['is_edit'] = false;
-                $list[$i - 1]['is_del'] = false;
-            }
+    if ($i > 0 && !$is_admin && $row['wr_comment_reply']) {
+        $tmp_comment_reply = substr($row['wr_comment_reply'], 0, strlen($row['wr_comment_reply']) - 1);
+        if ($tmp_comment_reply == $list[$i - 1]['wr_comment_reply']) {
+            $list[$i - 1]['is_edit'] = false;
+            $list[$i - 1]['is_del'] = false;
         }
     }
 }

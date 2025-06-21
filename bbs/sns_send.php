@@ -1,6 +1,6 @@
 <?php
 
-include_once("./_common.php");
+include_once(__DIR__ . "/_common.php");
 
 $title = isset($_REQUEST['title']) ? urlencode(str_replace('\"', '"', $_REQUEST['title'])) : '';
 $short_url = isset($_REQUEST['longurl']) ? googl_short_url($_REQUEST['longurl']) : '';

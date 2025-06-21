@@ -39,18 +39,18 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
             $max_height = $size[1];
 
         $item_html .= '<div class="item">';
-        if ($row['bn_url'][0] == '#')
+        if ($row['bn_url'][0] == '#') {
             $banner .= '<a href="'.$row['bn_url'].'">';
-        else if ($row['bn_url'] && $row['bn_url'] != 'http://') {
+        } elseif ($row['bn_url'] && $row['bn_url'] != 'http://') {
             $banner .= '<a href="'.G5_SHOP_URL.'/bannerhit.php?bn_id='.$row['bn_id'].'"'.$bn_new_win.'>';
         }
         $item_html .= $banner.'<img src="'.G5_DATA_URL.'/banner/'.$row['bn_id'].'?'.preg_replace('/[^0-9]/i', '', $row['bn_time']).'" width="'.$size[0].'" alt="'.get_text($row['bn_alt']).'"'.$bn_border.'>';
-        if($banner)
+        if($banner !== '' && $banner !== '0')
             $item_html .= '</a>';
         $item_html .= '</div>';
     }
     
-    $banner_style = $max_height ? 'style="min-height:'.($max_height + 25).'px"' : '';
+    $banner_style = $max_height !== 0 ? 'style="min-height:'.($max_height + 25).'px"' : '';
     if ($i==0) echo '<div id="main_bn"><div class="main_image_area"><div class="main_banner_owl owl-carousel">'.PHP_EOL;
     
     echo $item_html;

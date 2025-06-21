@@ -1,6 +1,6 @@
 <?php
 
-	if ($_POST['dwg_select']=='yes')	{
+	if (!empty($_POST['dwg_select']) && $_POST['dwg_select']=='yes') {
 	
 	$table_field_array = array('No.','Dwg no.','Rev no.','AG/UG','Unit','j_size','Class','Material','NDE','PMI','PWHT','Paint','Insulation');
 	$table_width_array = array(60,200,60,60,60,60,60,60,60,60,60,60,60);
@@ -10,7 +10,8 @@
 <caption> DRAWING DETAIL STATUS </caption>
 <tbody>
 <tr>
-<?php for($i=0;$i<count($table_field_array);$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';} ?>
+
+$counter = count($table_field_array);<?php for($i=0;$i<$counter;$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';} ?>
 </tr>
 
 <?php
@@ -44,7 +45,8 @@
 <?php viewPDF('submit_for_marked'.$no,'fab',$sql_dwg_arr['dwg_no'],$sql_dwg_arr['rev_no']);?>
 </td>
 
-<?php for($i=1;$i<count($sql_field_array);$i++){echo '<td class="jnt_td">'.$sql_dwg_arr[$sql_field_array[$i]].'</td>';}?>
+
+$counter = count($sql_field_array);<?php for($i=1;$i<$counter;$i++){echo '<td class="jnt_td">'.$sql_dwg_arr[$sql_field_array[$i]].'</td>';}?>
 </tr>
 
 <?php
@@ -118,7 +120,9 @@ for ( $k=0 ; $k<$temp_k; $k++ ) {	?>
 <td class="jnt_td">
 	<div class="stat_left"><?php if($sql_dwg_qty==0) {echo '';} else {echo $sql_dwg_qty.'<sub> Dwgs.';} ?></div>
 	<div class="stat_center"><?php if($sql_total_SDI==0) {echo '-';} else {echo sprintf("%.0f",$sql_done_SDI).' / '.sprintf("%.0f",$sql_total_SDI);} ?></div>
-	<div class="stat_center"><?php if($sql_total_FDI==0) {;} else {echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);} ?></div>
+	<div class="stat_center"><?php if ($sql_total_FDI != 0) {
+    echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);
+} ?></div>
 	<div class="stat_right"><?php if(($sql_total_SDI + $sql_total_FDI)==0) {echo '';} else {echo '('.sprintf("%.1f",($sql_done_SDI + $sql_done_FDI)/($sql_total_SDI + $sql_total_FDI)*100).'%)';} ?></div>
 </td>
 
@@ -142,7 +146,9 @@ for ( $k=0 ; $k<$temp_k; $k++ ) {	?>
 <td class="jnt_td">
 	<div class="stat_left"><?php if($sql_dwg_qty==0) {echo '';} else {echo $sql_dwg_qty.'<sub> Dwgs.';} ?></div>
 	<div class="stat_center"><?php if($sql_total_SDI==0) {echo '-';} else {echo sprintf("%.0f",$sql_done_SDI).' / '.sprintf("%.0f",$sql_total_SDI);} ?></div>
-	<div class="stat_center"><?php if($sql_total_FDI==0) {;} else {echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);} ?></div>
+	<div class="stat_center"><?php if ($sql_total_FDI != 0) {
+    echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);
+} ?></div>
 	<div class="stat_right"><?php if(($sql_total_SDI + $sql_total_FDI)==0) {echo '';} else {echo '('.sprintf("%.1f",($sql_done_SDI + $sql_done_FDI)/($sql_total_SDI + $sql_total_FDI)*100).'%)';} ?></div>
 </td>
 
@@ -169,7 +175,9 @@ for ( $k=0 ; $k<$temp_k; $k++ ) {	?>
 	<td class="jnt_td td_S_total">
 	<div class="stat_left"><?php if($sql_dwg_qty==0) {echo '';} else {echo $sql_dwg_qty.'<sub> Dwgs.';} ?></div>
 	<div class="stat_center"><?php if($sql_total_SDI==0) {echo '-';} else {echo sprintf("%.0f",$sql_done_SDI).' / '.sprintf("%.0f",$sql_total_SDI);} ?></div>
-	<div class="stat_center"><?php if($sql_total_FDI==0) {;} else {echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);} ?></div>
+	<div class="stat_center"><?php if ($sql_total_FDI != 0) {
+    echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);
+} ?></div>
 	<div class="stat_right"><?php if(($sql_total_SDI + $sql_total_FDI)==0) {echo '';} else {echo '('.sprintf("%.1f",($sql_done_SDI + $sql_done_FDI)/($sql_total_SDI + $sql_total_FDI)*100).'%)';} ?></div>
 
 	</td>
@@ -191,7 +199,9 @@ for ( $k=0 ; $k<$temp_k; $k++ ) {	?>
 	<td class="jnt_td td_S_total">
 	<div class="stat_left"><?php if($sql_dwg_qty==0) {echo '';} else {echo $sql_dwg_qty.'<sub> Dwgs.';} ?></div>
 	<div class="stat_center"><?php if($sql_total_SDI==0) {echo '-';} else {echo sprintf("%.0f",$sql_done_SDI).' / '.sprintf("%.0f",$sql_total_SDI);} ?></div>
-	<div class="stat_center"><?php if($sql_total_FDI==0) {;} else {echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);} ?></div>
+	<div class="stat_center"><?php if ($sql_total_FDI != 0) {
+    echo sprintf("%.0f",$sql_done_FDI).' / '.sprintf("%.0f",$sql_total_FDI);
+} ?></div>
 	<div class="stat_right"><?php if(($sql_total_SDI + $sql_total_FDI)==0) {echo '';} else {echo '('.sprintf("%.1f",($sql_done_SDI + $sql_done_FDI)/($sql_total_SDI + $sql_total_FDI)*100).'%)';} ?></div>
 	</td>
 
@@ -233,8 +243,7 @@ for ( $k=0 ; $k<$temp_k; $k++ ) {	?>
 <tr>
 <?php
 	for($j=0;$j<$j_qty;$j++) {
-		if($j<2){$state_j = $j_state[$j];}
-		else {$state_j = $o_state[$j-1];}
+		$state_j = $j < 2 ? $j_state[$j] : $o_state[$j-1];
 		echo '<td class="main_td td_sub_pkg1">'.$state_j.'</td>';
 	}
 ?>
@@ -321,12 +330,12 @@ for ( $k=0 ; $k<$temp_k  ; $k++ ) {	?>
 
 <?php }
 
-function dwg_chk_stat($au, $un, $num, $st='') {
+function dwg_chk_stat(string $au, string $un, string $num, $st=''): void {
 	if($st=='ACT'){$query_dwg_qty = 'SELECT COUNT(*) FROM '.G5_TABLE_PREFIX.'pcs_info_iso AS A JOIN '.G5_TABLE_PREFIX.'pcs_info_iso_coor AS B ON A.dwg_no  = B.dwg_no AND B.dwg_state = "'.$num.'" WHERE';$dwg_st=$st;}
 	else{$query_dwg_qty = 'SELECT COUNT(*) FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE state = "'.$num.'" AND';$dwg_st=$num;}
 	
-	if($au) {$query_dwg_qty .= ' ag_ug = "'.$au.'"';}
-	if($un) {$query_dwg_qty .= ' AND unit = "'.$un.'"';}
+	if($au !== '' && $au !== '0') {$query_dwg_qty .= ' ag_ug = "'.$au.'"';}
+	if($un !== '' && $un !== '0') {$query_dwg_qty .= ' AND unit = "'.$un.'"';}
 	$t_value = pcs_sql_value ($query_dwg_qty);
 	
 	if($t_value){

@@ -65,7 +65,7 @@ class TCPDF_IMPORT extends TCPDF {
 	 * @public
 	 * @since 1.0.000 (2011-05-24)
 	 */
-	public function importPDF($filename) {
+	public function importPDF($filename): void {
 		// load document
 		$rawdata = file_get_contents($filename);
 		if ($rawdata === false) {

@@ -19,11 +19,8 @@ class PdfString extends PdfType
 {
     /**
      * Parses a string object from the stream reader.
-     *
-     * @param StreamReader $streamReader
-     * @return self
      */
-    public static function parse(StreamReader $streamReader)
+    public static function parse(StreamReader $streamReader): self
     {
         $pos = $startPos = $streamReader->getOffset();
         $openBrackets = 1;
@@ -56,9 +53,8 @@ class PdfString extends PdfType
      * Helper method to create an instance.
      *
      * @param string $value The string needs to be escaped accordingly.
-     * @return self
      */
-    public static function create($value)
+    public static function create($value): self
     {
         $v = new self();
         $v->value = $value;
@@ -82,9 +78,8 @@ class PdfString extends PdfType
      * Unescapes escaped sequences in a PDF string according to the PDF specification.
      *
      * @param string $s
-     * @return string
      */
-    public static function unescape($s)
+    public static function unescape($s): string
     {
         $out = '';
         /** @noinspection ForeachInvariantsInspection */

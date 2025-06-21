@@ -78,50 +78,17 @@ class TCPDF_FILTERS {
 	 */
 	public static function decodeFilter($filter, $data) {
 		switch ($filter) {
-			case 'ASCIIHexDecode': {
-				return self::decodeFilterASCIIHexDecode($data);
-				break;
-			}
-			case 'ASCII85Decode': {
-				return self::decodeFilterASCII85Decode($data);
-				break;
-			}
-			case 'LZWDecode': {
-				return self::decodeFilterLZWDecode($data);
-				break;
-			}
-			case 'FlateDecode': {
-				return self::decodeFilterFlateDecode($data);
-				break;
-			}
-			case 'RunLengthDecode': {
-				return self::decodeFilterRunLengthDecode($data);
-				break;
-			}
-			case 'CCITTFaxDecode': {
-				return self::decodeFilterCCITTFaxDecode($data);
-				break;
-			}
-			case 'JBIG2Decode': {
-				return self::decodeFilterJBIG2Decode($data);
-				break;
-			}
-			case 'DCTDecode': {
-				return self::decodeFilterDCTDecode($data);
-				break;
-			}
-			case 'JPXDecode': {
-				return self::decodeFilterJPXDecode($data);
-				break;
-			}
-			case 'Crypt': {
-				return self::decodeFilterCrypt($data);
-				break;
-			}
-			default: {
-				return self::decodeFilterStandard($data);
-				break;
-			}
+			case 'ASCIIHexDecode': return self::decodeFilterASCIIHexDecode($data);
+			case 'ASCII85Decode': return self::decodeFilterASCII85Decode($data);
+			case 'LZWDecode': return self::decodeFilterLZWDecode($data);
+			case 'FlateDecode': return self::decodeFilterFlateDecode($data);
+			case 'RunLengthDecode': return self::decodeFilterRunLengthDecode($data);
+			case 'CCITTFaxDecode': return self::decodeFilterCCITTFaxDecode($data);
+			case 'JBIG2Decode': return self::decodeFilterJBIG2Decode($data);
+			case 'DCTDecode': return self::decodeFilterDCTDecode($data);
+			case 'JPXDecode': return self::decodeFilterJPXDecode($data);
+			case 'Crypt': return self::decodeFilterCrypt($data);
+			default: return self::decodeFilterStandard($data);
 		}
 	}
 
@@ -215,7 +182,6 @@ class TCPDF_FILTERS {
 		$group_pos = 0;
 		$tuple = 0;
 		$pow85 = array((85*85*85*85), (85*85*85), (85*85), 85, 1);
-		$last_pos = ($data_length - 1);
 		// for each byte
 		for ($i = 0; $i < $data_length; ++$i) {
 			// get char value
@@ -243,22 +209,18 @@ class TCPDF_FILTERS {
 		}
 		// last tuple (if any)
 		switch ($group_pos) {
-			case 4: {
-				$decoded .= chr($tuple >> 24).chr($tuple >> 16).chr($tuple >> 8);
-				break;
-			}
-			case 3: {
-				$decoded .= chr($tuple >> 24).chr($tuple >> 16);
-				break;
-			}
-			case 2: {
-				$decoded .= chr($tuple >> 24);
-				break;
-			}
-			case 1: {
-				self::Error('decodeFilterASCII85Decode: invalid code');
-				break;
-			}
+			case 4:
+                $decoded .= chr($tuple >> 24).chr($tuple >> 16).chr($tuple >> 8);
+                break;
+			case 3:
+                $decoded .= chr($tuple >> 24).chr($tuple >> 16);
+                break;
+			case 2:
+                $decoded .= chr($tuple >> 24);
+                break;
+			case 1:
+                self::Error('decodeFilterASCII85Decode: invalid code');
+                break;
 		}
 		return $decoded;
 	}
@@ -295,7 +257,7 @@ class TCPDF_FILTERS {
 		// previous val
 		$prev_index = 0;
 		// while we encounter EOD marker (257), read code_length bits
-		while (($data_length > 0) AND (($index = bindec(substr($bitstring, 0, $bitlen))) != 257)) {
+		while ($data_length > 0 && $index = bindec(substr($bitstring, 0, $bitlen)) != 257) {
 			// remove read bits from string
 			$bitstring = substr($bitstring, $bitlen);
 			// update number of bits
@@ -405,7 +367,7 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function decodeFilterCCITTFaxDecode($data) {
+	public static function decodeFilterCCITTFaxDecode($data): void {
 		self::Error('~decodeFilterCCITTFaxDecode: this method has not been yet implemented');
 		//return $data;
 	}
@@ -418,7 +380,7 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function decodeFilterJBIG2Decode($data) {
+	public static function decodeFilterJBIG2Decode($data): void {
 		self::Error('~decodeFilterJBIG2Decode: this method has not been yet implemented');
 		//return $data;
 	}
@@ -431,7 +393,7 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function decodeFilterDCTDecode($data) {
+	public static function decodeFilterDCTDecode($data): void {
 		self::Error('~decodeFilterDCTDecode: this method has not been yet implemented');
 		//return $data;
 	}
@@ -444,7 +406,7 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function decodeFilterJPXDecode($data) {
+	public static function decodeFilterJPXDecode($data): void {
 		self::Error('~decodeFilterJPXDecode: this method has not been yet implemented');
 		//return $data;
 	}
@@ -457,7 +419,7 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function decodeFilterCrypt($data) {
+	public static function decodeFilterCrypt($data): void {
 		self::Error('~decodeFilterCrypt: this method has not been yet implemented');
 		//return $data;
 	}

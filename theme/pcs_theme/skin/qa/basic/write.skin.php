@@ -71,7 +71,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$qa_skin_url.'/style.css">', 0);
                 
             </li>
 
-            <?php if ($option) { ?>
+            <?php if ($option !== '' && $option !== '0') { ?>
             <li>
                 옵션
                 <?php echo $option; ?>

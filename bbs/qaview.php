@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 include_once(G5_EDITOR_LIB);
 
 $qa_id = isset($_REQUEST['qa_id']) ? (int)$_REQUEST['qa_id'] : 0;
@@ -17,7 +17,7 @@ set_session('ss_qa_delete_token', $token);
 set_session('ss_qa_write_token', $token);
 
 $g5['title'] = $qaconfig['qa_title'];
-include_once('./qahead.php');
+include_once(__DIR__ . '/qahead.php');
 
 $skin_file = $qa_skin_path.'/view.skin.php';
 
@@ -43,11 +43,11 @@ if (is_file($skin_file)) {
     $view['email'] = get_text(get_email_address($view['qa_email']));
     $view['hp'] = $view['qa_hp'];
 
-    if (trim($stx)) {
+    if (trim($stx) !== '' && trim($stx) !== '0') {
         $view['subject'] = search_font($stx, $view['subject']);
     }
 
-    if (trim($stx)) {
+    if (trim($stx) !== '' && trim($stx) !== '0') {
         $view['content'] = search_font($stx, $view['content']);
     }
 
@@ -228,4 +228,4 @@ if (is_file($skin_file)) {
     echo '<div>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</div>';
 }
 
-include_once('./qatail.php');
+include_once(__DIR__ . '/qatail.php');

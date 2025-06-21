@@ -1,5 +1,5 @@
 <?php
-if($_POST['pkg_select']){
+if (!empty($_POST['pkg_select'])) {
 	$table_field_array = array('No.','Package no.','Test type','Line<br>size','Pressure','Welding','Support','PWHT','PMI','Punch A','Punch B','Punch C','RT','Last Check');
 	$sql_field_array = array('test_type','line_size','pressure','total_wd','total_spt','total_pwht','total_pmi','total_a','total_b','total_c','total_rt','last_chk');
 	echo '
@@ -7,7 +7,8 @@ if($_POST['pkg_select']){
 	<caption> PACKAGE STATUS </caption>
 	<tbody>
 	<tr>';
-	for($i=0;$i<count($table_field_array);$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';}
+    $counter = count($table_field_array);
+	for($i=0;$i<$counter;$i++){echo '<td class="jnt_td jnt_th">'.$table_field_array[$i].'</td>';}
 	echo '</tr>';
 
 	switch ($pkg_seq)	{
@@ -103,14 +104,14 @@ for ( $l = 0 ; $l < $cnt_agug ; $l++)	{
 <?php	
 
 	for ( $k = 0 ; $k < $cnt_unit ; $k++)	{
-		if($k){echo '<tr>';}
+		if($k !== 0){echo '<tr>';}
 ?>
 
 <td class="main_td" rowspan="<?php echo count($pkg_type);?>"><?php echo $pkg_unit[$k]; ?></td>
 
 <?php
 		for ( $j = 0 ; $j < $cnt_type ; $j++ )	{
-			if($j){echo '<tr>';}
+			if($j !== 0){echo '<tr>';}
 ?>	
 
 <td class="main_td"><?php	echo $pkg_type[$j]; ?></td>
@@ -119,7 +120,7 @@ for ( $l = 0 ; $l < $cnt_agug ; $l++)	{
 			for ( $i = 0 ; $i < $cnt_stat ; $i++ )	{
 				$query_pkg = 'SELECT count(pkg_no) FROM pkgState WHERE ag_ug = "'.$pkg_ag_ug[$l].'" AND test_type = "'.$pkg_type[$j].'" AND unit = "'.$pkg_unit[$k].'"';
 
-				if($i) {$query_pkg .= ' AND '.$pkg_stat[$i].' != "0000-00-00"  AND '.$pkg_stat[$i+1].' = "0000-00-00" ';}
+				if($i !== 0) {$query_pkg .= ' AND '.$pkg_stat[$i].' != "0000-00-00"  AND '.$pkg_stat[$i+1].' = "0000-00-00" ';}
 
 				$sql_pkg = pcs_sql_value ($query_pkg);
 				$pkg_qty_ag[$l][$k][$j][$i] = $sql_pkg;
@@ -205,7 +206,7 @@ for ( $l = 0 ; $l < $cnt_agug ; $l++)	{
 <?php
 for ( $i = 0 ; $i < $cnt_stat ; $i++ )	{
 
-	$sum_total[$i] = $sum_ag_ug[0][$i]+$sum_ag_ug[1][$i];
+	$sum_total[$i] = (isset($sum_ag_ug[0][$i]) ? $sum_ag_ug[0][$i] : 0) + (isset($sum_ag_ug[1][$i]) ? $sum_ag_ug[1][$i] : 0);
 ?>
 
 <td class="main_td td_G_total">	<?php if($sum_total[$i]==0) {echo '-';} else {echo $sum_total[$i];} ?></td>

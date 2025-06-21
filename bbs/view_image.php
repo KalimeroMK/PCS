@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $g5['title'] = '이미지 크게보기';
 include_once(G5_PATH.'/head.sub.php');
@@ -20,14 +20,12 @@ if (!preg_match('/(jpg|jpeg|png|gif|bmp|webp)$/i', $extension)) {
 if (strpos($filename, G5_DATA_DIR.'/editor')) {
     $editor_file = strstr($filename, 'editor');
     $filepath = G5_DATA_PATH.'/'.$editor_file;
+} elseif (strpos($filename, G5_DATA_DIR.'/qa')) {
+    $editor_file = strstr($filename, 'qa');
+    $filepath = G5_DATA_PATH.'/'.$editor_file;
 } else {
-    if (strpos($filename, G5_DATA_DIR.'/qa')) {
-        $editor_file = strstr($filename, 'qa');
-        $filepath = G5_DATA_PATH.'/'.$editor_file;
-    } else {
-        $editor_file = '';
-        $filepath = G5_DATA_PATH.'/file/'.$bo_table.'/'.$filename;
-    }
+    $editor_file = '';
+    $filepath = G5_DATA_PATH.'/file/'.$bo_table.'/'.$filename;
 }
 
 $file_exists = (is_file($filepath) && file_exists($filepath)) ? 1 : 0;

@@ -48,11 +48,9 @@
 			default : 	$wjt = ""; break;
 		}
 
-		if ($pkg_sel)	{ $pkg = "pkg_no = '".$pkg_sel."'";}
-		else {$pkg = "";}
+		$pkg = $pkg_sel ? "pkg_no = '".$pkg_sel."'" : "";
 
-		if ($dwg_sel)	{ $dwg = "dwg_no = '".$dwg_sel."'";}
-		else {$dwg = "";}
+		$dwg = $dwg_sel ? "dwg_no = '".$dwg_sel."'" : "";
 
 
 
@@ -105,7 +103,8 @@
 
 	while ($sql_pkg_arr = sql_fetch_array ($sql_pkg))	{
 
-	for ($i=0; $i<count($field_name); $i++) {if ($sql_pkg_arr[$field_name[$i]] == '0000-00-00') {$sql_pkg_arr[$field_name[$i]] = false ;}}
+	$counter = count($field_name);
+    for ($i=0; $i<$counter; $i++) {if ($sql_pkg_arr[$field_name[$i]] == '0000-00-00') {$sql_pkg_arr[$field_name[$i]] = false ;}}
 ?>
 
 <tr>
@@ -119,7 +118,7 @@
 
 	<a href=<?php echo G5_URL.'/bbs/board.php?bo_table=drawing&wr_id='.$sql_dwgby_jnt_arr[wr_id]; ?> target='_self'><?php echo $sql_pkg_arr[dwg_no]; }?>	</a></p></td>
 <td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor black; width: 50px; height: 36px; background-color: white;"><p align="center">
-	<?php if($prev_dwg==$sql_pkg_arr[dwg_no] or !$member['mb_5']) {echo "-";} else { ?>
+	<?php if($prev_dwg == $sql_pkg_arr[dwg_no] || !$member['mb_5']) {echo "-";} else { ?>
 	<a href="<?php echo PCS_LIB_URL."/PDF_down.php?flde=dwg&flna=".$sql_pkg_arr[dwg_no]; ?>"><img src="<?php echo PCS_LIB_URL ?>/pdf.gif" alt="<?php echo "PDF Drawing Download"; ?>"></a> <?php } ?> </p></td>
 <td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor black; width: 50px; height: 36px; background-color: white;"><p align="center">
 	<?php if($prev_dwg==$sql_pkg_arr[dwg_no]) {echo "-";} else { ?>
@@ -148,7 +147,7 @@
 <td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor black; width: 100px; height: 20px; background-color: white;"><p align="center">
 
 <?php
-	if($sql_pkg_arr[rt_rlt]<>'Accept' or !$member['mb_5']) {echo $sql_pkg_arr[rt_date].'<br>'.$sql_pkg_arr[rt_rep];}
+	if($sql_pkg_arr[rt_rlt] != 'Accept' || !$member['mb_5']) {echo $sql_pkg_arr[rt_date].'<br>'.$sql_pkg_arr[rt_rep];}
 
 	else {
 
@@ -167,7 +166,7 @@
 
 
 <td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor black; width: 50px; height: 20px; background-color: 
-<?php if($sql_pkg_arr[rt_rlt]<>"Accept" and $sql_pkg_arr[rt_rate]=="100") {echo "red";} else {echo "white";} ?> ;"> <p align="center"><?php echo substr($sql_pkg_arr[rt_rlt],0,3); ?></p></td>
+<?php if($sql_pkg_arr[rt_rlt] != "Accept" && $sql_pkg_arr[rt_rate] == "100") {echo "red";} else {echo "white";} ?> ;"> <p align="center"><?php echo substr($sql_pkg_arr[rt_rlt],0,3); ?></p></td>
 
 
 <td style="border-width: 0px 0px 1px 1px; border-style: none none solid solid; border-color: currentColor black; width: 100px; height: 20px; background-color: white;"><p align="center">

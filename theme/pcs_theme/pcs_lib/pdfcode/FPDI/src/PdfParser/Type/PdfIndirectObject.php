@@ -24,10 +24,6 @@ class PdfIndirectObject extends PdfType
      *
      * @param int $objectNumberToken
      * @param int $objectGenerationNumberToken
-     * @param PdfParser $parser
-     * @param Tokenizer $tokenizer
-     * @param StreamReader $reader
-     * @return bool|self
      * @throws PdfTypeException
      */
     public static function parse(
@@ -36,7 +32,7 @@ class PdfIndirectObject extends PdfType
         PdfParser $parser,
         Tokenizer $tokenizer,
         StreamReader $reader
-    ) {
+    ): false|\setasign\Fpdi\PdfParser\Type\PdfIndirectObject {
         $value = $parser->readValue();
         if ($value === false) {
             return false;
@@ -62,10 +58,8 @@ class PdfIndirectObject extends PdfType
      *
      * @param int $objectNumber
      * @param int $generationNumber
-     * @param PdfType $value
-     * @return self
      */
-    public static function create($objectNumber, $generationNumber, PdfType $value)
+    public static function create($objectNumber, $generationNumber, PdfType $value): self
     {
         $v = new self();
         $v->objectNumber = (int) $objectNumber;

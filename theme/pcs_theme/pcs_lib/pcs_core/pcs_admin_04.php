@@ -2,7 +2,7 @@
 	$field_arr = array('ag_ug','unit','material','test_type','paint_code','location');
 	$fld_qty = count($field_arr);
 
-if($_POST['Spec']){
+if(!empty($_POST['Spec'])){
 	$query_table = 'SHOW TABLES';
 	$sql_table = sql_query ($query_table);
 	

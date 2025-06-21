@@ -1,5 +1,5 @@
 <?php
-if($_POST['Spec']){
+if(!empty($_POST['Spec'])){
 	$query_change = '
 		UPDATE '.G5_TABLE_PREFIX.'pcs_dwgconfig SET
 		fontsize = "'.$_POST['fontsize'].'",
@@ -75,8 +75,8 @@ if($_POST['Spec']){
 	<td class="main_td" style="width:15%"><input type="text" name="qr_y" value="<?php echo $sql_dwg_spec_array['qr_y']; ?>"></td>
 	<td class="main_td" style="width:15%"><input type="text" name="qr_size"	value="<?php echo $sql_dwg_spec_array['qr_size']; ?>"></td>
 	<td class="main_td td_sub" style="width:15%"> Shop no. </td>
-	<td class="main_td" ><input type="text" name="sh_x" value="<?php echo $sql_dwg_spec_array['sh_x']; ?>"></td>
-	<td class="main_td" ><input type="text" name="sh_y" value="<?php echo $sql_dwg_spec_array['sh_y']; ?>"></td>
+	<td class="main_td" ><input type="text" name="sh_x" value="<?php echo isset($sql_dwg_spec_array['sh_x']) ? $sql_dwg_spec_array['sh_x'] : ''; ?>"></td>
+	<td class="main_td" ><input type="text" name="sh_y" value="<?php echo isset($sql_dwg_spec_array['sh_y']) ? $sql_dwg_spec_array['sh_y'] : ''; ?>"></td>
 </tr>
 </tbody>
 </table>

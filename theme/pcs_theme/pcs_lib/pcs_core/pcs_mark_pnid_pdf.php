@@ -1,8 +1,8 @@
 <?php
 ini_set('display_errors', '0');
-include_once('./_common.php');
-include_once('./pcs_config.php');
-include_once('./pcs_common_function.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
+include_once(__DIR__ . '/pcs_common_function.php');
 if (!defined('_GNUBOARD_')) exit;
 
 $pnid_file = $_POST['fn'];
@@ -17,17 +17,13 @@ if (!$_POST['key']) {
 		$sql_pnid_coor_array = sql_fetch_array ($sql_pnid_coor_check);
 		$pnid_coor_info = $sql_pnid_coor_array['pnid_coor'];
 		
-		if($_POST['pnid_txt']=='clear') {
-				$query_pnid_coor = 'DELETE FROM '.G5_TABLE_PREFIX.'pcs_info_pnid_coor WHERE pnid_no = "'.$_POST['mapped_pnid'].'" AND pnid_no = "'.$_POST['mapped_pnid'].'"';
-				sql_query ($query_pnid_coor);
-		}
-		else {
-			
-			if($pnid_coor_info){
-				$query_pnid_coor = 'UPDATE '.G5_TABLE_PREFIX.'pcs_info_pnid_coor SET pnid_coor = "'.$_POST['pnid_txt'].'", rev_no = "'.$_POST['rev_pnid'].'" WHERE pnid_no = "'.$_POST['mapped_pnid'].'"';
-				sql_query ($query_pnid_coor);
-			}
-			else {
+		if ($_POST['pnid_txt']=='clear') {
+            $query_pnid_coor = 'DELETE FROM '.G5_TABLE_PREFIX.'pcs_info_pnid_coor WHERE pnid_no = "'.$_POST['mapped_pnid'].'" AND pnid_no = "'.$_POST['mapped_pnid'].'"';
+            sql_query ($query_pnid_coor);
+        } elseif ($pnid_coor_info) {
+            $query_pnid_coor = 'UPDATE '.G5_TABLE_PREFIX.'pcs_info_pnid_coor SET pnid_coor = "'.$_POST['pnid_txt'].'", rev_no = "'.$_POST['rev_pnid'].'" WHERE pnid_no = "'.$_POST['mapped_pnid'].'"';
+            sql_query ($query_pnid_coor);
+        } else {
 				$query_pnid_coor = 'INSERT INTO '.G5_TABLE_PREFIX.'pcs_info_pnid_coor SET
 										pnid_no = "'.$_POST['mapped_pnid'].'",
 										rev_no = "'.$_POST['rev_pnid'].'",
@@ -35,7 +31,6 @@ if (!$_POST['key']) {
 										time = "'.G5_TIME_YMDHIS.'",
 										pnid_state = "Marked"';		sql_query ($query_pnid_coor);
 			}
-		}
 	}
 
 echo '
@@ -43,7 +38,7 @@ echo '
 opener.document.location.reload();
 </script>
 ';
-include_once('./pcs_mark_masterpnid.php');
+include_once(__DIR__ . '/pcs_mark_masterpnid.php');
 
 }
 else{
@@ -60,7 +55,7 @@ else{
 		$pnid_txt = explode(';',$pnid_coor_info);
 		foreach($pnid_txt as $pkg_txt){
 			$pkg = explode(',',$pkg_txt);
-			if($pkg[1]){$pkg_array[$pkg[1]] = $pkg[1];}
+			if($pkg[1] !== '' && $pkg[1] !== '0'){$pkg_array[$pkg[1]] = $pkg[1];}
 		}
 
 

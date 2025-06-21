@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 $delete_token = get_session('ss_delete_token');
 set_session('ss_delete_token', '');
@@ -15,47 +15,31 @@ $count_write = $count_comment = 0;
 
 @include_once($board_skin_path.'/delete.head.skin.php');
 
-if ($is_admin == 'super') // 최고관리자 통과
-{
-} else {
-    if ($is_admin == 'group') { // 그룹관리자
+if ($is_admin != 'super') {
+    if ($is_admin == 'group') {
+        // 그룹관리자
         $mb = get_member($write['mb_id']);
-        if ($member['mb_id'] != $group['gr_admin']) // 자신이 관리하는 그룹인가?
-        {
+        if ($member['mb_id'] != $group['gr_admin']) {
             alert('자신이 관리하는 그룹의 게시판이 아니므로 삭제할 수 없습니다.');
-        } else {
-            if ($member['mb_level'] < $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-            {
-                alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
-            }
+        } elseif ($member['mb_level'] < $mb['mb_level']) {
+            alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
         }
-    } else {
-        if ($is_admin == 'board') { // 게시판관리자이면
-            $mb = get_member($write['mb_id']);
-            if ($member['mb_id'] != $board['bo_admin']) // 자신이 관리하는 게시판인가?
-            {
-                alert('자신이 관리하는 게시판이 아니므로 삭제할 수 없습니다.');
-            } else {
-                if ($member['mb_level'] < $mb['mb_level']) // 자신의 레벨이 크거나 같다면 통과
-                {
-                    alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
-                }
-            }
-        } else {
-            if ($member['mb_id']) {
-                if ($member['mb_id'] !== $write['mb_id']) {
-                    alert('자신의 글이 아니므로 삭제할 수 없습니다.');
-                }
-            } else {
-                if ($write['mb_id']) {
-                    alert('로그인 후 삭제하세요.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
-                } else {
-                    if (!check_password($wr_password, $write['wr_password'])) {
-                        alert('비밀번호가 틀리므로 삭제할 수 없습니다.');
-                    }
-                }
-            }
+    } elseif ($is_admin == 'board') {
+        // 게시판관리자이면
+        $mb = get_member($write['mb_id']);
+        if ($member['mb_id'] != $board['bo_admin']) {
+            alert('자신이 관리하는 게시판이 아니므로 삭제할 수 없습니다.');
+        } elseif ($member['mb_level'] < $mb['mb_level']) {
+            alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
         }
+    } elseif ($member['mb_id']) {
+        if ($member['mb_id'] !== $write['mb_id']) {
+            alert('자신의 글이 아니므로 삭제할 수 없습니다.');
+        }
+    } elseif ($write['mb_id']) {
+        alert('로그인 후 삭제하세요.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
+    } elseif (!check_password($wr_password, $write['wr_password'])) {
+        alert('비밀번호가 틀리므로 삭제할 수 없습니다.');
     }
 }
 

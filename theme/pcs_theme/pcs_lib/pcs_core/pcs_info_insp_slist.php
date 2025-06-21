@@ -1,11 +1,11 @@
 <?php
-	$date_qrf = $_POST['sel_qrf'];
-	$date_qrt = $_POST['sel_qrt'];
-	$date_ptf = $_POST['sel_ptf'];
-	$date_ptt = $_POST['sel_ptt'];
 
-	$query_insp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_spool AS A LEFT JOIN '.G5_TABLE_PREFIX.'pcs_info_spl_stat AS B ON A.spool_no = B.spool_no WHERE ';
-	for($i=0; $mysql_field_array[$i]; $i++){
+$date_qrf = $_POST['sel_qrf'];
+$date_qrt = $_POST['sel_qrt'];
+$date_ptf = $_POST['sel_ptf'];
+$date_ptt = $_POST['sel_ptt'];
+$query_insp_spl = 'SELECT A.*, B.* FROM '.G5_TABLE_PREFIX.'pcs_info_spool AS A LEFT JOIN '.G5_TABLE_PREFIX.'pcs_info_spl_stat AS B ON A.spool_no = B.spool_no WHERE ';
+for($i=0; $mysql_field_array[$i]; $i++){
 
 		switch($i) {
 			case 0 :
@@ -33,7 +33,7 @@
 				break;
 		}
 	}
-	$query_insp_spl .= ' ORDER BY A.spool_no';
+$query_insp_spl .= ' ORDER BY A.spool_no';
 //	echo $query_insp_spl;
 ?>
 <form name='submit_form' method="post" onSubmit="return doSumbit()">
@@ -51,13 +51,9 @@
 	<td class="jnt_td jnt_th" style="width: 10%"> Photo </td>
 </tr>
 
-<?php
-
-	$no == 0;
-
-	$sql_insp_spl = sql_query ($query_insp_spl);
-
-	while ($sql_insp_spl_arr = sql_fetch_array ($sql_insp_spl))	{
+<?php 
+$sql_insp_spl = sql_query ($query_insp_spl);
+while ($sql_insp_spl_arr = sql_fetch_array ($sql_insp_spl))	{
 	
 		$no++;
 		$query_rev = 'SELECT rev_no FROM '.G5_TABLE_PREFIX.'pcs_info_iso WHERE dwg_no = "'.$sql_insp_spl_arr['dwg_no'].'"';
@@ -92,7 +88,9 @@
 <script>
 function sbm(){
 	var gglform = document.submit_form;
-	var url = "<?php echo PCS_LIB_URL.'/pcs_info_insp_location.php'; ?>";
+	var url = "<?php 
+echo PCS_LIB_URL.'/pcs_info_insp_location.php';
+?>";
 	window.open("","submit_form","width=900, height=900, left=200, top=100");
 	
 	gglform.action = url;
@@ -101,4 +99,4 @@ function sbm(){
 	gglform.submit();
 	
 }
-</script>
+</script><?php 

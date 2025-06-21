@@ -1,33 +1,28 @@
 <?php 
-function photo_thumb($folder, $photoFile, $jn, $thumbWidth, $dwg='') {
+function photo_thumb(string $folder, ?string $photoFile, string $jn, string $thumbWidth, string $dwg=''): void {
 	if ($photoFile) {
 		$ran = mt_rand(1, 10000);
 
-		if($folder=='photo_1'||$folder=='photo_2'||$folder=='spool'){
-			$ptPath = PCS_ISO_URL.'/'.$dwg;
-			echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
-			echo '<img src="'.$ptPath.'/thumb_'.$photoFile.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
-		}
-		else{
-			if($folder=='tp'){
-				$ptPath = PCS_URL_PHOTO.'/tp';
+		if ($folder === 'photo_1'||$folder === 'photo_2'||$folder === 'spool') {
+            $ptPath = PCS_ISO_URL.'/'.$dwg;
+            echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
+            echo '<img src="'.$ptPath.'/thumb_'.$photoFile.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
+        } elseif ($folder === 'tp') {
+            $ptPath = PCS_URL_PHOTO.'/tp';
+            echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
+            echo '<img src="'.$ptPath.'/'.$dwg.$photoFile.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
+        } elseif ($folder === 'daily') {
+            $ptPath = PCS_URL_DAILY.'/'.$photoFile;
+            echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'_'.$jn.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
+            echo '<img src="'.$ptPath.'/thumb_'.$photoFile.'_'.$jn.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
+        } else{$ptPath = PCS_ISO_URL.'/'.$dwg;
 				echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
 				echo '<img src="'.$ptPath.'/'.$dwg.$photoFile.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
 			}
-			else if($folder=='daily'){
-				$ptPath = PCS_URL_DAILY.'/'.$photoFile;
-				echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'_'.$jn.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
-				echo '<img src="'.$ptPath.'/thumb_'.$photoFile.'_'.$jn.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
-			}
-			else{$ptPath = PCS_ISO_URL.'/'.$dwg;
-				echo '<a onclick=\'window.open("'.$ptPath.'/'.$photoFile.'.jpg?ran='.$ran.'","'.$folder.$jn.'","width=800, height=600, left=200, top=100");\'>';
-				echo '<img src="'.$ptPath.'/'.$dwg.$photoFile.'.jpg?ran='.$ran.'" width="'.$thumbWidth.'px" ></a><br>';
-			}
-		}
 	}
 }
 
-function photo_up($folder, $sub, $jn, $photo, $dwg='') {
+function photo_up(string $folder, string $sub, string $jn, string $photo, $dwg=''): void {
 	if(!$dwg){$dwg=$sub;}
 	echo '
 	<a href = "javascript:document.'.$folder.$jn.'.submit()">(Photo update)</a>
@@ -56,6 +51,7 @@ function field_name_array($query) {
 
 // Enum value �迭��ȯ�Լ�
 function enum_value($query) {
+	$qry_field_name = array();
 
 	$sql_field = sql_query ($query);
 
@@ -81,19 +77,17 @@ function pcs_sql_value($query) {
 
 
 // package insert to pcs �Լ�
-function pcs_package_insert($arr) {
+function pcs_package_insert(array $arr) {
 
 	$query_pkg_pcs = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_pkg_stat WHERE pkg_no = '".$arr['pkg_no']."'";
 	$sql_pkg_pcs = sql_query ($query_pkg_pcs);
-	if ($sql_pkg_pcs_arr = sql_fetch_array ($sql_pkg_pcs)) {	}
-	else {
-		$insert_pkg_pcs = "INSERT INTO ".G5_TABLE_PREFIX."pcs_info_pkg_stat (pkg_no) VALUES ('".$arr['pkg_no']."')";
-		sql_query ($insert_pkg_pcs);
-
-		$query_pkg_pcs = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_pkg_stat WHERE pkg_no = '".$arr['pkg_no']."'";
-		$sql_pkg_pcs = sql_query ($query_pkg_pcs);
-		$sql_pkg_pcs_arr = sql_fetch_array ($sql_pkg_pcs);			
-	}
+	if (!$sql_pkg_pcs_arr = sql_fetch_array ($sql_pkg_pcs)) {
+        $insert_pkg_pcs = "INSERT INTO ".G5_TABLE_PREFIX."pcs_info_pkg_stat (pkg_no) VALUES ('".$arr['pkg_no']."')";
+        sql_query ($insert_pkg_pcs);
+        $query_pkg_pcs = "SELECT * FROM ".G5_TABLE_PREFIX."pcs_info_pkg_stat WHERE pkg_no = '".$arr['pkg_no']."'";
+        $sql_pkg_pcs = sql_query ($query_pkg_pcs);
+        $sql_pkg_pcs_arr = sql_fetch_array ($sql_pkg_pcs);
+    }
 	return $sql_pkg_pcs_arr;
 }
 
@@ -116,7 +110,7 @@ function pdf_report_download($type, $name, $report, $date, $result='') {
 
 
 // Select �ɼ� �����Լ� from server
-function sel_option_enum($array, $selected) {
+function sel_option_enum($array, $selected): void {
 	for ($i=0; $array[$i]; $i++){
 		$option = '<option value='.$array[$i];
 		if($array[$i]==$selected) {$option .= ' selected ';}
@@ -128,8 +122,9 @@ function sel_option_enum($array, $selected) {
 
 
 // Select �ɼ� �����Լ� from array
-function sel_option_arr($array, $selected) {
-	for ($i=0; $i<count($array); $i++){
+function sel_option_arr($array, $selected): void {
+	$counter = count($array);
+    for ($i=0; $i<$counter; $i++){
 		$option = '<option value='.($i+1);
 		if($i==($selected-1)) {$option .= ' selected ';}
 		$option .= '>'.$array[$i].'</option>';
@@ -141,7 +136,7 @@ function sel_option_arr($array, $selected) {
 
 
 // Submit �ؽ�Ʈ
-function submit_text($sno, $fld_id, $dwg_no, $jnt_no, $nm, $tm, $r_c, $nde_tp) {
+function submit_text(string $sno, string $fld_id, string $dwg_no, string $jnt_no, string $nm, string $tm, string $r_c, string $nde_tp): void {
 
 	$txt_key = $fld_id.$r_c.$sno.$nde_tp;
 
@@ -158,7 +153,7 @@ function submit_text($sno, $fld_id, $dwg_no, $jnt_no, $nm, $tm, $r_c, $nde_tp) {
 	switch ($r_c)	{
 		case 'request' :
 			$a_color = 'green';
-			if($nde_tp) {$a_txt = $nde_tp;}	else {$a_txt = 'REQUEST';};
+			$a_txt = $nde_tp !== '' && $nde_tp !== '0' ? $nde_tp : 'REQUEST';;
 			break;
 
 		case 'confirm' :
@@ -186,7 +181,7 @@ function submit_text($sno, $fld_id, $dwg_no, $jnt_no, $nm, $tm, $r_c, $nde_tp) {
 
 
 // spool_joint üũ ������
-function spl_ins_qry($f_id, $b_st) {
+function spl_ins_qry($f_id, $b_st): void {
 	switch ($f_id)	{
 
 		case 'Fit_up' :
@@ -449,11 +444,13 @@ function spl_ins_qry($f_id, $b_st) {
 		Default  :	break;
 
 	}
-	sql_query ($query_jnt_udt);
+	if (isset($query_jnt_udt)) {
+		sql_query($query_jnt_udt);
+	}
 }
 
 // fitup
-function insp_fitup($sno, $dwg, $jnt, $mem_insp, $mem_nick, $f_rqd, $f_rlt, $f_rld, $v_rld) {
+function insp_fitup($sno, $dwg, $jnt, $mem_insp, $mem_nick, string $f_rqd, ?string $f_rlt, string $f_rld, $v_rld): void {
 	
 	switch($mem_insp){
 
@@ -541,7 +538,7 @@ function insp_fitup($sno, $dwg, $jnt, $mem_insp, $mem_nick, $f_rqd, $f_rlt, $f_r
 
 // VI
 
-function insp_vi($sno, $dwg, $jnt, $mem_insp, $mem_nick, $v_rqd, $v_rlt, $v_rld, $pwr, $pmr, $ndr) {
+function insp_vi($sno, $dwg, $jnt, $mem_insp, $mem_nick, string $v_rqd, ?string $v_rlt, string $v_rld, $pwr, $pmr, $ndr): void {
 
 	switch($mem_insp){
 
@@ -604,8 +601,7 @@ function insp_vi($sno, $dwg, $jnt, $mem_insp, $mem_nick, $v_rqd, $v_rlt, $v_rld,
 				case 'Request' :
 						
 					echo "<div>";
-					echo $v_rqd.'<br>VI : '.$v_rlt;
-					echo "</div><div style='float:left;width:33%'>";
+					echo $v_rqd.'<br>VI : '.$v_rlt."</div><div style='float:left;width:33%'>";
 					submit_text($sno, 'VI', $dwg, $jnt, $mem_nick, G5_TIME_YMDHIS, 'cancle_req', '');
 					echo "</div><div style='float:left;width:32%'>";
 					submit_text($sno, 'VI', $dwg, $jnt, $mem_nick, G5_TIME_YMDHIS, 'Accept', '');
@@ -628,7 +624,7 @@ function insp_vi($sno, $dwg, $jnt, $mem_insp, $mem_nick, $v_rqd, $v_rlt, $v_rld,
 
 
 //PMI
-function insp_pmi($sno, $dwg, $jnt, $mem_insp, $mem_nick, $pmi_rqd, $pmi_rlt, $pmi_rld, $ndr) {
+function insp_pmi($sno, $dwg, $jnt, $mem_insp, $mem_nick, string $pmi_rqd, ?string $pmi_rlt, string $pmi_rld, $ndr): void {
 	
 	switch($mem_insp){
 
@@ -736,7 +732,7 @@ function insp_pmi($sno, $dwg, $jnt, $mem_insp, $mem_nick, $pmi_rqd, $pmi_rlt, $p
 
 //PWHT
 
-function insp_pwht($sno, $dwg, $jnt, $mem_insp, $mem_nick, $pw_rqd, $pw_rlt, $pw_rld, $ndr) {
+function insp_pwht($sno, $dwg, $jnt, $mem_insp, $mem_nick, string $pw_rqd, ?string $pw_rlt, string $pw_rld, $ndr): void {
 
 	switch($mem_insp){
 		
@@ -844,7 +840,7 @@ function insp_pwht($sno, $dwg, $jnt, $mem_insp, $mem_nick, $pw_rqd, $pw_rlt, $pw
 
 
 //NDE
-function insp_nde($sno, $dwg, $jnt, $mem_insp, $mem_nick, $nde_type, $nde_rqd, $nde_rlt) {
+function insp_nde($sno, $dwg, $jnt, $mem_insp, $mem_nick, string $nde_type, string $nde_rqd, ?string $nde_rlt): void {
 
 	switch($mem_insp){
 
@@ -968,7 +964,7 @@ function insp_nde($sno, $dwg, $jnt, $mem_insp, $mem_nick, $nde_type, $nde_rqd, $
 
 
 // file download
-function pcs_file_download($type, $name) {
+function pcs_file_download(string $type, string $name): void {
 
 	switch ($type) {
 		case 'dwg'	: $filepath = G5_URL.'/pcs_data/dwg/pdf/'.$name.'.pdf';		break;
@@ -980,7 +976,6 @@ function pcs_file_download($type, $name) {
 	$filesize = filesize($filepath);
 	$path_parts = pathinfo($filepath);
 	$filename = $path_parts['basename'];
-	$extension = $path_parts['extension'];
  
 	header("Pragma: public");
 	header("Expires: 0");
@@ -996,7 +991,7 @@ function pcs_file_download($type, $name) {
 
 
 // ���� �� ���� ����Ʈ �ҷ����� �Լ�
-function filesindir($tdir) {
+function filesindir(string $tdir): ?array {
 
 	if($dh = opendir($tdir)) {
 		$files = array();
@@ -1009,13 +1004,14 @@ function filesindir($tdir) {
 					if(is_array($in_files)) $files = array_merge ($files, $in_files);
 				}
 				else {
-					array_push($files, $tdir.'/'.$a_file);
+					$files[] = $tdir.'/'.$a_file;
 				}
 			}
 		}
 		closedir($dh);
 		return $files;
 	}
+    return null;
 }
 
 
@@ -1032,19 +1028,19 @@ function base64_to_img($base64_string, $image_fiilename) {
 
 
 // ���ݼ��� �������� Ȯ��
-function FileExitsCheck($Qt) 
+function FileExitsCheck($Qt): bool 
 { 
 	$tempo = curl_init(); 
 	curl_setopt($tempo, CURLOPT_URL,$Qt); // don't download content 
 	curl_setopt($tempo, CURLOPT_NOBODY, 1); 
 	curl_setopt($tempo, CURLOPT_FAILONERROR, 1); 
 	curl_setopt($tempo, CURLOPT_RETURNTRANSFER, 1); 
-	return (curl_exec($tempo)!==FALSE)? true : false; 
+	return curl_exec($tempo)!==FALSE; 
 } 
 
 
 // PNG ����ũ�� ���
-function convertPNGto8bitPNG($sourcePath, $destPath) {
+function convertPNGto8bitPNG($sourcePath, $destPath): void {
     $srcimage = imagecreatefrompng($sourcePath);
     list($width, $height) = getimagesize($sourcePath);
     $img = imagecreatetruecolor($width, $height);
@@ -1060,27 +1056,28 @@ function convertPNGto8bitPNG($sourcePath, $destPath) {
 
 
 // ���� �� ���ϸ� �迭��ȯ
-function folder_file_array($f_path,$f_ext,$f_data) {
+/**
+ * @return list<string>
+ */
+function folder_file_array($f_path,$f_ext,$f_data): array {
 
 	$dir = $f_path;
 	$handle  = opendir($dir);
 	$files = array();
  
 	while (false !== ($filename = readdir($handle))) {
-		if($filename == "." || $filename == ".."){continue;}
-		if(is_file($dir . "/" . $filename)){
-			if(strtolower(substr(strrchr($filename, "."), 1))==$f_ext){
-				$filename = substr($filename, 0, strrpos($filename, "."));
-				$files[] = $filename;
-			}
-		}
+		if($filename === "." || $filename === ".."){continue;}
+		if (is_file($dir . "/" . $filename) && strtolower(substr(strrchr($filename, "."), 1)) == $f_ext) {
+            $filename = substr($filename, 0, strrpos($filename, "."));
+            $files[] = $filename;
+        }
 	}
  	closedir($handle);
 	return $files;
 }
 
 
-	function add_tr($item_arr, $item_color, $item_text, $item_field){
+	function add_tr($item_arr, string $item_color, string $item_text, string $item_field): void{
 		echo '<tr>';
 		$qty=count($item_arr);
 		if($qty>0){ echo '<td class="main_td" colspan=6 style="background-color: '.$item_color.'; height:50px;"><b>'.$item_text.'</td></tr>';
@@ -1088,7 +1085,7 @@ function folder_file_array($f_path,$f_ext,$f_data) {
 			$j=0;
 			for($i=0;$i<$qty-1;$i++){
 				$item_name =  explode("_",$item_arr[$i]);
-				if($item_field){
+				if($item_field !== '' && $item_field !== '0'){
 					$query_inc_dwg = "SELECT wr_id FROM ".G5_TABLE_PREFIX."write_".$item_field." WHERE wr_subject = '".$item_name[0]."'";
 					$sql_inc_dwg = sql_query ($query_inc_dwg);
 					$sql_inc_dwg_arr = sql_fetch_array ($sql_inc_dwg);
@@ -1105,20 +1102,20 @@ function folder_file_array($f_path,$f_ext,$f_data) {
 				if($j%6==0){echo'</tr><tr>';}	
 		
 			}
-			if($j%6){for($k=0;$k<6-($j%6);$k++){ echo '<td class="main_td" style="height:80px;font-size:18px;"></td>';}	}
+			if($j % 6 !== 0){for($k=0;$k<6-($j%6);$k++){ echo '<td class="main_td" style="height:80px;font-size:18px;"></td>';}	}
 		}
 		echo '</tr>';
 	}
 
-function count_files($dir){
+function count_files(string $dir){
 	clearstatcache();
 	if (!is_dir($dir)) return -1;
 	if (!preg_match("&/$&", $dir)) $dir .= "/"; // '/'�� ������ �Ѵ�
 
-	return count(glob($dir."*.pdf", GLOB_NOSORT)); - count(glob($dir."*", GLOB_ONLYDIR));
+	return count(glob($dir."*.pdf", GLOB_NOSORT));
 }
 
-function rep_view($no,$pdf_folder,$insp_date,$rep_no){
+function rep_view(string $no,string $pdf_folder,string $insp_date,string $rep_no): void{
 	if(file_exists(PCS_DATA.'/'.$pdf_folder.'/'.$rep_no.'.pdf')) {
 		echo $insp_date.'<br>';
 		echo '<a href = "javascript:document.submit_for'.$no.'.submit()"> <b> '.$rep_no.' </b>';
@@ -1133,21 +1130,20 @@ function rep_view($no,$pdf_folder,$insp_date,$rep_no){
 
 }
 
-function z_rem_jno($j_no){
+function z_rem_jno($j_no): string{
 	preg_match('/[A-Z1-9][A-Z0-9]*/',$j_no,$mts);
 	return $mts[0];
 }
 
 function remove_spe_char($spe_string){
-	$spe_string = preg_replace('/[ #\&\+%@=\/\\\:;,\.\'\"\^`~\_|\!\?\*$#<>()\[\]\{\}]/i', '', $spe_string);
-	return $spe_string;
+	return preg_replace('/[ #\&\+%@=\/\\\:;,\.\'\"\^`~\_|\!\?\*$#<>()\[\]\{\}]/i', '', $spe_string);
 }
 
 
-function viewPDF($fmname,$folder,$drawing,$revision,$tb='')
+function viewPDF(string $fmname,string $folder,string $drawing,string $revision,string $tb=''): void
 {
 	$formstring = '<form name="'.$fmname.'" action="'.PCS_WPV_URL.'/viewer.php" method="post" target="'.$fmname.'" onSubmit="return doSumbit()"> ';
-	if($folder=='pkg'){
+	if($folder === 'pkg'){
 		if(file_exists(PCS_DWG_PKG.'/'.$tb.'/pkg_'.$drawing.'_'.$revision.'.pdf')){
 			$formstring .= '<input type="hidden" name="folder" value="dwg_pkg/'.$tb.'">';
 			$formstring .= '<input type="hidden" name="file" value="'.$folder.'_'.$drawing.'">';
@@ -1162,21 +1158,21 @@ function viewPDF($fmname,$folder,$drawing,$revision,$tb='')
         }
         $formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
     }
-	elseif($folder=='plan'){
+	elseif($folder === 'plan'){
 			$formstring .= '<input type="hidden" name="folder" value="plan/piping">';
 			$formstring .= '<input type="hidden" name="file" value="'.$drawing.'">';
 			$formstring .= '<input type="hidden" name="rev" value="'.$revision.'">';
 		
 	}
-	elseif($folder=='work'){
+	elseif($folder === 'work'){
 			$formstring .= '<input type="hidden" name="folder" value="plan/working">';
 			$formstring .= '<input type="hidden" name="file" value="'.$drawing.'">';
 	}
-	elseif($folder=='shop'){
+	elseif($folder === 'shop'){
 			$formstring .= '<input type="hidden" name="folder" value="dwg_iso/'.$drawing.'">';
 			$formstring .= '<input type="hidden" name="file" value="'.$revision.'">';
 	}
-	elseif($folder=='pnid'){
+	elseif($folder === 'pnid'){
 		if(file_exists(PCS_PNID_MST.'/master_'.$drawing.'_'.$revision.'.pdf')){
 			$formstring .= '<input type="hidden" name="folder" value="pnid/master">';
 			$formstring .= '<input type="hidden" name="file" value="master_'.$drawing.'">';
@@ -1221,7 +1217,7 @@ function GenerateString($length): string
 }
 
 
-function compass($x,$y){
+function compass($x,$y): int|float{
 	if($x==0 ){ if($y>0){return 0;} else {return 180;} } 
 	return ($x < 0)
 	? rad2deg(atan2($x,$y)) + 360
@@ -1229,27 +1225,26 @@ function compass($x,$y){
 }
 
 
-	function jointCheck($qty,$jnt,$arr){
+	function jointCheck($qty,$jnt,$arr): ?int{
 		
 		for($i=0;$i<$qty;$i++){
 			if($arr[$i]==$jnt) {return $i+1;}
 		}
+        return null;
 	}
 	
 	
 
-function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
+function PDFjointmarking($PDF, $curr_dwg, $jointinfo, array $jnt_desc, $jnt_arr): void{
 
 	
-	$color_green = array(141,253,115);
-	$color_red = array(255,0,0);
 	$color_blue = array(0,0,255);
 	$color_violet = array(204,0,204);
 	$color_black = array(0,0,0);
 	
 	if($jnt_arr){$jnt_qty = count($jnt_arr);}
 	
-	if($jnt_desc){
+	if($jnt_desc !== []){
 		$dwg_mark_line = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $color_black);
 		$PDF->SetTextColor($color_black);
 	}
@@ -1257,9 +1252,6 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 		$dwg_mark_line = array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $color_blue);
 		$PDF->SetTextColor($color_blue);
 	}
-
-	$pkg_mark_line = array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $color_green);
-	$pkg_page_line = array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $color_red);
 
 		$jointcoor_val = explode(',',$jointinfo);
 		
@@ -1288,17 +1280,15 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 					$PDF->Line($xf,$yf,$xt,$yt,$dwg_mark_line);
 					$PDF->Circle($xt,$yt, 2.6,0,360,'F',$dwg_mark_line,array(255,255,255));
 					$PDF->Circle($xt,$yt, 2.6);
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 10);
-						$text_x = $xt-2;
-						$text_y = $yt-2.2;
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-2.7;
-						$text_y = $yt-1.8;
-					}
-					else {
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 10);
+                        $text_x = $xt-2;
+                        $text_y = $yt-2.2;
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-2.7;
+                        $text_y = $yt-1.8;
+                    } else {
 						$PDF->SetFont('helvetica', '', 6);
 						$text_x = $xt-2.7;
 						$text_y = $yt-1.4;
@@ -1310,17 +1300,15 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 					$PDF->Line($xf,$yf,$xt,$yt,$dwg_mark_line);
 					$PDF->Circle(-100,-100, 2.6,0,360,'F',$dwg_mark_line,array(255,255,255));
 					$PDF->RegularPolygon($xt,$yt,3.2,6,30, 1, 'DF', array('all' => $dwg_mark_line), array(255, 255, 255), 'F', array(255, 255, 255));
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 10);
-						$text_x = $xt-2;
-						$text_y = $yt-2.2;
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-2.7;
-						$text_y = $yt-1.8;
-					}
-					else {
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 10);
+                        $text_x = $xt-2;
+                        $text_y = $yt-2.2;
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-2.7;
+                        $text_y = $yt-1.8;
+                    } else {
 						$PDF->SetFont('helvetica', '', 6);
 						$text_x = $xt-2.7;
 						$text_y = $yt-1.4;
@@ -1331,72 +1319,85 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 				case 'bolt' :
 					$PDF->Line($xf,$yf,$xt,$yt,$dwg_mark_line);
 					$PDF->RegularPolygon($xt,$yt,3,6,30, 1, 'DF', array('all' => $dwg_mark_line), array(255, 255, 255), 'F', array(255, 255, 255));
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-2.7;
-						$text_y = $yt-1.8;
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 6);
-						$text_x = $xt-2.9;
-						$text_y = $yt-1.4;
-					}
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-2.7;
+                        $text_y = $yt-1.8;
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 6);
+                        $text_x = $xt-2.9;
+                        $text_y = $yt-1.4;
+                    }
 					$PDF->Text($text_x,$text_y,'B'.$jointcoor_val[10]);
 				break;
 				
 				case 'thread' :
 					$PDF->Line($xf,$yf,$xt,$yt,$dwg_mark_line);
 					$PDF->RegularPolygon($xt,$yt,3,6,30, 1, 'DF', array('all' => $dwg_mark_line), array(255, 255, 255), 'F', array(255, 255, 255));
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-2.7;
-						$text_y = $yt-1.8;
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 6);
-						$text_x = $xt-2.9;
-						$text_y = $yt-1.4;
-					}
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-2.7;
+                        $text_y = $yt-1.8;
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 6);
+                        $text_x = $xt-2.9;
+                        $text_y = $yt-1.4;
+                    }
 					$PDF->Text($text_x,$text_y,'T'.$jointcoor_val[10]);
 				break;
 				
 				case 'support' :
 					$PDF->Line($xf,$yf,$xt,$yt,$dwg_mark_line);
 					$PDF->RegularPolygon($xt,$yt,3,6,30, 1, 'DF', array('all' => $dwg_mark_line), array(255, 255, 255), 'F', array(255, 255, 255));
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-2.7;
-						$text_y = $yt-1.8;
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 6);
-						$text_x = $xt-2.9;
-						$text_y = $yt-1.4;
-					}
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-2.7;
+                        $text_y = $yt-1.8;
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 6);
+                        $text_x = $xt-2.9;
+                        $text_y = $yt-1.4;
+                    }
 					$PDF->Text($text_x,$text_y,'S'.$jointcoor_val[10]);
 				break;
 				
 				case 'spool' :
 					$angle = compass($xt-$xf,$yt-$yf);
-					if($angle<90)		{$FX = $xt-18 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<180)	{$FX = $xt-18 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<270)	{$FX = $xt+22 ; $FY = $yt+1 ; $TX = $xt-18 ; $TY = $yt-3 ;}
-					else if($angle<360)	{$FX = $xt+22 ; $FY = $yt-3 ; $TX = $xt-18 ; $TY = $yt-3 ;}
+					if ($angle<90) {
+                        $FX = $xt-18 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<180) {
+                        $FX = $xt-18 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<270) {
+                        $FX = $xt+22 ;
+                        $FY = $yt+1 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    } elseif ($angle<360) {
+                        $FX = $xt+22 ;
+                        $FY = $yt-3 ;
+                        $TX = $xt-18 ;
+                        $TY = $yt-3 ;
+                    }
 					
 
-					if($jointcoor_val[10]=='R'){ $splno = 'RANDOM PIPE  <12000>';} else {$splno = $jointcoor_val[5].'_'.$jointcoor_val[10];}
+					$splno = $jointcoor_val[10] == 'R' ? 'RANDOM PIPE  <12000>' : $jointcoor_val[5].'_'.$jointcoor_val[10];
 
-					if(strlen($jointcoor_val[10])<2){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt-17;
-						$text_y = $yt-3;
-						$jointcoor_val[10] = '0'.$jointcoor_val[10];
-					}
-					else if(strlen($jointcoor_val[10])<3){
-						$PDF->SetFont('helvetica', '', 8);
-						$text_x = $xt;
-						$text_y = $yt;
-					}
+					if (strlen($jointcoor_val[10])<2) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt-17;
+                        $text_y = $yt-3;
+                        $jointcoor_val[10] = '0'.$jointcoor_val[10];
+                    } elseif (strlen($jointcoor_val[10])<3) {
+                        $PDF->SetFont('helvetica', '', 8);
+                        $text_x = $xt;
+                        $text_y = $yt;
+                    }
 					
 					
 					$PDF->Line($xf,$yf,$FX,$FY,$dwg_mark_line);
@@ -1410,7 +1411,7 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 			}
 			if($detail_mark){
 				$PDF->StartTransform();
-				
+
 				if(($yt-$yf)<0){
 					$rota = compass($xt-$xf,$yt-$yf)+180;
 					$rotY = -7;
@@ -1419,21 +1420,21 @@ function PDFjointmarking($PDF, $curr_dwg, $jointinfo, $jnt_desc, $jnt_arr){
 					$rota = compass($xt-$xf,$yt-$yf);
 					$rotY = 2;
 				}
-				
+
 				$PDF->Rotate($rota, $xt, $yt);
 				$PDF->SetFont('helvetica', '', 10);
 				$PDF->SetTextColor(204,0,204);
 				$PDF->Translate(-6, $rotY);
 				$PDF->Text($xt,$yt,$jnt_desc[$detail_mark-1]);
 				$PDF->StopTransform();
-				
+
 //				$PDF->Annotation($xt, $yt, 10, 10, "Text annotation example\naccented letters test: aeeiou", array('Subtype'=>'Text', 'Name' => 'Comment', 'T' => 'title example', 'Subj' => 'example', 'C' => array(255, 255, 0)));
 			}
 		}
 }
 
 
-function pcsqrcode($PDF,$set,$dwg,$sd){
+function pcsqrcode($PDF,string $set,string $dwg,$sd): void{
 	$query_dwg_spec = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_dwgconfig';
 	$sql_dwg_spec = sql_query ($query_dwg_spec);
 	$sql_dwg_spec_array = sql_fetch_array ($sql_dwg_spec);
@@ -1480,21 +1481,21 @@ EOD;
 }
 
 
-function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_height, $is_create, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3')
+function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_height, $is_create, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3'): ?string
 {
     global $g5;
 
     if(!$thumb_width && !$thumb_height)
-        return;
+        return null;
 
     $source_file = "$source_path/$filename";
 
     if(!is_file($source_file)) // ���� ������ ���ٸ�
-        return;
+        return null;
 
     $size = @getimagesize($source_file);
     if($size[2] < 1 || $size[2] > 3) // gif, jpg, png �� ���ؼ��� ����
-        return;
+        return null;
 
     if (!is_dir($target_path)) {
         @mkdir($target_path, G5_DIR_PERMISSION);
@@ -1506,9 +1507,8 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         return '';
 
     // Animated GIF�� ����� �������� ����
-    if($size[2] == 1) {
-        if(is_animated_gif($source_file))
-            return basename($source_file);
+    if($size[2] == 1 && is_animated_gif($source_file)) {
+        return basename($source_file);
     }
 
     $ext = array(1 => 'gif', 2 => 'jpg', 3 => 'png');
@@ -1519,10 +1519,8 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
     $thumb_time = @filemtime($thumb_file);
     $source_time = @filemtime($source_file);
 
-    if (file_exists($thumb_file)) {
-        if ($is_create == false && $source_time < $thumb_time) {
-            return basename($thumb_file);
-        }
+    if (file_exists($thumb_file) && ($is_create == false && $source_time < $thumb_time)) {
+        return basename($thumb_file);
     }
 
     // ���������� GD �̹��� ����
@@ -1532,9 +1530,8 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
     if ($size[2] == 1) {
         $src = @imagecreatefromgif($source_file);
         $src_transparency = @imagecolortransparent($src);
-    } else if ($size[2] == 2) {
+    } elseif ($size[2] == 2) {
         $src = @imagecreatefromjpeg($source_file);
-
         if(function_exists('exif_read_data')) {
             // exif ������ �������� ȸ������ ����
             $exif = @exif_read_data($source_file);
@@ -1552,7 +1549,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                 }
 
                 // ȸ������ ������ �̹��� ȸ��
-                if($degree) {
+                if($degree !== 0) {
                     $src = imagerotate($src, $degree, 0);
 
                     // ���λ����� ��� ����, ���� �� �ٲ�
@@ -1564,30 +1561,27 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                 }
             }
         }
-    } else if ($size[2] == 3) {
+    } elseif ($size[2] == 3) {
         $src = @imagecreatefrompng($source_file);
         @imagealphablending($src, true);
     } else {
-        return;
+        return null;
     }
 
     if(!$src)
-        return;
+        return null;
 
     $is_large = true;
     // width, height ����
 
-    if($thumb_width) {
-        if(!$thumb_height) {
+    if ($thumb_width) {
+        if (!$thumb_height) {
             $thumb_height = round(($thumb_width * $size[1]) / $size[0]);
-        } else {
-            if($size[0] < $thumb_width || $size[1] < $thumb_height)
-                $is_large = false;
+        } elseif ($size[0] < $thumb_width || $size[1] < $thumb_height) {
+            $is_large = false;
         }
-    } else {
-        if($thumb_height) {
-            $thumb_width = round(($thumb_height * $size[0]) / $size[1]);
-        }
+    } elseif ($thumb_height) {
+        $thumb_width = round(($thumb_height * $size[0]) / $size[1]);
     }
 
     $dst_x = 0;
@@ -1626,10 +1620,10 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
 
             $dst = imagecreatetruecolor($dst_w, $dst_h);
 
-            if($size[2] == 3) {
+            if ($size[2] == 3) {
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
-            } else if($size[2] == 1) {
+            } elseif ($size[2] == 1) {
                 $palletsize = imagecolorstotal($src);
                 if($src_transparency >= 0 && $src_transparency < $palletsize) {
                     $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -1642,7 +1636,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
             $dst = imagecreatetruecolor($dst_w, $dst_h);
             $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ����
 
-            if ( !((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
+            if ( !(defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) && !(defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO) ){
                 if($src_w > $src_h) {
                     $tmp_h = round(($dst_w * $src_h) / $src_w);
                     $dst_y = round(($dst_h - $tmp_h) / 2);
@@ -1654,12 +1648,12 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                 }
             }
 
-            if($size[2] == 3) {
+            if ($size[2] == 3) {
                 $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
                 imagefill($dst, 0, 0, $bgcolor);
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
-            } else if($size[2] == 1) {
+            } elseif ($size[2] == 1) {
                 $palletsize = imagecolorstotal($src);
                 if($src_transparency >= 0 && $src_transparency < $palletsize) {
                     $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -1677,10 +1671,9 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         $dst = imagecreatetruecolor($dst_w, $dst_h);
         $bgcolor = imagecolorallocate($dst, 255, 255, 255); // ����
 
-        if ( ((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
+        if ((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) {
             //�̹��� ������� ���� �������� �ʽ��ϴ�.  (5.2.6 ���� ���Ͽ��� ó���� �κа� ����)
-
-            if($src_w < $dst_w) {
+            if ($src_w < $dst_w) {
                 if($src_h >= $dst_h) {
                     $dst_x = round(($dst_w - $src_w) / 2);
                     $src_h = $dst_h;
@@ -1693,56 +1686,42 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
                     $dst_w = $src_w;
                     $dst_h = $src_h;
                 }
+            } elseif ($src_h < $dst_h) {
+                $dst_y = round(($dst_h - $src_h) / 2);
+                $dst_h = $src_h;
+                $src_w = $dst_w;
+            }
+        } elseif ($src_w < $dst_w) {
+            //�̹��� ������� ���� �����ϸ� ����� �����մϴ�.
+            if($src_h > $src_w) {
+                $tmp_w = round(($dst_h * $src_w) / $src_h);
+                $dst_x = round(($dst_w - $tmp_w) / 2);
+                $dst_w = $tmp_w;
             } else {
-                if($src_h < $dst_h) {
-                    $dst_y = round(($dst_h - $src_h) / 2);
-                    $dst_h = $src_h;
-                    $src_w = $dst_w;
+                $dst_x = round(($dst_w - $src_w) / 2);
+                $src_h = $dst_h;
+                if( $dst_w > $src_w ){
+                    $dst_w = $src_w;
                 }
             }
-
-        } else {
-            //�̹��� ������� ���� �����ϸ� ����� �����մϴ�.
-            if($src_w < $dst_w) {
-                if($src_h >= $dst_h) {
-                    if( $src_h > $src_w ){
-                        $tmp_w = round(($dst_h * $src_w) / $src_h);
-                        $dst_x = round(($dst_w - $tmp_w) / 2);
-                        $dst_w = $tmp_w;
-                    } else {
-                        $dst_x = round(($dst_w - $src_w) / 2);
-                        $src_h = $dst_h;
-                        if( $dst_w > $src_w ){
-                            $dst_w = $src_w;
-                        }
-                    }
-                } else {
-                    $dst_x = round(($dst_w - $src_w) / 2);
-                    $dst_y = round(($dst_h - $src_h) / 2);
-                    $dst_w = $src_w;
-                    $dst_h = $src_h;
-                }
+        } elseif ($src_h < $dst_h) {
+            if( $src_w > $dst_w ){
+                $tmp_h = round(($dst_w * $src_h) / $src_w);
+                $dst_y = round(($dst_h - $tmp_h) / 2);
+                $dst_h = $tmp_h;
             } else {
-                if($src_h < $dst_h) {
-                    if( $src_w > $dst_w ){
-                        $tmp_h = round(($dst_w * $src_h) / $src_w);
-                        $dst_y = round(($dst_h - $tmp_h) / 2);
-                        $dst_h = $tmp_h;
-                    } else {
-                        $dst_y = round(($dst_h - $src_h) / 2);
-                        $dst_h = $src_h;
-                        $src_w = $dst_w;
-                    }
-                }
+                $dst_y = round(($dst_h - $src_h) / 2);
+                $dst_h = $src_h;
+                $src_w = $dst_w;
             }
         }
 
-        if($size[2] == 3) {
+        if ($size[2] == 3) {
             $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
             imagefill($dst, 0, 0, $bgcolor);
             imagealphablending($dst, false);
             imagesavealpha($dst, true);
-        } else if($size[2] == 1) {
+        } elseif ($size[2] == 1) {
             $palletsize = imagecolorstotal($src);
             if($src_transparency >= 0 && $src_transparency < $palletsize) {
                 $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -1765,20 +1744,13 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
         UnsharpMask($dst, $val[0], $val[1], $val[2]);
     }
 
-    if($size[2] == 1) {
+    if ($size[2] == 1) {
         imagegif($dst, $thumb_file);
-    } else if($size[2] == 3) {
-        if(!defined('G5_THUMB_PNG_COMPRESS'))
-            $png_compress = 5;
-        else
-            $png_compress = G5_THUMB_PNG_COMPRESS;
-
+    } elseif ($size[2] == 3) {
+        $png_compress = defined('G5_THUMB_PNG_COMPRESS') ? G5_THUMB_PNG_COMPRESS : 5;
         imagepng($dst, $thumb_file, $png_compress);
     } else {
-        if(!defined('G5_THUMB_JPG_QUALITY'))
-            $jpg_quality = 90;
-        else
-            $jpg_quality = G5_THUMB_JPG_QUALITY;
+        $jpg_quality = defined('G5_THUMB_JPG_QUALITY') ? G5_THUMB_JPG_QUALITY : 90;
 
         imagejpeg($dst, $thumb_file, $jpg_quality);
     }
@@ -1791,11 +1763,11 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
     return basename($thumb_file);
 }
 
-function pcs_sfl_select_options($sfl, $sel){
+function pcs_sfl_select_options($sfl, string $sel){
 
     $str = '';
     $str .= '<option value="wr_subject" '.get_selected($sfl, 'wr_subject', true).'>'.$sel.'</option>';
-    if ($sel=='Drawing information'){$str .= '<option value="wr_content" '.get_selected($sfl, 'wr_content').'>Shop drawing no.</option>';}
+    if ($sel === 'Drawing information'){$str .= '<option value="wr_content" '.get_selected($sfl, 'wr_content').'>Shop drawing no.</option>';}
 
     return run_replace('get_board_sfl_select_options', $str, $sfl);
 }

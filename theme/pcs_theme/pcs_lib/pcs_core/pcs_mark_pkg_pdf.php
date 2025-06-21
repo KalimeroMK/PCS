@@ -1,6 +1,6 @@
 <?php
-include_once('./_common.php');
-include_once('./pcs_config.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
 
 $dwg_file = $_POST['fn'];
 
@@ -55,7 +55,7 @@ if (!$_POST['key']) {
 	</script>
 	';
 
-	include_once('./pcs_mark_NumPkg.php');
+	include_once(__DIR__ . '/pcs_mark_NumPkg.php');
 
 } 
 

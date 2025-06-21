@@ -70,7 +70,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <?php } ?>
 
     <ul id="gall_ul" class="gall_row">
-        <?php for ($i=0; $i<count($list); $i++) {
+        
+$counter = count($list);<?php for ($i=0; $i<$counter; $i++) {
 
             $classes = array();
             

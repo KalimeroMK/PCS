@@ -9,7 +9,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 <div id="scrap" class="new_win">
     <h1 id="win_title"><?php echo $g5['title'] ?></h1>
     <ul>
-        <?php for ($i=0; $i<count($list); $i++) {  ?>
+        
+$counter = count($list);<?php for ($i=0; $i<$counter; $i++) {  ?>
         <li>
             <a href="<?php echo $list[$i]['opener_href_wr_id'] ?>" class="scrap_tit" target="_blank" onclick="opener.document.location.href='<?php echo $list[$i]['opener_href_wr_id'] ?>'; return false;"><?php echo $list[$i]['subject'] ?></a>
             <a href="<?php echo $list[$i]['opener_href'] ?>" class="scrap_cate" target="_blank" onclick="opener.document.location.href='<?php echo $list[$i]['opener_href'] ?>'; return false;"><?php echo $list[$i]['bo_subject'] ?></a>

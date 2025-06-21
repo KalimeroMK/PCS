@@ -57,7 +57,7 @@ foreach ($tcpdf_include_dirs as $tcpdf_include_path) {
 /**
  * Display help guide for this command.
  */
-function showHelp() {
+function showHelp(): void {
 	$help = <<<EOD
 tcpdf_addfont - command line tool to convert fonts for the TCPDF library.
 
@@ -169,61 +169,51 @@ $inopt = getopt($sopt, $lopt);
 foreach ($inopt as $opt => $val) {
 	switch ($opt) {
 		case 't':
-		case 'type': {
-			if (in_array($val, array('TrueTypeUnicode', 'TrueType', 'Type1', 'CID0JP', 'CID0KR', 'CID0CS', 'CID0CT'))) {
+		case 'type':
+            if (in_array($val, array('TrueTypeUnicode', 'TrueType', 'Type1', 'CID0JP', 'CID0KR', 'CID0CS', 'CID0CT'))) {
 				$options['type'] = $val;
 			}
-			break;
-		}
+            break;
 		case 'e':
-		case 'enc': {
-			$options['enc'] = $val;
-			break;
-		}
+		case 'enc':
+            $options['enc'] = $val;
+            break;
 		case 'f':
-		case 'flags': {
-			$options['flags'] = intval($val);
-			break;
-		}
+		case 'flags':
+            $options['flags'] = intval($val);
+            break;
 		case 'o':
-		case 'outpath': {
-			$options['outpath'] = realpath($val);
-			if (substr($options['outpath'], -1) != '/') {
+		case 'outpath':
+            $options['outpath'] = realpath($val);
+            if (substr($options['outpath'], -1) !== '/') {
 				$options['outpath'] .= '/';
 			}
-			break;
-		}
+            break;
 		case 'p':
-		case 'platid': {
-			$options['platid'] = min(max(1, intval($val)), 3);
-			break;
-		}
+		case 'platid':
+            $options['platid'] = min(max(1, intval($val)), 3);
+            break;
 		case 'n':
-		case 'encid': {
-			$options['encid'] = min(max(0, intval($val)), 10);
-			break;
-		}
+		case 'encid':
+            $options['encid'] = min(max(0, intval($val)), 10);
+            break;
 		case 'b':
-		case 'addcbbox': {
-			$options['addcbbox'] = true;
-			break;
-		}
+		case 'addcbbox':
+            $options['addcbbox'] = true;
+            break;
 		case 'l':
-		case 'link': {
-			$options['link'] = true;
-			break;
-		}
+		case 'link':
+            $options['link'] = true;
+            break;
 		case 'i':
-		case 'fonts': {
-			$options['fonts'] = explode(',', $val);
-			break;
-		}
+		case 'fonts':
+            $options['fonts'] = explode(',', $val);
+            break;
 		case 'h':
 		case 'help':
-		default: {
-			showHelp();
-			break;
-		}
+		default:
+            showHelp();
+            break;
 	} // end of switch
 } // end of while loop
 
@@ -233,7 +223,7 @@ if (empty($options['fonts'])) {
 }
 
 // check the output path
-if (!is_dir($options['outpath']) OR !is_writable($options['outpath'])) {
+if (!is_dir($options['outpath']) || !is_writable($options['outpath'])) {
 	echo "ERROR: Can't write to ".$options['outpath']."\n\n";
 	exit(3);
 }

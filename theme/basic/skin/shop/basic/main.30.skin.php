@@ -20,9 +20,11 @@ foreach((array) $list as $row){
     $star_score = $row['it_use_avg'] ? (int) get_star($row['it_use_avg']) : '';
 
     if ($list_mod >= 2) { // 1줄 이미지 : 2개 이상
-        if ($i%$list_mod == 0) $sct_last = ' sct_last'; // 줄 마지막
-        else if ($i%$list_mod == 1) $sct_last = ' sct_clear'; // 줄 첫번째
-        else $sct_last = '';
+        if ($i%$list_mod == 0) {
+            $sct_last = ' sct_last';
+        } elseif ($i%$list_mod == 1) {
+            $sct_last = ' sct_clear';
+        } else $sct_last = '';
     } else { // 1줄 이미지 : 1개
         $sct_last = ' sct_clear';
     }
@@ -59,11 +61,9 @@ foreach((array) $list as $row){
         echo '<span class="sct_disc">'.$sale_per.'</span>'.PHP_EOL;
     }
     
-	if ($this->view_it_icon) {
-        // 품절
-        if (is_soldout($row['it_id'], true)) {
-            echo '<span class="shop_icon_soldout"><span class="soldout_txt">SOLD OUT</span></span>';
-        }
+	// 품절
+    if ($this->view_it_icon && is_soldout($row['it_id'], true)) {
+        echo '<span class="shop_icon_soldout"><span class="soldout_txt">SOLD OUT</span></span>';
     }
     echo "</div>\n";
 	

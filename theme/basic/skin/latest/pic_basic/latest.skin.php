@@ -11,8 +11,9 @@ $thumb_height = 150;
 <div class="pic_lt">
     <h2 class="lat_title"><a href="<?php echo get_pretty_url($bo_table); ?>"><?php echo $bo_subject ?></a></h2>
     <ul>
-    <?php
-    for ($i=0; $i<count($list); $i++) {
+    
+$counter = count($list);<?php
+    for ($i=0; $i<$counter; $i++) {
     $thumb = get_list_thumbnail($bo_table, $list[$i]['wr_id'], $thumb_width, $thumb_height, false, true);
 
     if($thumb['src']) {

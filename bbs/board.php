@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (!$board['bo_table']) {
     alert('존재하지 않는 게시판입니다.', G5_URL);
@@ -37,8 +37,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         }
 
         // 그룹관리자 이상이라면 통과
-        if ($is_admin == "super" || $is_admin == "group") {
-        } else {
+        if ($is_admin != "super" && $is_admin != "group") {
             // 그룹접근
             $sql = " select count(*) as cnt from {$g5['group_member_table']} where gr_id = '{$board['gr_id']}' and mb_id = '{$member['mb_id']}' ";
             $row = sql_fetch($sql);
@@ -82,38 +81,30 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
     }
 
     // 자신의 글이거나 관리자라면 통과
-    if (($write['mb_id'] && $write['mb_id'] === $member['mb_id']) || $is_admin) {
-    } else {
-        // 비밀글이라면
-        if (strstr($write['wr_option'], "secret")) {
-            // 회원이 비밀글을 올리고 관리자가 답변글을 올렸을 경우
-            // 회원이 관리자가 올린 답변글을 바로 볼 수 없던 오류를 수정
-            $is_owner = false;
-            if ($write['wr_reply'] && $member['mb_id']) {
-                $sql = " select mb_id from {$write_table}
+    // 비밀글이라면
+    if (!($write['mb_id'] && $write['mb_id'] === $member['mb_id']) && !$is_admin && strstr($write['wr_option'], "secret")) {
+        // 회원이 비밀글을 올리고 관리자가 답변글을 올렸을 경우
+        // 회원이 관리자가 올린 답변글을 바로 볼 수 없던 오류를 수정
+        $is_owner = false;
+        if ($write['wr_reply'] && $member['mb_id']) {
+            $sql = " select mb_id from {$write_table}
                             where wr_num = '{$write['wr_num']}'
                             and wr_reply = ''
                             and wr_is_comment = 0 ";
-                $row = sql_fetch($sql);
-                if ($row['mb_id'] === $member['mb_id']) {
-                    $is_owner = true;
-                }
+            $row = sql_fetch($sql);
+            if ($row['mb_id'] === $member['mb_id']) {
+                $is_owner = true;
             }
-
-            $ss_name = 'ss_secret_'.$bo_table.'_'.$write['wr_num'];
-
-            if (!$is_owner) {
-                //$ss_name = "ss_secret_{$bo_table}_{$wr_id}";
-                // 한번 읽은 게시물의 번호는 세션에 저장되어 있고 같은 게시물을 읽을 경우는 다시 비밀번호를 묻지 않습니다.
-                // 이 게시물이 저장된 게시물이 아니면서 관리자가 아니라면
-                //if ("$bo_table|$write['wr_num']" != get_session("ss_secret"))
-                if (!get_session($ss_name)) {
-                    goto_url(G5_BBS_URL.'/password.php?w=s&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
-                }
-            }
-
-            set_session($ss_name, true);
         }
+        $ss_name = 'ss_secret_'.$bo_table.'_'.$write['wr_num'];
+        //$ss_name = "ss_secret_{$bo_table}_{$wr_id}";
+        // 한번 읽은 게시물의 번호는 세션에 저장되어 있고 같은 게시물을 읽을 경우는 다시 비밀번호를 묻지 않습니다.
+        // 이 게시물이 저장된 게시물이 아니면서 관리자가 아니라면
+        //if ("$bo_table|$write['wr_num']" != get_session("ss_secret"))
+        if (!$is_owner && !get_session($ss_name)) {
+            goto_url(G5_BBS_URL.'/password.php?w=s&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
+        }
+        set_session($ss_name, true);
     }
 
     // 한번 읽은글은 브라우저를 닫기전까지는 카운트를 증가시키지 않음
@@ -122,8 +113,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         sql_query(" update {$write_table} set wr_hit = wr_hit + 1 where wr_id = '{$wr_id}' ");
 
         // 자신의 글이면 통과
-        if ($write['mb_id'] && $write['mb_id'] === $member['mb_id']) {
-        } else {
+        if (!($write['mb_id'] && $write['mb_id'] === $member['mb_id'])) {
             if ($is_guest && $board['bo_read_level'] == 1 && $write['wr_ip'] == $_SERVER['REMOTE_ADDR']) {
                 // 비회원이면서 읽기레벨이 1이고 등록된 아이피가 같다면 자신의 글이므로 통과
             } else {
@@ -181,7 +171,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
     $g5['title'] = $g5['board_title'].' '.$page.' 페이지';
 }
 
-$is_auth = $is_admin ? true : false;
+$is_auth = (bool) $is_admin;
 
 include_once(G5_PATH.'/head.sub.php');
 
@@ -200,11 +190,9 @@ if ($is_admin) {
     if ($write && array_key_exists('wr_ip', $write)) {
         $ip = $write['wr_ip'];
     }
-} else {
+} elseif (isset($write['wr_ip'])) {
     // 관리자가 아니라면 IP 주소를 감춘후 보여줍니다.
-    if (isset($write['wr_ip'])) {
-        $ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", G5_IP_DISPLAY, $write['wr_ip']);
-    }
+    $ip = preg_replace("/(\\d+).(\\d+).(\\d+).(\\d+)/", G5_IP_DISPLAY, $write['wr_ip']);
 }
 
 // 분류 사용

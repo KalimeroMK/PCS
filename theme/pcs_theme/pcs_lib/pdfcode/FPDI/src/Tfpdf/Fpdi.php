@@ -23,6 +23,7 @@ use setasign\Fpdi\PdfParser\Type\PdfNull;
  */
 class Fpdi extends FpdfTpl
 {
+    public $buffer;
     use FpdiTrait;
 
     /**
@@ -32,9 +33,8 @@ class Fpdi extends FpdfTpl
      */
     const VERSION = '2.3.5';
 
-    public function _enddoc()
+    public function _enddoc(): void
     {
-        parent::_enddoc();
         $this->cleanUp();
     }
 
@@ -93,7 +93,7 @@ class Fpdi extends FpdfTpl
      * @throws CrossReferenceException
      * @throws PdfParserException
      */
-    public function _putimages()
+    public function _putimages(): void
     {
         $this->currentReaderId = null;
         parent::_putimages();
@@ -133,7 +133,7 @@ class Fpdi extends FpdfTpl
      */
     protected function _putxobjectdict()
     {
-        foreach ($this->importedPages as $key => $pageData) {
+        foreach ($this->importedPages as $pageData) {
             $this->_put('/' . $pageData['id'] . ' ' . $pageData['objectNumber'] . ' 0 R');
         }
 

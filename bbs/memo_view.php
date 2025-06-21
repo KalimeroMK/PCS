@@ -1,6 +1,6 @@
 <?php
 
-include_once('./_common.php');
+include_once(__DIR__ . '/_common.php');
 
 if (!$is_member) {
     alert('회원만 이용하실 수 있습니다.');
@@ -11,23 +11,19 @@ $me_id = isset($_REQUEST['me_id']) ? (int)$_REQUEST['me_id'] : 0;
 if ($kind == 'recv') {
     $t = '받은';
     $unkind = 'send';
-
     $sql = " update {$g5['memo_table']}
                 set me_read_datetime = '".G5_TIME_YMDHIS."'
                 where (me_id = '$me_id' or me_send_id = '$me_id' )
                 and me_recv_mb_id = '{$member['mb_id']}'
                 and me_read_datetime = '0000-00-00 00:00:00' ";
     sql_query($sql);
-
     $sql = " update `{$g5['member_table']}` set mb_memo_cnt = '".get_memo_not_read($member['mb_id'])."' where mb_id = '{$member['mb_id']}' ";
     sql_query($sql);
+} elseif ($kind == 'send') {
+    $t = '보낸';
+    $unkind = 'recv';
 } else {
-    if ($kind == 'send') {
-        $t = '보낸';
-        $unkind = 'recv';
-    } else {
-        alert($kind.' 값을 넘겨주세요.');
-    }
+    alert($kind.' 값을 넘겨주세요.');
 }
 
 $sql = " select * from {$g5['memo_table']}
@@ -74,8 +70,8 @@ $mb = get_member($memo['me_'.$unkind.'_mb_id']);
 $list_link = './memo.php?kind='.$kind;
 
 if (isset($page) && $page) {
-    $prev_link .= $prev_link ? '&amp;page='.(int)$page : '';
-    $next_link .= $next_link ? '&amp;page='.(int)$page : '';
+    $prev_link .= $prev_link !== '' && $prev_link !== '0' ? '&amp;page='.(int)$page : '';
+    $next_link .= $next_link !== '' && $next_link !== '0' ? '&amp;page='.(int)$page : '';
     $list_link .= '&amp;page='.(int)$page;
 }
 

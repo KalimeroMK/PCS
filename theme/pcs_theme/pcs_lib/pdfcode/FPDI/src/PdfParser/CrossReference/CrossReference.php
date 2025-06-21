@@ -37,10 +37,7 @@ class CrossReference
      */
     protected $fileHeaderOffset = 0;
 
-    /**
-     * @var PdfParser
-     */
-    protected $parser;
+    protected \setasign\Fpdi\PdfParser\PdfParser $parser;
 
     /**
      * @var ReaderInterface[]
@@ -50,7 +47,6 @@ class CrossReference
     /**
      * CrossReference constructor.
      *
-     * @param PdfParser $parser
      * @throws CrossReferenceException
      * @throws PdfTypeException
      */
@@ -79,11 +75,7 @@ class CrossReference
             $this->checkForEncryption($trailer);
             $this->readers[] = $reader;
 
-            if (isset($trailer->value['Prev'])) {
-                $offset = $trailer->value['Prev']->value;
-            } else {
-                $offset = false;
-            }
+            $offset = isset($trailer->value['Prev']) ? $trailer->value['Prev']->value : false;
         }
 
         // fix faulty sub-section header
@@ -217,7 +209,7 @@ class CrossReference
      * @throws CrossReferenceException
      * @throws PdfTypeException
      */
-    protected function initReaderInstance($initValue)
+    protected function initReaderInstance($initValue): \setasign\Fpdi\PdfParser\CrossReference\FixedReader|\setasign\Fpdi\PdfParser\CrossReference\LineReader
     {
         $position = $this->parser->getStreamReader()->getPosition()
             + $this->parser->getStreamReader()->getOffset() + $this->fileHeaderOffset;
@@ -270,7 +262,6 @@ class CrossReference
     /**
      * Check for encryption.
      *
-     * @param PdfDictionary $dictionary
      * @throws CrossReferenceException
      */
     protected function checkForEncryption(PdfDictionary $dictionary)

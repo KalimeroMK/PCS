@@ -1,7 +1,7 @@
 <?php
-include_once('./_common.php');
-include_once('./pcs_config.php');
-include_once('./pcs_common_function.php');
+include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/pcs_config.php');
+include_once(__DIR__ . '/pcs_common_function.php');
 if (!defined('_GNUBOARD_')) exit;
 
 $dwg_file = $_POST['fn'];
@@ -63,25 +63,27 @@ sql_query ($query_view_mark_coor);
 					for($i=0;$i<$jntfor;$i++){
 						$spn = ''; $s_f = 'F';
 						$jnt_each_arr = explode(',',$jnt_arr[$i]);
-						if($jnt_each_arr[6]!='comment' and $jnt_each_arr[6]!='coupling') {
+						if($jnt_each_arr[6] != 'comment' && $jnt_each_arr[6] != 'coupling') {
 							$pwht_yn = 'NO';	$pmi_yn = 'NO';
 							switch($jnt_each_arr[6]) {
-								case 'bolt' 	:	$j_type_sbc = 'BT';		$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'B0'.$jnt_each_arr[10];} else {$jnt_sbc = 'B'.$jnt_each_arr[10];};		break;
-								case 'thread' 	: 	$j_type_sbc = 'TH'; 	$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'T0'.$jnt_each_arr[10];} else {$jnt_sbc = 'T'.$jnt_each_arr[10];};		break;
-								case 'support' 	: 	$j_type_sbc = 'PS';		$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'S0'.$jnt_each_arr[10];} else {$jnt_sbc = 'S'.$jnt_each_arr[10];}; 		break;
-								case 'spool' 	: 	$j_type_sbc = 'SPL';	$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'SP0'.$jnt_each_arr[10];} else {$jnt_sbc = 'SP'.$jnt_each_arr[10];};		break;
+								case 'bolt' 	:	$j_type_sbc = 'BT';		$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'B0'.$jnt_each_arr[10] : 'B'.$jnt_each_arr[10];;		break;
+								case 'thread' 	: 	$j_type_sbc = 'TH'; 	$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'T0'.$jnt_each_arr[10] : 'T'.$jnt_each_arr[10];;		break;
+								case 'support' 	: 	$j_type_sbc = 'PS';		$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'S0'.$jnt_each_arr[10] : 'S'.$jnt_each_arr[10];; 		break;
+								case 'spool' 	: 	$j_type_sbc = 'SPL';	$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'SP0'.$jnt_each_arr[10] : 'SP'.$jnt_each_arr[10];;		break;
 								default		 	:	$j_type_sbc = 'after';	$w_type_sbc = 'WELD';	$pmi_yn = $sql_dwg_array['pmi']; $pwht_yn = $sql_dwg_array['pwht'];
 										
-									if($jnt_each_arr[11]*1){
-										$jnt_or = preg_replace('/([a-zA-Z]+[1-9]||[a-zA-Z])/','',$jnt_each_arr[10]);
-										if($jnt_or*1<10)		{$jnt_sbc = '00'.$jnt_each_arr[10];}	
-										else if($jnt_or*1<100)	{$jnt_sbc =  '0'.$jnt_each_arr[10];}
-									}
-									else {
-											if($jnt_each_arr[10]*1<10)		{$jnt_sbc = '00'.$jnt_each_arr[10];}
-											else if($jnt_each_arr[10]*1<100){$jnt_sbc = '0'.$jnt_each_arr[10];}
-											else {$jnt_sbc = $jnt_each_arr[10];}
-									}
+									if ($jnt_each_arr[11]*1) {
+                                        $jnt_or = preg_replace('/([a-zA-Z]+[1-9]||[a-zA-Z])/','',$jnt_each_arr[10]);
+                                        if ($jnt_or*1<10) {
+                                            $jnt_sbc = '00'.$jnt_each_arr[10];
+                                        } elseif ($jnt_or*1<100) {
+                                            $jnt_sbc =  '0'.$jnt_each_arr[10];
+                                        }
+                                    } elseif ($jnt_each_arr[10]*1<10) {
+                                        $jnt_sbc = '00'.$jnt_each_arr[10];
+                                    } elseif ($jnt_each_arr[10]*1<100) {
+                                        $jnt_sbc = '0'.$jnt_each_arr[10];
+                                    } else {$jnt_sbc = $jnt_each_arr[10];}
 
 								break;
 							}
@@ -142,25 +144,27 @@ sql_query ($query_view_mark_coor);
 					for($i=0;$i<$jntfor;$i++){
 						$spn = ''; $s_f = 'F'; $spn = '';
 						$jnt_each_arr = explode(',',$jnt_arr[$i]);
-						if($jnt_each_arr[6]!='comment' and $jnt_each_arr[6]!='coupling') {
+						if($jnt_each_arr[6] != 'comment' && $jnt_each_arr[6] != 'coupling') {
 							$pwht_yn = 'NO';	$pmi_yn = 'NO';
 							switch($jnt_each_arr[6]) {
-								case 'bolt' 	:	$j_type_sbc = 'BT';		$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'B0'.$jnt_each_arr[10];} else {$jnt_sbc = 'B'.$jnt_each_arr[10];};		break;
-								case 'thread' 	: 	$j_type_sbc = 'TH'; 	$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'T0'.$jnt_each_arr[10];} else {$jnt_sbc = 'T'.$jnt_each_arr[10];};		break;
-								case 'support' 	: 	$j_type_sbc = 'PS';		$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'S0'.$jnt_each_arr[10];} else {$jnt_sbc = 'S'.$jnt_each_arr[10];}; 		break;
-								case 'spool' 	: 	$j_type_sbc = 'SPL';	$w_type_sbc = 'OTHER';	if($jnt_each_arr[10]*1<10){$jnt_sbc = 'SP0'.$jnt_each_arr[10];} else {$jnt_sbc = 'SP'.$jnt_each_arr[10];};		break;
+								case 'bolt' 	:	$j_type_sbc = 'BT';		$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'B0'.$jnt_each_arr[10] : 'B'.$jnt_each_arr[10];;		break;
+								case 'thread' 	: 	$j_type_sbc = 'TH'; 	$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'T0'.$jnt_each_arr[10] : 'T'.$jnt_each_arr[10];;		break;
+								case 'support' 	: 	$j_type_sbc = 'PS';		$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'S0'.$jnt_each_arr[10] : 'S'.$jnt_each_arr[10];; 		break;
+								case 'spool' 	: 	$j_type_sbc = 'SPL';	$w_type_sbc = 'OTHER';	$jnt_sbc = $jnt_each_arr[10] * 1 < 10 ? 'SP0'.$jnt_each_arr[10] : 'SP'.$jnt_each_arr[10];;		break;
 								default		 	:							$w_type_sbc = 'WELD';	$pmi_yn = $sql_dwg_array['pmi']; $pwht_yn = $sql_dwg_array['pwht'];
 
-									if($jnt_each_arr[11]*1){
-										$jnt_or = preg_replace('/([a-zA-Z]+[1-9]||[a-zA-Z])/','',$jnt_each_arr[10]);
-										if($jnt_or*1<10)		{$jnt_sbc = '00'.$jnt_each_arr[10];}	
-										else if($jnt_or*1<100)	{$jnt_sbc =  '0'.$jnt_each_arr[10];}
-									}
-									else {
-											if($jnt_each_arr[10]*1<10)		{$jnt_sbc = '00'.$jnt_each_arr[10];}
-											else if($jnt_each_arr[10]*1<100){$jnt_sbc = '0'.$jnt_each_arr[10];}
-											else {$jnt_sbc = $jnt_each_arr[10];}
-									}
+									if ($jnt_each_arr[11]*1) {
+                                        $jnt_or = preg_replace('/([a-zA-Z]+[1-9]||[a-zA-Z])/','',$jnt_each_arr[10]);
+                                        if ($jnt_or*1<10) {
+                                            $jnt_sbc = '00'.$jnt_each_arr[10];
+                                        } elseif ($jnt_or*1<100) {
+                                            $jnt_sbc =  '0'.$jnt_each_arr[10];
+                                        }
+                                    } elseif ($jnt_each_arr[10]*1<10) {
+                                        $jnt_sbc = '00'.$jnt_each_arr[10];
+                                    } elseif ($jnt_each_arr[10]*1<100) {
+                                        $jnt_sbc = '0'.$jnt_each_arr[10];
+                                    } else {$jnt_sbc = $jnt_each_arr[10];}
 									
 								break;
 							}
@@ -225,7 +229,7 @@ sql_query ($query_view_coor_drop);
 
 echo '<script>opener.document.location.reload();</script>';
 
-include_once('./pcs_mark_FabISO.php');
+include_once(__DIR__ . '/pcs_mark_FabISO.php');
 
 }
 else {

@@ -14,7 +14,7 @@
 <tbody>
 <tr>
 <?php
-	for($i=0; $table_field_array[$i]; $i++){
+	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
 		echo '<td class="jnt_td jnt_th" style="width: '.$table_width_array[$i].'%">'.$table_field_array[$i].'</td>'; 
 	}
 ?>
@@ -23,7 +23,7 @@
 <tr>
 <input type='hidden' name='btn_check' value='<?php echo $_GET['wr_id']; ?>'>
 <?php
-	for($i=0; $table_field_array[$i]; $i++){
+	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
 		switch ($i)	{
 		
 			case 0 :

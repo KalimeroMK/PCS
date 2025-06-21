@@ -23,12 +23,9 @@ class PdfArray extends PdfType
     /**
      * Parses an array of the passed tokenizer and parser.
      *
-     * @param Tokenizer $tokenizer
-     * @param PdfParser $parser
-     * @return bool|self
      * @throws PdfTypeException
      */
-    public static function parse(Tokenizer $tokenizer, PdfParser $parser)
+    public static function parse(Tokenizer $tokenizer, PdfParser $parser): false|\setasign\Fpdi\PdfParser\Type\PdfArray
     {
         $result = [];
 
@@ -51,9 +48,8 @@ class PdfArray extends PdfType
      * Helper method to create an instance.
      *
      * @param PdfType[] $values
-     * @return self
      */
-    public static function create(array $values = [])
+    public static function create(array $values = []): self
     {
         $v = new self();
         $v->value = $values;

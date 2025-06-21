@@ -83,7 +83,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 	    <?php } ?>
 	</div>
 	
-    <?php if ($option) { ?>
+    <?php if ($option !== '' && $option !== '0') { ?>
     <div class="write_div">
         <span class="sound_only">옵션</span>
         <ul class="bo_v_option">

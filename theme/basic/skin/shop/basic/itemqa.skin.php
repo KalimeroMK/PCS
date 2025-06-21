@@ -100,7 +100,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_SHOP_SKIN_URL.'/style.css">', 
 
     if ($i > 0) echo '</ol>';
 
-    if (!$i) echo '<p class="sit_empty">상품문의가 없습니다.</p>';
+    if ($i === 0) echo '<p class="sit_empty">상품문의가 없습니다.</p>';
     ?>
 </section>
 

@@ -1,9 +1,12 @@
 <?php
+
 include_once('./_common.php');
 
-if (!$is_member) die('0');
+if (!$is_member) {
+    die('0');
+}
 
-$uid     = isset($_REQUEST['uid']) ? preg_replace('/[^0-9]/', '', $_REQUEST['uid']) : 0;
+$uid = isset($_REQUEST['uid']) ? preg_replace('/[^0-9]/', '', $_REQUEST['uid']) : 0;
 $subject = isset($_REQUEST['subject']) ? trim($_REQUEST['subject']) : '';
 $content = isset($_REQUEST['content']) ? trim($_REQUEST['content']) : '';
 

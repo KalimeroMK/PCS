@@ -1,7 +1,10 @@
 <?php
+
 include_once("./_common.php");
 
-if (!$is_member) die("0");
+if (!$is_member) {
+    die("0");
+}
 
 $as_id = isset($_REQUEST['as_id']) ? (int)$_REQUEST['as_id'] : 0;
 

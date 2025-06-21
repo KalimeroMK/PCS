@@ -1,4 +1,5 @@
 <?php
+
 include_once('./_common.php');
 
 // 로그인중인 경우 회원가입 할 수 없습니다.

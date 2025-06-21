@@ -1,13 +1,14 @@
 <?php
+
 define('G5_CERT_IN_PROG', true);
 include_once('./_common.php');
 
-if(function_exists('social_provider_logout')){
+if (function_exists('social_provider_logout')) {
     social_provider_logout();
 }
 
 // 이호경님 제안 코드
-session_unset(); // 모든 세션변수를 언레지스터 시켜줌
+session_unset();   // 모든 세션변수를 언레지스터 시켜줌
 session_destroy(); // 세션해제함
 
 // 자동로그인 해제 --------------------------------
@@ -16,8 +17,9 @@ set_cookie('ck_auto', '', 0);
 // 자동로그인 해제 end --------------------------------
 
 if ($url) {
-    if ( substr($url, 0, 2) == '//' )
-        $url = 'http:' . $url;
+    if (substr($url, 0, 2) == '//') {
+        $url = 'http:'.$url;
+    }
 
     $p = @parse_url(urldecode($url));
     /*
@@ -28,14 +30,17 @@ if ($url) {
         alert('url에 도메인을 지정할 수 없습니다.', G5_URL);
     }
 
-    if($url == 'shop')
+    if ($url == 'shop') {
         $link = G5_SHOP_URL;
-    else
+    } else {
         $link = $url;
-} else if ($bo_table) {
-    $link = get_pretty_url($bo_table);
+    }
 } else {
-    $link = G5_URL;
+    if ($bo_table) {
+        $link = get_pretty_url($bo_table);
+    } else {
+        $link = G5_URL;
+    }
 }
 
 run_event('member_logout', $link);

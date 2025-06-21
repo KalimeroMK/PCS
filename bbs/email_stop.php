@@ -1,12 +1,14 @@
 <?php
+
 include_once('./_common.php');
 
 $mb_id = isset($_REQUEST['mb_id']) ? clean_xss_tags($_REQUEST['mb_id'], 1, 1) : '';
 
 $sql = " select mb_id, mb_email, mb_datetime from {$g5['member_table']} where mb_id = '{$mb_id}' ";
 $row = sql_fetch($sql);
-if (!$row['mb_id'])
+if (!$row['mb_id']) {
     alert('존재하는 회원이 아닙니다.', G5_URL);
+}
 
 if ($mb_md5) {
     $tmp_md5 = md5($row['mb_id'].$row['mb_email'].$row['mb_datetime']);

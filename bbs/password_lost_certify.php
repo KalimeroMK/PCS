@@ -1,8 +1,11 @@
 <?php
+
 include_once('./_common.php');
 
 // 봇의 메일 링크 크롤링을 방지합니다.
-if(function_exists('check_mail_bot')){ check_mail_bot($_SERVER['REMOTE_ADDR']); }
+if (function_exists('check_mail_bot')) {
+    check_mail_bot($_SERVER['REMOTE_ADDR']);
+}
 
 run_event('password_lost_certify_before');
 
@@ -13,9 +16,10 @@ $mb_nonce = isset($_GET['mb_nonce']) ? trim($_GET['mb_nonce']) : '';
 
 // 회원아이디가 아닌 회원고유번호로 회원정보를 구한다.
 $sql = " select mb_id, mb_lost_certify from {$g5['member_table']} where mb_no = '$mb_no' ";
-$mb  = sql_fetch($sql);
-if (strlen($mb['mb_lost_certify']) < 33)
+$mb = sql_fetch($sql);
+if (strlen($mb['mb_lost_certify']) < 33) {
     die("Error");
+}
 
 // 인증 링크는 한번만 처리가 되게 한다.
 sql_query(" update {$g5['member_table']} set mb_lost_certify = '' where mb_no = '$mb_no' ");
@@ -28,7 +32,6 @@ if ($mb_nonce === substr($mb['mb_lost_certify'], 0, 32)) {
     run_event('password_lost_certify_after', $mb, $mb_nonce);
 
     alert('비밀번호가 변경됐습니다.\\n\\n회원아이디와 변경된 비밀번호로 로그인 하시기 바랍니다.', G5_BBS_URL.'/login.php');
-}
-else {
+} else {
     die("Error");
 }

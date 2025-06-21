@@ -1,4 +1,5 @@
 <?php
+
 include_once('./_common.php');
 
 include_once(G5_PATH.'/head.sub.php');
@@ -29,8 +30,9 @@ echo <<<HEREDOC
 </script>
 HEREDOC;
 
-if ($write['wr_is_comment'])
+if ($write['wr_is_comment']) {
     alert_close('코멘트는 스크랩 할 수 없습니다.');
+}
 
 $sql = " select count(*) as cnt from {$g5['scrap_table']}
             where mb_id = '{$member['mb_id']}'
@@ -38,7 +40,6 @@ $sql = " select count(*) as cnt from {$g5['scrap_table']}
             and wr_id = '$wr_id' ";
 $row = sql_fetch($sql);
 if ($row['cnt']) {
-
     $back_url = get_pretty_url($bo_table, $wr_id);
 
     echo <<<HEREDOC

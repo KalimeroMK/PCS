@@ -1,5 +1,8 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+
+if (!defined('_GNUBOARD_')) {
+    exit;
+} // 개별 페이지 접근 불가
 
 // 분류 사용 여부
 $is_category = false;
@@ -9,17 +12,20 @@ if ($board['bo_use_category']) {
     $category_href = get_pretty_url($bo_table);
 
     $category_option .= '<li><a href="'.$category_href.'"';
-    if ($sca=='')
+    if ($sca == '') {
         $category_option .= ' id="bo_cate_on"';
+    }
     $category_option .= '>전체</a></li>';
 
     $categories = explode('|', $board['bo_category_list']); // 구분자가 , 로 되어 있음
-    for ($i=0; $i<count($categories); $i++) {
+    for ($i = 0; $i < count($categories); $i++) {
         $category = trim($categories[$i]);
-        if ($category=='') continue;
-        $category_option .= '<li><a href="'.(get_pretty_url($bo_table,'','sca='.urlencode($category))).'"';
+        if ($category == '') {
+            continue;
+        }
+        $category_option .= '<li><a href="'.(get_pretty_url($bo_table, '', 'sca='.urlencode($category))).'"';
         $category_msg = '';
-        if ($category==$sca) { // 현재 선택된 카테고리라면
+        if ($category == $sca) { // 현재 선택된 카테고리라면
             $category_option .= ' id="bo_cate_on"';
             $category_msg = '<span class="sound_only">열린 분류 </span>';
         }
@@ -28,8 +34,9 @@ if ($board['bo_use_category']) {
 }
 
 $sop = strtolower($sop);
-if ($sop != 'and' && $sop != 'or')
+if ($sop != 'and' && $sop != 'or') {
     $sop = 'and';
+}
 
 // 분류 선택 또는 검색어가 있다면
 $stx = trim($stx);
@@ -37,7 +44,7 @@ $stx = trim($stx);
 $is_search_bbs = false;
 
 if ($sca || $stx || $stx === '0') {     //검색이면
-    $is_search_bbs = true;      //검색구분변수 true 지정
+    $is_search_bbs = true;              //검색구분변수 true 지정
     $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
 
     // 가장 작은 번호를 얻어서 변수에 저장 (하단의 페이징에서 사용)
@@ -45,7 +52,9 @@ if ($sca || $stx || $stx === '0') {     //검색이면
     $row = sql_fetch($sql);
     $min_spt = (int)$row['min_wr_num'];
 
-    if (!$spt) $spt = $min_spt;
+    if (!$spt) {
+        $spt = $min_spt;
+    }
 
     $sql_search .= " and (wr_num between {$spt} and ({$spt} + {$config['cf_search_part']})) ";
 
@@ -65,7 +74,7 @@ if ($sca || $stx || $stx === '0') {     //검색이면
     $total_count = $board['bo_count_write'];
 }
 
-if(G5_IS_MOBILE) {
+if (G5_IS_MOBILE) {
     $page_rows = $board['bo_mobile_page_rows'];
     $list_page_rows = $board['bo_mobile_page_rows'];
 } else {
@@ -73,36 +82,46 @@ if(G5_IS_MOBILE) {
     $list_page_rows = $board['bo_page_rows'];
 }
 
-if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
+if ($page < 1) {
+    $page = 1;
+} // 페이지가 없으면 첫 페이지 (1 페이지)
 
 // 년도 2자리
 $today2 = G5_TIME_YMD;
 
-$list = array();
+$list = [];
 $i = 0;
 $notice_count = 0;
-$notice_array = array();
+$notice_array = [];
 
 // 공지 처리
 if (!$is_search_bbs) {
     $arr_notice = explode(',', trim($board['bo_notice']));
     $from_notice_idx = ($page - 1) * $page_rows;
-    if($from_notice_idx < 0)
+    if ($from_notice_idx < 0) {
         $from_notice_idx = 0;
+    }
     $board_notice_count = count($arr_notice);
 
-    for ($k=0; $k<$board_notice_count; $k++) {
-        if (trim($arr_notice[$k]) == '') continue;
+    for ($k = 0; $k < $board_notice_count; $k++) {
+        if (trim($arr_notice[$k]) == '') {
+            continue;
+        }
 
         $row = sql_fetch(" select * from {$write_table} where wr_id = '{$arr_notice[$k]}' ");
 
-        if (!isset($row['wr_id']) || !$row['wr_id']) continue;
+        if (!isset($row['wr_id']) || !$row['wr_id']) {
+            continue;
+        }
 
         $notice_array[] = $row['wr_id'];
 
-        if($k < $from_notice_idx) continue;
+        if ($k < $from_notice_idx) {
+            continue;
+        }
 
-        $list[$i] = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
+        $list[$i] = get_list($row, $board, $board_skin_url,
+            G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
         $list[$i]['is_notice'] = true;
         $list[$i]['list_content'] = $list[$i]['wr_content'];
 
@@ -115,32 +134,37 @@ if (!$is_search_bbs) {
         $i++;
         $notice_count++;
 
-        if($notice_count >= $list_page_rows)
+        if ($notice_count >= $list_page_rows) {
             break;
+        }
     }
 }
 
-$total_page  = ceil($total_count / $page_rows);  // 전체 페이지 계산
-$from_record = ($page - 1) * $page_rows; // 시작 열을 구함
+$total_page = ceil($total_count / $page_rows);  // 전체 페이지 계산
+$from_record = ($page - 1) * $page_rows;        // 시작 열을 구함
 
 // 공지글이 있으면 변수에 반영
-if(!empty($notice_array)) {
+if (!empty($notice_array)) {
     $from_record -= count($notice_array);
 
-    if($from_record < 0)
+    if ($from_record < 0) {
         $from_record = 0;
+    }
 
-    if($notice_count > 0)
+    if ($notice_count > 0) {
         $page_rows -= $notice_count;
+    }
 
-    if($page_rows < 0)
+    if ($page_rows < 0) {
         $page_rows = $list_page_rows;
+    }
 }
 
 // 관리자라면 CheckBox 보임
 $is_checkbox = false;
-if ($is_member && ($is_admin == 'super' || $group['gr_admin'] == $member['mb_id'] || $board['bo_admin'] == $member['mb_id']))
+if ($is_member && ($is_admin == 'super' || $group['gr_admin'] == $member['mb_id'] || $board['bo_admin'] == $member['mb_id'])) {
     $is_checkbox = true;
+}
 
 // 정렬에 사용하는 QUERY_STRING
 $qstr2 = 'bo_table='.$bo_table.'&amp;sop='.$sop;
@@ -156,7 +180,7 @@ if (!$sst) {
     if ($board['bo_sort_field']) {
         $sst = $board['bo_sort_field'];
     } else {
-        $sst  = "wr_num, wr_reply";
+        $sst = "wr_num, wr_reply";
         $sod = "";
     }
 } else {
@@ -171,8 +195,9 @@ if (!$sst) {
     }
 }
 
-if(!$sst)
-    $sst  = "wr_num, wr_reply";
+if (!$sst) {
+    $sst = "wr_num, wr_reply";
+}
 
 if ($sst) {
     $sql_order = " order by {$sst} {$sod} ";
@@ -182,24 +207,26 @@ if ($is_search_bbs) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
 } else {
     $sql = " select * from {$write_table} where wr_is_comment = 0 ";
-    if(!empty($notice_array))
+    if (!empty($notice_array)) {
         $sql .= " and wr_id not in (".implode(', ', $notice_array).") ";
+    }
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
 }
 
 // 페이지의 공지개수가 목록수 보다 작을 때만 실행
-if($page_rows > 0) {
+if ($page_rows > 0) {
     $result = sql_query($sql);
 
     $k = 0;
 
-    while ($row = sql_fetch_array($result))
-    {
+    while ($row = sql_fetch_array($result)) {
         // 검색일 경우 wr_id만 얻었으므로 다시 한행을 얻는다
-        if ($is_search_bbs)
+        if ($is_search_bbs) {
             $row = sql_fetch(" select * from {$write_table} where wr_id = '{$row['wr_parent']}' ");
+        }
 
-        $list[$i] = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
+        $list[$i] = get_list($row, $board, $board_skin_url,
+            G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
         if (strstr($sfl, 'subject')) {
             $list[$i]['subject'] = search_font($stx, $list[$i]['subject']);
         }
@@ -221,7 +248,8 @@ if($page_rows > 0) {
 
 g5_latest_cache_data($board['bo_table'], $list);
 
-$write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, get_pretty_url($bo_table, '', $qstr.'&amp;page='));
+$write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page,
+    get_pretty_url($bo_table, '', $qstr.'&amp;page='));
 
 $list_href = '';
 $prev_part_href = '';
@@ -229,21 +257,23 @@ $next_part_href = '';
 if ($is_search_bbs) {
     $list_href = get_pretty_url($bo_table);
 
-    $patterns = array('#&amp;page=[0-9]*#', '#&amp;spt=[0-9\-]*#');
+    $patterns = ['#&amp;page=[0-9]*#', '#&amp;spt=[0-9\-]*#'];
 
     //if ($prev_spt >= $min_spt)
     $prev_spt = $spt - $config['cf_search_part'];
     if (isset($min_spt) && $prev_spt >= $min_spt) {
         $qstr1 = preg_replace($patterns, '', $qstr);
-        $prev_part_href = get_pretty_url($bo_table,0,$qstr1.'&amp;spt='.$prev_spt.'&amp;page=1');
-        $write_pages = page_insertbefore($write_pages, '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">이전검색</a>');
+        $prev_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$prev_spt.'&amp;page=1');
+        $write_pages = page_insertbefore($write_pages,
+            '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">이전검색</a>');
     }
 
     $next_spt = $spt + $config['cf_search_part'];
     if ($next_spt < 0) {
         $qstr1 = preg_replace($patterns, '', $qstr);
-        $next_part_href = get_pretty_url($bo_table,0,$qstr1.'&amp;spt='.$next_spt.'&amp;page=1');
-        $write_pages = page_insertafter($write_pages, '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">다음검색</a>');
+        $next_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$next_spt.'&amp;page=1');
+        $write_pages = page_insertafter($write_pages,
+            '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">다음검색</a>');
     }
 }
 
@@ -256,7 +286,7 @@ if ($member['mb_level'] >= $board['bo_write_level']) {
 $nobr_begin = $nobr_end = "";
 if (preg_match("/gecko|firefox/i", $_SERVER['HTTP_USER_AGENT'])) {
     $nobr_begin = '<nobr>';
-    $nobr_end   = '</nobr>';
+    $nobr_end = '</nobr>';
 }
 
 // RSS 보기 사용에 체크가 되어 있어야 RSS 보기 가능 061106

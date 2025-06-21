@@ -7,7 +7,7 @@ function specialchars_replace($str, $len=0) {
         $str = substr($str, 0, $len);
     }
 
-    $str = str_replace(array("&", "<", ">"), array("&amp;", "&lt;", "&gt;"), $str);
+    $str = str_replace(["&", "<", ">"], ["&amp;", "&lt;", "&gt;"], $str);
 
     /*
     $str = preg_replace("/&/", "&amp;", $str);
@@ -61,9 +61,9 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
     $file = '';
 
     if (strstr($row['wr_option'], 'html'))
-        $html = 1;
+        {$html = 1;}
     else
-        $html = 0;
+        {$html = 0;}
 
 if ($i === 0) {
     echo '<description>'. specialchars_replace($subj2). ' ('. $row['wr_datetime'] .')</description>'.PHP_EOL;

@@ -49,7 +49,6 @@ if(!G5_IS_MOBILE) { /////////// PC 버전 시작
 <tbody>
 <td class="main_td td_sub" style="height:80px;" colspan="6"> <a href = 'javascript:document.shopdwg.submit()'> <b> DRAWING INFORMATION </b> </a> </td>
 <?php viewPDF('shopdwg', 'shop', $view['wr_subject'], $sql_dwg_arr['shop_dwg']);  ?>
-</tr>
 <tr>
 <td class="main_td td_sub" style="height:80px;" > DRAWING NO. </td>
 

@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 $data_path = '../'.G5_DATA_DIR;
 
 if (! (isset($title) && $title)) $title = G5_VERSION." 설치";

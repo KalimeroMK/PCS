@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 if(!extension_loaded('gd') || !function_exists('gd_info')) {
     echo '<script>'.PHP_EOL;

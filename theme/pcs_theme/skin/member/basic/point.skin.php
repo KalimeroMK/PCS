@@ -11,7 +11,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <div class="new_win_con2">
         <ul class="point_all">
         	<li class="full_li">
-        		보유포인트
+        		Points Held
         		<span><?php echo number_format($member['mb_point']); ?></span>
         	</li>
 		</ul>
@@ -50,7 +50,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
                 <span class="point_date1"><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $row['po_datetime']; ?></span>
                 <span class="point_date<?php echo $expr; ?>">
                     <?php if ($row['po_expired'] == 1) { ?>
-                    만료 <?php echo substr(str_replace('-', '', $row['po_expire_date']), 2); ?>
+                    Expired <?php echo substr(str_replace('-', '', $row['po_expire_date']), 2); ?>
                     <?php } else echo $row['po_expire_date'] == '9999-12-31' ? '&nbsp;' : $row['po_expire_date']; ?>
                 </span>
             </li>
@@ -58,7 +58,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             }
 
             if ($i == 0)
-                echo '<li class="empty_li">자료가 없습니다.</li>';
+                echo '<li class="empty_table">No data available.</li>';
             else {
                 if ($sum_point1 > 0)
                     $sum_point1 = "+" . number_format($sum_point1);
@@ -67,7 +67,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
             ?>
 
             <li class="point_status">
-                소계
+                Total
                 <span><?php echo $sum_point1; ?></span>
                 <span><?php echo $sum_point2; ?></span>
             </li>
@@ -76,5 +76,5 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
     <?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, $_SERVER['SCRIPT_NAME'].'?'.$qstr.'&amp;page='); ?>
 
-    <button type="button" onclick="javascript:window.close();" class="btn_close">창닫기</button>
+    <button type="button" onclick="javascript:window.close();" class="btn_close">Close</button>
 </div>

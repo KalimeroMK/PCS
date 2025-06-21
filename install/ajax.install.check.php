@@ -1,16 +1,17 @@
 <?php
 $g5_path['path'] = '..';
 include_once('../config.php');
-include_once('./install.function.php');    // 인스톨 과정 함수 모음
-include_once('../lib/common.lib.php');    // 공통 라이브러리
-include_once('../lib/hook.lib.php');    // hook 함수 파일
-include_once('../lib/get_data.lib.php');    // 데이터 가져오는 함수 모음
+include_once('./install.function.php');    // Collection of installation process functions
+include_once('../lib/common.lib.php');    // Common library
+include_once('../lib/hook.lib.php');    // Hook function file
+include_once('../lib/get_data.lib.php');    // Collection of functions for getting data
 
 $data_path = '../'.G5_DATA_DIR;
 
-// 파일이 존재한다면 설치할 수 없다.
+// If the file exists, installation is not possible.
 $dbconfig_file = $data_path.'/'.G5_DBCONFIG_FILE;
 if (file_exists($dbconfig_file)) {
+    die(install_json_msg('The program is already installed.'));
     die(install_json_msg('프로그램이 이미 설치되어 있습니다.'));
 }
 

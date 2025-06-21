@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
@@ -9,31 +9,32 @@ if (G5_IS_MOBILE) {
 
     </div>
     <div id="aside">
-        <?php echo outlogin('theme/basic'); // 외부 로그인, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
-        <?php echo poll('theme/basic'); // 설문조사, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
+        <?php echo outlogin('theme/basic'); // External login, to use the theme's skin, specify the skin as theme/basic ?>
+
+        <?php echo poll('theme/basic'); // Poll, to use the theme's skin, specify the skin as theme/basic ?>
     </div>
 </div>
 
 </div>
-<!-- } 콘텐츠 끝 -->
+<!-- } Content End -->
 
 <hr>
 
-<!-- 하단 시작 { -->
+<!-- Footer Start { -->
 <div id="ft">
 
     <div id="ft_wr">
         <div id="ft_link" class="ft_cnt">
-        	<a href="<?php echo get_pretty_url('content', 'company'); ?>">회사소개</a>
+        	<a href="<?php echo get_pretty_url('content', 'company'); ?>">About Us</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-			<a href="<?php echo get_pretty_url('content', 'privacy'); ?>">개인정보처리방침</a>
+			<a href="<?php echo get_pretty_url('content', 'privacy'); ?>">Privacy Policy</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_pretty_url('content', 'provision'); ?>">서비스이용약관</a>
+            <a href="<?php echo get_pretty_url('content', 'provision'); ?>">Terms of Service</a>
 		</div>
         <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_device_change_url(); ?>">모바일버전</a>
+            <a href="<?php echo get_device_change_url(); ?>">Mobile Version</a>
         </div>
 	</div>      
         <!-- <div id="ft_catch"><img src="<?php echo G5_IMG_URL; ?>/ft_logo.png" alt="<?php echo G5_VERSION ?>"></div> -->
@@ -41,7 +42,7 @@ if (G5_IS_MOBILE) {
     
     
     <button type="button" id="top_btn">
-    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">상단으로</span>
+    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">Go to top</span>
     </button>
     <script>
     $(function() {
@@ -63,11 +64,11 @@ if ($config['cf_analytics']) {
 }
 ?>
 
-<!-- } 하단 끝 -->
+<!-- } Footer End -->
 
 <script>
 $(function() {
-    // 폰트 리사이즈 쿠키있으면 실행
+    // Execute if font resize cookie exists
     font_resize("container", get_cookie("ck_font_resize_rmv_class"), get_cookie("ck_font_resize_add_class"));
 });
 </script>

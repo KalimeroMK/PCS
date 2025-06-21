@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 include_once(G5_THEME_PATH.'/head.sub.php');
 include_once(G5_LIB_PATH.'/latest.lib.php');
@@ -19,8 +19,8 @@ include_once(PCS_LIB.'/pcs_common_function.php');
     <div class="to_content"><a href="#container">본문 바로가기</a></div>
 
     <?php
-    if(defined('_INDEX_')) { // index에서만 실행
-        include G5_MOBILE_PATH.'/newwin.inc.php'; // 팝업레이어
+    if(defined('_INDEX_')) { // Execute only on index
+        include G5_MOBILE_PATH.'/newwin.inc.php'; // Popup layer
     } ?>
 
     <div id="hd_wrapper">
@@ -33,7 +33,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
 
         <div id="gnb" class="hd_div">
             <button type="button" id="gnb_close" class="hd_closer"><span class="sound_only">메뉴 닫기</span><i class="fa fa-times" aria-hidden="true"></i></button>
-			<?php echo outlogin('theme/basic'); // 외부 로그인 ?>
+			<?php echo outlogin('theme/basic'); // External login ?>
 <?php if($member['mb_1']) { ?>
             <ul id="gnb_1dul">
             <?php
@@ -74,7 +74,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
 
         <script>
         $(function () {
-            //폰트 크기 조정 위치 지정
+            // Font resize position
             var font_resize_class = get_cookie("ck_font_resize_add_class");
             if( font_resize_class == 'ts_up' ){
                 $("#text_size button").removeClass("select");

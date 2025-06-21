@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 $delete_str = "";
 if ($w == 'x') $delete_str = "댓";
 if ($w == 'u') $g5['title'] = $delete_str."글 수정";

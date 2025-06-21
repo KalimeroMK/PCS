@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/head.php');
@@ -23,8 +23,8 @@ include_once(PCS_LIB.'/pcs_common_function.php');
     <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
 
     <?php
-    if(defined('_INDEX_')) { // index에서만 실행
-        include G5_BBS_PATH.'/newwin.inc.php'; // 팝업레이어
+    if(defined('_INDEX_')) { // Execute only on index
+        include G5_BBS_PATH.'/newwin.inc.php'; // Popup layer
     }
     ?>
     <div id="hd_wrapper">
@@ -42,7 +42,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
                 <li class="gnb_1dli gnb_mnal"><button type="button" class="gnb_menu_btn" title="전체메뉴"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only">전체메뉴열기</span></button></li>
                 <?php
 				$menu_datas = get_menu_db(0, true);
-				$gnb_zindex = 999; // gnb_1dli z-index 값 설정용
+				$gnb_zindex = 999; // For setting gnb_1dli z-index value
                 $i = 0;
                 foreach( $menu_datas as $row ){
  	if($i<($member['mb_1']+3)) {
@@ -98,7 +98,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
                             <li><a href="<?php echo str_replace('http://127.0.0.1/demo',G5_URL,$row2['me_link']); ?>" target="_<?php echo $row2['me_target']; ?>"><?php echo $row2['me_name'] ?></a></li>
                         <?php
                         $k++;
-                        }   //end foreach $row2
+                        }   // end foreach $row2
 
                         if($k > 0)
                             echo '</ul>'.PHP_EOL;

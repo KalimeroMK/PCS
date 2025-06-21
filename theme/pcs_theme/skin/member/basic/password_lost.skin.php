@@ -5,23 +5,23 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 0);
 ?>
 
-<!-- 회원정보 찾기 시작 { -->
+<!-- Find Member Information start { -->
 <div id="find_info" class="new_win">
-    <h1 id="win_title">회원정보 찾기</h1>
+    <h1 id="win_title">Find Member Information</h1>
     <div class="new_win_con">
         <form name="fpasswordlost" action="<?php echo $action_url ?>" onsubmit="return fpasswordlost_submit(this);" method="post" autocomplete="off">
         <fieldset id="info_fs">
             <p>
-                회원가입 시 등록하신 이메일 주소를 입력해 주세요.<br>
-                해당 이메일로 아이디와 비밀번호 정보를 보내드립니다.
+                Please enter the email address you registered with.<br>
+                Your ID and password information will be sent to that email.
             </p>
-            <label for="mb_email" class="sound_only">E-mail 주소<strong class="sound_only">필수</strong></label>
-            <input type="text" name="mb_email" id="mb_email" required class="required frm_input full_input email" size="30" placeholder="E-mail 주소">
+            <label for="mb_email" class="sound_only">E-mail address<strong class="sound_only">Required</strong></label>
+            <input type="text" name="mb_email" id="mb_email" required class="required frm_input full_input email" size="30" placeholder="E-mail address">
         </fieldset>
         <?php echo captcha_html();  ?>
         <div class="win_btn">
-            <button type="submit" class="btn_submit">확인</button>
-            <button type="button" onclick="window.close();" class="btn_close">창닫기</button>  
+            <button type="submit" class="btn_submit">Confirm</button>
+            <button type="button" onclick="window.close();" class="btn_close">Close</button>  
         </div>
         </form>
     </div>
@@ -45,4 +45,4 @@ $(function() {
     moveTo(left, top);
 });
 </script>
-<!-- } 회원정보 찾기 끝 -->
+<!-- } Find Member Information end -->

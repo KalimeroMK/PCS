@@ -1,6 +1,6 @@
 <div id="ins_ft">
-    <strong>GNUBOARD5</strong>
-    <p>GPL! OPEN SOURCE GNUBOARD</p>
+    <!-- Individual page access not allowed --><strong>GNUBOARD5</strong>
+    <!-- Individual page access not allowed --><p>GPL! OPEN SOURCE GNUBOARD</p>
 </div>
 
 </body>

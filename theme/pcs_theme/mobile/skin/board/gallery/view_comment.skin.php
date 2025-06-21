@@ -1,10 +1,11 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 ?>
 
 <script>
-// 글자수 제한
-var char_min = parseInt(<?php echo $comment_min ?>); // 최소
+// Character limit
+var char_min = parseInt(<?php echo $comment_min ?>); // Minimum
+var char_max = parseInt(<?php echo $comment_max ?>); // Maximum
 var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 </script>
 

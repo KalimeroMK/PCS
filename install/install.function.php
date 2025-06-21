@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 if( ! function_exists('array_map_deep') ){
     // multi-dimensional array에 사용자지정 함수적용

@@ -1,27 +1,27 @@
 <?php
-if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
+if (!defined("_GNUBOARD_")) exit; // Individual page access not allowed
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 
-// add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
+// add_stylesheet('css statement', output order); Lower numbers output first
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0);
 ?>
 
 <script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
 
-<!-- 게시판 이름 표시 <div id="bo_v_table"><?php echo ($board['bo_mobile_subject'] ? $board['bo_mobile_subject'] : $board['bo_subject']); ?></div> -->
+<!-- Display board name <div id="bo_v_table"><?php echo ($board['bo_mobile_subject'] ? $board['bo_mobile_subject'] : $board['bo_subject']); ?></div> -->
 
 <article id="bo_v" style="width:<?php echo $width; ?>">
     <header>
         <h2 id="bo_v_title">
             <?php if ($category_name) { ?>
-            <span class="bo_v_cate"><?php echo $view['ca_name']; // 분류 출력 끝 ?></span> 
+            <span class="bo_v_cate"><?php echo $view['ca_name']; // End of category output ?></span> 
             <?php } ?>
-            <span class="bo_v_tit"><?php echo cut_str(get_text($view['wr_subject']), 70); // 글제목 출력 ?></span>
+            <span class="bo_v_tit"><?php echo cut_str(get_text($view['wr_subject']), 70); // Output post title ?></span>
         </h2>
     </header>
 
     <section id="bo_v_atc">
-        <h2 id="bo_v_atc_title">본문</h2>
+        <h2 id="bo_v_atc_title">Content</h2>
 
 <?php	include_once (PCS_LIB.'/pcs_view_board.php');	?>
 
@@ -66,7 +66,7 @@ $(function() {
         return false;
     });
 
-    // 추천, 비추천
+    // Recommend, Not recommend
     $("#good_button, #nogood_button").click(function() {
         var $tx;
         if(this.id == "good_button")
@@ -78,7 +78,7 @@ $(function() {
         return false;
     });
 
-    // 이미지 리사이즈
+    // Image resize
     $("#bo_v_atc").viewimageresize();
 });
 

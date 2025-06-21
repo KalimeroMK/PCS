@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 if( ! function_exists('array_map_deep') ){
-    // multi-dimensional array에 사용자지정 함수적용
+    // Apply user-defined function to a multi-dimensional array
     function array_map_deep($fn, $array)
     {
         if(is_array($array)) {
@@ -25,16 +25,18 @@ if( ! function_exists('safe_install_string_check') ){
     function safe_install_string_check( $str, $is_json=false ) {
         $is_check = false;
 
+        // Check for use of dangerous functions
         if(preg_match('#\);(passthru|eval|pcntl_exec|exec|system|popen|fopen|fsockopen|file|file_get_contents|readfile|unlink|include|include_once|require|require_once)\s?#i', $str)) {
             $is_check = true;
         }
 
+        // Check for use of superglobals in input
         if(preg_match('#\$_(get|post|request)\s?\[.*?\]\s?\)#i', $str)){
             $is_check = true;
         }
 
         if($is_check){
-            $msg = "입력한 값에 안전하지 않는 문자가 포함되어 있습니다. 설치를 중단합니다.";
+            $msg = "The entered value contains unsafe characters. Installation aborted.";
 
             if($is_json){
                 die(install_json_msg($msg));
@@ -48,6 +50,7 @@ if( ! function_exists('safe_install_string_check') ){
 }
 
 if( ! function_exists('install_json_msg') ){
+    // Returns a JSON-encoded message for installation process feedback
     function install_json_msg($msg, $type='error'){
 
         $error_msg = ($type==='error') ? $msg : '';

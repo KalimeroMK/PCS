@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('_GNUBOARD_')) exit;
-// 개별 페이지 접근 불가
+// Individual page access not allowed
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
@@ -16,60 +16,60 @@ if(G5_COMMUNITY_USE === false) {
     <div id="aside">
         <?php 
 echo outlogin('theme/basic');
-// 외부 로그인, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 
+// External login, to use the theme's skin specify as theme/basic 
 ?>
         <?php 
 echo poll('theme/basic');
-// 설문조사, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 
+// Poll, to use the theme's skin specify as theme/basic 
 ?>
     </div>
 </div>
 
 </div>
-<!-- } 콘텐츠 끝 -->
+<!-- } End Content -->
 
 <hr>
 
-<!-- 하단 시작 { -->
+<!-- Footer Start { -->
 <div id="ft">
 
     <div id="ft_wr">
         <div id="ft_link" class="ft_cnt">
             <a href="<?php 
 echo get_pretty_url('content', 'company');
-?>">회사소개</a>
+?>">About Us</a>
             <a href="<?php 
 echo get_pretty_url('content', 'privacy');
-?>">개인정보처리방침</a>
+?>">Privacy Policy</a>
             <a href="<?php 
 echo get_pretty_url('content', 'provision');
-?>">서비스이용약관</a>
+?>">Terms of Service</a>
             <a href="<?php 
 echo get_device_change_url();
-?>">모바일버전</a>
+?>">Mobile Version</a>
         </div>
         <div id="ft_company" class="ft_cnt">
-        	<h2>사이트 정보</h2>
+        	<h2>Site Information</h2>
 	        <p class="ft_info">
-	        	회사명 : 회사명 / 대표 : 대표자명<br>
-				주소  : OO도 OO시 OO구 OO동 123-45<br>
-				사업자 등록번호  : 123-45-67890<br>
-				전화 :  02-123-4567  팩스  : 02-123-4568<br>
-				통신판매업신고번호 :  제 OO구 - 123호<br>
-				개인정보관리책임자 :  정보책임자명<br>
+	        	Company Name: Company Name / CEO: CEO Name<br>
+				Address: 123-45, OO-dong, OO-gu, OO-si, OO-do<br>
+				Business Registration Number: 123-45-67890<br>
+				Tel: 02-123-4567  Fax: 02-123-4568<br>
+				E-commerce Permit Number: OO-gu - 123<br>
+				Personal Information Manager: Manager Name<br>
 			</p>
 	    </div>
         <?php 
-//공지사항
-// 이 함수가 바로 최신글을 추출하는 역할을 합니다.
-// 사용방법 : latest(스킨, 게시판아이디, 출력라인, 글자수);
-// 테마의 스킨을 사용하려면 theme/basic 과 같이 지정
+// Notice
+// This function extracts the latest posts.
+// Usage: latest(skin, board_id, lines, subject_length);
+// To use the theme's skin, specify as theme/basic
 echo latest('theme/notice', 'notice', 4, 13);
 ?>
         
 		<?php 
 echo visit('theme/basic');
-// 접속자집계, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 
+// Visitor statistics, to use the theme's skin specify as theme/basic 
 ?>
 	</div>      
         <!-- <div id="ft_catch"><img src="<?php 
@@ -77,11 +77,11 @@ echo G5_IMG_URL;
 ?>/ft_logo.png" alt="<?php 
 echo G5_VERSION ?>
 ?>"></div> -->
-        <div id="ft_copy">Copyright &copy; <b>소유하신 도메인.</b> All rights reserved.</div>
+        <div id="ft_copy">Copyright &copy; <b>Your Domain.</b> All rights reserved.</div>
     
     
     <button type="button" id="top_btn">
-    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">상단으로</span>
+    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">Go to top</span>
     </button>
     <script>
     $(function() {
@@ -99,11 +99,11 @@ if ($config['cf_analytics']) {
 }
 ?>
 
-<!-- } 하단 끝 -->
+<!-- } End Footer -->
 
 <script>
 $(function() {
-    // 폰트 리사이즈 쿠키있으면 실행
+    // If font resize cookies exist, execute
     font_resize("container", get_cookie("ck_font_resize_rmv_class"), get_cookie("ck_font_resize_add_class"));
 });
 </script>

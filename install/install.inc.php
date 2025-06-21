@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 $data_path = '../'.G5_DATA_DIR;
 
-if (! (isset($title) && $title)) $title = G5_VERSION." 설치";
+if (! (isset($title) && $title)) $title = G5_VERSION." Installation";
 ?>
 <!doctype html>
 <html lang="ko">
@@ -19,14 +19,14 @@ if (! (isset($title) && $title)) $title = G5_VERSION." 설치";
 </div>
 
 <?php
-// 파일이 존재한다면 설치할 수 없다.
+// If the file exists, installation is not possible.
 $dbconfig_file = $data_path.'/'.G5_DBCONFIG_FILE;
 if (file_exists($dbconfig_file)) {
 ?>
-<h1><?php echo G5_VERSION; ?> 프로그램이 이미 설치되어 있습니다.</h1>
+<h1><?php echo G5_VERSION; ?> The program is already installed.</h1>
 
 <div class="ins_inner">
-    <p>프로그램이 이미 설치되어 있습니다.<br />새로 설치하시려면 다음 파일을 삭제 하신 후 새로고침 하십시오.</p>
+    <p>The program is already installed.<br />To reinstall, please delete the following file and refresh the page.</p>
     <ul>
         <li><?php echo $dbconfig_file ?></li>
     </ul>
@@ -38,19 +38,19 @@ if (file_exists($dbconfig_file)) {
 
 <?php
 $exists_data_dir = true;
-// data 디렉토리가 있는가?
+// Does the data directory exist?
 if (!is_dir($data_path))
 {
 ?>
-<h1><?php echo G5_VERSION; ?> 설치를 위해 아래 내용을 확인해 주십시오.</h1>
+<h1><?php echo G5_VERSION; ?> Please check the following to proceed with installation.</h1>
 
 <div class="ins_inner">
     <p>
-        루트 디렉토리에 아래로 <?php echo G5_DATA_DIR ?> 디렉토리를 생성하여 주십시오.<br />
-        (common.php 파일이 있는곳이 루트 디렉토리 입니다.)<br /><br />
+        Please create the <?php echo G5_DATA_DIR ?> directory in the root directory.<br />
+        (The root directory is where the common.php file is located.)<br /><br />
         $> mkdir <?php echo G5_DATA_DIR ?><br /><br />
-        윈도우의 경우 data 폴더를 하나 생성해 주시기 바랍니다.<br /><br />
-        위 명령 실행후 브라우저를 새로고침 하십시오.
+        For Windows, please create a data folder manually.<br /><br />
+        After executing the above command, refresh your browser.
     </p>
 </div>
 <?php
@@ -60,7 +60,7 @@ if (!is_dir($data_path))
 
 <?php
 $write_data_dir = true;
-// data 디렉토리에 파일 생성 가능한지 검사.
+// Check if files can be created in the data directory.
 if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
     $sapi_type = php_sapi_name();
     if (substr($sapi_type, 0, 3) == 'cgi') {
@@ -69,9 +69,9 @@ if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
         ?>
         <div class="ins_inner">
             <p>
-                <?php echo G5_DATA_DIR ?> 디렉토리의 퍼미션을 705로 변경하여 주십시오.<br /><br />
-                $> chmod 705 <?php echo G5_DATA_DIR ?> 또는 chmod uo+rx <?php echo G5_DATA_DIR ?><br /><br />
-                위 명령 실행후 브라우저를 새로고침 하십시오.
+                Please change the permission of the <?php echo G5_DATA_DIR ?> directory to 705.<br /><br />
+                $> chmod 705 <?php echo G5_DATA_DIR ?> or chmod uo+rx <?php echo G5_DATA_DIR ?><br /><br />
+                After executing the above command, refresh your browser.
             </p>
         </div>
         <?php

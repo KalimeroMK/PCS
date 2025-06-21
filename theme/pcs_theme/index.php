@@ -13,19 +13,19 @@ if (G5_IS_MOBILE) {
     include_once(G5_THEME_PATH.'/head.php');
 ?>
 
-    <h2 class="sound_only">최신글</h2>
+    <h2 class="sound_only">Latest Posts</h2>
 
     <div class="latest_wr">
-        <!-- 최신글 시작 { -->
+        <!-- Latest Posts Start { -->
         <div>
             <?php
                 if ( ! $is_member) {
-                    echo "<p align='center'> <font color = red size = 5> <strong> 로그인이 필요합니다. </strong></font></p>";
+                    echo "<p align='center'> <font color = red size = 5> <strong> Login is required. </strong></font></p>";
                 } elseif ( ! $member['mb_1']) {
-                    echo "<p align='center'> <font color = red size = 5> <strong> 사용권한이 필요합니다.</strong></font></p>";
+                    echo "<p align='center'> <font color = red size = 5> <strong> Permission is required.</strong></font></p>";
                 }
             ?>
-            <!-- } 최신글 끝 -->
+            <!-- } End Latest Posts -->
         </div>
     </div>
 

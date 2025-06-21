@@ -17,10 +17,10 @@ include_once(G5_THEME_PATH.'/pcs_lib/pcs_core/pcs_config.php');
 include_once(PCS_LIB.'/pcs_common_function.php');
 ?>
 
-<!-- 상단 시작 { -->
+<!-- Header Start { -->
 <div id="hd">
     <h1 id="hd_h1"><?php echo $g5['title'] ?></h1>
-    <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+    <div id="skip_to_container"><a href="#container">Skip to main content</a></div>
 
     <?php
     if(defined('_INDEX_')) { // Execute only on index
@@ -36,10 +36,10 @@ include_once(PCS_LIB.'/pcs_common_function.php');
     </div>
 <? if($member['mb_1']) {  ?>    
     <nav id="gnb">
-        <h2>메인메뉴</h2>
+        <h2>Main Menu</h2>
         <div class="gnb_wrap">
             <ul id="gnb_1dul">
-                <li class="gnb_1dli gnb_mnal"><button type="button" class="gnb_menu_btn" title="전체메뉴"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only">전체메뉴열기</span></button></li>
+                <li class="gnb_1dli gnb_mnal"><button type="button" class="gnb_menu_btn" title="All Menu"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only">Open all menu</span></button></li>
                 <?php
 				$menu_datas = get_menu_db(0, true);
 				$gnb_zindex = 999; // For setting gnb_1dli z-index value
@@ -58,7 +58,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
                         if( empty($row2) ) continue; 
 
                         if($k == 0)
-                            echo '<span class="bg">하위분류</span><div class="gnb_2dul"><ul class="gnb_2dul_box">'.PHP_EOL;
+                            echo '<span class="bg">Subcategory</span><div class="gnb_2dul"><ul class="gnb_2dul_box">'.PHP_EOL;
                     ?>
                         <li class="gnb_2dli"><a href="<?php echo str_replace('http://127.0.0.1/demo',G5_URL,$row2['me_link']); ?>" target="_<?php echo $row2['me_target']; ?>" class="gnb_2da"><?php echo $row2['me_name'] ?></a></li>
                     <?php
@@ -75,11 +75,11 @@ include_once(PCS_LIB.'/pcs_common_function.php');
                 }   //end foreach $row
 
                 if ($i == 0) {  ?>
-                    <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
+                    <li class="gnb_empty">Menu is being prepared.<?php if ($is_admin) { ?> <a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">Admin Mode &gt; Settings &gt; Menu Settings</a> can be set here.<?php } ?></li>
                 <?php } ?>
             </ul>
             <div id="gnb_all">
-                <h2>전체메뉴</h2>
+                <h2>All Menu</h2>
                 <ul class="gnb_al_ul">
                     <?php
                     
@@ -110,7 +110,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
                     }   //end foreach $row
 
                     if ($i == 0) {  ?>
-                        <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
+                        <li class="gnb_empty">Menu is being prepared.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">Admin Mode &gt; Settings &gt; Menu Settings</a> can be set here.<?php } ?></li>
                     <?php } ?>
                 </ul>
                 <button type="button" class="gnb_close_btn"><i class="fa fa-times" aria-hidden="true"></i></button>
@@ -132,12 +132,12 @@ include_once(PCS_LIB.'/pcs_common_function.php');
 
     </script>
 </div>
-<!-- } 상단 끝 -->
+<!-- } End Header -->
 
 
 <hr>
 
-<!-- 콘텐츠 시작 { -->
+<!-- Content Start { -->
 <div id="wrapper">
     <div id="container_wr">
    

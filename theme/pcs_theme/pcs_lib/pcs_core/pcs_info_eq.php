@@ -36,7 +36,7 @@ function pdf_v(string $sq,string $eqdw,string $eqcn): void{
 	$sqlISO = sql_query ($queryISO);
 
 	if($sqlISO){
-		echo '<td class="main_td" colspan=6 style="background-color: #F6D8CE; height:50px;"><b>CONNECTED DRAWING</td></tr>';
+		echo '<td class="main_td" colspan=6 style="background-color: #F6D8CE; height:50px;"><b>Related Drawings</b></td></tr>';
 	
 		$j=0;
 

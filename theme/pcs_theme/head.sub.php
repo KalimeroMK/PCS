@@ -1,5 +1,5 @@
 <?php
-// 이 파일은 새로운 파일 생성시 반드시 포함되어야 함
+// This file must be included when creating a new file
 if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 
 $g5_debug['php']['begin_time'] = $begin_time = get_microtime();
@@ -9,15 +9,15 @@ if (!isset($g5['title'])) {
     $g5_head_title = $g5['title'];
 }
 else {
-    $g5_head_title = $g5['title']; // 상태바에 표시될 제목
+    $g5_head_title = $g5['title']; // Title to be displayed in the status bar
     $g5_head_title .= " | ".$config['cf_title'];
 }
 
 $g5['title'] = strip_tags($g5['title']);
 $g5_head_title = strip_tags($g5_head_title);
 
-// 현재 접속자
-// 게시판 제목에 ' 포함되면 오류 발생
+// Current visitor
+// Error occurs if the board title contains a single quote
 $g5['lo_location'] = addslashes($g5['title']);
 if ($g5['lo_location'] === '' || $g5['lo_location'] === '0')
     $g5['lo_location'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
@@ -25,7 +25,7 @@ $g5['lo_url'] = addslashes(clean_xss_tags($_SERVER['REQUEST_URI']));
 if (strstr($g5['lo_url'], '/'.G5_ADMIN_DIR.'/') || $is_admin == 'super') $g5['lo_url'] = '';
 
 /*
-// 만료된 페이지로 사용하시는 경우
+// If you want to use as an expired page
 header("Cache-Control: no-cache"); // HTTP/1.1
 header("Expires: 0"); // rfc2616 - Section 14.21
 header("Pragma: no-cache"); // HTTP/1.0
@@ -56,7 +56,7 @@ if($config['cf_add_meta'])
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>
 <![endif]-->
 <script>
-// 자바스크립트에서 사용하는 전역변수 선언
+// Declare global variables used in JavaScript
 var g5_url       = "<?php echo G5_URL ?>";
 var g5_bbs_url   = "<?php echo G5_BBS_URL ?>";
 var g5_is_member = "<?php echo isset($is_member)?$is_member:''; ?>";
@@ -77,7 +77,7 @@ add_javascript('<script src="'.G5_JS_URL.'/placeholders.min.js"></script>', 0);
 add_stylesheet('<link rel="stylesheet" href="'.G5_JS_URL.'/font-awesome/css/font-awesome.min.css">', 0);
 
 if(G5_IS_MOBILE) {
-    add_javascript('<script src="'.G5_JS_URL.'/modernizr.custom.70111.js"></script>', 1); // overflow scroll 감지
+    add_javascript('<script src="'.G5_JS_URL.'/modernizr.custom.70111.js"></script>', 1); // Detect overflow scroll
 }
 if(!defined('G5_IS_ADMIN'))
     echo $config['cf_add_script'];
@@ -85,17 +85,17 @@ if(!defined('G5_IS_ADMIN'))
 </head>
 <body<?php echo isset($g5['body_script']) ? $g5['body_script'] : ''; ?>>
 <?php
-if ($is_member) { // 회원이라면 로그인 중이라는 메세지를 출력해준다.
+if ($is_member) { // If the user is a member, display a login message.
     $sr_admin_msg = '';
     if ($is_admin == 'super') {
-        $sr_admin_msg = "최고관리자 ";
+        $sr_admin_msg = "Super Administrator ";
     } elseif ($is_admin == 'group') {
-        $sr_admin_msg = "그룹관리자 ";
+        $sr_admin_msg = "Group Administrator ";
     } elseif ($is_admin == 'board') {
-        $sr_admin_msg = "게시판관리자 ";
+        $sr_admin_msg = "Board Administrator ";
     }
 
-    echo '<div id="hd_login_msg">'.$sr_admin_msg.get_text($member['mb_nick']).'님 로그인 중 ';
-    echo '<a href="'.G5_BBS_URL.'/logout.php">로그아웃</a></div>';
+    echo '<div id="hd_login_msg">'.$sr_admin_msg.get_text($member['mb_nick']).' is logged in ';
+    echo '<a href="'.G5_BBS_URL.'/logout.php">Logout</a></div>';
 }
 ?>

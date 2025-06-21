@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // Individual page access not allowed
 ?>
 
 <?php if ($is_admin == 'super') {  ?><!-- <div style='float:left; text-align:center;'>RUN TIME : <?php echo get_microtime()-$begin_time; ?><br></div> --><?php }  ?>
@@ -8,4 +8,4 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 </body>
 </html>
-<?php echo html_end(); // HTML 마지막 처리 함수 : 반드시 넣어주시기 바랍니다.
+<?php echo html_end(); // HTML finalization function: Please make sure to include this.

@@ -12,12 +12,12 @@ if (G5_IS_MOBILE) {
     <div id="aside">
         <?php 
 echo outlogin('theme/basic');
-// External login, to use the theme's skin, specify the skin as theme/basic 
+// External login. To use the theme's skin, specify as theme/basic 
 ?>
 
         <?php 
 echo poll('theme/basic');
-// Poll, to use the theme's skin, specify the skin as theme/basic 
+// Poll. To use the theme's skin, specify as theme/basic 
 ?>
     </div>
 </div>

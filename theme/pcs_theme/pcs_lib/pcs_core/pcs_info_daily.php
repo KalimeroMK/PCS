@@ -80,7 +80,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 	$issue_idx = $sql_daily_arr['wr_1'];
 	if($view['wr_subject']==G5_TIME_YMD && $member['mb_2']>1){$issue_idx++;}
 
-	if(!G5_IS_MOBILE) { /////////// PC 버전 시작
+	if(!G5_IS_MOBILE) { /////////// PC version start
 
 ?>
 
@@ -143,7 +143,7 @@ if ($_POST['folder'] || $_POST['ph']) {
 <?php
 
 	}
-	else {  /////////////////////////////////////////////////////////////////////////////////  Mobile 버전 시작
+	else {  /////////////////////////////////////////////////////////////////////////////////  Mobile version start
 ?>
 
 <table class="main">

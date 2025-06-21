@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('_GNUBOARD_')) exit;
-// 개별 페이지 접근 불가
+// Individual page access not allowed
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/head.php');
     return;
@@ -20,16 +20,16 @@ include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
 ?>
 
-<!-- 상단 시작 { -->
+<!-- Header Start { -->
 <div id="hd">
     <h1 id="hd_h1"><?php 
 echo $g5['title'] ?>
 ?></h1>
-    <div id="skip_to_container"><a href="#container">본문 바로가기</a></div>
+    <div id="skip_to_container"><a href="#container">Skip to main content</a></div>
 
     <?php 
-if(defined('_INDEX_')) { // index에서만 실행
-        include G5_BBS_PATH.'/newwin.inc.php'; // 팝업레이어
+if(defined('_INDEX_')) { // Only run on index page
+        include G5_BBS_PATH.'/newwin.inc.php'; // Popup layer
     }
 ?>
     <div id="tnb">
@@ -39,10 +39,10 @@ if(defined('_INDEX_')) { // index에서만 실행
     		<ul id="hd_define">
     			<li class="active"><a href="<?php 
 echo G5_URL ?>
-?>/">커뮤니티</a></li>
+?>/">Community</a></li>
                 <?php 
 if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>
-    			<li><a href="<?php echo G5_SHOP_URL ?>/">쇼핑몰</a></li>
+    			<li><a href="<?php echo G5_SHOP_URL ?>/">Shop</a></li>
             <?php }
 ?>
     		</ul>
@@ -57,12 +57,12 @@ echo G5_BBS_URL ?>
 ?>/qalist.php">Q&A</a></li>
 	            <li><a href="<?php 
 echo G5_BBS_URL ?>
-?>/new.php">새글</a></li>
+?>/new.php">New Posts</a></li>
 	            <li><a href="<?php 
 echo G5_BBS_URL ?>
-?>/current_connect.php" class="visit">접속자<strong class="visit-num"><?php 
+?>/current_connect.php" class="visit">Visitors<strong class="visit-num"><?php 
 echo connect('theme/basic');
-// 현재 접속자수, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정  
+// Current visitors, to use the theme's skin specify as theme/basic
 ?></strong></a></li>
 	        </ul>
 		</div>
@@ -81,15 +81,15 @@ echo $config['cf_title'];
     
         <div class="hd_sch_wr">
             <fieldset id="hd_sch">
-                <legend>사이트 내 전체검색</legend>
+                <legend>Site-wide Search</legend>
                 <form name="fsearchbox" method="get" action="<?php 
 echo G5_BBS_URL ?>
 ?>/search.php" onsubmit="return fsearchbox_submit(this);">
                 <input type="hidden" name="sfl" value="wr_subject||wr_content">
                 <input type="hidden" name="sop" value="and">
-                <label for="sch_stx" class="sound_only">검색어 필수</label>
-                <input type="text" name="stx" id="sch_stx" maxlength="20" placeholder="검색어를 입력해주세요">
-                <button type="submit" id="sch_submit" value="검색"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">검색</span></button>
+                <label for="sch_stx" class="sound_only">Search term required</label>
+                <input type="text" name="stx" id="sch_stx" maxlength="20" placeholder="Please enter a search term">
+                <button type="submit" id="sch_submit" value="Search"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">Search</span></button>
                 </form>
 
                 <script>
@@ -97,13 +97,13 @@ echo G5_BBS_URL ?>
                 {
                     var stx = f.stx.value.trim();
                     if (stx.length < 2) {
-                        alert("검색어는 두글자 이상 입력하십시오.");
+                        alert("Please enter at least two characters for the search term.");
                         f.stx.select();
                         f.stx.focus();
                         return false;
                     }
 
-                    // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
+                    // Uncomment this if searching puts too much load on the server.
                     var cnt = 0;
                     for (var i = 0; i < stx.length; i++) {
                         if (stx.charAt(i) == ' ')
@@ -111,7 +111,7 @@ echo G5_BBS_URL ?>
                     }
 
                     if (cnt > 1) {
-                        alert("빠른 검색을 위하여 검색어에 공백은 한개만 입력할 수 있습니다.");
+                        alert("For faster searching, only one space is allowed in the search term.");
                         f.stx.select();
                         f.stx.focus();
                         return false;
@@ -126,7 +126,7 @@ echo G5_BBS_URL ?>
                 
             <?php 
 echo popular('theme/basic');
-// 인기검색어, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정  
+// Popular search terms. To use the theme's skin, specify as theme/basic
 ?>
         </div>
         <ul class="hd_login">        
@@ -147,14 +147,14 @@ if ($is_member) {  ?>
     </div>
     
     <nav id="gnb">
-        <h2>메인메뉴</h2>
+        <h2>Main Menu</h2>
         <div class="gnb_wrap">
             <ul id="gnb_1dul">
                 <li class="gnb_1dli gnb_mnal"><button type="button" class="gnb_menu_btn" title="전체메뉴"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only">전체메뉴열기</span></button></li>
                 <?php 
 $menu_datas = get_menu_db(0, true);
 $gnb_zindex = 999;
-// gnb_1dli z-index 값 설정용
+// For setting gnb_1dli z-index value
 $i = 0;
 foreach( $menu_datas as $row ){
     if( empty($row) ) continue;
@@ -169,7 +169,7 @@ foreach( $menu_datas as $row ){
         if( empty($row2) ) continue; 
 
         if($k == 0)
-            echo '<span class="bg">하위분류</span><div class="gnb_2dul"><ul class="gnb_2dul_box">'.PHP_EOL;
+            echo '<span class="bg">Subcategory</span><div class="gnb_2dul"><ul class="gnb_2dul_box">'.PHP_EOL;
     ?>
                         <li class="gnb_2dli"><a href="<?php echo $row2['me_link']; ?>" target="_<?php echo $row2['me_target']; ?>" class="gnb_2da"><?php echo $row2['me_name'] ?></a></li>
     <?php
@@ -185,12 +185,12 @@ foreach( $menu_datas as $row ){
 }
 //end foreach $row
 if ($i == 0) {  ?>
-                    <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
+                    <li class="gnb_empty">Menu is being prepared.<?php if ($is_admin) { ?> <a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">Admin Mode &gt; Settings &gt; Menu Settings</a> can be set here.<?php } ?></li>
 <?php }
 ?>
             </ul>
             <div id="gnb_all">
-                <h2>전체메뉴</h2>
+                <h2>All Menus</h2>
                 <ul class="gnb_al_ul">
                     <?php 
 $i = 0;
@@ -218,7 +218,7 @@ foreach( $menu_datas as $row ){
 }
 //end foreach $row
 if ($i == 0) {  ?>
-                        <li class="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하실 수 있습니다.<?php } ?></li>
+                        <li class="gnb_empty">Menu is being prepared.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">Admin Mode &gt; Settings &gt; Menu Settings</a> can be set here.<?php } ?></li>
 <?php }
 ?>
                 </ul>
@@ -240,12 +240,12 @@ if ($i == 0) {  ?>
 
     </script>
 </div>
-<!-- } 상단 끝 -->
+<!-- } Header End -->
 
 
 <hr>
 
-<!-- 콘텐츠 시작 { -->
+<!-- Content Start { -->
 <div id="wrapper">
     <div id="container_wr">
    

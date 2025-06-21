@@ -1,16 +1,30 @@
-FROM php:7.2-apache
+FROM php:7.4-apache
 
-RUN apt-get update \
-  && apt-get install -y zip libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev \
-  && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv
-    #Xdebug
-#RUN pecl install xdebug
-#RUN docker-php-ext-enable xdebug
-RUN a2enmod rewrite
-RUN a2enmod include
+# Инсталирај потребни библиотеки
+RUN apt-get update && apt-get install -y \
+    zip \
+    unzip \
+    libzip-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        pdo_mysql \
+        mysqli \
+        mbstring \
+        gd \
+        iconv \
+        zip
 
+# Вклучи Apache модули
+RUN a2enmod rewrite include
+
+# Копирај Apache конфигурација
 COPY ./base.conf /etc/apache2/sites-available/base.conf
 RUN a2ensite base.conf
-RUN docker-php-ext-configure zip
-RUN docker-php-ext-install zip
+
+# Копирај custom php.ini
 COPY php.ini /usr/local/etc/php/

@@ -881,7 +881,7 @@ class PDF417 {
 						// the sub-mode is changed
 						for ($s = 0; $s < 4; ++$s) {
 							// search new sub-mode
-							if ($s != $submode && $k = array_search($chval, $this->textsubmodes[$s]) !== false) {
+							if ($s != $submode && $k = in_array($chval, $this->textsubmodes[$s])) {
 								// $s is the new submode
 								if (($i + 1 == $codelen || $i + 1 < $codelen && in_array(ord($code{($i + 1)}), $this->textsubmodes[$submode])) && ($s == 3 || $s == 0 && $submode == 1)) {
 									// shift (temporary change only for this char)

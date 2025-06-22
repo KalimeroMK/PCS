@@ -116,5 +116,5 @@ if (is_file($skin_file)) {
 if ($co['co_include_tail'] && is_include_path_check($co['co_include_tail'])) {
     @include_once($co['co_include_tail']);
 } else {
-    include_once('tail.php');
+    include_once(__DIR__ . '/tail.php');
 }

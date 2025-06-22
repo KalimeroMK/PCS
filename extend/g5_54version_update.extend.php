@@ -6,10 +6,8 @@ add_event('password_is_wrong', 'g54_check_bbs_password', 10, 3);
 add_replace('invalid_password', 'g54_return_invalid_password', 10, 3);
 
 function g54_return_invalid_password($bool, $type, array $wr){
-    if($type === 'write' && $bool === false && $wr['wr_password'] && isset($_POST['wr_password']) && (G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16))) {
-        if( sql_password($_POST['wr_password']) === $wr['wr_password'] ){
-            $bool = true;
-        }
+    if($type === 'write' && $bool === false && $wr['wr_password'] && isset($_POST['wr_password']) && (G5_STRING_ENCRYPT_FUNCTION === 'create_hash' && (strlen($wr['wr_password']) === G5_MYSQL_PASSWORD_LENGTH || strlen($wr['wr_password']) === 16)) && sql_password($_POST['wr_password']) === $wr['wr_password']) {
+        $bool = true;
     }
 
     return $bool;

@@ -21,10 +21,7 @@ use setasign\Fpdi\PdfParser\StreamReader;
  */
 class FixedReader extends AbstractReader implements ReaderInterface
 {
-    /**
-     * @var StreamReader
-     */
-    protected $reader;
+    protected \setasign\Fpdi\PdfParser\StreamReader $reader;
 
     /**
      * Data of subsections.

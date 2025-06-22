@@ -1085,7 +1085,7 @@ class QRcode {
 	 * @param $maskGenOnly (boolean)
 	 * @return int b
 	 */
-	 protected function makeMaskNo($maskNo, $width, $s, &$d, $maskGenOnly=false): ?int {
+	 protected function makeMaskNo(string $maskNo, $width, $s, &$d, $maskGenOnly=false): ?int {
 		$b = 0;
 		$bitMask = $this->generateMaskNo($maskNo, $width, $s);
 		if ($maskGenOnly) {
@@ -1111,7 +1111,7 @@ class QRcode {
 	 * @param $level (int)
 	 * @return array mask
 	 */
-	 protected function makeMask($width, $frame, $maskNo, $level) {
+	 protected function makeMask($width, $frame, $maskNo, $level): array {
 		$masked = array_fill(0, $width, str_repeat("\0", $width));
 		$this->makeMaskNo($maskNo, $width, $frame, $masked);
 		$this->writeFormatInformation($width, $masked, $maskNo, $level);
@@ -1300,7 +1300,7 @@ class QRcode {
 	 * eatNum
 	 * @return int run
 	 */
-	 protected function eatNum() {
+	 protected function eatNum(): int {
 		$ln = $this->lengthIndicator(QR_MODE_NM, $this->version);
 		$p = 0;
 		while($this->isdigitat($this->dataStr, $p)) {
@@ -1332,7 +1332,7 @@ class QRcode {
 	 * eatAn
 	 * @return int run
 	 */
-	 protected function eatAn() {
+	 protected function eatAn(): int {
 		$la = $this->lengthIndicator(QR_MODE_AN,  $this->version);
 		$ln = $this->lengthIndicator(QR_MODE_NM, $this->version);
 		$p =1 ;
@@ -1884,7 +1884,7 @@ class QRcode {
 	 * @param $items (array)
 	 * @return int version
 	 */
-	 protected function estimateVersion($items) {
+	 protected function estimateVersion($items): int {
 		$version = 0;
 		$prev = 0;
 		do {
@@ -1905,7 +1905,7 @@ class QRcode {
 	 * @param $bits (int)
 	 * @return int size
 	 */
-	 protected function lengthOfCode($mode, $version, $bits) {
+	 protected function lengthOfCode($mode, $version, $bits): float|int {
 		$payload = $bits - 4 - $this->lengthIndicator($mode, $version);
 		switch($mode) {
 			case QR_MODE_NM:
@@ -2056,7 +2056,7 @@ class QRcode {
 	 * @param $items (int)
 	 * @return array padded merged byte stream
 	 */
-	protected function getByteStream($items) {
+	protected function getByteStream($items): ?array {
 		$bstream = $this->getBitStream($items);
 		return $this->bitstreamToByte($bstream);
 	}
@@ -2077,7 +2077,7 @@ class QRcode {
 	 * @param $num (int) number
 	 * @return array bitstream
 	 */
-	 protected function newFromNum($bits, $num) {
+	 protected function newFromNum($bits, $num): array {
 		$bstream = $this->allocate($bits);
 		$mask = 1 << ($bits - 1);
 		for ($i=0; $i<$bits; ++$i) {
@@ -2093,7 +2093,7 @@ class QRcode {
 	 * @param $data (array) bytes
 	 * @return array bitstream
 	 */
-	 protected function newFromBytes($size, $data) {
+	 protected function newFromBytes($size, $data): array {
 		$bstream = $this->allocate($size * 8);
 		$p=0;
 		for ($i=0; $i<$size; ++$i) {

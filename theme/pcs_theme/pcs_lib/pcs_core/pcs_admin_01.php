@@ -84,7 +84,7 @@
                                         break;
                                 }
                                 echo '</select>';
-                            } elseif ($i == 11) {
+                            } elseif ($i === 11) {
                                 echo '<a href = "javascript:document.submit_form'.$j.'.submit()" style="font-size:20px;"> <b> UPDATE </b></a>';
                             }
                         }

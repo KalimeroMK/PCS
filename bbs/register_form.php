@@ -150,4 +150,4 @@ include_once($member_skin_path.'/register_form.skin.php');
 
 run_event('register_form_after', $w, $agree, $agree2);
 
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

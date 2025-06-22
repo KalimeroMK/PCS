@@ -1144,7 +1144,7 @@ class TCPDFBarcode {
                             for ($i = 0; $i < $seq[2]; ++$i) {
 								$char = $seq[1]{$i};
 								$char_id = ord($char);
-								$code_data[] = ($char_id >= 241 and $char_id <= 244) ? $fnc_a[$char_id] : strpos($keys_a, $char);
+								$code_data[] = ($char_id >= 241 && $char_id <= 244) ? $fnc_a[$char_id] : strpos($keys_a, $char);
 							}
                             break;
 						case 'B':
@@ -1180,7 +1180,7 @@ class TCPDFBarcode {
                             for ($i = 0; $i < $seq[2]; ++$i) {
 								$char = $seq[1]{$i};
 								$char_id = ord($char);
-								$code_data[] = ($char_id >= 241 and $char_id <= 244) ? $fnc_b[$char_id] : strpos($keys_b, $char);
+								$code_data[] = ($char_id >= 241 && $char_id <= 244) ? $fnc_b[$char_id] : strpos($keys_b, $char);
 							}
                             break;
 						case 'C':

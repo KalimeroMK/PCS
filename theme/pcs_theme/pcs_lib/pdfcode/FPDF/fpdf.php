@@ -20,7 +20,7 @@ protected int $state;              // current document state
 protected $compress;           // compression flag
 protected $k;                  // scale factor (number of points in user unit)
 protected $DefOrientation;     // default orientation
-protected $CurOrientation;     // current orientation
+protected string $CurOrientation;     // current orientation
 protected array $StdPageSizes;       // standard page sizes
 protected $DefPageSize;        // default page size
 protected $CurPageSize;        // current page size
@@ -315,14 +315,14 @@ function AddPage($orientation='', $size='', $rotation=0): void
 	$this->LineWidth = $lw;
 	$this->_out(sprintf('%.2F w',$lw*$this->k));
 	// Set font
-	if($family)
+	if($family !== '' && $family !== '0')
 		$this->SetFont($family,$style,$fontsize);
 	// Set colors
 	$this->DrawColor = $dc;
-	if($dc!='0 G')
+	if($dc !== '0 G')
 		$this->_out($dc);
 	$this->FillColor = $fc;
-	if($fc!='0 g')
+	if($fc !== '0 g')
 		$this->_out($fc);
 	$this->TextColor = $tc;
 	$this->ColorFlag = $cf;
@@ -331,21 +331,21 @@ function AddPage($orientation='', $size='', $rotation=0): void
 	$this->Header();
 	$this->InHeader = false;
 	// Restore line width
-	if($this->LineWidth!=$lw)
+	if($this->LineWidth !== $lw)
 	{
 		$this->LineWidth = $lw;
 		$this->_out(sprintf('%.2F w',$lw*$this->k));
 	}
 	// Restore font
-	if($family)
+	if($family !== '' && $family !== '0')
 		$this->SetFont($family,$style,$fontsize);
 	// Restore colors
-	if($this->DrawColor!=$dc)
+	if($this->DrawColor !== $dc)
 	{
 		$this->DrawColor = $dc;
 		$this->_out($dc);
 	}
-	if($this->FillColor!=$fc)
+	if($this->FillColor !== $fc)
 	{
 		$this->FillColor = $fc;
 		$this->_out($fc);
@@ -364,7 +364,7 @@ function Footer(): void
 	// To be implemented in your own inherited class
 }
 
-function PageNo()
+function PageNo(): int
 {
 	// Get current page number
 	return $this->page;
@@ -388,7 +388,7 @@ function SetFillColor($r, $g=null, $b=null): void
 		$this->FillColor = sprintf('%.3F g',$r/255);
 	else
 		$this->FillColor = sprintf('%.3F %.3F %.3F rg',$r/255,$g/255,$b/255);
-	$this->ColorFlag = ($this->FillColor!=$this->TextColor);
+	$this->ColorFlag = ($this->FillColor !== $this->TextColor);
 	if($this->page>0)
 		$this->_out($this->FillColor);
 }
@@ -400,7 +400,7 @@ function SetTextColor($r, $g=null, $b=null): void
 		$this->TextColor = sprintf('%.3F g',$r/255);
 	else
 		$this->TextColor = sprintf('%.3F %.3F %.3F rg',$r/255,$g/255,$b/255);
-	$this->ColorFlag = ($this->FillColor!=$this->TextColor);
+	$this->ColorFlag = ($this->FillColor !== $this->TextColor);
 }
 
 function GetStringWidth($s): int|float
@@ -415,7 +415,7 @@ function GetStringWidth($s): int|float
 	return $w*$this->FontSize/1000;
 }
 
-function SetLineWidth($width): void
+function SetLineWidth(float $width): void
 {
 	// Set line width
 	$this->LineWidth = $width;
@@ -483,18 +483,18 @@ function SetFont($family, $style='', $size=0): void
 	if($size==0)
 		$size = $this->FontSizePt;
 	// Test if font is already selected
-	if($this->FontFamily==$family && $this->FontStyle==$style && $this->FontSizePt==$size)
+	if($this->FontFamily === $family && $this->FontStyle==$style && $this->FontSizePt==$size)
 		return;
 	// Test if font is already loaded
 	$fontkey = $family.$style;
 	if(!isset($this->fonts[$fontkey]))
 	{
 		// Test if one of the core fonts
-		if($family=='arial')
+		if($family === 'arial')
 			$family = 'helvetica';
 		if(in_array($family,$this->CoreFonts))
 		{
-			if($family=='symbol' || $family=='zapfdingbats')
+			if($family === 'symbol' || $family === 'zapfdingbats')
 				$style = '';
 			$fontkey = $family.$style;
 			if(!isset($this->fonts[$fontkey]))
@@ -965,7 +965,7 @@ function SetXY($x, $y): void
 	$this->SetY($y,false);
 }
 
-function Output($dest='', $name='', $isUTF8=false)
+function Output($dest='', $name='', $isUTF8=false): string
 {
 	// Output PDF to some destination
 	$this->Close();
@@ -1031,7 +1031,7 @@ protected function _dochecks()
 
 protected function _checkoutput()
 {
-	if(PHP_SAPI != 'cli' && headers_sent($file,$line))
+	if(PHP_SAPI !== 'cli' && headers_sent($file,$line))
 	{
 		$this->Error("Some data has already been output, can't send PDF file (output started at $file:$line)");
 	}
@@ -1226,7 +1226,10 @@ protected function _parsejpg(string $file): array
 	return array('w'=>$a[0], 'h'=>$a[1], 'cs'=>$colspace, 'bpc'=>$bpc, 'f'=>'DCTDecode', 'data'=>$data);
 }
 
-protected function _parsepng(string $file)
+/**
+ * @return mixed[]
+ */
+protected function _parsepng(string $file): array
 {
 	// Extract info from a PNG file
 	$f = fopen($file,'rb');
@@ -1240,12 +1243,12 @@ protected function _parsepng(string $file)
 protected function _parsepngstream($f, string $file): array
 {
 	// Check signature
-	if($this->_readstream($f,8)!=chr(137).'PNG'.chr(13).chr(10).chr(26).chr(10))
+	if($this->_readstream($f,8) !== chr(137) . 'PNG' . chr(13) . chr(10) . chr(26) . chr(10))
 		$this->Error('Not a PNG file: '.$file);
 
 	// Read header chunk
 	$this->_readstream($f,4);
-	if($this->_readstream($f,4)!='IHDR')
+	if($this->_readstream($f,4) !== 'IHDR')
 		$this->Error('Incorrect PNG file: '.$file);
 	$w = $this->_readint($f);
 	$h = $this->_readint($f);
@@ -1263,9 +1266,9 @@ protected function _parsepngstream($f, string $file): array
 		$this->Error('Unknown color type: '.$file);
 	if(ord($this->_readstream($f,1))!=0)
 		$this->Error('Unknown compression method: '.$file);
-	if(ord($this->_readstream($f,1))!=0)
+	if(ord($this->_readstream($f,1)) !== 0)
 		$this->Error('Unknown filter method: '.$file);
-	if(ord($this->_readstream($f,1))!=0)
+	if(ord($this->_readstream($f,1)) !== 0)
 		$this->Error('Interlacing not supported: '.$file);
 	$this->_readstream($f,4);
 	$dp = '/Predictor 15 /Colors '.($colspace === 'DeviceRGB' ? 3 : 1).' /BitsPerComponent '.$bpc.' /Columns '.$w;
@@ -1278,13 +1281,13 @@ protected function _parsepngstream($f, string $file): array
 	{
 		$n = $this->_readint($f);
 		$type = $this->_readstream($f,4);
-		if($type=='PLTE')
+		if($type === 'PLTE')
 		{
 			// Read palette
 			$pal = $this->_readstream($f,$n);
 			$this->_readstream($f,4);
 		}
-		elseif($type=='tRNS')
+		elseif($type === 'tRNS')
 		{
 			// Read transparency info
 			$t = $this->_readstream($f,$n);
@@ -1300,13 +1303,13 @@ protected function _parsepngstream($f, string $file): array
 			}
 			$this->_readstream($f,4);
 		}
-		elseif($type=='IDAT')
+		elseif($type === 'IDAT')
 		{
 			// Read image data block
 			$data .= $this->_readstream($f,$n);
 			$this->_readstream($f,4);
 		}
-		elseif($type=='IEND')
+		elseif($type === 'IEND')
 			break;
 		else
 			$this->_readstream($f,$n+4);
@@ -1387,7 +1390,10 @@ protected function _readint($f)
 	return $a['i'];
 }
 
-protected function _parsegif(string $file)
+/**
+ * @return mixed[]
+ */
+protected function _parsegif(string $file): array
 {
 	// Extract info from a GIF file (via PNG conversion)
 	if(!function_exists('imagepng'))
@@ -1444,7 +1450,7 @@ protected function _newobj($n=null)
 	$this->_put($n.' 0 obj');
 }
 
-protected function _putstream($data)
+protected function _putstream(string $data)
 {
 	$this->_put('stream');
 	$this->_put($data);

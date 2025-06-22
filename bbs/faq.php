@@ -103,4 +103,4 @@ if (is_file($skin_file)) {
     echo '<p>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</p>';
 }
 
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

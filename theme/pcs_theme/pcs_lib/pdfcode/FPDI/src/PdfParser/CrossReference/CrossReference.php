@@ -192,7 +192,7 @@ class CrossReference
      * @throws CrossReferenceException
      * @throws PdfTypeException
      */
-    protected function readXref($offset)
+    protected function readXref($offset): \setasign\Fpdi\PdfParser\CrossReference\FixedReader|\setasign\Fpdi\PdfParser\CrossReference\LineReader
     {
         $this->parser->getStreamReader()->reset($offset);
         $this->parser->getTokenizer()->clearStack();

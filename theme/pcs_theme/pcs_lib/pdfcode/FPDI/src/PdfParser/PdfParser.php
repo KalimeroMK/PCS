@@ -82,20 +82,16 @@ class PdfParser
 
     /**
      * Get the stream reader instance.
-     *
-     * @return StreamReader
      */
-    public function getStreamReader()
+    public function getStreamReader(): \setasign\Fpdi\PdfParser\StreamReader
     {
         return $this->streamReader;
     }
 
     /**
      * Get the tokenizer instance.
-     *
-     * @return Tokenizer
      */
-    public function getTokenizer()
+    public function getTokenizer(): \setasign\Fpdi\PdfParser\Tokenizer
     {
         return $this->tokenizer;
     }
@@ -234,7 +230,7 @@ class PdfParser
      * @return false|PdfArray|PdfBoolean|PdfDictionary|PdfHexString|PdfIndirectObject|PdfIndirectObjectReference|PdfName|PdfNull|PdfNumeric|PdfStream|PdfString|PdfToken
      * @throws Type\PdfTypeException
      */
-    public function readValue($token = null, $expectedType = null)
+    public function readValue($token = null, $expectedType = null): false|\setasign\Fpdi\PdfParser\Type\PdfString|\setasign\Fpdi\PdfParser\Type\PdfDictionary|\setasign\Fpdi\PdfParser\Type\PdfHexString|\setasign\Fpdi\PdfParser\Type\PdfName|\setasign\Fpdi\PdfParser\Type\PdfArray|\setasign\Fpdi\PdfParser\Type\PdfIndirectObject|\setasign\Fpdi\PdfParser\Type\PdfIndirectObjectReference|\setasign\Fpdi\PdfParser\Type\PdfNumeric|\setasign\Fpdi\PdfParser\Type\PdfBoolean|\setasign\Fpdi\PdfParser\Type\PdfNull|\setasign\Fpdi\PdfParser\Type\PdfToken
     {
         if ($token === null) {
             $token = $this->tokenizer->getNextToken();

@@ -66,4 +66,4 @@ if (!$ckey || $ckey !== $key) {
         }
     </script>
 <?php
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

@@ -84,7 +84,7 @@ class TCPDF2DBarcode {
 	 * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
  	 * @public
 	 */
-	public function getBarcodeSVG($w=3, $h=3, $color='black'): void {
+	public function getBarcodeSVG($w=3, $h=3, string $color='black'): void {
 		// send headers
 		$code = $this->getBarcodeSVGcode($w, $h, $color);
 		header('Content-Type: application/svg+xml');

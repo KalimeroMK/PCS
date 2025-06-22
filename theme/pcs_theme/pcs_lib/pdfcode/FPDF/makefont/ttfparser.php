@@ -386,7 +386,7 @@ class TTFParser
 		}
 	}
 
-	function Build()
+	function Build(): string
 	{
 		$this->BuildCmap();
 		$this->BuildHhea();
@@ -638,7 +638,7 @@ class TTFParser
 		return $font;
 	}
 
-	function LoadTable($tag): void
+	function LoadTable(string $tag): void
 	{
 		$this->Seek($tag);
 		$length = $this->tables[$tag]['length'];

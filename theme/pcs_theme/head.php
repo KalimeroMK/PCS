@@ -34,7 +34,7 @@ include_once(PCS_LIB.'/pcs_common_function.php');
         </div>
     
     </div>
-<? if($member['mb_1']) {  ?>    
+<?php if($member['mb_1']) {  ?>    
     <nav id="gnb">
         <h2>Main Menu</h2>
         <div class="gnb_wrap">
@@ -143,4 +143,3 @@ include_once(PCS_LIB.'/pcs_common_function.php');
    
     <div id="container">
         <?php if (!defined("_INDEX_")) { ?><?php } ?>
-

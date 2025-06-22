@@ -114,7 +114,7 @@ class TCPDF_STATIC {
 	 * @since 5.9.012 (2010-11-10)
 	 * @public static
 	 */
-	public static function getTCPDFVersion() {
+	public static function getTCPDFVersion(): string {
 		return self::$tcpdf_version;
 	}
 
@@ -1270,7 +1270,7 @@ class TCPDF_STATIC {
                             break;
 						case '~':
                             for ($i = ($key - 1); $i > $dom[$key]['parent']; --$i) {
-								if (($dom[$i]['tag'] and $dom[$i]['opening']) && self::isValidCSSSelectorForTag($dom, $i, $selector)) {
+								if (($dom[$i]['tag'] && $dom[$i]['opening']) && self::isValidCSSSelectorForTag($dom, $i, $selector)) {
 									break;
 								}
 							}
@@ -1573,7 +1573,7 @@ class TCPDF_STATIC {
 	 * @since 5.0.000 (2010-05-02)
 	 * @public static
 	 */
-	public static function getSVGTransformMatrix($attribute) {
+	public static function getSVGTransformMatrix($attribute): array {
 		// identity matrix
 		$tm = array(1, 0, 0, 1, 0, 0);
 		$transform = array();

@@ -78,7 +78,7 @@ class Fpdi extends FpdfTpl
      * @param float|int|null $height The height.
      * @return array|bool An array with following keys: width, height, 0 (=width), 1 (=height), orientation (L or P)
      */
-    public function getTemplateSize($tpl, $width = null, $height = null)
+    public function getTemplateSize($tpl, $width = null, $height = null): array|false
     {
         $size = parent::getTemplateSize($tpl, $width, $height);
         if ($size === false) {

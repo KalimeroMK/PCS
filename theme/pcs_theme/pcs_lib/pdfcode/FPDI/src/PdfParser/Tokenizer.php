@@ -34,10 +34,8 @@ class Tokenizer
 
     /**
      * Get the stream reader instance.
-     *
-     * @return StreamReader
      */
-    public function getStreamReader()
+    public function getStreamReader(): \setasign\Fpdi\PdfParser\StreamReader
     {
         return $this->streamReader;
     }

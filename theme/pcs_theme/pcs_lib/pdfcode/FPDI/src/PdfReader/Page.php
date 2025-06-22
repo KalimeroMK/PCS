@@ -56,10 +56,8 @@ class Page
 
     /**
      * Get the indirect object of this page.
-     *
-     * @return PdfIndirectObject
      */
-    public function getPageObject()
+    public function getPageObject(): \setasign\Fpdi\PdfParser\Type\PdfIndirectObject
     {
         return $this->pageObject;
     }

@@ -228,7 +228,7 @@ while ($sql_ref_sbc_arr = sql_fetch_array ($sql_spl_jnt))	{
 			is_string($val) &&
 			substr($val,4,1) === '-' &&
 			substr($val,7,1) === '-' &&
-			$val == '0000-00-00'
+			$val === '0000-00-00'
 		) {
 			$sql_ref_con_arr[$key] = false ;
 		}

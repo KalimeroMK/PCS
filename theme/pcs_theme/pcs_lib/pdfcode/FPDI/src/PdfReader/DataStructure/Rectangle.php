@@ -84,40 +84,32 @@ class Rectangle
 
     /**
      * Get the lower left abscissa.
-     *
-     * @return float|int
      */
-    public function getLlx()
+    public function getLlx(): float|int
     {
         return $this->llx;
     }
 
     /**
      * Get the lower left ordinate.
-     *
-     * @return float|int
      */
-    public function getLly()
+    public function getLly(): float|int
     {
         return $this->lly;
     }
 
     /**
      * Get the upper right abscissa.
-     *
-     * @return float|int
      */
-    public function getUrx()
+    public function getUrx(): float|int
     {
         return $this->urx;
     }
 
     /**
      * Get the upper right ordinate.
-     *
-     * @return float|int
      */
-    public function getUry()
+    public function getUry(): float|int
     {
         return $this->ury;
     }

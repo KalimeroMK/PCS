@@ -150,7 +150,7 @@ for ($i=0; isset($col_loca[$i]) && $col_loca[$i]; $i++)    {spl_loc_stat('','','
 
 <?php
 // Restore spl_fab_stat and spl_loc_stat functions
-function spl_fab_stat($au, $un, $st, $lo, $co='') {
+function spl_fab_stat(string $au, string $un, string $st, string $lo, string $co=''): void {
     $query_spl_qty = 'SELECT COUNT(*) FROM '.G5_TABLE_PREFIX.'pcs_info_spool';
     if($au !== '' && $au !== '0') {$query_spl_qty .= ' WHERE ag_ug = "'.$au.'"';}
     if($un !== '' && $un !== '0') {$query_spl_qty .= ' AND unit = "'.$un.'"';}
@@ -173,7 +173,7 @@ function spl_fab_stat($au, $un, $st, $lo, $co='') {
     }
 }
 
-function spl_loc_stat($au, $un, $st, $lo, $co='') {
+function spl_loc_stat(string $au, string $un, string $st, string $lo, string $co=''): void {
     $query_spl_qty = 'SELECT COUNT(*) FROM '.G5_TABLE_PREFIX.'pcs_info_spool';
     if($au !== '' && $au !== '0') {$query_spl_qty .= ' WHERE ag_ug = "'.$au.'"';}
     if($un !== '' && $un !== '0') {$query_spl_qty .= ' AND unit = "'.$un.'"';}

@@ -2173,7 +2173,7 @@ class TCPDF {
 						$this->pagedim[$this->page]['trans']['M'] = $format['trans']['M'];
 					}
 					$valid_effect = array('Wipe', 'Glitter', 'Fly', 'Cover', 'Uncover', 'Push');
-					if ((isset($format['trans']['Di']) and in_array($format['trans']['S'], $valid_effect)) && (($format['trans']['Di'] == 90 || $format['trans']['Di'] == 180) && $format['trans']['S'] == 'Wipe' || $format['trans']['Di'] == 315 && $format['trans']['S'] == 'Glitter' || ($format['trans']['Di'] == 0 || $format['trans']['Di'] == 270))) {
+					if ((isset($format['trans']['Di']) && in_array($format['trans']['S'], $valid_effect)) && (($format['trans']['Di'] == 90 || $format['trans']['Di'] == 180) && $format['trans']['S'] == 'Wipe' || $format['trans']['Di'] == 315 && $format['trans']['S'] == 'Glitter' || ($format['trans']['Di'] == 0 || $format['trans']['Di'] == 270))) {
 						$this->pagedim[$this->page]['trans']['Di'] = intval($format['trans']['Di']);
 					}
 					if (isset($format['trans']['SS']) && $format['trans']['S'] == 'Fly') {
@@ -2307,9 +2307,9 @@ class TCPDF {
 		$re_parts = explode('/', $re);
 		// get pattern parts
 		$this->re_space = array();
-		$this->re_space['p'] = (isset($re_parts[1]) and !empty($re_parts[1])) ? $re_parts[1] : '[\s]';
+		$this->re_space['p'] = (isset($re_parts[1]) && !empty($re_parts[1])) ? $re_parts[1] : '[\s]';
 		// set pattern modifiers
-		$this->re_space['m'] = (isset($re_parts[2]) and !empty($re_parts[2])) ? $re_parts[2] : '';
+		$this->re_space['m'] = (isset($re_parts[2]) && !empty($re_parts[2])) ? $re_parts[2] : '';
 	}
 
 	/**
@@ -6106,7 +6106,7 @@ class TCPDF {
 		// check if string contains arabic text
 		$arabic = (bool) preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_ARABIC, $s);
 		// check if string contains RTL text
-		$rtlmode = ($arabic || $this->tmprtl == 'R' or preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $s));
+		$rtlmode = ($arabic || $this->tmprtl == 'R' || preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $s));
 		// get a char width
 		$chrwidth = $this->GetCharWidth(46); // dot character
 		// get array of unicode values
@@ -6293,7 +6293,7 @@ class TCPDF {
 						}
 					} else {
 						// word wrapping
-						$endspace = ($this->rtl && !$firstblock and $sep < $i) ? 1 : 0;
+						$endspace = ($this->rtl && !$firstblock && $sep < $i) ? 1 : 0;
 						// check the length of the next string
 						$strrest = TCPDF_FONTS::UniArrSubString($uchars, ($sep + $endspace));
 						$nextstr = TCPDF_STATIC::pregSplit('/'.$this->re_space['p'].'/', $this->re_space['m'], $this->stringTrim($strrest));
@@ -7190,7 +7190,7 @@ class TCPDF {
 		$y = floatval($y);
 		if ($resetx) {
 			//reset x
-			$this->x = (!$rtloff and $this->rtl) ? $this->w - $this->rMargin : $this->lMargin;
+			$this->x = (!$rtloff && $this->rtl) ? $this->w - $this->rMargin : $this->lMargin;
 		}
 		$this->y = $y >= 0 ? $y : $this->h + $y;
 		if ($this->y < 0) {
@@ -7474,7 +7474,7 @@ class TCPDF {
 			'tsa_data'
 		);
 		foreach (array_keys(get_object_vars($this)) as $val) {
-			if (($destroyall or !in_array($val, $preserve)) && ((!$preserve_objcopy || $val != 'objcopy') && $val != 'file_id' && isset($this->$val))) {
+			if (($destroyall || !in_array($val, $preserve)) && ((!$preserve_objcopy || $val != 'objcopy') && $val != 'file_id' && isset($this->$val))) {
 				unset($this->$val);
 			}
 		}
@@ -9998,7 +9998,7 @@ class TCPDF {
 			$lnkdata = explode(',', $url);
 			if (isset($lnkdata[0]) ) {
 				$page = substr($lnkdata[0], 1);
-				$lnky = (isset($lnkdata[1]) and strlen($lnkdata[1]) > 0) ? floatval($lnkdata[1]) : 0;
+				$lnky = (isset($lnkdata[1]) && strlen($lnkdata[1]) > 0) ? floatval($lnkdata[1]) : 0;
 				$url = $this->AddLink();
 				$this->SetLink($url, $lnky, $page);
 			}
@@ -13054,7 +13054,7 @@ class TCPDF {
 	 */
 	protected function getSignatureAppearanceArray($x=0, $y=0, $w=0, $h=0, $page=-1, $name='') {
 		$sigapp = array();
-		$sigapp['page'] = ($page < 1 or $page > $this->numpages) ? $this->page : intval($page);
+		$sigapp['page'] = ($page < 1 || $page > $this->numpages) ? $this->page : intval($page);
 		$sigapp['name'] = empty($name) ? 'Signature' : $name;
 		$a = $x * $this->k;
 		$b = $this->pagedim[($sigapp['page'])]['h'] - (($y + $h) * $this->k);
@@ -14724,7 +14724,7 @@ class TCPDF {
 			$style['stretch'] = false;
 		}
 		if (!isset($style['stretch'])) {
-			$style['stretch'] = ($w === '' or $w <= 0) ? false : true;
+			$style['stretch'] = ($w === '' || $w <= 0) ? false : true;
 		}
 		if (!isset($style['fgcolor'])) {
 			$style['fgcolor'] = array(0,0,0); // default black
@@ -14916,7 +14916,7 @@ class TCPDF {
 		}
 		// print text
 		if ($style['text']) {
-			$label = (isset($style['label']) and !TCPDF_STATIC::empty_string($style['label'])) ? $style['label'] : $code;
+			$label = (isset($style['label']) && !TCPDF_STATIC::empty_string($style['label'])) ? $style['label'] : $code;
 			$txtwidth = ($arrcode['maxw'] * $xres);
 			if ($this->GetStringWidth($label) > $txtwidth) {
 				$style['stretchtext'] = 2;
@@ -16254,7 +16254,7 @@ class TCPDF {
 					if (($dom[$key]['value'] == 'ul' || $dom[$key]['value'] == 'ol' || $dom[$key]['value'] == 'dl') && (!isset($dom[$key]['align']) || TCPDF_STATIC::empty_string($dom[$key]['align']) || $dom[$key]['align'] != 'J')) {
 						$dom[$key]['align'] = $this->rtl ? 'R' : 'L';
 					}
-					if (($dom[$key]['value'] == 'small' || $dom[$key]['value'] == 'sup' or $dom[$key]['value'] == 'sub') && (!isset($dom[$key]['attribute']['size']) && !isset($dom[$key]['style']['font-size']))) {
+					if (($dom[$key]['value'] == 'small' || $dom[$key]['value'] == 'sup' || $dom[$key]['value'] == 'sub') && (!isset($dom[$key]['attribute']['size']) && !isset($dom[$key]['style']['font-size']))) {
 						$dom[$key]['fontsize'] *= K_SMALL_RATIO;
 					}
 					if ($dom[$key]['value'] == 'strong' || $dom[$key]['value'] == 'b') {
@@ -18132,7 +18132,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							if (empty($page) || $page <= 0) {
 								$page = $this->page;
 							}
-							$lnky = (isset($lnkdata[1]) and strlen($lnkdata[1]) > 0) ? floatval($lnkdata[1]) : 0;
+							$lnky = (isset($lnkdata[1]) && strlen($lnkdata[1]) > 0) ? floatval($lnkdata[1]) : 0;
 							$imglink = $this->AddLink();
 							$this->SetLink($imglink, $lnky, $page);
 						}
@@ -18484,7 +18484,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
                 break;
 			case 'tcpdf':
                 // Special tag used to call TCPDF methods
-                if ((defined('K_TCPDF_CALLS_IN_HTML') and K_TCPDF_CALLS_IN_HTML) && isset($tag['attribute']['method'])) {
+                if ((defined('K_TCPDF_CALLS_IN_HTML') && K_TCPDF_CALLS_IN_HTML) && isset($tag['attribute']['method'])) {
                     $tcpdf_method = $tag['attribute']['method'];
                     if (method_exists($this, $tcpdf_method)) {
 							if (isset($tag['attribute']['params']) && !empty($tag['attribute']['params'])) {
@@ -18554,7 +18554,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			} else {
 				$cn = 1;
 			}
-			$hb = (!isset($this->tagvspaces[$tag['value']]) and $tag['value'] == 'div') ? 0 : $cn * $pre_h;
+			$hb = (!isset($this->tagvspaces[$tag['value']]) && $tag['value'] == 'div') ? 0 : $cn * $pre_h;
 			if ($maxbottomliney > $this->PageBreakTrigger) {
 				$hbz = $this->getCellHeight($this->FontSize);
 			} elseif ($this->y < $maxbottomliney) {
@@ -18659,7 +18659,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
                 $default_border = $border;
                 // fix bottom line alignment of last line before page break
-                foreach ($dom[($dom[$key]['parent'])]['trids'] as $j => $trkey) {
+                foreach ($dom[($dom[$key]['parent'])]['trids'] as $trkey) {
 					// update row-spanned cells
 					if (isset($dom[($dom[$key]['parent'])]['rowspans'])) {
 						foreach ($dom[($dom[$key]['parent'])]['rowspans'] as $k => $trwsp) {
@@ -20333,7 +20333,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		}
 		// copy outlines
 		$tmpoutlines = $this->outlines;
-		foreach ($tmpoutlines as $key => $outline) {
+		foreach ($tmpoutlines as $outline) {
 			if ($outline['p'] == $page) {
 				$this->outlines[] = array('t' => $outline['t'], 'l' => $outline['l'], 'x' => $outline['x'], 'y' => $outline['y'], 'p' => $this->page, 'f' => $outline['f'], 's' => $outline['s'], 'c' => $outline['c']);
 			}
@@ -20499,7 +20499,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					// get page number aliases
 					$pnalias = $this->getInternalPageNumberAliases($a);
 					// calculate replacement number
-					$np = ($n >= $page and $n <= $this->numpages) ? $n + $numpages : $n;
+					$np = ($n >= $page && $n <= $this->numpages) ? $n + $numpages : $n;
 					$na = TCPDF_STATIC::formatTOCPageNumber(($this->starting_page_number + $np - 1));
 					$nu = TCPDF_FONTS::UTF8ToUTF16BE($na, false, $this->isunicode, $this->CurrentFont);
 					// replace aliases with numbers

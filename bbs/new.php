@@ -107,4 +107,4 @@ $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['c
 
 include_once($new_skin_path.'/new.skin.php');
 
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

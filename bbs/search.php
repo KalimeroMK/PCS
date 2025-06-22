@@ -263,4 +263,4 @@ if (!$sop) {
 
 include_once($search_skin_path.'/search.skin.php');
 
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

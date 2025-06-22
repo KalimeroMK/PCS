@@ -58,4 +58,4 @@ include_once(__DIR__ . '/../head.php');include_once(G5_LIB_PATH.'/latest.lib.php
         <!-- 메인화면 최신글 끝 -->
     </div>
 <?php
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

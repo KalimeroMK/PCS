@@ -50,7 +50,10 @@ function field_name_array($query) {
 
 
 // Enum value �迭��ȯ�Լ�
-function enum_value($query) {
+/**
+ * @return list<string>[]
+ */
+function enum_value($query): array {
 	$qry_field_name = array();
 
 	$sql_field = sql_query ($query);

@@ -77,7 +77,7 @@ class LineReader extends AbstractReader implements ReaderInterface
             $pos = \max(($bytesPerCycle * $cycles) - 6, 0);
             $trailerPos = \strpos($reader->getBuffer(false), 'trailer', $pos);
             $cycles++;
-        } while ($trailerPos === false && $reader->increaseLength($bytesPerCycle) !== false);
+        } while ($trailerPos === false && $reader->increaseLength($bytesPerCycle));
 
         if ($trailerPos === false) {
             throw new CrossReferenceException(

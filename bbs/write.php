@@ -309,12 +309,10 @@ if ($w == '') {
     $password_required = 'required';
 } elseif ($w == 'u') {
     $password_required = '';
-    if (!$is_admin && !($is_member && $member['mb_id'] === $write['mb_id'])) {
-        if (!check_password($wr_password, $write['wr_password'])) {
-            $is_wrong = run_replace('invalid_password', false, 'write', $write);
-            if (!$is_wrong) {
-                alert('비밀번호가 틀립니다.');
-            }
+    if (!$is_admin && !$is_member && $member['mb_id'] === $write['mb_id'] && !check_password($wr_password, $write['wr_password'])) {
+        $is_wrong = run_replace('invalid_password', false, 'write', $write);
+        if (!$is_wrong) {
+            alert('비밀번호가 틀립니다.');
         }
     }
     $name = get_text(cut_str(stripslashes($write['wr_name']), 20));

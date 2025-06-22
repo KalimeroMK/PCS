@@ -30,4 +30,4 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
 include_once($connect_skin_path.'/current_connect.skin.php');
 
-include_once('tail.php');
+include_once(__DIR__ . '/tail.php');

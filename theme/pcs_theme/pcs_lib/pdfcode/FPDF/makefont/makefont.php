@@ -357,7 +357,7 @@ function MakeDefinitionFile($file, string $type, string $enc, $embed, $subset, $
 	$s .= '$cw = '.MakeWidthArray($info['Widths']).";\n";
 	$s .= '$enc = \''.$enc."';\n";
 	$diff = MakeFontEncoding($map);
-	if($diff)
+	if($diff !== '' && $diff !== '0')
 		$s .= '$diff = \''.$diff."';\n";
 	$s .= '$uv = '.MakeUnicodeArray($map).";\n";
 	if($embed)

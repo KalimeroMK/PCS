@@ -85,7 +85,7 @@ else {
 <?php 
 	add_tr($pnid_array, '#F6D8CE', 'CONNECTED P&ID', 'pnid');
 	add_tr($EQ_array, '#CEF6F5', 'INCLUDED EQUIPMENT', 'equipment');
-	if($pkg_array){
+	if($pkg_array !== []){
 		echo '<tr>';
 		$qty=count($pkg_array);
 		if($qty>0){ echo '<td class="main_td" colspan=6 style="background-color: #FFBF00; height:50px;"><b>INCLUDED PACKAGE</td></tr>';
@@ -98,13 +98,9 @@ else {
 				$sql_inc_dwg_arr = sql_fetch_array ($sql_inc_dwg);
 				
 				echo '<td class="jnt_td" style="height:80px;font-size:18px;">';
-
-				if($pkg_no){
-					$j++;
-			
-					if($sql_inc_dwg_arr['wr_id']){ echo '<a href='.G5_BBS_URL.'/board.php?bo_table=package&wr_id='.$sql_inc_dwg_arr['wr_id'].'> <b>'.$pkg_no.'</b></a>';}
+                $j++;
+                if($sql_inc_dwg_arr['wr_id']){ echo '<a href='.G5_BBS_URL.'/board.php?bo_table=package&wr_id='.$sql_inc_dwg_arr['wr_id'].'> <b>'.$pkg_no.'</b></a>';}
 					else {echo '<mark>'.$pkg_no.'</mark>';}
-				}
 				echo'</a></td>';
 				if($j%6==0){echo'</tr><tr>';}	
 		

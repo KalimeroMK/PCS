@@ -60,10 +60,8 @@ class PdfReader
 
     /**
      * Get the pdf parser instance.
-     *
-     * @return PdfParser
      */
-    public function getParser()
+    public function getParser(): \setasign\Fpdi\PdfParser\PdfParser
     {
         return $this->parser;
     }

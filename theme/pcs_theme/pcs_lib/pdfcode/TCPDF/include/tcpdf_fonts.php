@@ -143,7 +143,7 @@ class TCPDF_FONTS {
 		// set encoding maps (if any)
 		$fmetric['enc'] = preg_replace('/[^A-Za-z0-9_\-]/', '', $enc);
 		$fmetric['diff'] = '';
-		if (($fmetric['type'] == 'TrueType' or $fmetric['type'] == 'Type1') && (!empty($enc) && $enc != 'cp1252' && isset(TCPDF_FONT_DATA::$encmap[$enc]))) {
+		if (($fmetric['type'] == 'TrueType' || $fmetric['type'] == 'Type1') && (!empty($enc) && $enc != 'cp1252' && isset(TCPDF_FONT_DATA::$encmap[$enc]))) {
             // build differences from reference encoding
             $enc_ref = TCPDF_FONT_DATA::$encmap['cp1252'];
             $enc_target = TCPDF_FONT_DATA::$encmap[$enc];
@@ -254,7 +254,7 @@ class TCPDF_FONTS {
 			// get charstring data
 			$eplain = substr($eplain, (strpos($eplain, '/CharStrings') + 1));
 			preg_match_all('#/([A-Za-z0-9\.]*)[\s][0-9]+[\s]RD[\s](.*)[\s]ND#sU', $eplain, $matches, PREG_SET_ORDER);
-			$enc_map = (!empty($enc) and isset(TCPDF_FONT_DATA::$encmap[$enc])) ? TCPDF_FONT_DATA::$encmap[$enc] : false;
+			$enc_map = (!empty($enc) && isset(TCPDF_FONT_DATA::$encmap[$enc])) ? TCPDF_FONT_DATA::$encmap[$enc] : false;
 			$fmetric['cw'] = '';
 			$fmetric['MaxWidth'] = 0;
 			$cwidths = array();
@@ -1646,7 +1646,7 @@ class TCPDF_FONTS {
 	 * @return Returns the specified character.
 	 * @public static
 	 */
-	public static function unichrUnicode($c) {
+	public static function unichrUnicode($c): string {
 		return self::unichr($c, true);
 	}
 
@@ -1656,7 +1656,7 @@ class TCPDF_FONTS {
 	 * @return Returns the specified character.
 	 * @public static
 	 */
-	public static function unichrASCII($c) {
+	public static function unichrASCII($c): string {
 		return self::unichr($c, false);
 	}
 
@@ -1967,15 +1967,14 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Converts UTF-8 strings to Latin1 when using the standard 14 core fonts.<br>
-	 * @param $str (string) string to process.
-	 * @param $isunicode (boolean) True when the documetn is in Unicode mode, false otherwise.
-	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
-	 * @since 3.2.000 (2008-06-23)
-	 * @public static
-	 */
-	public static function UTF8ToLatin1($str, $isunicode=true, &$currentfont) {
+     * Converts UTF-8 strings to Latin1 when using the standard 14 core fonts.<br>
+     * @param $str (string) string to process.
+     * @param $isunicode (boolean) True when the documetn is in Unicode mode, false otherwise.
+     * @param $currentfont (array) Reference to current font array.
+     * @since 3.2.000 (2008-06-23)
+     * @public static
+     */
+    public static function UTF8ToLatin1($str, $isunicode=true, &$currentfont): string {
 		$unicode = self::UTF8StringToArray($str, $isunicode, $currentfont); // array containing UTF-8 unicode values
 		return self::UTF8ArrToLatin1($unicode);
 	}
@@ -2000,35 +1999,33 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
-	 * @param $str (string) string to manipulate.
-	 * @param $setbom (bool) if true set the Byte Order Mark (BOM = 0xFEFF)
-	 * @param $forcertl (bool) if true forces RTL text direction
-	 * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
-	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
-	 * @author Nicola Asuni
-	 * @since 2.1.000 (2008-01-08)
-	 * @public static
-	 */
-	public static function utf8StrRev($str, $setbom=false, $forcertl=false, $isunicode=true, &$currentfont) {
+     * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
+     * @param $str (string) string to manipulate.
+     * @param $setbom (bool) if true set the Byte Order Mark (BOM = 0xFEFF)
+     * @param $forcertl (bool) if true forces RTL text direction
+     * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
+     * @param $currentfont (array) Reference to current font array.
+     * @author Nicola Asuni
+     * @since 2.1.000 (2008-01-08)
+     * @public static
+     */
+    public static function utf8StrRev($str, $setbom=false, $forcertl=false, $isunicode=true, &$currentfont): string {
 		return self::utf8StrArrRev(self::UTF8StringToArray($str, $isunicode, $currentfont), $str, $setbom, $forcertl, $isunicode, $currentfont);
 	}
 
 	/**
-	 * Reverse the RLT substrings array using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
-	 * @param $arr (array) array of unicode values.
-	 * @param $str (string) string to manipulate (or empty value).
-	 * @param $setbom (bool) if true set the Byte Order Mark (BOM = 0xFEFF)
-	 * @param $forcertl (bool) if true forces RTL text direction
-	 * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
-	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
-	 * @author Nicola Asuni
-	 * @since 4.9.000 (2010-03-27)
-	 * @public static
-	 */
-	public static function utf8StrArrRev($arr, $str='', $setbom=false, $forcertl=false, $isunicode=true, &$currentfont) {
+     * Reverse the RLT substrings array using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
+     * @param $arr (array) array of unicode values.
+     * @param $str (string) string to manipulate (or empty value).
+     * @param $setbom (bool) if true set the Byte Order Mark (BOM = 0xFEFF)
+     * @param $forcertl (bool) if true forces RTL text direction
+     * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
+     * @param $currentfont (array) Reference to current font array.
+     * @author Nicola Asuni
+     * @since 4.9.000 (2010-03-27)
+     * @public static
+     */
+    public static function utf8StrArrRev($arr, $str='', $setbom=false, $forcertl=false, $isunicode=true, array &$currentfont): string {
 		return self::arrUTF8ToUTF16BE(self::utf8Bidi($arr, $str, $forcertl, $isunicode, $currentfont), $setbom);
 	}
 
@@ -2481,7 +2478,7 @@ class TCPDF_FONTS {
 			 */
 			for ($i = 0; $i < ($numchars-1); ++$i) {
 				// check if the subtitution font is defined on current font
-                if (($chardata2[$i]['char'] == 1617 and isset(TCPDF_FONT_DATA::$uni_diacritics[($chardata2[$i+1]['char'])])) && isset($currentfont['cw'][(TCPDF_FONT_DATA::$uni_diacritics[($chardata2[$i+1]['char'])])])) {
+                if (($chardata2[$i]['char'] == 1617 && isset(TCPDF_FONT_DATA::$uni_diacritics[($chardata2[$i+1]['char'])])) && isset($currentfont['cw'][(TCPDF_FONT_DATA::$uni_diacritics[($chardata2[$i+1]['char'])])])) {
                     $chardata2[$i]['char'] = false;
                     $chardata2[$i+1]['char'] = TCPDF_FONT_DATA::$uni_diacritics[($chardata2[$i+1]['char'])];
                 }

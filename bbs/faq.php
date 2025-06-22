@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 //dbconfig파일에 $g5['faq_table'] , $g5['faq_master_table'] 배열변수가 있는지 체크
 if (!isset($g5['faq_table']) || !isset($g5['faq_master_table'])) {
@@ -35,8 +36,7 @@ $g5['title'] = $fm['fm_subject'];
 
 $skin_file = $faq_skin_path.'/list.skin.php';
 
-include_once(__DIR__ . '/_head.php');
-
+include_once(__DIR__ . '/../head.php');
 if (is_file($skin_file)) {
     $admin_href = '';
     $himg_src = '';
@@ -103,4 +103,4 @@ if (is_file($skin_file)) {
     echo '<p>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</p>';
 }
 
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

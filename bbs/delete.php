@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $delete_token = get_session('ss_delete_token');
 set_session('ss_delete_token', '');

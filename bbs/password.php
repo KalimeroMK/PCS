@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $g5['title'] = '비밀번호 입력';
 

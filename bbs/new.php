@@ -1,10 +1,10 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $g5['title'] = '새글';
-include_once(__DIR__ . '/_head.php');
-
+include_once(__DIR__ . '/../head.php');
 $sql_common = " from {$g5['board_new_table']} a, {$g5['board_table']} b, {$g5['group_table']} c where a.bo_table = b.bo_table and b.gr_id = c.gr_id and b.bo_use_search = 1 ";
 
 $gr_id = isset($_GET['gr_id']) ? substr(preg_replace('#[^a-z0-9_]#i', '', $_GET['gr_id']), 0, 10) : '';
@@ -107,4 +107,4 @@ $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['c
 
 include_once($new_skin_path.'/new.skin.php');
 
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

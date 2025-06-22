@@ -21,7 +21,8 @@ $compressed = gzcompress('Compress me', 9);
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(__DIR__ . '/pcs_config.php');
 include_once(__DIR__ . '/pcs_common_function.php');
 

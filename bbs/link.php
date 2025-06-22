@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $html_title = '링크 &gt; '.conv_subject($write['wr_subject'], 255);
 

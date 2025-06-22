@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if (!$bo_table) {
     die(json_encode(['error' => '게시판 정보가 올바르지 않습니다.', 'url' => G5_URL]));

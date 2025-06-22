@@ -4,7 +4,8 @@ ini_set("display_errors", 1);
 
 
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(__DIR__ . '/pcs_config.php');
 
 	

@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 // 로그인중인 경우 회원가입 할 수 없습니다.
 if ($is_member) {
@@ -11,9 +12,8 @@ if ($is_member) {
 set_session("ss_mb_reg", "");
 
 $g5['title'] = '회원가입약관';
-include_once(__DIR__ . '/_head.php');
-
+include_once(__DIR__ . '/../head.php');
 $register_action_url = G5_BBS_URL.'/register_form.php';
 include_once($member_skin_path.'/register.skin.php');
 
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

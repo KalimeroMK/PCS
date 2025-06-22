@@ -1,7 +1,8 @@
 <?php
 
 // 코멘트 삭제
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $comment_id = isset($_REQUEST['comment_id']) ? (int)$_REQUEST['comment_id'] : 0;
 

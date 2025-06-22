@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $g5['title'] = '이미지 크게보기';
 include_once(G5_PATH.'/head.sub.php');

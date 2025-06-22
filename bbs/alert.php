@@ -3,7 +3,8 @@
 global $lo_location;
 global $lo_url;
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $g5['title'] = $error ? "오류안내 페이지" : "결과안내 페이지";
 include_once(G5_PATH.'/head.sub.php');

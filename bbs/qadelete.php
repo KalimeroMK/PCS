@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if ($is_guest) {
     alert('회원이시라면 로그인 후 이용해 주십시오.', G5_URL);

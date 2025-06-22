@@ -1,10 +1,10 @@
 <?php
 
-include_once(__DIR__ . "/_common.php");
+include_once(__DIR__ . '/../common.php');
 
 $title = isset($_REQUEST['title']) ? urlencode(str_replace('\"', '"', $_REQUEST['title'])) : '';
 $short_url = isset($_REQUEST['longurl']) ? googl_short_url($_REQUEST['longurl']) : '';
-$sns = isset($_REQUEST['sns']) ? $_REQUEST['sns'] : '';
+$sns = $_REQUEST['sns'] ?? '';
 
 if (!$short_url) {
     $short_url = isset($_REQUEST['longurl']) ? urlencode($_REQUEST['longurl']) : '';

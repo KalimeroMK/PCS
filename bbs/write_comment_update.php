@@ -1,7 +1,8 @@
 <?php
 
 define('G5_CAPTCHA', true);
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 // 토큰체크

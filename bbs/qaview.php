@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(G5_EDITOR_LIB);
 
 $qa_id = isset($_REQUEST['qa_id']) ? (int)$_REQUEST['qa_id'] : 0;

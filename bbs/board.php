@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if (!$board['bo_table']) {
     alert('존재하지 않는 게시판입니다.', G5_URL);
@@ -192,7 +193,7 @@ if ($is_admin) {
     }
 } elseif (isset($write['wr_ip'])) {
     // 관리자가 아니라면 IP 주소를 감춘후 보여줍니다.
-    $ip = preg_replace("/(\\d+).(\\d+).(\\d+).(\\d+)/", G5_IP_DISPLAY, $write['wr_ip']);
+    $ip = substr($write['wr_ip'], 0, strlen($write['wr_ip']) - 3).'***';
 }
 
 // 분류 사용
@@ -223,7 +224,7 @@ if ($member['mb_id'] && ($is_admin === 'super' || $group['gr_admin'] === $member
     $admin_href = G5_ADMIN_URL.'/board_form.php?w=u&amp;bo_table='.$bo_table;
 }
 
-include_once(G5_BBS_PATH.'/board_head.php');
+include_once(G5_PATH.'/head.php');
 
 // 게시물 아이디가 있다면 게시물 보기를 INCLUDE
 if (isset($wr_id) && $wr_id) {

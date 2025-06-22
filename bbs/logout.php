@@ -1,7 +1,8 @@
 <?php
 
 define('G5_CERT_IN_PROG', true);
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if (function_exists('social_provider_logout')) {
     social_provider_logout();

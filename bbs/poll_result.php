@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 $po_id = isset($_REQUEST['po_id']) ? (int)$_REQUEST['po_id'] : '';

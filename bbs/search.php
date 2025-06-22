@@ -1,10 +1,10 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $g5['title'] = '전체검색 결과';
-include_once(__DIR__ . '/_head.php');
-
+include_once(__DIR__ . '/../head.php');
 $search_table = [];
 $table_index = 0;
 $write_pages = "";
@@ -263,4 +263,4 @@ if (!$sop) {
 
 include_once($search_skin_path.'/search.skin.php');
 
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

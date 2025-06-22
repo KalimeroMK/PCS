@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', '0');
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(__DIR__ . '/pcs_config.php');
 include_once(__DIR__ . '/pcs_common_function.php');
 if (!defined('_GNUBOARD_')) exit;

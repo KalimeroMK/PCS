@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if (function_exists('social_check_login_before')) {
     $social_login_html = social_check_login_before();

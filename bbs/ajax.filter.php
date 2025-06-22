@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $subject = isset($_POST['subject']) ? strip_tags($_POST['subject']) : '';
 $content = isset($_POST['content']) ? strip_tags($_POST['content']) : '';

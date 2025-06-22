@@ -1,5 +1,6 @@
 <?php
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(__DIR__ . '/pcs_config.php');
 
 $dwg_file = $_POST['fn'];

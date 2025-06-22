@@ -1,11 +1,11 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 $g5['title'] = '메일인증 메일주소 변경';
-include_once(__DIR__ . '/_head.php');
-
+include_once(__DIR__ . '/../head.php');
 $mb_id = isset($_GET['mb_id']) ? substr(clean_xss_tags($_GET['mb_id']), 0, 20) : '';
 $sql = " select mb_email, mb_datetime, mb_ip, mb_email_certify, mb_id from {$g5['member_table']} where mb_id = '{$mb_id}' ";
 $mb = sql_fetch($sql);
@@ -66,4 +66,4 @@ if (!$ckey || $ckey !== $key) {
         }
     </script>
 <?php
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

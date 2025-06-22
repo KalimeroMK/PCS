@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $mb_id = isset($_SESSION['ss_cert_mb_id']) ? trim(get_session('ss_cert_mb_id')) : '';
 $mb_dupinfo = isset($_SESSION['ss_cert_dupinfo']) ? trim(get_session('ss_cert_dupinfo')) : '';

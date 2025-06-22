@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 $ms_id = isset($_REQUEST['ms_id']) ? (int)$_REQUEST['ms_id'] : 0;
 

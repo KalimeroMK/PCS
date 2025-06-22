@@ -1,6 +1,7 @@
 <?php
 
-include_once(__DIR__ . '/_common.php');
+include_once(__DIR__ . '/../common.php');
+
 
 if (defined('G5_THEME_PATH')) {
     $group_file = G5_THEME_PATH.'/group.php';
@@ -21,8 +22,7 @@ if (!$is_admin && $group['gr_device'] == 'mobile') {
 }
 
 $g5['title'] = $group['gr_subject'];
-include_once(__DIR__ . '/_head.php');
-include_once(G5_LIB_PATH.'/latest.lib.php');
+include_once(__DIR__ . '/../head.php');include_once(G5_LIB_PATH.'/latest.lib.php');
 ?>
 
     <div class="latest_wr">
@@ -58,4 +58,4 @@ include_once(G5_LIB_PATH.'/latest.lib.php');
         <!-- 메인화면 최신글 끝 -->
     </div>
 <?php
-include_once(__DIR__ . '/_tail.php');
+include_once('tail.php');

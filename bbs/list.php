@@ -2,9 +2,9 @@
 
 if (!defined('_GNUBOARD_')) {
     exit;
-} // 개별 페이지 접근 불가
+} // Individual page access not allowed
 
-// 분류 사용 여부
+// Category usage
 $is_category = false;
 $category_option = '';
 if ($board['bo_use_category']) {
@@ -15,11 +15,11 @@ if ($board['bo_use_category']) {
     if ($sca == '') {
         $category_option .= ' id="bo_cate_on"';
     }
-    $category_option .= '>전체</a></li>';
+    $category_option .= '><span class="sound_only">All</span></a></li>';
 
     $categories = explode('|', $board['bo_category_list']);
-    // 구분자가 , 로 되어 있음
-    $counter = count($categories); // 구분자가 , 로 되어 있음
+    // The delimiter is ','
+    $counter = count($categories); // The delimiter is ','
     for ($i = 0; $i < $counter; $i++) {
         $category = trim($categories[$i]);
         if ($category === '') {
@@ -27,9 +27,9 @@ if ($board['bo_use_category']) {
         }
         $category_option .= '<li><a href="'.(get_pretty_url($bo_table, '', 'sca='.urlencode($category))).'"';
         $category_msg = '';
-        if ($category == $sca) { // 현재 선택된 카테고리라면
+        if ($category == $sca) { // If this is the currently selected category
             $category_option .= ' id="bo_cate_on"';
-            $category_msg = '<span class="sound_only">열린 분류 </span>';
+            $category_msg = '<span class="sound_only">Opened category </span>';
         }
         $category_option .= '>'.$category_msg.$category.'</a></li>';
     }
@@ -40,16 +40,16 @@ if ($sop !== 'and' && $sop !== 'or') {
     $sop = 'and';
 }
 
-// 분류 선택 또는 검색어가 있다면
+// If there is a category selection or search term
 $stx = trim($stx);
-//검색인지 아닌지 구분하는 변수 초기화
+// Initialize variable to distinguish between search and non-search
 $is_search_bbs = false;
 
-if ($sca || $stx || $stx === '0') {     //검색이면
-    $is_search_bbs = true;              //검색구분변수 true 지정
+if ($sca || $stx || $stx === '0') {     // If search
+    $is_search_bbs = true;              // Set search distinction variable to true
     $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
 
-    // 가장 작은 번호를 얻어서 변수에 저장 (하단의 페이징에서 사용)
+    // Get the smallest post number and store in variable (used at the bottom of the page)
     $sql = " select MIN(wr_num) as min_wr_num from {$write_table} ";
     $row = sql_fetch($sql);
     $min_spt = (int)$row['min_wr_num'];
@@ -60,8 +60,8 @@ if ($sca || $stx || $stx === '0') {     //검색이면
 
     $sql_search .= " and (wr_num between {$spt} and ({$spt} + {$config['cf_search_part']})) ";
 
-    // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
-    // 라엘님 제안 코드로 대체 http://sir.kr/g5_bug/2922
+    // Only get original posts. (To search comment content as well)
+    // Code provided by Ral, see http://sir.kr/g5_bug/2922
     $sql = " SELECT COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE {$sql_search} ";
     $row = sql_fetch($sql);
     $total_count = $row['cnt'];
@@ -86,9 +86,9 @@ if (G5_IS_MOBILE) {
 
 if ($page < 1) {
     $page = 1;
-} // 페이지가 없으면 첫 페이지 (1 페이지)
+} // If page is not set, set to first page (1)
 
-// 년도 2자리
+// Year in 2 digits
 $today2 = G5_TIME_YMD;
 
 $list = [];
@@ -96,7 +96,7 @@ $i = 0;
 $notice_count = 0;
 $notice_array = [];
 
-// 공지 처리
+// Notice processing
 if (!$is_search_bbs) {
     $arr_notice = explode(',', trim($board['bo_notice']));
     $from_notice_idx = ($page - 1) * $page_rows;
@@ -127,7 +127,7 @@ if (!$is_search_bbs) {
         $list[$i]['is_notice'] = true;
         $list[$i]['list_content'] = $list[$i]['wr_content'];
 
-        // 비밀글인 경우 리스트에서 내용이 출력되지 않게 글 내용을 지웁니다. 
+        // If post is private, remove content from list
         if (strstr($list[$i]['wr_option'], "secret")) {
             $list[$i]['wr_content'] = '';
         }
@@ -142,10 +142,10 @@ if (!$is_search_bbs) {
     }
 }
 
-$total_page = ceil($total_count / $page_rows);  // 전체 페이지 계산
-$from_record = ($page - 1) * $page_rows;        // 시작 열을 구함
+$total_page = ceil($total_count / $page_rows);  // Calculate total pages
+$from_record = ($page - 1) * $page_rows;        // Calculate starting record
 
-// 공지글이 있으면 변수에 반영
+// If there are notices, adjust variables
 if (!empty($notice_array)) {
     $from_record -= count($notice_array);
 
@@ -162,21 +162,21 @@ if (!empty($notice_array)) {
     }
 }
 
-// 관리자라면 CheckBox 보임
+// If user is admin, show checkbox
 $is_checkbox = false;
 if ($is_member && ($is_admin == 'super' || $group['gr_admin'] == $member['mb_id'] || $board['bo_admin'] == $member['mb_id'])) {
     $is_checkbox = true;
 }
 
-// 정렬에 사용하는 QUERY_STRING
+// Query string for sorting
 $qstr2 = 'bo_table='.$bo_table.'&amp;sop='.$sop;
 
-// 0 으로 나눌시 오류를 방지하기 위하여 값이 없으면 1 로 설정
+// 0 to prevent division by zero error
 $bo_gallery_cols = $board['bo_gallery_cols'] ? $board['bo_gallery_cols'] : 1;
 $td_width = (int)(100 / $bo_gallery_cols);
 
-// 정렬
-// 인덱스 필드가 아니면 정렬에 사용하지 않음
+// Sorting
+// If index field is not set, do not use for sorting
 //if (!$sst || ($sst && !(strstr($sst, 'wr_id') || strstr($sst, "wr_datetime")))) {
 if (!$sst) {
     if ($board['bo_sort_field']) {
@@ -190,8 +190,9 @@ if (!$sst) {
     if (!$sod && array_key_exists($sst, $board_sort_fields)) {
         $sst = $board_sort_fields[$sst];
     } else {
-        // 게시물 리스트의 정렬 대상 필드가 아니라면 공백으로 (nasca 님 09.06.16)
-        // 리스트에서 다른 필드로 정렬을 하려면 아래의 코드에 해당 필드를 추가하세요.
+        // If field is not a valid sorting field, set to empty string
+        // (nasca, 09.06.16)
+        // To sort by other fields, add them to the code below
         // $sst = preg_match("/^(wr_subject|wr_datetime|wr_hit|wr_good|wr_nogood)$/i", $sst) ? $sst : "";
         $sst = preg_match("/^(wr_datetime|wr_hit|wr_good|wr_nogood)$/i", $sst) ? $sst : "";
     }
@@ -215,14 +216,14 @@ if ($is_search_bbs) {
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
 }
 
-// 페이지의 공지개수가 목록수 보다 작을 때만 실행
+// If page has notices and number of notices is less than number of list items
 if ($page_rows > 0) {
     $result = sql_query($sql);
 
     $k = 0;
 
     while ($row = sql_fetch_array($result)) {
-        // 검색일 경우 wr_id만 얻었으므로 다시 한행을 얻는다
+        // If search, get original post
         if ($is_search_bbs) {
             $row = sql_fetch(" select * from {$write_table} where wr_id = '{$row['wr_parent']}' ");
         }
@@ -235,7 +236,7 @@ if ($page_rows > 0) {
         $list[$i]['is_notice'] = false;
         $list[$i]['list_content'] = $list[$i]['wr_content'];
 
-        // 비밀글인 경우 리스트에서 내용이 출력되지 않게 글 내용을 지웁니다. 
+        // If post is private, remove content from list
         if (strstr($list[$i]['wr_option'], "secret")) {
             $list[$i]['wr_content'] = '';
         }
@@ -267,7 +268,7 @@ if ($is_search_bbs) {
         $qstr1 = preg_replace($patterns, '', $qstr);
         $prev_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$prev_spt.'&amp;page=1');
         $write_pages = page_insertbefore($write_pages,
-            '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">이전검색</a>');
+            '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">Previous Search</a>');
     }
 
     $next_spt = $spt + $config['cf_search_part'];
@@ -275,7 +276,7 @@ if ($is_search_bbs) {
         $qstr1 = preg_replace($patterns, '', $qstr);
         $next_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$next_spt.'&amp;page=1');
         $write_pages = page_insertafter($write_pages,
-            '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">다음검색</a>');
+            '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">Next Search</a>');
     }
 }
 
@@ -291,7 +292,7 @@ if (preg_match("/gecko|firefox/i", $_SERVER['HTTP_USER_AGENT'])) {
     $nobr_end = '</nobr>';
 }
 
-// RSS 보기 사용에 체크가 되어 있어야 RSS 보기 가능 061106
+// RSS view is only available if enabled
 $rss_href = '';
 if ($board['bo_use_rss_view']) {
     $rss_href = G5_BBS_URL.'/rss.php?bo_table='.$bo_table;

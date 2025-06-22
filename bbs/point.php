@@ -4,10 +4,10 @@ include_once(__DIR__ . '/../common.php');
 
 
 if ($is_guest) {
-    alert_close('회원만 조회하실 수 있습니다.');
+    alert_close('Only members can view this page.');
 }
 
-$g5['title'] = get_text($member['mb_nick']).' 님의 포인트 내역';
+$g5['title'] = get_text($member['mb_nick'])."'s Point History";
 include_once(G5_PATH.'/head.sub.php');
 
 $list = [];
@@ -20,11 +20,11 @@ $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
 $rows = $config['cf_page_rows'];
-$total_page = ceil($total_count / $rows);  // 전체 페이지 계산
+$total_page = ceil($total_count / $rows);  // Calculate total pages
 if ($page < 1) {
     $page = 1;
-}                                          // 페이지가 없으면 첫 페이지 (1 페이지)
-$from_record = ($page - 1) * $rows;        // 시작 열을 구함
+}                                          // If no page, set to first page (page 1)
+$from_record = ($page - 1) * $rows;        // Calculate starting record
 
 $sql = " select *
             {$sql_common}

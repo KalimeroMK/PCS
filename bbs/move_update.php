@@ -2,24 +2,28 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
+// Get the action type
 $act = isset($act) ? strip_tags($act) : '';
+
+// Get the count of checked boards
 $count_chk_bo_table = (isset($_POST['chk_bo_table']) && is_array($_POST['chk_bo_table'])) ? count($_POST['chk_bo_table']) : 0;
 
-// 게시판 관리자 이상 복사, 이동 가능
+// Only board, group, or super admins can access this feature
 if ($is_admin != 'board' && $is_admin != 'group' && $is_admin != 'super') {
-    alert_close('게시판 관리자 이상 접근이 가능합니다.');
+    alert_close('Only board, group, or super admins can access this feature.');
 }
 
+// Check if the sw value is valid
 if ($sw != 'move' && $sw != 'copy') {
-    alert('sw 값이 제대로 넘어오지 않았습니다.');
+    alert('The value of sw was not passed correctly.');
 }
 
+// Check if at least one board is selected
 if ($count_chk_bo_table === 0) {
-    alert('게시물을 '.$act.'할 게시판을 한개 이상 선택해 주십시오.', $url);
+    alert('Please select at least one board to ' . $act . '.', $url);
 }
 
-// 원본 파일 디렉토리
+// Original directory
 $src_dir = G5_DATA_PATH.'/file/'.$bo_table;
 
 $save = [];
@@ -39,23 +43,23 @@ while ($row = sql_fetch_array($result)) {
         $move_bo_table = isset($_POST['chk_bo_table'][$i]) ? preg_replace('/[^a-z0-9_]/i', '',
             $_POST['chk_bo_table'][$i]) : '';
 
-        // 취약점 18-0075 참고
+        // Security notice 18-0075 reference
         $sql = "select * from {$g5['board_table']} where bo_table = '".sql_real_escape_string($move_bo_table)."' ";
         $move_board = sql_fetch($sql);
-        // 존재하지 않다면
+        // If the board does not exist
         if (!$move_board['bo_table']) {
             continue;
         }
 
         $move_write_table = $g5['write_prefix'].$move_bo_table;
 
-        $src_dir = G5_DATA_PATH.'/file/'.$bo_table;      // 원본 디렉토리
-        $dst_dir = G5_DATA_PATH.'/file/'.$move_bo_table; // 복사본 디렉토리
+        $src_dir = G5_DATA_PATH.'/file/'.$bo_table;      // Original directory
+        $dst_dir = G5_DATA_PATH.'/file/'.$move_bo_table; // Destination directory
 
         $count_write = 0;
         $count_comment = 0;
 
-        // get_next_num 함수는 mysql 지연시 중복이 될수 있는 문제로 더 이상 사용하지 않습니다.
+        // Do not use get_next_num due to possible duplication in MySQL
         // $next_wr_num = get_next_num($move_write_table);
         $next_wr_num = 0;
 
@@ -74,10 +78,10 @@ while ($row = sql_fetch_array($result)) {
                     $log_tag2 = '';
                 }
 
-                $row2['wr_content'] .= "\n".$log_tag1.'[이 게시물은 '.$nick.'님에 의해 '.G5_TIME_YMDHIS.' '.$board['bo_subject'].'에서 '.($sw == 'copy' ? '복사' : '이동').' 됨]'.$log_tag2;
+                $row2['wr_content'] .= "\n".$log_tag1.'[This post was '.($sw == 'copy' ? 'copied' : 'moved').' by '.$nick.' on '.G5_TIME_YMDHIS.' from '.$board['bo_subject'].']'.$log_tag2;
             }
 
-            // 게시글 추천, 비추천수
+            // Post recommendation and non-recommendation count
             $wr_good = $wr_nogood = 0;
             if ($sw == 'move' && $i == 0) {
                 $wr_good = $row2['wr_good'];
@@ -129,7 +133,7 @@ while ($row = sql_fetch_array($result)) {
                 $next_wr_num = $tmp['wr_num'];
             }
 
-            // 코멘트가 아니라면
+            // If it's not a comment
             if (!$row2['wr_is_comment']) {
                 $save_parent = $insert_id;
 
@@ -137,8 +141,8 @@ while ($row = sql_fetch_array($result)) {
                 $result3 = sql_query($sql3);
                 for ($k = 0; $row3 = sql_fetch_array($result3); $k++) {
                     if ($row3['bf_file']) {
-                        // 원본파일을 복사하고 퍼미션을 변경
-                        // 제이프로님 코드제안 적용
+                        // Copy the original file and change permissions
+                        // Apply the code suggested by Jeipro
 
                         $copy_file_name = $row3['bf_file'];
 
@@ -188,20 +192,20 @@ while ($row = sql_fetch_array($result)) {
                 $count_write++;
 
                 if ($sw == 'move' && $i == 0) {
-                    // 스크랩 이동
+                    // Move scrap
                     sql_query(" update {$g5['scrap_table']} set bo_table = '$move_bo_table', wr_id = '$save_parent' where bo_table = '$bo_table' and wr_id = '{$row2['wr_id']}' ");
 
-                    // 최신글 이동
+                    // Move latest posts
                     sql_query(" update {$g5['board_new_table']} set bo_table = '$move_bo_table', wr_id = '$save_parent', wr_parent = '$save_parent' where bo_table = '$bo_table' and wr_id = '{$row2['wr_id']}' ");
 
-                    // 추천데이터 이동
+                    // Move recommendation data
                     sql_query(" update {$g5['board_good_table']} set bo_table = '$move_bo_table', wr_id = '$save_parent' where bo_table = '$bo_table' and wr_id = '{$row2['wr_id']}' ");
                 }
             } else {
                 $count_comment++;
 
                 if ($sw == 'move') {
-                    // 최신글 이동
+                    // Move latest posts
                     sql_query(" update {$g5['board_new_table']} set bo_table = '$move_bo_table', wr_id = '$insert_id', wr_parent = '$save_parent' where bo_table = '$bo_table' and wr_id = '{$row2['wr_id']}' ");
                 }
             }
@@ -240,7 +244,7 @@ if ($sw == 'move') {
                     @unlink($del_file);
                 }
 
-                // 썸네일 파일 삭제, 먼지손 님 코드 제안
+                // Delete thumbnail file, suggested by Munsik
                 delete_board_thumbnail($bo_table, basename($save[$i]['bf_file'][$k]));
             }
         }
@@ -254,7 +258,7 @@ if ($sw == 'move') {
         sql_query(" delete from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '{$save[$i]['wr_id']}' ");
     }
 
-    // 공지사항이 이동되는 경우의 처리 begin
+    // Handle notice posts that are moved
     $arr = [];
     $sql = " select bo_notice from {$g5['board_table']} where bo_table = '{$bo_table}' ";
     $row = sql_fetch($sql);
@@ -262,19 +266,18 @@ if ($sw == 'move') {
     $counter = count($arr_notice);
     for ($i = 0; $i < $counter; $i++) {
         $move_id = (int)$arr_notice[$i];
-        // 게시판에 wr_id 가 있다면 이동한게 아니므로 bo_notice 에 다시 넣음
+        // If the post still exists in the board, add it back to bo_notice
         $row2 = sql_fetch(" select count(*) as cnt from $write_table where wr_id = '{$move_id}' ");
         if ($row2['cnt']) {
             $arr[] = $move_id;
         }
         $bo_notice = implode(',', $arr);
     }
-    // 공지사항이 이동되는 경우의 처리 end
 
     sql_query(" update {$g5['board_table']} set bo_notice = '{$bo_notice}', bo_count_write = bo_count_write - '$save_count_write', bo_count_comment = bo_count_comment - '$save_count_comment' where bo_table = '$bo_table' ");
 }
 
-$msg = '해당 게시물을 선택한 게시판으로 '.$act.' 하였습니다.';
+$msg = 'The selected posts have been ' . $act . ' to the chosen boards.';
 $opener_href = get_pretty_url($bo_table, '', '&amp;page='.$page.'&amp;'.$qstr);
 $opener_href1 = str_replace('&amp;', '&', $opener_href);
 
@@ -292,5 +295,5 @@ run_event('bbs_move_update', $bo_table, $chk_bo_table, $wr_id_list, $opener_href
         echo $msg; ?>
     </p>
     <a href="<?php
-    echo $opener_href; ?>">돌아가기</a>
+    echo $opener_href; ?>">Return</a>
 </noscript>

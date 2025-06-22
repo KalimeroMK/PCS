@@ -2,8 +2,8 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
-$g5['title'] = '전체검색 결과';
+// Set the title of the page
+$g5['title'] = 'Search Results';
 include_once(__DIR__ . '/../head.php');
 $search_table = [];
 $table_index = 0;
@@ -11,19 +11,20 @@ $write_pages = "";
 $text_stx = "";
 $srows = 0;
 
+// Remove special characters
 $stx = strip_tags($stx);
-//$stx = preg_replace('/[[:punct:]]/u', '', $stx); // 특수문자 제거
-$stx = get_search_string($stx); // 특수문자 제거
+//$stx = preg_replace('/[[:punct:]]/u', '', $stx); // Remove special characters
+$stx = get_search_string($stx); // Remove special characters
 if ($stx) {
     $stx = preg_replace('/\//', '\/', trim($stx));
     $sop = strtolower($sop);
     if (!$sop || $sop !== 'and' && $sop !== 'or') {
         $sop = 'and';
-    } // 연산자 and , or
+    } // Operator: and, or
     $srows = isset($_GET['srows']) ? (int)preg_replace('#[^0-9]#', '', $_GET['srows']) : 10;
     if ($srows === 0) {
         $srows = 10;
-    } // 한페이지에 출력하는 검색 행수
+    } // Number of search rows per page
 
     $g5_search['tables'] = [];
     $g5_search['read_level'] = [];
@@ -32,7 +33,8 @@ if ($stx) {
         $sql .= " and gr_id = '{$gr_id}' ";
     }
     $onetable = isset($onetable) ? preg_replace('/[^a-z0-9_]/i', '', $onetable) : '';
-    if ($onetable) // 하나의 게시판만 검색한다면
+    // Only search one board if specified
+    if ($onetable) // Only search one board if specified
     {
         $sql .= " and bo_table = '{$onetable}' ";
     }
@@ -40,11 +42,11 @@ if ($stx) {
     $result = sql_query($sql);
     for ($i = 0; $row = sql_fetch_array($result); $i++) {
         if ($is_admin != 'super') {
-            // 그룹접근 사용에 대한 검색 차단
+            // Restrict search by group access
             $sql2 = " select gr_use_access, gr_admin from {$g5['group_table']} where gr_id = '{$row['gr_id']}' ";
             $row2 = sql_fetch($sql2);
-            // 그룹접근을 사용한다면
-            // 그룹관리자가 있으며 현재 회원이 그룹관리자라면 통과
+            // If using group access
+            // If there is a group admin and the current member is the group admin, allow
             if ($row2['gr_use_access'] && !($row2['gr_admin'] && $row2['gr_admin'] == $member['mb_id'])) {
                 $sql3 = " select count(*) as cnt from {$g5['group_member_table']} where gr_id = '{$row['gr_id']}' and mb_id = '{$member['mb_id']}' and mb_id <> '' ";
                 $row3 = sql_fetch($sql3);
@@ -59,7 +61,7 @@ if ($stx) {
 
     $op1 = '';
 
-    // 검색어를 구분자로 나눈다. 여기서는 공백
+    // Split search terms by space. Whitespace only here
     $s = explode(' ', strip_tags($stx));
 
     if (count($s) > 1) {
@@ -71,7 +73,7 @@ if ($stx) {
 
     $search_query = 'sfl='.urlencode($sfl).'&amp;stx='.urlencode($stx).'&amp;sop='.$sop;
 
-    // 검색필드를 구분자로 나눈다. 여기서는 +
+    // Split search fields by delimiter. + used here
     $field = explode('||', trim($sfl));
 
     $str = '(';
@@ -83,14 +85,14 @@ if ($stx) {
 
         $search_str = $s[$i];
 
-        // 인기검색어
+        // Popular search terms
         insert_popular($field, $search_str);
 
         $str .= $op1;
         $str .= "(";
 
         $op2 = '';
-        // 필드의 수만큼 다중 필드 검색 가능 (필드1+필드2...)
+        // Search multiple fields (field1+field2...)
         for ($k = 0; $k < count($field); $k++) {
             $str .= $op2;
             switch ($field[$k]) {
@@ -107,7 +109,7 @@ if ($stx) {
                     }
                     break;
                 default :
-                    $str .= "1=0"; // 항상 거짓
+                    $str .= "1=0"; // Always false
                     break;
             }
             $op2 = " or ";
@@ -155,13 +157,13 @@ if ($stx) {
     }
 
     $rows = $srows;
-    $total_page = ceil($total_count / $rows);  // 전체 페이지 계산
+    $total_page = ceil($total_count / $rows);  // Calculate total pages
     if ($page < 1) {
         $page = 1;
-    }                                          // 페이지가 없으면 첫 페이지 (1 페이지)
+    }                                          // If no page, set to first page (1)
     $from_record = ($page - 1) * $rows;
-    // 시작 열을 구함
-    $counter = count($search_table);        // 시작 열을 구함
+    // Calculate start record
+    $counter = count($search_table);        // Calculate start record
 
     for ($i = 0; $i < $counter; $i++) {
         if ($from_record < $search_table_count[$i]) {
@@ -186,7 +188,7 @@ if ($stx) {
         $sql = " select * from {$tmp_write_table} where {$sql_search} order by wr_id desc limit {$from_record}, {$rows} ";
         $result = sql_query($sql);
         for ($i = 0; $row = sql_fetch_array($result); $i++) {
-            // 검색어까지 링크되면 게시판 부하가 일어남
+            // Search terms should not link to the board to avoid load
             $list[$idx][$i] = $row;
             $list[$idx][$i]['href'] = get_pretty_url($search_table[$idx], $row['wr_parent']);
 
@@ -197,9 +199,9 @@ if ($stx) {
                 $row['wr_subject'] = get_text($row2['wr_subject']);
             }
 
-            // 비밀글은 검색 불가
+            // Private posts are not searchable
             if (strstr($row['wr_option'].(isset($row2['wr_option']) ? $row2['wr_option'] : ''), 'secret')) {
-                $row['wr_content'] = '[비밀글 입니다.]';
+                $row['wr_content'] = '[Private post]';
             }
 
             $subject = get_text($row['wr_subject']);
@@ -245,7 +247,8 @@ if ($stx) {
         $_SERVER['SCRIPT_NAME'].'?'.$search_query.'&amp;gr_id='.$gr_id.'&amp;srows='.$srows.'&amp;onetable='.$onetable.'&amp;page=');
 }
 
-$group_select = '<label for="gr_id" class="sound_only">게시판 그룹선택</label><select name="gr_id" id="gr_id" class="select"><option value="">전체 분류';
+// Board group selection
+$group_select = '<label for="gr_id" class="sound_only">Select Board Group</label><select name="gr_id" id="gr_id" class="select"><option value="">All Groups';
 $sql = " select gr_id, gr_subject from {$g5['group_table']} order by gr_id ";
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {

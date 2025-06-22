@@ -7,7 +7,7 @@ $delete_token = get_session('ss_delete_token');
 set_session('ss_delete_token', '');
 
 if (!($token && $delete_token == $token)) {
-    alert('토큰 에러로 삭제 불가합니다.');
+    alert('Token error, deletion is not possible.');
 }
 
 //$wr = sql_fetch(" select * from $write_table where wr_id = '$wr_id' ");
@@ -18,29 +18,29 @@ $count_write = $count_comment = 0;
 
 if ($is_admin != 'super') {
     if ($is_admin == 'group') {
-        // 그룹관리자
+        // Group administrator
         $mb = get_member($write['mb_id']);
         if ($member['mb_id'] != $group['gr_admin']) {
-            alert('자신이 관리하는 그룹의 게시판이 아니므로 삭제할 수 없습니다.');
+            alert('This is not a board managed by the group administrator, so it cannot be deleted.');
         } elseif ($member['mb_level'] < $mb['mb_level']) {
-            alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
+            alert('This is a post written by a member with higher authority than you, so it cannot be deleted.');
         }
     } elseif ($is_admin == 'board') {
-        // 게시판관리자이면
+        // Board administrator
         $mb = get_member($write['mb_id']);
         if ($member['mb_id'] != $board['bo_admin']) {
-            alert('자신이 관리하는 게시판이 아니므로 삭제할 수 없습니다.');
+            alert('This is not a board managed by the board administrator, so it cannot be deleted.');
         } elseif ($member['mb_level'] < $mb['mb_level']) {
-            alert('자신의 권한보다 높은 권한의 회원이 작성한 글은 삭제할 수 없습니다.');
+            alert('This is a post written by a member with higher authority than you, so it cannot be deleted.');
         }
     } elseif ($member['mb_id']) {
         if ($member['mb_id'] !== $write['mb_id']) {
-            alert('자신의 글이 아니므로 삭제할 수 없습니다.');
+            alert('This is not your post, so it cannot be deleted.');
         }
     } elseif ($write['mb_id']) {
-        alert('로그인 후 삭제하세요.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
+        alert('Please log in before deleting.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
     } elseif (!check_password($wr_password, $write['wr_password'])) {
-        alert('비밀번호가 틀리므로 삭제할 수 없습니다.');
+        alert('The password is incorrect, so it cannot be deleted.');
     }
 }
 
@@ -50,7 +50,7 @@ if ($len < 0) {
 }
 $reply = substr($write['wr_reply'], 0, $len);
 
-// 원글만 구한다.
+// Only get original post.
 $sql = " select count(*) as cnt from $write_table
             where wr_reply like '$reply%'
             and wr_id <> '{$write['wr_id']}'
@@ -58,37 +58,37 @@ $sql = " select count(*) as cnt from $write_table
             and wr_is_comment = 0 ";
 $row = sql_fetch($sql);
 if ($row['cnt'] && !$is_admin) {
-    alert('이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.');
+    alert('There is a related reply post, so it cannot be deleted.\n\nPlease delete the reply post first.');
 }
 
-// 코멘트 달린 원글의 삭제 여부
+// Check if the original post with different member has comments
 $sql = " select count(*) as cnt from $write_table
             where wr_parent = '$wr_id'
             and mb_id <> '{$member['mb_id']}'
             and wr_is_comment = 1 ";
 $row = sql_fetch($sql);
 if ($row['cnt'] >= $board['bo_count_delete'] && !$is_admin) {
-    alert('이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '.$board['bo_count_delete'].'건 이상 달린 원글은 삭제할 수 없습니다.');
+    alert('There is a related comment, so it cannot be deleted.\n\nIf there are more than '.$board['bo_count_delete'].' related comments, the original post cannot be deleted.');
 }
 
 
-// 사용자 코드 실행
+// Execute user code
 @include_once($board_skin_path.'/delete.skin.php');
 
 
-// 나라오름님 수정 : 원글과 코멘트수가 정상적으로 업데이트 되지 않는 오류를 잡아 주셨습니다.
+// Fixed by Naraoreum: Fixed the bug where the number of original posts and comments were not updated correctly.
 //$sql = " select wr_id, mb_id, wr_comment from $write_table where wr_parent = '$write[wr_id]' order by wr_id ";
 $sql = " select wr_id, mb_id, wr_is_comment, wr_content from $write_table where wr_parent = '{$write['wr_id']}' order by wr_id ";
 $result = sql_query($sql);
 while ($row = sql_fetch_array($result)) {
-    // 원글이라면
+    // Original post
     if (!$row['wr_is_comment']) {
-        // 원글 포인트 삭제
-        if (!delete_point($row['mb_id'], $bo_table, $row['wr_id'], '쓰기')) {
-            insert_point($row['mb_id'], $board['bo_write_point'] * (-1), "{$board['bo_subject']} {$row['wr_id']} 글삭제");
+        // Delete original post points
+        if (!delete_point($row['mb_id'], $bo_table, $row['wr_id'], 'Write')) {
+            insert_point($row['mb_id'], $board['bo_write_point'] * (-1), "{$board['bo_subject']} {$row['wr_id']} post deleted");
         }
 
-        // 업로드된 파일이 있다면 파일삭제
+        // Delete uploaded files
         $sql2 = " select * from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '{$row['wr_id']}' ";
         $result2 = sql_query($sql2);
         while ($row2 = sql_fetch_array($result2)) {
@@ -97,41 +97,41 @@ while ($row = sql_fetch_array($result)) {
             if (file_exists($delete_file)) {
                 @unlink($delete_file);
             }
-            // 썸네일삭제
+            // Delete thumbnail
             if (preg_match("/\.({$config['cf_image_extension']})$/i", $row2['bf_file'])) {
                 delete_board_thumbnail($bo_table, $row2['bf_file']);
             }
         }
 
-        // 에디터 썸네일 삭제
+        // Delete editor thumbnail
         delete_editor_thumbnail($row['wr_content']);
 
-        // 파일테이블 행 삭제
+        // Delete file table row
         sql_query(" delete from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '{$row['wr_id']}' ");
 
         $count_write++;
     } else {
-        // 코멘트 포인트 삭제
-        if (!delete_point($row['mb_id'], $bo_table, $row['wr_id'], '댓글')) {
+        // Delete comment points
+        if (!delete_point($row['mb_id'], $bo_table, $row['wr_id'], 'Comment')) {
             insert_point($row['mb_id'], $board['bo_comment_point'] * (-1),
-                "{$board['bo_subject']} {$write['wr_id']}-{$row['wr_id']} 댓글삭제");
+                "{$board['bo_subject']} {$write['wr_id']}-{$row['wr_id']} comment deleted");
         }
 
         $count_comment++;
     }
 }
 
-// 게시글과 댓글 삭제
+// Delete post and comments
 sql_query(" delete from $write_table where wr_parent = '{$write['wr_id']}' ");
 
-// 최근게시물 삭제
+// Delete recent posts
 sql_query(" delete from {$g5['board_new_table']} where bo_table = '$bo_table' and wr_parent = '{$write['wr_id']}' ");
 
-// 스크랩 삭제
+// Delete scrap
 sql_query(" delete from {$g5['scrap_table']} where bo_table = '$bo_table' and wr_id = '{$write['wr_id']}' ");
 
 /*
-// 공지사항 삭제
+// Delete notice
 $notice_array = explode("\n", trim($board['bo_notice']));
 $bo_notice = "";
 for ($k=0; $k<count($notice_array); $k++)
@@ -142,7 +142,7 @@ $bo_notice = trim($bo_notice);
 $bo_notice = board_notice($board['bo_notice'], $write['wr_id']);
 sql_query(" update {$g5['board_table']} set bo_notice = '$bo_notice' where bo_table = '$bo_table' ");
 
-// 글숫자 감소
+// Decrease post count
 if ($count_write > 0 || $count_comment > 0) {
     sql_query(" update {$g5['board_table']} set bo_count_write = bo_count_write - '$count_write', bo_count_comment = bo_count_comment - '$count_comment' where bo_table = '$bo_table' ");
 }

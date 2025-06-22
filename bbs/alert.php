@@ -6,25 +6,25 @@ global $lo_url;
 include_once(__DIR__ . '/../common.php');
 
 
-$g5['title'] = $error ? "오류안내 페이지" : "결과안내 페이지";
+$g5['title'] = $error ? "Error Notice Page" : "Result Notice Page";
 include_once(G5_PATH.'/head.sub.php');
-// 필수 입력입니다.
-// 양쪽 공백 없애기
-// 필수 (선택 혹은 입력)입니다.
-// 전화번호 형식이 올바르지 않습니다. 하이픈(-)을 포함하여 입력하세요.
-// 이메일주소 형식이 아닙니다.
-// 한글이 아닙니다. (자음, 모음만 있는 한글은 처리하지 않습니다.)
-// 한글이 아닙니다.
-// 한글, 영문, 숫자가 아닙니다.
-// 한글, 영문이 아닙니다.
-// 숫자가 아닙니다.
-// 영문이 아닙니다.
-// 영문 또는 숫자가 아닙니다.
-// 영문, 숫자, _ 가 아닙니다.
-// 최소 글자 이상 입력하세요.
-// 이미지 파일이 아닙니다..gif .jpg .png 파일만 가능합니다.
-// 파일만 가능합니다.
-// 공백이 없어야 합니다.
+// Required input.
+// Remove spaces on both sides
+// Required (selection or input)
+// The phone number format is incorrect. Please include hyphens (-).
+// The email address format is incorrect.
+// Korean is not allowed. (Korean with only consonants or vowels is not processed.)
+// Korean is not allowed.
+// Korean, English, and numbers are not allowed.
+// Korean and English are not allowed.
+// Numbers are not allowed.
+// English is not allowed.
+// English or numbers are not allowed.
+// English, numbers, and _ are not allowed.
+// Please enter at least the minimum number of characters.
+// The image file is not allowed. Only .gif, .jpg, .png files are allowed.
+// Only files are allowed.
+// Spaces are not allowed.
 
 $msg = isset($msg) ? strip_tags($msg) : '';
 $msg2 = str_replace("\\n", "<br>", $msg);
@@ -37,10 +37,10 @@ if (!$url) {
 $url = preg_replace("/[\<\>\'\"\\\'\\\"\(\)]/", "", $url);
 $url = preg_replace('/\r\n|\r|\n|[^\x20-\x7e]/', '', $url);
 
-// url 체크
+// url check
 check_url_host($url, $msg);
 
-$header2 = $error ? "다음 항목에 오류가 있습니다." : "다음 내용을 확인해 주세요.";
+$header2 = $error ? "There is an error in the following item." : "Please check the following content.";
 ?>
 
     <script>
@@ -83,13 +83,13 @@ $header2 = $error ? "다음 항목에 오류가 있습니다." : "다음 내용�
                         <?php
                     }
                     ?>
-                    <input type="submit" value="돌아가기">
+                    <input type="submit" value="Back">
                 </form>
             <?php
             } else { ?>
                 <div class="btn_confirm">
                     <a href="<?php
-                    echo $url ?>">돌아가기</a>
+                    echo $url ?>">Back</a>
                 </div>
             <?php
             } ?>
@@ -113,7 +113,7 @@ $header2 = $error ? "다음 항목에 오류가 있습니다." : "다음 내용�
                <?php echo $msg2 ?>
            </p>
 
-           <a href="<?php echo $url ?>">돌아가기</a>
+           <a href="<?php echo $url ?>">Back</a>
            </article>
            */ ?>
         </div>

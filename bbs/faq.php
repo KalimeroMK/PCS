@@ -2,10 +2,9 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
-//dbconfig파일에 $g5['faq_table'] , $g5['faq_master_table'] 배열변수가 있는지 체크
+// Check if $g5['faq_table'] and $g5['faq_master_table'] array variables exist in dbconfig file
 if (!isset($g5['faq_table']) || !isset($g5['faq_master_table'])) {
-    die('<meta charset="utf-8">관리자 모드에서 게시판관리->FAQ관리를 먼저 확인해 주세요.');
+    die('<meta charset="utf-8">Please check Board Management->FAQ Management in admin mode first.');
 }
 
 // FAQ MASTER
@@ -23,13 +22,13 @@ while ($row = sql_fetch_array($result)) {
 $fm = [];
 if (isset($fm_id) && $fm_id) {
     $fm_id = (int)$fm_id;
-    $qstr .= '&amp;fm_id='.$fm_id; // 마스터faq key_id
+    $qstr .= '&amp;fm_id='.$fm_id; // masterfaq key_id
 
     $fm = $faq_master_list[$fm_id];
 }
 
 if (!(isset($fm['fm_id']) && $fm['fm_id'])) {
-    alert('등록된 내용이 없습니다.');
+    alert('The registered content does not exist.');
 }
 
 $g5['title'] = $fm['fm_subject'];
@@ -70,7 +69,7 @@ if (is_file($skin_file)) {
 
     if ($page < 1) {
         $page = 1;
-    } // 페이지가 없으면 첫 페이지 (1 페이지)
+    } // If there are no pages, set to first page (page 1)
 
     $page_rows = G5_IS_MOBILE ? $config['cf_mobile_page_rows'] : $config['cf_page_rows'];
 
@@ -81,8 +80,8 @@ if (is_file($skin_file)) {
     $total = sql_fetch($sql);
     $total_count = $total['cnt'];
 
-    $total_page = ceil($total_count / $page_rows);  // 전체 페이지 계산
-    $from_record = ($page - 1) * $page_rows;        // 시작 열을 구함
+    $total_page = ceil($total_count / $page_rows);  // Calculate total pages
+    $from_record = ($page - 1) * $page_rows;        // Get start row
 
     $sql = " select *
                 from {$g5['faq_table']}
@@ -100,7 +99,7 @@ if (is_file($skin_file)) {
     }
     include_once($skin_file);
 } else {
-    echo '<p>'.str_replace(G5_PATH.'/', '', $skin_file).'이 존재하지 않습니다.</p>';
+    echo '<p>'.str_replace(G5_PATH.'/', '', $skin_file).' does not exist.</p>';
 }
 
 include_once(__DIR__ . '/tail.php');

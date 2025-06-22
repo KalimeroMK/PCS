@@ -3,7 +3,7 @@
 include_once(__DIR__ . '/../common.php');
 
 
-$g5['title'] = '현재접속자';
+$g5['title'] = 'Current Visitors';
 include_once(__DIR__ . '/../head.php');
 $list = [];
 

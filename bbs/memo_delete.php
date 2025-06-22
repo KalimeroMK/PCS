@@ -4,14 +4,14 @@ include_once(__DIR__ . '/../common.php');
 
 
 if (!$is_member) {
-    alert('회원만 이용하실 수 있습니다.');
+    alert('Only members can use this feature.');
 }
 
 $delete_token = get_session('ss_memo_delete_token');
 set_session('ss_memo_delete_token', '');
 
 if (!($token && $delete_token == $token)) {
-    alert('토큰 에러로 삭제 불가합니다.');
+    alert('Token error, deletion failed.');
 }
 
 $me_id = isset($_REQUEST['me_id']) ? (int)$_REQUEST['me_id'] : 0;
@@ -24,7 +24,7 @@ $sql = " delete from {$g5['memo_table']}
             and (me_recv_mb_id = '{$member['mb_id']}' or me_send_mb_id = '{$member['mb_id']}') ";
 sql_query($sql);
 
-if (!$row['me_read_datetime'][0]) // 메모 받기전이면
+if (!$row['me_read_datetime'][0]) // If memo was not read yet
 {
     $sql = " update {$g5['member_table']}
                 set mb_memo_call = ''

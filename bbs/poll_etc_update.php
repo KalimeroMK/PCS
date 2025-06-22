@@ -10,7 +10,7 @@ if ($w == '') {
     $pc_idea = isset($_POST['pc_idea']) ? clean_xss_tags($_POST['pc_idea'], 1, 1) : '';
     $po = sql_fetch(" select * from {$g5['poll_table']} where po_id = '{$po_id}' ");
     if (!$po['po_id']) {
-        alert('po_id 값이 제대로 넘어오지 않았습니다.');
+        alert('The value of po_id was not passed correctly.');
     }
     $tmp_row = sql_fetch(" select max(pc_id) as max_pc_id from {$g5['poll_etc_table']} ");
     $pc_id = $tmp_row['max_pc_id'] + 1;
@@ -24,7 +24,7 @@ if ($w == '') {
     if ($member['mb_id']) {
         $mb_id = '('.$member['mb_id'].')';
     }
-    // 환경설정의 투표 기타의견 작성시 최고관리자에게 메일발송 사용에 체크되어 있을 경우
+    // When writing other opinions for poll, if admin email notification is enabled, send to super admin
     if ($config['cf_email_po_super_admin']) {
         $subject = $po['po_subject'];
         $content = $pc_idea;
@@ -34,10 +34,10 @@ if ($w == '') {
         $content = ob_get_contents();
         ob_end_clean();
 
-        // 관리자에게 보내는 메일
+        // Send mail to admin
         $admin = get_admin('super');
         $from_email = $member['mb_email'] ? $member['mb_email'] : $admin['mb_email'];
-        mailer($name, $from_email, $admin['mb_email'], '['.$config['cf_title'].'] 설문조사 기타의견 메일', $content, 1);
+        mailer($name, $from_email, $admin['mb_email'], '['.$config['cf_title'].'] Poll Other Opinion Mail', $content, 1);
     }
 } elseif ($w == 'd') {
     if ($member['mb_id'] || $is_admin == 'super') {

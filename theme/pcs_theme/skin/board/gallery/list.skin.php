@@ -1,5 +1,5 @@
 <?php
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // individual page access not allowed
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
@@ -7,12 +7,12 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 ?>
 
 
-<!-- 게시판 목록 시작 { -->
+<!-- board list start { -->
 <div id="bo_gall" style="width:<?php echo $width; ?>">
 
     <?php if ($is_category) { ?>
     <nav id="bo_cate">
-        <h2><?php echo $board['bo_subject'] ?> 카테고리</h2>
+        <h2><?php echo $board['bo_subject'] ?> Category</h2>
         <ul id="bo_cate_ul">
             <?php echo $category_option ?>
         </ul>
@@ -29,42 +29,42 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <input type="hidden" name="page" value="<?php echo $page ?>">
     <input type="hidden" name="sw" value="">
 
-    <!-- 게시판 페이지 정보 및 버튼 시작 { -->
+    <!-- board page info and button start { -->
     <div id="bo_btn_top">
         <div id="bo_list_total">
-            <span>Total <?php echo number_format($total_count) ?>건</span>
-            <?php echo $page ?> 페이지
+            <span>Total <?php echo number_format($total_count) ?> posts</span>
+            <?php echo $page ?> page
         </div>
 
         <ul class="btn_bo_user">
-        	<?php if ($admin_href) { ?><li><a href="<?php echo $admin_href ?>" class="btn_admin btn" title="관리자"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">관리자</span></a></li><?php } ?>
+        	<?php if ($admin_href) { ?><li><a href="<?php echo $admin_href ?>" class="btn_admin btn" title="Admin"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">Admin</span></a></li><?php } ?>
             <?php if ($rss_href) { ?><li><a href="<?php echo $rss_href ?>" class="btn_b01 btn" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i><span class="sound_only">RSS</span></a></li><?php } ?>
             <li>
-            	<button type="button" class="btn_bo_sch btn_b01 btn" title="게시판 검색"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">게시판 검색</span></button> 
+            	<button type="button" class="btn_bo_sch btn_b01 btn" title="Board Search"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">Board Search</span></button> 
             </li>
-            <?php if ($write_href) { ?><li><a href="<?php echo $write_href ?>" class="btn_b01 btn" title="글쓰기"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sound_only">글쓰기</span></a></li><?php } ?>
+            <?php if ($write_href) { ?><li><a href="<?php echo $write_href ?>" class="btn_b01 btn" title="Write"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sound_only">Write</span></a></li><?php } ?>
         	<?php if ($is_admin == 'super' || $is_auth) {  ?>
         	<li>
-        		<button type="button" class="btn_more_opt is_list_btn btn_b01 btn" title="게시판 리스트 옵션"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sound_only">게시판 리스트 옵션</span></button>
+        		<button type="button" class="btn_more_opt is_list_btn btn_b01 btn" title="Board List Options"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sound_only">Board List Options</span></button>
         		<?php if ($is_checkbox) { ?>	
 		        <ul class="more_opt is_list_btn">  
-		            <li><button type="submit" name="btn_submit" value="선택삭제" onclick="document.pressed=this.value"><i class="fa fa-trash-o" aria-hidden="true"></i> 선택삭제</button></li>
-		            <li><button type="submit" name="btn_submit" value="선택복사" onclick="document.pressed=this.value"><i class="fa fa-files-o" aria-hidden="true"></i> 선택복사</button></li>
-		            <li><button type="submit" name="btn_submit" value="선택이동" onclick="document.pressed=this.value"><i class="fa fa-arrows" aria-hidden="true"></i> 선택이동</button></li>
+		            <li><button type="submit" name="btn_submit" value="Delete Selected" onclick="document.pressed=this.value"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Selected</button></li>
+		            <li><button type="submit" name="btn_submit" value="Copy Selected" onclick="document.pressed=this.value"><i class="fa fa-files-o" aria-hidden="true"></i> Copy Selected</button></li>
+		            <li><button type="submit" name="btn_submit" value="Move Selected" onclick="document.pressed=this.value"><i class="fa fa-arrows" aria-hidden="true"></i> Move Selected</button></li>
 		        </ul>
 		        <?php } ?>
         	</li>
         	<?php }  ?>
         </ul>
     </div>
-    <!-- } 게시판 페이지 정보 및 버튼 끝 -->
+    <!-- } board page info and button end -->
 
     <?php if ($is_checkbox) { ?>
     <div id="gall_allchk" class="all_chk chk_box">
         <input type="checkbox" id="chkall" onclick="if (this.checked) all_checked(true); else all_checked(false);" class="selec_chk">
     	<label for="chkall">
         	<span></span>
-        	<b class="sound_only">현재 페이지 게시물 </b> 전체선택
+        	<b class="sound_only">Select all posts on this page</b>
         </label>
     </div>
     <?php } ?>
@@ -100,7 +100,7 @@ $counter = count($list);<?php for ($i=0; $i<$counter; $i++) {
 	                <span class="sound_only">
 	                    <?php
 	                    if ($wr_id == $list[$i]['wr_id'])
-	                        echo "<span class=\"bo_current\">열람중</span>";
+	                        echo "<span class=\"bo_current\">Currently viewing</span>";
 	                    else
 	                        echo $list[$i]['num'];
 	                     ?>
@@ -110,8 +110,8 @@ $counter = count($list);<?php for ($i=0; $i<$counter; $i++) {
                     <div class="gall_img">
                         <a href="<?php echo $list[$i]['href'] ?>">
                         <?php
-                        if ($list[$i]['is_notice']) { // 공지사항  ?>
-                            <span class="is_notice">공지</span>
+                        if ($list[$i]['is_notice']) { // notice ?>
+                            <span class="is_notice">Notice</span>
                         <?php } else {
                             $thumb = get_list_thumbnail($board['bo_table'], $list[$i]['wr_id'], $board['bo_gallery_width'], $board['bo_gallery_height'], false, true);
 
@@ -133,79 +133,79 @@ $counter = count($list);<?php for ($i=0; $i<$counter; $i++) {
                         <a href="<?php echo $list[$i]['href'] ?>" class="bo_tit">
                             
                             <?php // echo $list[$i]['icon_reply']; ?>
-                        	<!-- 갤러리 댓글기능 사용시 주석을 제거하세요. -->
+                        	<!-- Please remove the comment function in the gallery if not used. -->
                         
                             <?php echo $list[$i]['subject'] ?>                      
                             <?php
                             // if ($list[$i]['file']['count']) { echo '<'.$list[$i]['file']['count'].'>'; }
-                            if ($list[$i]['icon_new']) echo "<span class=\"new_icon\">N<span class=\"sound_only\">새글</span></span>";
+                            if ($list[$i]['icon_new']) echo "<span class=\"new_icon\">N<span class=\"sound_only\">New</span></span>";
                             if (isset($list[$i]['icon_hot'])) echo rtrim($list[$i]['icon_hot']);
                             //if (isset($list[$i]['icon_file'])) echo rtrim($list[$i]['icon_file']);
                             //if (isset($list[$i]['icon_link'])) echo rtrim($list[$i]['icon_link']);
                             if (isset($list[$i]['icon_secret'])) echo rtrim($list[$i]['icon_secret']);
 							?>
-							<?php if ($list[$i]['comment_cnt']) { ?><span class="sound_only">댓글</span><span class="cnt_cmt"><?php echo $list[$i]['wr_comment']; ?></span><span class="sound_only">개</span><?php } ?>
+							<?php if ($list[$i]['comment_cnt']) { ?><span class="sound_only">Comments</span><span class="cnt_cmt"><?php echo $list[$i]['wr_comment']; ?></span><span class="sound_only"> posts</span><?php } ?>
                          </a>
                          <span class="bo_cnt"><?php echo utf8_strcut(strip_tags($list[$i]['wr_content']), 68, '..'); ?></span>
                     </div>
 
                     <div class="gall_info">
-                    	<span class="sound_only">작성자 </span><?php echo $list[$i]['name'] ?>
-                        <span class="gall_date"><span class="sound_only">작성일 </span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $list[$i]['datetime2'] ?></span>
-                    	<span class="gall_view"><span class="sound_only">조회 </span><i class="fa fa-eye" aria-hidden="true"></i> <?php echo $list[$i]['wr_hit'] ?></span>
+                    	<span class="sound_only">Author </span><?php echo $list[$i]['name'] ?>
+                        <span class="gall_date"><span class="sound_only">Date </span><i class="fa fa-clock-o" aria-hidden="true"></i> <?php echo $list[$i]['datetime2'] ?></span>
+                    	<span class="gall_view"><span class="sound_only">Views </span><i class="fa fa-eye" aria-hidden="true"></i> <?php echo $list[$i]['wr_hit'] ?></span>
                     </div>
                     <div class="gall_option">
-                    	<?php if ($is_good) { ?><span class="sound_only">추천</span><strong><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <?php echo $list[$i]['wr_good'] ?></strong><?php } ?>
-                        <?php if ($is_nogood) { ?><span class="sound_only">비추천</span><strong><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> <?php echo $list[$i]['wr_nogood'] ?></strong><?php } ?>           
+                    	<?php if ($is_good) { ?><span class="sound_only">Like</span><strong><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <?php echo $list[$i]['wr_good'] ?></strong><?php } ?>
+                        <?php if ($is_nogood) { ?><span class="sound_only">Dislike</span><strong><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> <?php echo $list[$i]['wr_nogood'] ?></strong><?php } ?>           
                     </div>
                 </div>
             </div>
         </li>
         <?php } ?>
-        <?php if (count($list) == 0) { echo "<li class=\"empty_list\">게시물이 없습니다.</li>"; } ?>
+        <?php if (count($list) == 0) { echo "<li class=\"empty_list\">No posts available.</li>"; } ?>
     </ul>
 	
-	<!-- 페이지 -->
+	<!-- page -->
 	<?php echo $write_pages; ?>
-	<!-- 페이지 -->
+	<!-- page -->
 	
 	<?php if ($list_href || $is_checkbox || $write_href) { ?>
     <div class="bo_fx">
         <?php if ($list_href || $write_href) { ?>
         <ul class="btn_bo_user">
-        	<?php if ($admin_href) { ?><li><a href="<?php echo $admin_href ?>" class="btn_admin btn" title="관리자"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">관리자</span></a></li><?php } ?>
+        	<?php if ($admin_href) { ?><li><a href="<?php echo $admin_href ?>" class="btn_admin btn" title="Admin"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">Admin</span></a></li><?php } ?>
             <?php if ($rss_href) { ?><li><a href="<?php echo $rss_href ?>" class="btn_b01 btn" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i><span class="sound_only">RSS</span></a></li><?php } ?>
-            <?php if ($write_href) { ?><li><a href="<?php echo $write_href ?>" class="btn_b01 btn" title="글쓰기"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sound_only">글쓰기</span></a></li><?php } ?>
+            <?php if ($write_href) { ?><li><a href="<?php echo $write_href ?>" class="btn_b01 btn" title="Write"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sound_only">Write</span></a></li><?php } ?>
         </ul>	
         <?php } ?>
     </div>
     <?php } ?> 
     </form>
 
-    <!-- 게시판 검색 시작 { -->
+    <!-- board search start { -->
     <div class="bo_sch_wrap">	
         <fieldset class="bo_sch">
-            <h3>검색</h3>
+            <h3>Search</h3>
             <form name="fsearch" method="get">
             <input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
             <input type="hidden" name="sca" value="<?php echo $sca ?>">
             <input type="hidden" name="sop" value="and">
-            <label for="sfl" class="sound_only">검색대상</label>
+            <label for="sfl" class="sound_only">Search Target</label>
             <select name="sfl" id="sfl">
                 <?php echo get_board_sfl_select_options($sfl); ?>
             </select>
-            <label for="stx" class="sound_only">검색어<strong class="sound_only"> 필수</strong></label>
+            <label for="stx" class="sound_only">Search Term<strong class="sound_only"> required</strong></label>
             <div class="sch_bar">
-                <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="sch_input" size="25" maxlength="20" placeholder="검색어를 입력해주세요">
-                <button type="submit" value="검색" class="sch_btn"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">검색</span></button>
+                <input type="text" name="stx" value="<?php echo stripslashes($stx) ?>" required id="stx" class="sch_input" size="25" maxlength="20" placeholder="Please enter a search term">
+                <button type="submit" value="Search" class="sch_btn"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">Search</span></button>
             </div>
-            <button type="button" class="bo_sch_cls"><i class="fa fa-times" aria-hidden="true"></i><span class="sound_only">닫기</span></button>
+            <button type="button" class="bo_sch_cls"><i class="fa fa-times" aria-hidden="true"></i><span class="sound_only">Close</span></button>
             </form>
         </fieldset>
         <div class="bo_sch_bg"></div>
     </div>
     <script>
-        // 게시판 검색
+        // board search
         $(".btn_bo_sch").on("click", function() {
             $(".bo_sch_wrap").toggle();
         })
@@ -213,12 +213,12 @@ $counter = count($list);<?php for ($i=0; $i<$counter; $i++) {
             $('.bo_sch_wrap').hide();
         });
     </script>
-    <!-- } 게시판 검색 끝 -->
+    <!-- } board search end -->
 </div>
 
 <?php if($is_checkbox) { ?>
 <noscript>
-<p>자바스크립트를 사용하지 않는 경우<br>별도의 확인 절차 없이 바로 선택삭제 처리하므로 주의하시기 바랍니다.</p>
+<p>Please note that JavaScript is not enabled. Posts will be deleted without confirmation.</p>
 </noscript>
 <?php } ?>
 
@@ -242,22 +242,22 @@ function fboardlist_submit(f) {
     }
 
     if (!chk_count) {
-        alert(document.pressed + "할 게시물을 하나 이상 선택하세요.");
+        alert(document.pressed + " Please select at least one post.");
         return false;
     }
 
-    if(document.pressed == "선택복사") {
+    if(document.pressed == "Copy Selected") {
         select_copy("copy");
         return;
     }
 
-    if(document.pressed == "선택이동") {
+    if(document.pressed == "Move Selected") {
         select_copy("move");
         return;
     }
 
-    if(document.pressed == "선택삭제") {
-        if (!confirm("선택한 게시물을 정말 삭제하시겠습니까?\n\n한번 삭제한 자료는 복구할 수 없습니다\n\n답변글이 있는 게시글을 선택하신 경우\n답변글도 선택하셔야 게시글이 삭제됩니다."))
+    if(document.pressed == "Delete Selected") {
+        if (!confirm("Are you sure you want to delete the selected posts?\n\nOnce deleted, posts cannot be recovered.\n\nIf you have selected a post with replies, please select the replies as well to delete the post."))
             return false;
 
         f.removeAttribute("target");
@@ -267,14 +267,14 @@ function fboardlist_submit(f) {
     return true;
 }
 
-// 선택한 게시물 복사 및 이동
+// select and copy/move posts
 function select_copy(sw) {
     var f = document.fboardlist;
 
     if (sw == 'copy')
-        str = "복사";
+        str = "Copy";
     else
-        str = "이동";
+        str = "Move";
 
     var sub_win = window.open("", "move", "left=50, top=50, width=500, height=550, scrollbars=1");
 
@@ -284,7 +284,7 @@ function select_copy(sw) {
     f.submit();
 }
 
-// 게시판 리스트 관리자 옵션
+// board list admin options
 jQuery(function($){
     $(".btn_more_opt.is_list_btn").on("click", function(e) {
         e.stopPropagation();
@@ -298,4 +298,4 @@ jQuery(function($){
 });
 </script>
 <?php } ?>
-<!-- } 게시판 목록 끝 -->
+<!-- } board list end -->

@@ -2,9 +2,9 @@
 
 if (!defined('_GNUBOARD_')) {
     exit;
-} // 개별 페이지 접근 불가
+} // Individual page access not allowed
 
-// 게시판에서 두단어 이상 검색 후 검색된 게시물에 코멘트를 남기면 나오던 오류 수정
+// Fix for error when leaving a comment on a searched post after searching in the board
 $sop = strtolower($sop);
 if ($sop !== 'and' && $sop !== 'or') {
     $sop = 'and';
@@ -13,9 +13,9 @@ if ($sop !== 'and' && $sop !== 'or') {
 @include_once($board_skin_path.'/view.head.skin.php');
 
 $sql_search = "";
-// 검색이면
+// If searching
 if ($sca || $stx || $stx === '0') {
-    // where 문을 얻음
+    // Get where clause
     $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
     $search_href = get_pretty_url($bo_table, '', '&amp;page='.$page.$qstr);
     $list_href = get_pretty_url($bo_table);
@@ -29,26 +29,26 @@ if (!$board['bo_use_list_view']) {
         $sql_search = " and ".$sql_search;
     }
 
-    // 윗글을 얻음
+    // Get previous post
     $sql = " select wr_id, wr_subject, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply < '{$write['wr_reply']}' {$sql_search} order by wr_num desc, wr_reply desc limit 1 ";
     $prev = sql_fetch($sql);
-    // 위의 쿼리문으로 값을 얻지 못했다면
+    // If value cannot be obtained with the above query
     if (!(isset($prev['wr_id']) && $prev['wr_id'])) {
         $sql = " select wr_id, wr_subject, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num < '{$write['wr_num']}' {$sql_search} order by wr_num desc, wr_reply desc limit 1 ";
         $prev = sql_fetch($sql);
     }
 
-    // 아래글을 얻음
+    // Get next post
     $sql = " select wr_id, wr_subject, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply > '{$write['wr_reply']}' {$sql_search} order by wr_num, wr_reply limit 1 ";
     $next = sql_fetch($sql);
-    // 위의 쿼리문으로 값을 얻지 못했다면
+    // If value cannot be obtained with the above query
     if (!(isset($next['wr_id']) && $next['wr_id'])) {
         $sql = " select wr_id, wr_subject, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num > '{$write['wr_num']}' {$sql_search} order by wr_num, wr_reply limit 1 ";
         $next = sql_fetch($sql);
     }
 }
 
-// 이전글 링크
+// Previous post link
 $prev_href = '';
 if (isset($prev['wr_id']) && $prev['wr_id']) {
     $prev_wr_subject = get_text(cut_str($prev['wr_subject'], 255));
@@ -56,7 +56,7 @@ if (isset($prev['wr_id']) && $prev['wr_id']) {
     $prev_wr_date = $prev['wr_datetime'];
 }
 
-// 다음글 링크
+// Next post link
 $next_href = '';
 if (isset($next['wr_id']) && $next['wr_id']) {
     $next_wr_subject = get_text(cut_str($next['wr_subject'], 255));
@@ -64,32 +64,32 @@ if (isset($next['wr_id']) && $next['wr_id']) {
     $next_wr_date = $next['wr_datetime'];
 }
 
-// 쓰기 링크
+// Write link
 $write_href = '';
 if ($member['mb_level'] >= $board['bo_write_level']) {
     $write_href = short_url_clean(G5_BBS_URL.'/write.php?bo_table='.$bo_table);
 }
 
-// 답변 링크
+// Reply link
 $reply_href = '';
 if ($member['mb_level'] >= $board['bo_reply_level']) {
     $reply_href = short_url_clean(G5_BBS_URL.'/write.php?w=r&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
 }
 
-// 수정, 삭제 링크
+// Edit, delete link
 $update_href = $delete_href = '';
-// 로그인중이고 자신의 글이라면 또는 관리자라면 비밀번호를 묻지 않고 바로 수정, 삭제 가능
+// If logged in and own post, or if admin, can edit and delete without password
 if (($member['mb_id'] && ($member['mb_id'] === $write['mb_id'])) || $is_admin) {
     $update_href = short_url_clean(G5_BBS_URL.'/write.php?w=u&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr);
     set_session('ss_delete_token', $token = uniqid(time()));
     $delete_href = G5_BBS_URL.'/delete.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;token='.$token.'&amp;page='.$page.urldecode($qstr);
 } elseif (!$write['mb_id']) {
-    // 회원이 쓴 글이 아니라면
+    // If not a member's post
     $update_href = G5_BBS_URL.'/password.php?w=u&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
     $delete_href = G5_BBS_URL.'/password.php?w=d&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
 }
 
-// 최고, 그룹관리자라면 글 복사, 이동 가능
+// If super admin or group admin, can copy and move posts
 $copy_href = $move_href = '';
 if ($write['wr_reply'] == '' && ($is_admin == 'super' || $is_admin == 'group')) {
     $copy_href = G5_BBS_URL.'/move.php?sw=copy&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;page='.$page.$qstr;
@@ -100,15 +100,15 @@ $scrap_href = '';
 $good_href = '';
 $nogood_href = '';
 if ($is_member) {
-    // 스크랩 링크
+    // Scrap link
     $scrap_href = G5_BBS_URL.'/scrap_popin.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id;
 
-    // 추천 링크
+    // Recommend link
     if ($board['bo_use_good']) {
         $good_href = G5_BBS_URL.'/good.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;good=good';
     }
 
-    // 비추천 링크
+    // Not recommend link
     if ($board['bo_use_nogood']) {
         $nogood_href = G5_BBS_URL.'/good.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id.'&amp;good=nogood';
     }

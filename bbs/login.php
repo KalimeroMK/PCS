@@ -7,16 +7,16 @@ if (function_exists('social_check_login_before')) {
     $social_login_html = social_check_login_before();
 }
 
-$g5['title'] = '로그인';
+$g5['title'] = 'Login';
 include_once(__DIR__ . '/_head.sub.php');
 
 $url = isset($_GET['url']) ? strip_tags($_GET['url']) : '';
 $od_id = isset($_POST['od_id']) ? safe_replace_regex($_POST['od_id'], 'od_id') : '';
 
-// url 체크
+// url check
 check_url_host($url);
 
-// 이미 로그인 중이라면
+// If already logged in
 if ($is_member) {
     if ($url !== '' && $url !== '0') {
         goto_url($url);
@@ -28,7 +28,7 @@ if ($is_member) {
 $login_url = login_url($url);
 $login_action_url = G5_HTTPS_BBS_URL."/login_check.php";
 
-// 로그인 스킨이 없는 경우 관리자 페이지 접속이 안되는 것을 막기 위하여 기본 스킨으로 대체
+// If login skin does not exist, use the default skin to prevent admin page access issues
 $login_file = $member_skin_path.'/login.skin.php';
 if (!file_exists($login_file)) {
     $member_skin_path = G5_SKIN_PATH.'/member/basic';

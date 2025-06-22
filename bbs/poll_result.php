@@ -8,14 +8,14 @@ $po_id = isset($_REQUEST['po_id']) ? (int)$_REQUEST['po_id'] : '';
 
 $po = sql_fetch(" select * from {$g5['poll_table']} where po_id = '{$po_id}' ");
 if (!$po['po_id']) {
-    alert('설문조사 정보가 없습니다.');
+    alert('Poll information does not exist.');
 }
 
 if ($member['mb_level'] < $po['po_level']) {
-    alert('권한 '.$po['po_level'].' 이상의 회원만 결과를 보실 수 있습니다.');
+    alert('Only members with level '.$po['po_level'].' or higher can view the results.');
 }
 
-$g5['title'] = '설문조사 결과';
+$g5['title'] = 'Poll Results';
 
 $po_subject = $po['po_subject'];
 
@@ -62,7 +62,7 @@ for ($i = 1; $i <= $poll_max_count; $i++) {
 
 $list2 = [];
 
-// 기타의견 리스트
+// List of other opinions
 $sql = " select a.*, b.mb_open
            from {$g5['poll_etc_table']} a
            left join {$g5['member_table']} b on (a.mb_id = b.mb_id)
@@ -80,7 +80,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     }
 }
 
-// 기타의견 입력
+// Other opinions input
 $is_etc = false;
 if ($po['po_etc']) {
     $is_etc = true;
@@ -94,7 +94,7 @@ if ($po['po_etc']) {
 
 $list3 = [];
 
-// 다른투표
+// Other polls
 $sql = " select po_id, po_subject, po_date from {$g5['poll_table']} order by po_id desc ";
 $result = sql_query($sql);
 for ($i = 0; $row2 = sql_fetch_array($result); $i++) {

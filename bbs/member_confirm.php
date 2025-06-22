@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../common.php');
 
 
 if ($is_guest) {
-    alert('로그인 한 회원만 접근하실 수 있습니다.', G5_BBS_URL.'/login.php');
+    alert('Only logged-in members can access this page.', G5_BBS_URL.'/login.php');
 }
 
 $url = isset($_GET['url']) ? clean_xss_tags($_GET['url']) : '';
@@ -17,17 +17,17 @@ while (1) {
     $url = $tmp;
 }
 
-//소셜 로그인 한 경우
+//Social login case
 if (function_exists('social_member_comfirm_redirect') && (!$url || $url === 'register_form.php' || (function_exists('social_is_edit_page') && social_is_edit_page($url)))) {
     social_member_comfirm_redirect();
 }
 
 $url = run_replace('member_confirm_next_url', $url);
 
-$g5['title'] = '회원 비밀번호 확인';
+$g5['title'] = 'Member Password Confirmation';
 include_once(__DIR__ . '/_head.sub.php');
 
-// url 체크
+// url check
 check_url_host($url, '', G5_URL, true);
 
 if ($url) {

@@ -1,6 +1,6 @@
 <?php
 
-// 코멘트 삭제
+// Delete comment
 include_once(__DIR__ . '/../common.php');
 
 
@@ -10,7 +10,7 @@ $delete_comment_token = get_session('ss_delete_comment_'.$comment_id.'_token');
 set_session('ss_delete_comment_'.$comment_id.'_token', '');
 
 if (!($token && $delete_comment_token == $token)) {
-    alert('토큰 에러로 삭제 불가합니다.');
+    alert('Token error, deletion is not possible.');
 }
 
 // 4.1
@@ -19,36 +19,36 @@ if (!($token && $delete_comment_token == $token)) {
 $write = sql_fetch(" select * from {$write_table} where wr_id = '{$comment_id}' ");
 
 if (!$write['wr_id'] || !$write['wr_is_comment']) {
-    alert('등록된 코멘트가 없거나 코멘트 글이 아닙니다.');
+    alert('There is no registered comment or it is not a comment post.');
 }
 
 if ($is_admin != 'super') {
     if ($is_admin == 'group') {
-        // 그룹관리자
+        // Group administrator
         $mb = get_member($write['mb_id']);
-        if ($member['mb_id'] === $group['gr_admin']) { // 자신이 관리하는 그룹인가?
+        if ($member['mb_id'] === $group['gr_admin']) { // Is this the group you manage?
             if ($member['mb_level'] < $mb['mb_level']) {
-                alert('그룹관리자의 권한보다 높은 회원의 코멘트이므로 삭제할 수 없습니다.');
+                alert('This is a comment from a member with higher authority than the group administrator, so it cannot be deleted.');
             }
         } else {
-            alert('자신이 관리하는 그룹의 게시판이 아니므로 코멘트를 삭제할 수 없습니다.');
+            alert('This is not a board managed by the group administrator, so comments cannot be deleted.');
         }
     } elseif ($is_admin === 'board') {
-        // 게시판관리자이면
+        // Board administrator
         $mb = get_member($write['mb_id']);
-        if ($member['mb_id'] === $board['bo_admin']) { // 자신이 관리하는 게시판인가?
+        if ($member['mb_id'] === $board['bo_admin']) { // Is this the board you manage?
             if ($member['mb_level'] < $mb['mb_level']) {
-                alert('게시판관리자의 권한보다 높은 회원의 코멘트이므로 삭제할 수 없습니다.');
+                alert('This is a comment from a member with higher authority than the board administrator, so it cannot be deleted.');
             }
         } else {
-            alert('자신이 관리하는 게시판이 아니므로 코멘트를 삭제할 수 없습니다.');
+            alert('This is not a board managed by the board administrator, so comments cannot be deleted.');
         }
     } elseif ($member['mb_id']) {
         if ($member['mb_id'] !== $write['mb_id']) {
-            alert('자신의 글이 아니므로 삭제할 수 없습니다.');
+            alert('This is not your post, so it cannot be deleted.');
         }
     } elseif (!check_password($wr_password, $write['wr_password'])) {
-        alert('비밀번호가 틀립니다.');
+        alert('The password is incorrect.');
     }
 }
 
@@ -66,32 +66,32 @@ $sql = " select count(*) as cnt from {$write_table}
             and wr_is_comment = 1 ";
 $row = sql_fetch($sql);
 if ($row['cnt'] && !$is_admin) {
-    alert('이 코멘트와 관련된 답변코멘트가 존재하므로 삭제 할 수 없습니다.');
+    alert('There is a related reply comment, so it cannot be deleted.');
 }
 
-// 코멘트 포인트 삭제
-if (!delete_point($write['mb_id'], $bo_table, $comment_id, '댓글')) {
+// Delete comment points
+if (!delete_point($write['mb_id'], $bo_table, $comment_id, 'Comment')) {
     insert_point($write['mb_id'], $board['bo_comment_point'] * (-1),
-        "{$board['bo_subject']} {$write['wr_parent']}-{$comment_id} 댓글삭제");
+        "{$board['bo_subject']} {$write['wr_parent']}-{$comment_id} comment deletion");
 }
 
-// 코멘트 삭제
+// Delete comment
 sql_query(" delete from {$write_table} where wr_id = '{$comment_id}' ");
 
-// 코멘트가 삭제되므로 해당 게시물에 대한 최근 시간을 다시 얻는다.
+// Since the comment is deleted, get the latest time for the related post again.
 $sql = " select max(wr_datetime) as wr_last from {$write_table} where wr_parent = '{$write['wr_parent']}' ";
 $row = sql_fetch($sql);
 
-// 원글의 코멘트 숫자를 감소
+// Decrease the number of comments for the original post
 sql_query(" update {$write_table} set wr_comment = wr_comment - 1, wr_last = '{$row['wr_last']}' where wr_id = '{$write['wr_parent']}' ");
 
-// 코멘트 숫자 감소
+// Decrease the comment count
 sql_query(" update {$g5['board_table']} set bo_count_comment = bo_count_comment - 1 where bo_table = '{$bo_table}' ");
 
-// 새글 삭제
+// Delete new post
 sql_query(" delete from {$g5['board_new_table']} where bo_table = '{$bo_table}' and wr_id = '{$comment_id}' ");
 
-// 사용자 코드 실행
+// Execute user code
 @include_once($board_skin_path.'/delete_comment.skin.php');
 @include_once($board_skin_path.'/delete_comment.tail.skin.php');
 

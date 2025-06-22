@@ -3,7 +3,7 @@
 include_once(__DIR__ . '/../common.php');
 
 
-$g5['title'] = '비밀번호 입력';
+$g5['title'] = 'Enter Password';
 
 $comment_id = isset($_REQUEST['comment_id']) ? preg_replace('/[^0-9]/', '', $_REQUEST['comment_id']) : 0;
 
@@ -24,7 +24,7 @@ switch ($w) {
         $return_url = short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$row['wr_parent']);
         break;
     case 's' :
-        // 비밀번호 창에서 로그인 하는 경우 관리자 또는 자신의 글이면 바로 글보기로 감
+        // If logging in from password window, go directly to view if admin or post owner
         if ($is_admin || ($member['mb_id'] == $write['mb_id'] && $write['mb_id'])) {
             goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id));
         } else {
@@ -33,7 +33,7 @@ switch ($w) {
         }
         break;
     case 'sc' :
-        // 비밀번호 창에서 로그인 하는 경우 관리자 또는 자신의 글이면 바로 글보기로 감
+        // If logging in from password window, go directly to view if admin or post owner
         if ($is_admin || ($member['mb_id'] == $write['mb_id'] && $write['mb_id'])) {
             goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id));
         } else {
@@ -42,7 +42,7 @@ switch ($w) {
         }
         break;
     default :
-        alert('w 값이 제대로 넘어오지 않았습니다.');
+        alert('Invalid w value.');
 }
 
 include_once(G5_PATH.'/head.sub.php');
@@ -50,7 +50,7 @@ include_once(G5_PATH.'/head.sub.php');
 //if ($board['bo_include_head'] && is_include_path_check($board['bo_content_head'])) { @include ($board['bo_include_head']); }
 //if ($board['bo_content_head']) { echo html_purifier(stripslashes($board['bo_content_head'])); }
 
-/* 비밀글의 제목을 가져옴 지운아빠 2013-01-29 */
+/* Get the subject of the secret post - Jieun's dad 2013-01-29 */
 if (isset($write['wr_num'])) {
     $sql = " select wr_subject from {$write_table}
                         where wr_num = '{$write['wr_num']}'

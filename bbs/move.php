@@ -6,19 +6,19 @@ include_once(__DIR__ . '/../common.php');
 $sw = isset($_REQUEST['sw']) ? clean_xss_tags($_REQUEST['sw'], 1, 1) : '';
 
 if ($sw === 'move') {
-    $act = '이동';
+    $act = 'Move';
 } elseif ($sw === 'copy') {
-    $act = '복사';
+    $act = 'Copy';
 } else {
-    alert('sw 값이 제대로 넘어오지 않았습니다.');
+    alert('The value of sw was not passed correctly.');
 }
 
-// 게시판 관리자 이상 복사, 이동 가능
+// Only board, group, or super admins can copy or move
 if ($is_admin != 'board' && $is_admin != 'group' && $is_admin != 'super') {
-    alert_close("게시판 관리자 이상 접근이 가능합니다.");
+    alert_close("Only board, group, or super admins can access this feature.");
 }
 
-$g5['title'] = '게시물 '.$act;
+$g5['title'] = 'Post ' . $act;
 include_once(G5_PATH.'/head.sub.php');
 
 $wr_id_list = '';
@@ -37,7 +37,7 @@ if ($wr_id) {
 }
 
 //$sql = " select * from {$g5['board_table']} a, {$g5['group_table']} b where a.gr_id = b.gr_id and bo_table <> '$bo_table' ";
-// 원본 게시판을 선택 할 수 있도록 함.
+// Allow selecting the original board.
 $sql = " select * from {$g5['board_table']} a, {$g5['group_table']} b where a.gr_id = b.gr_id ";
 if ($is_admin == 'group') {
     $sql .= " and b.gr_admin = '{$member['mb_id']}' ";
@@ -85,16 +85,15 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
             <div class="tbl_head01 tbl_wrap">
                 <table>
                     <caption><?php
-                        echo $act ?>할 게시판을 한개 이상 선택하여 주십시오.
-                    </caption>
+                        echo $act ?> the post to one of the following boards.</caption>
                     <thead>
                     <tr>
                         <th scope="col">
-                            <label for="chkall" class="sound_only">현재 페이지 게시판 전체</label>
+                            <label for="chkall" class="sound_only">Select all boards on this page</label>
                             <input type="checkbox" id="chkall"
                                    onclick="if (this.checked) all_checked(true); else all_checked(false);">
                         </th>
-                        <th scope="col">게시판</th>
+                        <th scope="col">Board</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -103,8 +102,8 @@ $counter = count($list);<?php
                     for ($i = 0; $i < $counter; $i++) {
                         $atc_mark = '';
                         $atc_bg = '';
-                        if ($list[$i]['bo_table'] == $bo_table) { // 게시물이 현재 속해 있는 게시판이라면
-                            $atc_mark = '<span class="copymove_current">현재<span class="sound_only">게시판</span></span>';
+                        if ($list[$i]['bo_table'] == $bo_table) { // The post is currently in this board
+                            $atc_mark = '<span class="copymove_current">Current board</span>';
                             $atc_bg = 'copymove_currentbg';
                         }
                         ?>
@@ -149,7 +148,7 @@ $counter = count($list);<?php
 
     <script>
         $(function () {
-            $(".win_btn").append("<button type=\"button\" class=\"btn_cancel btn_close\">창닫기</button>");
+            $(".win_btn").append("<button type=\"button\" class=\"btn_cancel btn_close\">Close window</button>");
 
             $(".win_btn button").click(function () {
                 window.close();
@@ -185,7 +184,7 @@ $counter = count($list);<?php
             }
 
             if (!check) {
-                alert('게시물을 ' + f.act.value + '할 게시판을 한개 이상 선택해 주십시오.');
+                alert('Please select at least one board to ' + f.act.value + ' the post.');
                 return false;
             }
 

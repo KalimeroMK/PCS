@@ -2,14 +2,14 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
+// Only members can use this feature.
 if ($is_guest) {
-    alert_close('회원만 이용하실 수 있습니다.');
+    alert_close('Only members can use this feature.');
 }
 
 set_session('ss_memo_delete_token', $token = uniqid(time()));
 
-$g5['title'] = '내 쪽지함';
+$g5['title'] = 'My Memo Box';
 include_once(G5_PATH.'/head.sub.php');
 
 $kind = isset($_GET['kind']) ? clean_xss_tags($_GET['kind'], 0, 1) : 'recv';
@@ -19,12 +19,12 @@ if ($kind == 'recv') {
 } elseif ($kind == 'send') {
     $unkind = 'recv';
 } else {
-    alert("kind 변수 값이 올바르지 않습니다.");
+    alert("The value of kind variable is invalid.");
 }
 
 if ($page < 1) {
     $page = 1;
-} // 페이지가 없으면 첫 페이지 (1 페이지)
+} // If page is not set, set to first page (1)
 
 run_event('memo_list', $kind, $unkind, $page);
 
@@ -32,15 +32,15 @@ $sql = " select count(*) as cnt from {$g5['memo_table']} where me_{$kind}_mb_id 
 $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
-$total_page = ceil($total_count / $config['cf_page_rows']);  // 전체 페이지 계산
-$from_record = ((int)$page - 1) * $config['cf_page_rows'];   // 시작 열을 구함
+$total_page = ceil($total_count / $config['cf_page_rows']);  // Calculate total pages
+$from_record = ((int)$page - 1) * $config['cf_page_rows'];   // Calculate starting record
 
 if ($kind == 'recv') {
-    $kind_title = '받은';
+    $kind_title = 'Received';
     $recv_img = 'on';
     $send_img = 'off';
 } else {
-    $kind_title = '보낸';
+    $kind_title = 'Sent';
     $recv_img = 'off';
     $send_img = 'on';
 }
@@ -59,12 +59,12 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
     $mb_id = $row["me_{$unkind}_mb_id"];
 
-    $mb_nick = $row['mb_nick'] ? $row['mb_nick'] : '정보없음';
+    $mb_nick = $row['mb_nick'] ? $row['mb_nick'] : 'No information';
 
     $name = get_sideview($row['mb_id'], $row['mb_nick'], $row['mb_email'], $row['mb_homepage']);
 
     if (substr($row['me_read_datetime'], 0, 1) == 0) {
-        $read_datetime = '아직 읽지 않음';
+        $read_datetime = 'Not read yet';
     } else {
         $read_datetime = substr($row['me_read_datetime'], 2, 14);
     }

@@ -2,23 +2,25 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
-$html_title = '링크 &gt; '.conv_subject($write['wr_subject'], 255);
+/**
+ * Set the HTML title
+ */
+$html_title = 'Link &gt; '.conv_subject($write['wr_subject'], 255);
 
 $no = isset($_REQUEST['no']) ? preg_replace('/[^0-9]/i', '', $_REQUEST['no']) : '';
 
 if (!($bo_table && $wr_id && $no)) {
-    alert_close('값이 제대로 넘어오지 않았습니다.');
+    alert_close('The value was not passed correctly.');
 }
 
-// SQL Injection 예방
+// Prevent SQL Injection
 $row = sql_fetch(" select count(*) as cnt from {$g5['write_prefix']}{$bo_table} ", false);
 if (!$row['cnt']) {
-    alert_close('존재하는 게시판이 아닙니다.');
+    alert_close('The post does not exist.');
 }
 
 if (!$write['wr_link'.$no]) {
-    alert_close('링크가 없습니다.');
+    alert_close('Link does not exist.');
 }
 
 $ss_name = 'ss_link_'.$bo_table.'_'.$wr_id.'_'.$no;

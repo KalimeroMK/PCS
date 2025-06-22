@@ -5,36 +5,36 @@ include_once(__DIR__ . '/../common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 if (!$config['cf_email_use']) {
-    alert_close('환경설정에서 \"메일발송 사용\"에 체크하셔야 메일을 발송할 수 있습니다.\\n\\n관리자에게 문의하시기 바랍니다.');
+    alert_close('Please enable "Use email sending" in the environment settings to send emails.\n\nContact the administrator.');
 }
 
 if (!$is_member && $config['cf_formmail_is_member']) {
-    alert_close('회원만 이용하실 수 있습니다.');
+    alert_close('Only members can use this feature.');
 }
 
 $mb_id = isset($mb_id) ? get_search_string($mb_id) : '';
 
 if ($is_member && !$member['mb_open'] && $is_admin != "super" && $member['mb_id'] != $mb_id) {
-    alert_close('자신의 정보를 공개하지 않으면 다른분에게 메일을 보낼 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.');
+    alert_close('You cannot send emails to others unless you make your information public.\n\nYou can set information disclosure in the member information edit page.');
 }
 
 if ($mb_id) {
     $mb = get_member($mb_id);
     if (!$mb['mb_id']) {
-        alert_close('회원정보가 존재하지 않습니다.\\n\\n탈퇴한 회원일 수 있습니다.');
+        alert_close('Member information does not exist.\n\nIt may be a withdrawn member.');
     }
 
     if (!$mb['mb_open'] && $is_admin != "super") {
-        alert_close('정보공개를 하지 않았습니다.');
+        alert_close('Information is not public.');
     }
 }
 
 $sendmail_count = (int)get_session('ss_sendmail_count') + 1;
 if ($sendmail_count > 3) {
-    alert_close('한번 접속후 일정수의 메일만 발송할 수 있습니다.\\n\\n계속해서 메일을 보내시려면 다시 로그인 또는 접속하여 주십시오.');
+    alert_close('You can only send a certain number of emails per session.\n\nTo continue sending, please log in or reconnect.');
 }
 
-$g5['title'] = '메일 쓰기';
+$g5['title'] = 'Write Email';
 include_once(G5_PATH.'/head.sub.php');
 
 $email_enc = new str_encrypt();
@@ -42,7 +42,7 @@ $email_dec = $email_enc->decrypt($email);
 
 $email = get_email_address($email_dec);
 if (!$email) {
-    alert_close('이메일이 올바르지 않습니다.');
+    alert_close('The email is incorrect.');
 }
 
 $email = $email_enc->encrypt($email);

@@ -5,28 +5,28 @@ include_once(__DIR__ . '/../common.php');
 include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 if ($is_guest) {
-    alert_close('회원만 이용하실 수 있습니다.');
+    alert_close('Only members can use this feature.');
 }
 
 $mb_id = isset($mb_id) ? get_search_string($mb_id) : '';
 
 if (!$member['mb_open'] && $is_admin != 'super' && $member['mb_id'] != $mb_id) {
-    alert_close("자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다.");
+    alert_close('You cannot send memos to others unless you make your information public. You can set information disclosure in the member information edit page.');
 }
 
 $content = "";
 $me_recv_mb_id = isset($_REQUEST['me_recv_mb_id']) ? clean_xss_tags($_REQUEST['me_recv_mb_id'], 1, 1) : '';
 $me_id = isset($_REQUEST['me_id']) ? clean_xss_tags($_REQUEST['me_id'], 1, 1) : '';
 
-// 탈퇴한 회원에게 쪽지 보낼 수 없음
+// Member information does not exist when sending a memo
 if ($me_recv_mb_id) {
     $mb = get_member($me_recv_mb_id);
     if (!$mb['mb_id']) {
-        alert_close('회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.');
+        alert_close('Member information does not exist.\n\nIt may be a withdrawn member.');
     }
 
     if (!$mb['mb_open'] && $is_admin != 'super') {
-        alert_close('정보공개를 하지 않았습니다.');
+        alert_close('Information is not public.');
     }
 
     // 4.00.15
@@ -40,7 +40,7 @@ if ($me_recv_mb_id) {
     }
 }
 
-$g5['title'] = '쪽지 보내기';
+$g5['title'] = 'Send Memo';
 include_once(G5_PATH.'/head.sub.php');
 
 $memo_action_url = G5_HTTPS_BBS_URL."/memo_form_update.php";

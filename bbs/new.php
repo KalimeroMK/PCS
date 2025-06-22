@@ -2,8 +2,8 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
-$g5['title'] = '새글';
+// Set page title
+$g5['title'] = 'New Posts';
 include_once(__DIR__ . '/../head.php');
 $sql_common = " from {$g5['board_new_table']} a, {$g5['board_table']} b, {$g5['group_table']} c where a.bo_table = b.bo_table and b.gr_id = c.gr_id and b.bo_use_search = 1 ";
 
@@ -35,13 +35,13 @@ $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
 $rows = G5_IS_MOBILE ? $config['cf_mobile_page_rows'] : $config['cf_new_rows'];
-$total_page = ceil($total_count / $rows);  // 전체 페이지 계산
+$total_page = ceil($total_count / $rows);  // Calculate total pages
 if ($page < 1) {
     $page = 1;
-}                                          // 페이지가 없으면 첫 페이지 (1 페이지)
-$from_record = ($page - 1) * $rows;        // 시작 열을 구함
+}                                          // If page not set, set to first page (1)
+$from_record = ($page - 1) * $rows;        // Calculate starting record
 
-$group_select = '<label for="gr_id" class="sound_only">그룹</label><select name="gr_id" id="gr_id"><option value="">전체그룹';
+$group_select = '<label for="gr_id" class="sound_only">Group</label><select name="gr_id" id="gr_id"><option value="">All Groups';
 $sql = " select gr_id, gr_subject from {$g5['group_table']} order by gr_id ";
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {
@@ -56,7 +56,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     $tmp_write_table = $g5['write_prefix'].$row['bo_table'];
 
     if ($row['wr_id'] == $row['wr_parent']) {
-        // 원글
+        // Original post
         $comment = "";
         $comment_link = "";
         $row2 = sql_fetch(" select * from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
@@ -64,13 +64,13 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
         $name = get_sideview($row2['mb_id'], get_text(cut_str($row2['wr_name'], $config['cf_cut_name'])),
             $row2['wr_email'], $row2['wr_homepage']);
-        // 당일인 경우 시간으로 표시함
+        // If today, show as time
         $datetime = substr($row2['wr_datetime'], 0, 10);
         $datetime2 = $row2['wr_datetime'];
         $datetime2 = $datetime == G5_TIME_YMD ? substr($datetime2, 11, 5) : substr($datetime2, 5, 5);
     } else {
-        // 코멘트
-        $comment = '[코] ';
+        // Comment
+        $comment = '[Comment] ';
         $comment_link = '#c_'.$row['wr_id'];
         $row2 = sql_fetch(" select * from {$tmp_write_table} where wr_id = '{$row['wr_parent']}' ");
         $row3 = sql_fetch(" select mb_id, wr_name, wr_email, wr_homepage, wr_datetime from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
@@ -83,7 +83,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
         $name = get_sideview($row3['mb_id'], get_text(cut_str($row3['wr_name'], $config['cf_cut_name'])),
             $row3['wr_email'], $row3['wr_homepage']);
-        // 당일인 경우 시간으로 표시함
+        // If today, show as time
         $datetime = substr($row3['wr_datetime'], 0, 10);
         $datetime2 = $row3['wr_datetime'];
         $datetime2 = $datetime == G5_TIME_YMD ? substr($datetime2, 11, 5) : substr($datetime2, 5, 5);

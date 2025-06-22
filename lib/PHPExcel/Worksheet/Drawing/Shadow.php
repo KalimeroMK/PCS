@@ -39,56 +39,42 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
 
     /**
      * Visible
-     *
-     * @var boolean
      */
-    private $visible;
+    private bool $visible;
 
     /**
      * Blur radius
      *
      * Defaults to 6
-     *
-     * @var int
      */
-    private $blurRadius;
+    private int $blurRadius;
 
     /**
      * Shadow distance
      *
      * Defaults to 2
-     *
-     * @var int
      */
-    private $distance;
+    private int $distance;
 
     /**
      * Shadow direction (in degrees)
-     *
-     * @var int
      */
-    private $direction;
+    private int $direction;
 
     /**
      * Shadow alignment
-     *
-     * @var int
      */
-    private $alignment;
+    private string $alignment;
 
     /**
      * Color
-     *
-     * @var PHPExcel_Style_Color
      */
-    private $color;
+    private \PHPExcel_Style_Color $color;
 
     /**
      * Alpha
-     *
-     * @var int
      */
-    private $alpha;
+    private int $alpha;
 
     /**
      * Create a new PHPExcel_Worksheet_Drawing_Shadow
@@ -119,9 +105,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Visible
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setVisible($pValue = false)
+    public function setVisible($pValue = false): static
     {
         $this->visible = $pValue;
         return $this;
@@ -141,9 +126,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Blur radius
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setBlurRadius($pValue = 6)
+    public function setBlurRadius($pValue = 6): static
     {
         $this->blurRadius = $pValue;
         return $this;
@@ -163,9 +147,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Shadow distance
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setDistance($pValue = 2)
+    public function setDistance($pValue = 2): static
     {
         $this->distance = $pValue;
         return $this;
@@ -185,9 +168,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Shadow direction (in degrees)
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setDirection($pValue = 0)
+    public function setDirection($pValue = 0): static
     {
         $this->direction = $pValue;
         return $this;
@@ -207,9 +189,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Shadow alignment
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setAlignment($pValue = 0)
+    public function setAlignment($pValue = 0): static
     {
         $this->alignment = $pValue;
         return $this;
@@ -228,11 +209,9 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
     /**
      * Set Color
      *
-     * @param     PHPExcel_Style_Color $pValue
      * @throws     PHPExcel_Exception
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setColor(PHPExcel_Style_Color $pValue = null)
+    public function setColor(PHPExcel_Style_Color $pValue = null): static
     {
            $this->color = $pValue;
            return $this;
@@ -252,9 +231,8 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      * Set Alpha
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_Drawing_Shadow
      */
-    public function setAlpha($pValue = 0)
+    public function setAlpha($pValue = 0): static
     {
         $this->alpha = $pValue;
         return $this;
@@ -265,7 +243,7 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             ($this->visible ? 't' : 'f') .
@@ -286,11 +264,7 @@ class PHPExcel_Worksheet_Drawing_Shadow implements PHPExcel_IComparable
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

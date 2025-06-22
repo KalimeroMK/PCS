@@ -141,7 +141,7 @@ function get_menu_db($use_mobile=0, $is_cache=false){
 }
 
 // 게시판 테이블에서 하나의 행을 읽음
-function get_content_by_field($write_table, $type='bbs', $where_field='', $where_value='', $is_cache=false)
+function get_content_by_field(string $write_table, $type='bbs', string $where_field='', $where_value='', $is_cache=false)
 {
     global $g5, $g5_object;
 
@@ -187,7 +187,7 @@ function get_content_by_field($write_table, $type='bbs', $where_field='', $where
 }
 
 // 게시판 첨부파일 테이블에서 하나의 행을 읽음
-function get_board_file_db($bo_table, $wr_id, $fields='*', $add_where='', $is_cache=false)
+function get_board_file_db(string $bo_table, $wr_id, string $fields='*', string $add_where='', $is_cache=false)
 {
     global $g5;
 
@@ -284,13 +284,13 @@ function get_qacontent_db($qa_id, $is_cache=false){
     return $cache[$key];
 }
 
-function get_thumbnail_find_cache($bo_table, $wr_id, $wr_key){
+function get_thumbnail_find_cache(string $bo_table, $wr_id, $wr_key){
     global $g5;
 
     if( $cache_content = g5_latest_cache_data($bo_table, array(), $wr_id) ){
-        if( $wr_key === 'content' ){
+        if ($wr_key === 'content') {
             return $cache_content;
-        } else if ( $wr_key === 'file' && isset($cache_content['first_file_thumb']) ){
+        } elseif ($wr_key === 'file' && isset($cache_content['first_file_thumb'])) {
             return $cache_content['first_file_thumb'];
         }
     }
@@ -320,7 +320,7 @@ function get_db_charset($charset){
     return run_replace('get_db_charset', $add_charset, $charset);
 }
 
-function get_db_create_replace($sql_str){
+function get_db_create_replace($sql_str): string|array|null{
 
     if( in_array(strtolower(G5_DB_ENGINE), array('innodb', 'myisam')) ){
         $sql_str = preg_replace('/ENGINE=MyISAM/', 'ENGINE='.G5_DB_ENGINE, $sql_str);
@@ -351,18 +351,14 @@ function get_string_encrypt($str){
 
     $new = get_class_encrypt();
 
-    $encrypt_str = $new->encrypt($str);
-
-    return $encrypt_str;
+    return $new->encrypt($str);
 }
 
 function get_string_decrypt($str){
 
     $new = get_class_encrypt();
 
-    $decrypt_str = $new->decrypt($str);
-
-    return $decrypt_str;
+    return $new->decrypt($str);
 }
 
 function get_permission_debug_show(){
@@ -376,7 +372,7 @@ function get_permission_debug_show(){
     return run_replace('get_permission_debug_show', $bool, $member);
 }
 
-function get_check_mod_rewrite(){
+function get_check_mod_rewrite(): int{
 
     if( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) )
         $mod_rewrite = 1;
@@ -450,7 +446,7 @@ function get_board_sfl_select_options($sfl){
     global $is_admin;
 
     $str = '';
-    $str .= '<option value="wr_subject" '.get_selected($sfl, 'wr_subject', true).'>제목</option>';
+    $str .= '<option value="wr_subject" '.get_selected($sfl, 'wr_subject').'>제목</option>';
     $str .= '<option value="wr_content" '.get_selected($sfl, 'wr_content').'>내용</option>';
     $str .= '<option value="wr_subject||wr_content" '.get_selected($sfl, 'wr_subject||wr_content').'>제목+내용</option>';
     if ( $is_admin ){
@@ -468,7 +464,7 @@ function get_qa_sfl_select_options($sfl) {
     global $is_admin;
 
     $str = '';
-    $str .= '<option value="qa_subject" '.get_selected($sfl, 'qa_subject', true).'>제목</option>';
+    $str .= '<option value="qa_subject" '.get_selected($sfl, 'qa_subject').'>제목</option>';
     $str .= '<option value="qa_content" '.get_selected($sfl, 'qa_content').'>내용</option>';
     $str .= '<option value="qa_name" '.get_selected($sfl, 'qa_name').'>글쓴이</option>';
     if ($is_admin)

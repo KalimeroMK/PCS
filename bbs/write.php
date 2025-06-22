@@ -413,10 +413,10 @@ if ($config['cf_editor'] && $is_dhtml_editor_use && $board['bo_use_dhtml_editor'
         $editor_content_js = '<script src="'.G5_EDITOR_URL.'/'.$config['cf_editor'].'/autosave.editor.js"></script>'.PHP_EOL;
     }
 }
-$editor_html = editor_html('wr_content', $content, $is_dhtml_editor);
+$editor_html = editor_html('wr_content', $content);
 $editor_js = '';
-$editor_js .= get_editor_js('wr_content', $is_dhtml_editor);
-$editor_js .= chk_editor_js('wr_content', $is_dhtml_editor);
+$editor_js .= get_editor_js('wr_content');
+$editor_js .= chk_editor_js('wr_content');
 
 // 임시 저장된 글 수
 $autosave_count = autosave_count($member['mb_id']);

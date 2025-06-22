@@ -41,7 +41,7 @@ class PHPExcel_Shared_File
      *
      * @param     boolean    $useUploadTempDir        Use File Upload Temporary directory (true or false)
      */
-    public static function setUseUploadTempDirectory($useUploadTempDir = false)
+    public static function setUseUploadTempDirectory($useUploadTempDir = false): void
     {
         self::$useUploadTempDirectory = (boolean) $useUploadTempDir;
     }
@@ -69,7 +69,7 @@ class PHPExcel_Shared_File
         // Sick construction, but it seems that
         // file_exists returns strange values when
         // doing the original file_exists on ZIP archives...
-        if (strtolower(substr($pFilename, 0, 3)) == 'zip') {
+        if (strtolower(substr($pFilename, 0, 3)) === 'zip') {
             // Open ZIP file and verify if the file exists
             $zipFile     = substr($pFilename, 6, strpos($pFilename, '#') - 6);
             $archiveFile = substr($pFilename, strpos($pFilename, '#') + 1);
@@ -92,9 +92,8 @@ class PHPExcel_Shared_File
      * Returns canonicalized absolute pathname, also for ZIP archives
      *
      * @param string $pFilename
-     * @return string
      */
-    public static function realpath($pFilename)
+    public static function realpath($pFilename): string
     {
         // Returnvalue
         $returnValue = '';
@@ -108,7 +107,8 @@ class PHPExcel_Shared_File
         if ($returnValue == '' || ($returnValue === null)) {
             $pathArray = explode('/', $pFilename);
             while (in_array('..', $pathArray) && $pathArray[0] != '..') {
-                for ($i = 0; $i < count($pathArray); ++$i) {
+                $counter = count($pathArray);
+                for ($i = 0; $i < $counter; ++$i) {
                     if ($pathArray[$i] == '..' && $i > 0) {
                         unset($pathArray[$i]);
                         unset($pathArray[$i - 1]);
@@ -130,35 +130,26 @@ class PHPExcel_Shared_File
      */
     public static function sys_get_temp_dir()
     {
-        if (self::$useUploadTempDirectory) {
-            //  use upload-directory when defined to allow running on environments having very restricted
-            //      open_basedir configs
-            if (ini_get('upload_tmp_dir') !== false) {
-                if ($temp = ini_get('upload_tmp_dir')) {
-                    if (file_exists($temp)) {
-                        return realpath($temp);
-                    }
-                }
+        //  use upload-directory when defined to allow running on environments having very restricted
+        //      open_basedir configs
+        if (self::$useUploadTempDirectory && ini_get('upload_tmp_dir') !== false) {
+            $temp = ini_get('upload_tmp_dir');
+            if ($temp !== '' && $temp !== '0' && file_exists($temp)) {
+                return realpath($temp);
             }
         }
 
         // sys_get_temp_dir is only available since PHP 5.2.1
         // http://php.net/manual/en/function.sys-get-temp-dir.php#94119
         if (!function_exists('sys_get_temp_dir')) {
-            if ($temp = getenv('TMP')) {
-                if ((!empty($temp)) && (file_exists($temp))) {
-                    return realpath($temp);
-                }
+            if (($temp = getenv('TMP')) && (!empty($temp) && file_exists($temp))) {
+                return realpath($temp);
             }
-            if ($temp = getenv('TEMP')) {
-                if ((!empty($temp)) && (file_exists($temp))) {
-                    return realpath($temp);
-                }
+            if (($temp = getenv('TEMP')) && (!empty($temp) && file_exists($temp))) {
+                return realpath($temp);
             }
-            if ($temp = getenv('TMPDIR')) {
-                if ((!empty($temp)) && (file_exists($temp))) {
-                    return realpath($temp);
-                }
+            if (($temp = getenv('TMPDIR')) && (!empty($temp) && file_exists($temp))) {
+                return realpath($temp);
             }
 
             // trick for creating a file in system's temporary dir

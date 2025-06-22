@@ -56,7 +56,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
      * @param     float        $yValue            Y-Value
      * @return     float                        X-Value
      **/
-    public function getValueOfXForY($yValue)
+    public function getValueOfXForY($yValue): float|int
     {
         return pow((($yValue + $this->yOffset) / $this->getIntersect()), (1 / $this->getSlope()));
     }
@@ -66,9 +66,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
      * Return the Equation of the best-fit line
      *
      * @param     int        $dp        Number of places of decimal precision to display
-     * @return     string
      **/
-    public function getEquation($dp = 0)
+    public function getEquation($dp = 0): string
     {
         $slope = $this->getSlope($dp);
         $intersect = $this->getIntersect($dp);
@@ -81,9 +80,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
      * Return the Value of X where it intersects Y = 0
      *
      * @param     int        $dp        Number of places of decimal precision to display
-     * @return     string
      **/
-    public function getIntersect($dp = 0)
+    public function getIntersect($dp = 0): float
     {
         if ($dp != 0) {
             return round(exp($this->intersect), $dp);
@@ -99,11 +97,11 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
      * @param     float[]    $xValues    The set of X-values for this regression
      * @param     boolean    $const
      */
-    private function powerRegression($yValues, $xValues, $const)
+    private function powerRegression($yValues, $xValues, $const): void
     {
         foreach ($xValues as &$value) {
             if ($value < 0.0) {
-                $value = 0 - log(abs($value));
+                $value = -log(abs($value));
             } elseif ($value > 0.0) {
                 $value = log($value);
             }
@@ -111,7 +109,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
         unset($value);
         foreach ($yValues as &$value) {
             if ($value < 0.0) {
-                $value = 0 - log(abs($value));
+                $value = -log(abs($value));
             } elseif ($value > 0.0) {
                 $value = log($value);
             }

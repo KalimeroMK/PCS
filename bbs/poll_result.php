@@ -70,7 +70,7 @@ $sql = " select a.*, b.mb_open
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {
     $list2[$i]['pc_name'] = get_text($row['pc_name']);
-    $list2[$i]['name'] = get_sideview($row['mb_id'], get_text(cut_str($row['pc_name'], 10)), '', '', $row['mb_open']);
+    $list2[$i]['name'] = get_sideview($row['mb_id'], get_text(cut_str($row['pc_name'], 10)), '', '');
     $list2[$i]['idea'] = get_text(cut_str($row['pc_idea'], 255));
     $list2[$i]['datetime'] = $row['pc_datetime'];
 

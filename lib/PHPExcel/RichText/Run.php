@@ -27,10 +27,8 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
 {
     /**
      * Font
-     *
-     * @var PHPExcel_Style_Font
      */
-    private $font;
+    private \PHPExcel_Style_Font $font;
 
     /**
      * Create a new PHPExcel_RichText_Run instance
@@ -61,7 +59,7 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
      * @throws     PHPExcel_Exception
      * @return PHPExcel_RichText_ITextElement
      */
-    public function setFont(PHPExcel_Style_Font $pFont = null)
+    public function setFont(PHPExcel_Style_Font $pFont = null): static
     {
         $this->font = $pFont;
         return $this;
@@ -72,7 +70,7 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             $this->getText() .
@@ -88,11 +86,7 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

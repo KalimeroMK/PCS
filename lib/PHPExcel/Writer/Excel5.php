@@ -27,54 +27,42 @@
  */
 class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter
 {
+    public $writerWorkbook;
+    public $writerWorksheets;
     /**
      * PHPExcel object
-     *
-     * @var PHPExcel
      */
-    private $phpExcel;
+    private \PHPExcel $phpExcel;
 
     /**
      * Total number of shared strings in workbook
-     *
-     * @var int
      */
-    private $strTotal = 0;
+    private int $strTotal = 0;
 
     /**
      * Number of unique shared strings in workbook
-     *
-     * @var int
      */
-    private $strUnique = 0;
+    private int $strUnique = 0;
 
     /**
      * Array of unique shared strings in workbook
-     *
-     * @var array
      */
-    private $strTable = array();
+    private array $strTable = array();
 
     /**
      * Color cache. Mapping between RGB value and color index.
-     *
-     * @var array
      */
-    private $colors;
+    private ?array $colors = null;
 
     /**
      * Formula parser
-     *
-     * @var PHPExcel_Writer_Excel5_Parser
      */
-    private $parser;
+    private \PHPExcel_Writer_Excel5_Parser $parser;
 
     /**
      * Identifier clusters for drawings. Used in MSODRAWINGGROUP record.
-     *
-     * @var array
      */
-    private $IDCLs;
+    private ?array $IDCLs = null;
 
     /**
      * Basic OLE object summary information
@@ -108,7 +96,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
      * @param    string        $pFilename
      * @throws    PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
 
         // garbage collect
@@ -186,14 +174,14 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
         $this->documentSummaryInformation = $this->writeDocumentSummaryInformation();
         // initialize OLE Document Summary Information
-        if (isset($this->documentSummaryInformation) && !empty($this->documentSummaryInformation)) {
+        if ($this->documentSummaryInformation !== null && !empty($this->documentSummaryInformation)) {
             $OLE_DocumentSummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'DocumentSummaryInformation'));
             $OLE_DocumentSummaryInformation->append($this->documentSummaryInformation);
         }
 
         $this->summaryInformation = $this->writeSummaryInformation();
         // initialize OLE Summary Information
-        if (isset($this->summaryInformation) && !empty($this->summaryInformation)) {
+        if ($this->summaryInformation !== null && !empty($this->summaryInformation)) {
             $OLE_SummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'SummaryInformation'));
             $OLE_SummaryInformation->append($this->summaryInformation);
         }
@@ -211,7 +199,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
         $root = new PHPExcel_Shared_OLE_PPS_Root(time(), time(), $arrRootData);
         // save the OLE file
-        $res = $root->save($pFilename);
+        $root->save($pFilename);
 
         PHPExcel_Calculation_Functions::setReturnDateType($saveDateReturnType);
         PHPExcel_Calculation::getInstance($this->phpExcel)->getDebugLog()->setWriteDebugLog($saveDebugLog);
@@ -223,9 +211,8 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
      * @deprecated
      * @param    string    $pValue        Temporary storage directory
      * @throws    PHPExcel_Writer_Exception    when directory does not exist
-     * @return PHPExcel_Writer_Excel5
      */
-    public function setTempDir($pValue = '')
+    public function setTempDir($pValue = ''): static
     {
         return $this;
     }
@@ -234,7 +221,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
      * Build the Worksheet Escher objects
      *
      */
-    private function buildWorksheetEschers()
+    private function buildWorksheetEschers(): void
     {
         // 1-based index to BstoreContainer
         $blipIndex = 0;
@@ -398,7 +385,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
     /**
      * Build the Escher object corresponding to the MSODRAWINGGROUP record
      */
-    private function buildWorkbookEscher()
+    private function buildWorkbookEscher(): void
     {
         $escher = null;
 
@@ -535,9 +522,8 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
     /**
      * Build the OLE Part for DocumentSummary Information
-     * @return string
      */
-    private function writeDocumentSummaryInformation()
+    private function writeDocumentSummaryInformation(): string
     {
         // offset: 0; size: 2; must be 0xFE 0xFF (UTF-16 LE byte order mark)
         $data = pack('v', 0xFFFE);
@@ -695,7 +681,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
                 $dataProp['data']['data'] .= chr(0);
                 $dataProp['data']['length'] += 1;
                 // Complete the string with null string for being a %4
-                $dataProp['data']['length'] = $dataProp['data']['length'] + ((4 - $dataProp['data']['length'] % 4)==4 ? 0 : (4 - $dataProp['data']['length'] % 4));
+                $dataProp['data']['length'] += (4 - $dataProp['data']['length'] % 4)==4 ? 0 : (4 - $dataProp['data']['length'] % 4);
                 $dataProp['data']['data'] = str_pad($dataProp['data']['data'], $dataProp['data']['length'], chr(0), STR_PAD_RIGHT);
 
                 $dataSection_Content .= pack('V', $dataProp['data']['length']);
@@ -731,9 +717,8 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
     /**
      * Build the OLE Part for Summary Information
-     * @return string
      */
-    private function writeSummaryInformation()
+    private function writeSummaryInformation(): string
     {
         // offset: 0; size: 2; must be 0xFE 0xFF (UTF-16 LE byte order mark)
         $data = pack('v', 0xFFFE);
@@ -871,7 +856,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
                 $dataProp['data']['data'] .= chr(0);
                 $dataProp['data']['length'] += 1;
                 // Complete the string with null string for being a %4
-                $dataProp['data']['length'] = $dataProp['data']['length'] + ((4 - $dataProp['data']['length'] % 4)==4 ? 0 : (4 - $dataProp['data']['length'] % 4));
+                $dataProp['data']['length'] += (4 - $dataProp['data']['length'] % 4)==4 ? 0 : (4 - $dataProp['data']['length'] % 4);
                 $dataProp['data']['data'] = str_pad($dataProp['data']['data'], $dataProp['data']['length'], chr(0), STR_PAD_RIGHT);
 
                 $dataSection_Content .= pack('V', $dataProp['data']['length']);

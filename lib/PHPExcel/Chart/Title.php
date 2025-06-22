@@ -33,14 +33,12 @@ class PHPExcel_Chart_Title
      *
      * @var string
      */
-    private $caption = null;
+    private $caption;
 
     /**
      * Title Layout
-     *
-     * @var PHPExcel_Chart_Layout
      */
-    private $layout = null;
+    private ?\PHPExcel_Chart_Layout $layout;
 
     /**
      * Create a new PHPExcel_Chart_Title
@@ -65,9 +63,8 @@ class PHPExcel_Chart_Title
      * Set caption
      *
      * @param string $caption
-     * @return PHPExcel_Chart_Title
      */
-    public function setCaption($caption = null)
+    public function setCaption($caption = null): static
     {
         $this->caption = $caption;
         

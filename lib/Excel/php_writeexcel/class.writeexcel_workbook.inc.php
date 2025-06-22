@@ -24,32 +24,32 @@
  * Spreadsheet::WriteExcel was written by John McNamara, jmcnamara@cpan.org
  */
 
-require_once "class.writeexcel_biffwriter.inc.php";
-require_once "class.writeexcel_format.inc.php";
-require_once "class.writeexcel_formula.inc.php";
-require_once "class.writeexcel_olewriter.inc.php";
+require_once __DIR__ . "/class.writeexcel_biffwriter.inc.php";
+require_once __DIR__ . "/class.writeexcel_format.inc.php";
+require_once __DIR__ . "/class.writeexcel_formula.inc.php";
+require_once __DIR__ . "/class.writeexcel_olewriter.inc.php";
 
 class writeexcel_workbook extends writeexcel_biffwriter {
 
-    var $_filename;
-    var $_tmpfilename;
-    var $_parser;
-    var $_tempdir;
-    var $_1904;
-    var $_activesheet;
-    var $_firstsheet;
-    var $_selected;
-    var $_xf_index;
-    var $_fileclosed;
-    var $_biffsize;
-    var $_sheetname;
-    var $_tmp_format;
-    var $_url_format;
-    var $_codepage;
-    var $_worksheets;
-    var $_sheetnames;
-    var $_formats;
-    var $_palette;
+    public $_filename;
+    public $_tmpfilename;
+    public $_parser;
+    public $_tempdir;
+    public $_1904;
+    public $_activesheet;
+    public $_firstsheet;
+    public $_selected;
+    public $_xf_index;
+    public $_fileclosed;
+    public $_biffsize;
+    public $_sheetname;
+    public $_tmp_format;
+    public $_url_format;
+    public $_codepage;
+    public $_worksheets;
+    public $_sheetnames;
+    public $_formats;
+    public $_palette;
 
 ###############################################################################
 #
@@ -57,7 +57,7 @@ class writeexcel_workbook extends writeexcel_biffwriter {
 #
 # Constructor. Creates a new Workbook object from a BIFFwriter object.
 #
-function writeexcel_workbook($filename) {
+function writeexcel_workbook($filename): void {
 
     $this->writeexcel_biffwriter();
 
@@ -110,7 +110,7 @@ function writeexcel_workbook($filename) {
 # Calls finalization methods and explicitly close the OLEwriter file
 # handle.
 #
-function close() {
+function close(): void {
     # Prevent close() from being called twice.
     if ($this->_fileclosed) {
         return;
@@ -146,14 +146,14 @@ function &sheets() {
 #
 # Returns: reference to a worksheet object
 #
-function &addworksheet($name="") {
+function &addworksheet($name=""): \writeexcel_worksheet {
 
     # Check that sheetname is <= 31 chars (Excel limit).
     if (strlen($name) > 31) {
         trigger_error("Sheetname $name must be <= 31 chars", E_USER_ERROR);
     }
 
-    $index     = sizeof($this->_worksheets);
+    $index     = count($this->_worksheets);
     $sheetname = $this->_sheetname;
 
     if ($name == "") {
@@ -186,11 +186,7 @@ function &addworksheet($name="") {
 # a FONT record. Also, pass any properties to the Format::new().
 #
 function &addformat($para=false) {
-    if($para===false) {
-        $format = new writeexcel_format($this->_xf_index);
-    } else {
-        $format = new writeexcel_format($this->_xf_index, $para);
-    }
+    $format = $para === false ? new writeexcel_format($this->_xf_index) : new writeexcel_format($this->_xf_index, $para);
 
     $this->_xf_index += 1;
     # Store format reference
@@ -205,7 +201,7 @@ function &addformat($para=false) {
 #
 # Set the date system: 0 = 1900 (the default), 1 = 1904
 #
-function set_1904($_1904) {
+function set_1904($_1904): void {
     $this->_1904 = $_1904;
 }
 
@@ -225,7 +221,7 @@ function get_1904() {
 #
 # Change the RGB components of the elements in the colour palette.
 #
-function set_custom_color($index, $red, $green, $blue) {
+function set_custom_color($index, $red, $green, $blue): null|int|float {
 // todo
 /*
     # Match a HTML #xxyyzz style parameter
@@ -237,9 +233,9 @@ function set_custom_color($index, $red, $green, $blue) {
     $aref    = &$this->_palette;
 
     # Check that the colour index is the right range
-    if ($index < 8 or $index > 64) {
+    if ($index < 8 || $index > 64) {
 //todo        carp "Color index $index outside range: 8 <= index <= 64";
-        return;
+        return null;
     }
 
     # Check that the colour components are in the right range
@@ -248,7 +244,7 @@ function set_custom_color($index, $red, $green, $blue) {
          ($blue  < 0 || $blue  > 255) )
     {
 //todo        carp "Color component outside range: 0 <= color <= 255";
-        return;
+        return null;
     }
 
     $index -=8; # Adjust colour index (wingless dragonfly)
@@ -265,7 +261,7 @@ function set_custom_color($index, $red, $green, $blue) {
 #
 # Sets the colour palette to the Excel 97+ default.
 #
-function set_palette_xl97() {
+function set_palette_xl97(): int {
     $this->_palette = array(
                             array(0x00, 0x00, 0x00, 0x00),   # 8
                             array(0xff, 0xff, 0xff, 0x00),   # 9
@@ -334,7 +330,7 @@ function set_palette_xl97() {
 #
 # Sets the colour palette to the Excel 5 default.
 #
-function set_palette_xl5() {
+function set_palette_xl5(): int {
     $this->_palette = array(
                             array(0x00, 0x00, 0x00, 0x00),   # 8
                             array(0xff, 0xff, 0xff, 0x00),   # 9
@@ -403,7 +399,7 @@ function set_palette_xl5() {
 #
 # Change the default temp directory used by _initialize() in Worksheet.pm.
 #
-function set_tempdir($tempdir) {
+function set_tempdir($tempdir): void {
 //todo
 /*
     croak "$_[0] is not a valid directory"                 unless -d $_[0];
@@ -420,13 +416,14 @@ function set_tempdir($tempdir) {
 # See also the _store_codepage method. This is used to store the code page, i.e.
 # the character set used in the workbook.
 #
-function set_codepage($cp) {
+function set_codepage($cp): void {
 
-    if($cp==1)
-      $codepage   = 0x04E4;
-    else if($cp==2)
-      $codepage   = 0x8000;
-    if($codepage)
+    if ($cp==1) {
+        $codepage   = 0x04E4;
+    } elseif ($cp==2) {
+        $codepage   = 0x8000;
+    }
+    if($codepage !== 0)
       $this->_codepage = $codepage;
 }
 
@@ -438,7 +435,7 @@ function set_codepage($cp) {
 # Assemble worksheets into a workbook and send the BIFF data to an OLE
 # storage.
 #
-function _store_workbook() {
+function _store_workbook(): void {
 
     # Ensure that at least one worksheet has been selected.
     if ($this->_activesheet == 0) {
@@ -447,7 +444,7 @@ function _store_workbook() {
 
     # Calculate the number of selected worksheet tabs and call the finalization
     # methods for each worksheet
-    for ($c=0;$c<sizeof($this->_worksheets);$c++) {
+    for ($c=0;$c<count($this->_worksheets);$c++) {
         $sheet=&$this->_worksheets[$c];
         if ($sheet->_selected) {
             $this->_selected++;
@@ -481,7 +478,7 @@ function _store_workbook() {
     $this->_calc_sheet_offsets();
 
     # Add BOUNDSHEET records
-    for ($c=0;$c<sizeof($this->_worksheets);$c++) {
+    for ($c=0;$c<count($this->_worksheets);$c++) {
        $sheet=&$this->_worksheets[$c];
         $this->_store_boundsheet($sheet->_name, $sheet->_offset);
     }
@@ -500,7 +497,7 @@ function _store_workbook() {
 # Store the workbook in an OLE container if the total size of the workbook data
 # is less than ~ 7MB.
 #
-function _store_OLE_file() {
+function _store_OLE_file(): void {
 ## ABR
     if ($this->_tmpfilename != '') {
         $OLE  = new writeexcel_olewriter('/tmp/'.$this->_tmpfilename);
@@ -516,7 +513,7 @@ function _store_OLE_file() {
         $OLE->write_header();
         $OLE->write($this->_data);
 
-        for ($c=0;$c<sizeof($this->_worksheets);$c++) {
+        for ($c=0;$c<count($this->_worksheets);$c++) {
             $sheet=&$this->_worksheets[$c];
             while ($tmp = $sheet->get_data()) {
                 $OLE->write($tmp);
@@ -534,7 +531,7 @@ function _store_OLE_file() {
 #
 # Calculate offsets for Worksheet BOF records.
 #
-function _calc_sheet_offsets() {
+function _calc_sheet_offsets(): void {
 
     $BOF     = 11;
     $EOF     = 4;
@@ -546,7 +543,7 @@ function _calc_sheet_offsets() {
 
     $offset += $EOF;
 
-    for ($c=0;$c<sizeof($this->_worksheets);$c++) {
+    for ($c=0;$c<count($this->_worksheets);$c++) {
         $sheet=&$this->_worksheets[$c];
         $sheet->_offset = $offset;
         $offset += $sheet->_datasize;
@@ -561,7 +558,7 @@ function _calc_sheet_offsets() {
 #
 # Store the Excel FONT records.
 #
-function _store_all_fonts() {
+function _store_all_fonts(): void {
     # _tmp_format is added by new(). We use this to write the default XF's
     $format = $this->_tmp_format;
     $font   = $format->get_font();
@@ -581,7 +578,7 @@ function _store_all_fonts() {
     $key = $format->get_font_key(); # The default font from _tmp_format
     $fonts[$key] = 0;               # Index of the default font
 
-    for ($c=0;$c<sizeof($this->_formats);$c++) {
+    for ($c=0;$c<count($this->_formats);$c++) {
         $format=&$this->_formats[$c];
 
         $key = $format->get_font_key();
@@ -606,7 +603,7 @@ function _store_all_fonts() {
 #
 # Store user defined numerical formats i.e. FORMAT records
 #
-function _store_all_num_formats() {
+function _store_all_num_formats(): void {
 
     # Leaning num_format syndrome
     $num_formats_list=array();
@@ -616,7 +613,7 @@ function _store_all_num_formats() {
     # built-in format type and if the FORMAT string hasn't already been used.
     #
 
-    for ($c=0;$c<sizeof($this->_formats);$c++) {
+    for ($c=0;$c<count($this->_formats);$c++) {
         $format=&$this->_formats[$c];
 
         $num_format = $format->_num_format;
@@ -625,11 +622,9 @@ function _store_all_num_formats() {
         # Also check for a string of zeros, which is a valid format string
         # but would evaluate to zero.
         #
-        if (!preg_match('/^0+\d/', $num_format)) {
-            if (preg_match('/^\d+$/', $num_format)) {
-                # built-in
-                continue;
-            }
+        if (!preg_match('/^0+\d/', $num_format) && preg_match('/^\d+$/', $num_format)) {
+            # built-in
+            continue;
         }
 
         if (isset($num_formats[$num_format])) {
@@ -639,7 +634,7 @@ function _store_all_num_formats() {
             # Add a new FORMAT
             $num_formats[$num_format] = $index;
             $format->_num_format    = $index;
-            array_push($num_formats_list, $num_format);
+            $num_formats_list[] = $num_format;
             $index++;
         }
     }
@@ -658,12 +653,11 @@ function _store_all_num_formats() {
 #
 # Write all XF records.
 #
-function _store_all_xfs() {
+function _store_all_xfs(): void {
     # _tmp_format is added by new(). We use this to write the default XF's
     # The default font index is 0
     #
     $format = $this->_tmp_format;
-    $xf;
 
     for ($c=0;$c<15;$c++) {
         $xf = $format->get_xf('style'); # Style XF
@@ -686,7 +680,7 @@ function _store_all_xfs() {
 #
 # Write all STYLE records.
 #
-function _store_all_styles() {
+function _store_all_styles(): void {
     $this->_store_style();
 }
 
@@ -697,10 +691,10 @@ function _store_all_styles() {
 # Write the EXTERNCOUNT and EXTERNSHEET records. These are used as indexes for
 # the NAME records.
 #
-function _store_externs() {
+function _store_externs(): void {
 
     # Create EXTERNCOUNT with number of worksheets
-    $this->_store_externcount(sizeof($this->_worksheets));
+    $this->_store_externcount(count($this->_worksheets));
 
     # Create EXTERNSHEET for each worksheet
     foreach ($this->_sheetnames as $sheetname) {
@@ -714,7 +708,7 @@ function _store_externs() {
 #
 # Write the NAME record to define the print area and the repeat rows and cols.
 #
-function _store_names() {
+function _store_names(): void {
 
     # Create the print area NAME records
     foreach ($this->_worksheets as $worksheet) {
@@ -791,7 +785,7 @@ function _store_names() {
 #
 # Write Excel BIFF WINDOW1 record.
 #
-function _store_window1() {
+function _store_window1(): void {
 
     $record    = 0x003D;                 # Record identifier
     $length    = 0x0012;                 # Number of bytes to follow
@@ -823,7 +817,7 @@ function _store_window1() {
 #
 # Writes Excel BIFF BOUNDSHEET record.
 #
-function _store_boundsheet($sheetname, $offset) {
+function _store_boundsheet(string $sheetname, $offset): void {
     $record    = 0x0085;               # Record identifier
     $length    = 0x07 + strlen($sheetname); # Number of bytes to follow
 
@@ -844,7 +838,7 @@ function _store_boundsheet($sheetname, $offset) {
 #
 # Write Excel BIFF STYLE records.
 #
-function _store_style() {
+function _store_style(): void {
     $record    = 0x0293; # Record identifier
     $length    = 0x0004; # Bytes to follow
 
@@ -864,7 +858,7 @@ function _store_style() {
 #
 # Writes Excel FORMAT record for non "built-in" numerical formats.
 #
-function _store_num_format($num_format, $index) {
+function _store_num_format($num_format, $index): void {
     $record    = 0x041E;                 # Record identifier
     $length    = 0x03 + strlen($num_format);   # Number of bytes to follow
 
@@ -884,7 +878,7 @@ function _store_num_format($num_format, $index) {
 #
 # Write Excel 1904 record to indicate the date system in use.
 #
-function _store_1904() {
+function _store_1904(): void {
     $record    = 0x0022;         # Record identifier
     $length    = 0x0002;         # Bytes to follow
 
@@ -909,7 +903,7 @@ function _store_1904() {
 #
 # A similar method is used in Worksheet.pm for a slightly different purpose.
 #
-function _store_externcount($par0) {
+function _store_externcount($par0): void {
     $record   = 0x0016;          # Record identifier
     $length   = 0x0002;          # Number of bytes to follow
 
@@ -932,7 +926,7 @@ function _store_externcount($par0) {
 #
 # A similar method is used in Worksheet.pm for a slightly different purpose.
 #
-function _store_externsheet($par0) {
+function _store_externsheet($par0): void {
     $record      = 0x0017;               # Record identifier
     $length      = 0x02 + strlen($par0); # Number of bytes to follow
 
@@ -954,7 +948,7 @@ function _store_externsheet($par0) {
 # Store the NAME record in the short format that is used for storing the print
 # area, repeat rows only and repeat columns only.
 #
-function _store_name_short($par0, $par1, $par2, $par3, $par4, $par5) {
+function _store_name_short($par0, $par1, $par2, $par3, $par4, $par5): void {
     $record          = 0x0018;       # Record identifier
     $length          = 0x0024;       # Number of bytes to follow
 
@@ -1023,7 +1017,7 @@ function _store_name_short($par0, $par1, $par2, $par3, $par4, $par5) {
 # _store_name_short() but we use a separate method to keep the code clean.
 # Code abstraction for reuse can be carried too far, and I should know. ;-)
 #
-function _store_name_long($par0, $par1, $par2, $par3, $par4, $par5) {
+function _store_name_long($par0, $par1, $par2, $par3, $par4, $par5): void {
     $record          = 0x0018;       # Record identifier
     $length          = 0x003d;       # Number of bytes to follow
 
@@ -1108,12 +1102,12 @@ function _store_name_long($par0, $par1, $par2, $par3, $par4, $par5) {
 #
 # Stores the PALETTE biff record.
 #
-function _store_palette() {
+function _store_palette(): void {
     $aref            = &$this->_palette;
 
     $record          = 0x0092;                  # Record identifier
-    $length          = 2 + 4 * sizeof($aref);   # Number of bytes to follow
-    $ccv             =         sizeof($aref);   # Number of RGB values to follow
+    $length          = 2 + 4 * count($aref);   # Number of bytes to follow
+    $ccv             =         count($aref);   # Number of RGB values to follow
     //$data;                                      # The RGB data
 
     # Pack the RGB data
@@ -1132,7 +1126,7 @@ function _store_palette() {
 #
 # Stores the CODEPAGE biff record.
 #
-function _store_codepage() {
+function _store_codepage(): void {
 
     $record          = 0x0042;               # Record identifier
     $length          = 0x0002;               # Number of bytes to follow

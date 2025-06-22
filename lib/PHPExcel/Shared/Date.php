@@ -81,7 +81,7 @@ class PHPExcel_Shared_Date
      * @param     integer    $baseDate           Excel base date (1900 or 1904)
      * @return    boolean                        Success or failure
      */
-    public static function setExcelCalendar($baseDate)
+    public static function setExcelCalendar($baseDate): bool
     {
         if (($baseDate == self::CALENDAR_WINDOWS_1900) ||
             ($baseDate == self::CALENDAR_MAC_1904)) {
@@ -112,7 +112,7 @@ class PHPExcel_Shared_Date
      *    @param        string         $timezone            The timezone for finding the adjustment from UST
      *    @return       integer        PHP serialized date/time
      */
-    public static function ExcelToPHP($dateValue = 0, $adjustToTimezone = false, $timezone = null)
+    public static function ExcelToPHP($dateValue = 0, $adjustToTimezone = false, $timezone = null): int|float
     {
         if (self::$excelBaseDate == self::CALENDAR_WINDOWS_1900) {
             $myexcelBaseDate = 25569;
@@ -152,7 +152,7 @@ class PHPExcel_Shared_Date
      * @param    integer        $dateValue        Excel date/time value
      * @return    DateTime                    PHP date/time object
      */
-    public static function ExcelToPHPObject($dateValue = 0)
+    public static function ExcelToPHPObject($dateValue = 0): \DateTime|false
     {
         $dateTime = self::ExcelToPHP($dateValue);
         $days = floor($dateTime / 86400);
@@ -214,7 +214,7 @@ class PHPExcel_Shared_Date
      * @param    integer    $seconds
      * @return   integer    Excel date/time value
      */
-    public static function FormattedPHPToExcel($year, $month, $day, $hours = 0, $minutes = 0, $seconds = 0)
+    public static function FormattedPHPToExcel($year, $month, $day, $hours = 0, $minutes = 0, $seconds = 0): float
     {
         if (self::$excelBaseDate == self::CALENDAR_WINDOWS_1900) {
             //
@@ -246,14 +246,13 @@ class PHPExcel_Shared_Date
 
         $excelTime = (($hours * 3600) + ($minutes * 60) + $seconds) / 86400;
 
-        return (float) $excelDate + $excelTime;
+        return $excelDate + $excelTime;
     }
 
 
     /**
      * Is a given cell a date/time?
      *
-     * @param     PHPExcel_Cell    $pCell
      * @return     boolean
      */
     public static function isDateTime(PHPExcel_Cell $pCell)
@@ -269,7 +268,6 @@ class PHPExcel_Shared_Date
     /**
      * Is a given number format a date/time?
      *
-     * @param     PHPExcel_Style_NumberFormat    $pFormat
      * @return     boolean
      */
     public static function isDateTimeFormat(PHPExcel_Style_NumberFormat $pFormat)
@@ -278,15 +276,14 @@ class PHPExcel_Shared_Date
     }
 
 
-    private static $possibleDateFormatCharacters = 'eymdHs';
+    private static string $possibleDateFormatCharacters = 'eymdHs';
 
     /**
      * Is a given number format code a date/time?
      *
      * @param     string    $pFormatCode
-     * @return     boolean
      */
-    public static function isDateTimeFormatCode($pFormatCode = '')
+    public static function isDateTimeFormatCode($pFormatCode = ''): bool
     {
         if (strtolower($pFormatCode) === strtolower(PHPExcel_Style_NumberFormat::FORMAT_GENERAL)) {
             //    "General" contains an epoch letter 'e', so we trap for it explicitly here (case-insensitive check)
@@ -326,7 +323,7 @@ class PHPExcel_Shared_Date
         }
 
         //    Typically number, currency or accounting (or occasionally fraction) formats
-        if ((substr($pFormatCode, 0, 1) == '_') || (substr($pFormatCode, 0, 2) == '0 ')) {
+        if ((substr($pFormatCode, 0, 1) === '_') || (substr($pFormatCode, 0, 2) === '0 ')) {
             return false;
         }
         // Try checking for any of the date formatting characters that don't appear within square braces

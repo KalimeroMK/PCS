@@ -29,10 +29,8 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 {
     /**
      * Path
-     *
-     * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * Create a new PHPExcel_Worksheet_Drawing
@@ -48,20 +46,16 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 
     /**
      * Get Filename
-     *
-     * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return basename($this->path);
     }
 
     /**
      * Get indexed filename (using image index)
-     *
-     * @return string
      */
-    public function getIndexedFilename()
+    public function getIndexedFilename(): string
     {
         $fileName = $this->getFilename();
         $fileName = str_replace(' ', '_', $fileName);
@@ -70,10 +64,8 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 
     /**
      * Get Extension
-     *
-     * @return string
      */
-    public function getExtension()
+    public function getExtension(): string
     {
         $exploded = explode(".", basename($this->path));
         return $exploded[count($exploded) - 1];
@@ -95,9 +87,8 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
      * @param     string         $pValue            File path
      * @param     boolean        $pVerifyFile    Verify file
      * @throws     PHPExcel_Exception
-     * @return PHPExcel_Worksheet_Drawing
      */
-    public function setPath($pValue = '', $pVerifyFile = true)
+    public function setPath($pValue = '', $pVerifyFile = true): static
     {
         if ($pVerifyFile) {
             if (file_exists($pValue)) {
@@ -121,7 +112,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             $this->path .
@@ -137,11 +128,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

@@ -41,14 +41,14 @@ class PHPExcel_Shared_Escher_DgContainer
      */
     private $lastSpId;
 
-    private $spgrContainer = null;
+    private $spgrContainer;
 
     public function getDgId()
     {
         return $this->dgId;
     }
 
-    public function setDgId($value)
+    public function setDgId($value): void
     {
         $this->dgId = $value;
     }
@@ -58,7 +58,7 @@ class PHPExcel_Shared_Escher_DgContainer
         return $this->lastSpId;
     }
 
-    public function setLastSpId($value)
+    public function setLastSpId($value): void
     {
         $this->lastSpId = $value;
     }

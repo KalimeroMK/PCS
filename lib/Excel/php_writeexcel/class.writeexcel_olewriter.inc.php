@@ -25,24 +25,24 @@
  */
 
 class writeexcel_olewriter {
-    var $_OLEfilename;
-    var $_OLEtmpfilename; /* ABR */
-    var $_filehandle;
-    var $_fileclosed;
-    var $_internal_fh;
-    var $_biff_only;
-    var $_size_allowed;
-    var $_biffsize;
-    var $_booksize;
-    var $_big_blocks;
-    var $_list_blocks;
-    var $_root_start;
-    var $_block_count;
+    public $_OLEfilename;
+    public $_OLEtmpfilename; /* ABR */
+    public $_filehandle;
+    public $_fileclosed;
+    public $_internal_fh;
+    public $_biff_only;
+    public $_size_allowed;
+    public $_biffsize;
+    public $_booksize;
+    public $_big_blocks;
+    public $_list_blocks;
+    public $_root_start;
+    public $_block_count;
 
     /*
      * Constructor
      */
-    function writeexcel_olewriter($filename) {
+    function writeexcel_olewriter($filename): void {
 
         $this->_OLEfilename  = $filename;
         $this->_filehandle   = false;
@@ -63,7 +63,7 @@ class writeexcel_olewriter {
     /*
      * Check for a valid filename and store the filehandle.
      */
-    function _initialize() {
+    function _initialize(): void {
         $OLEfile = $this->_OLEfilename;
 
         /* Check for a filename. Workbook.pm will catch this first. */
@@ -101,7 +101,7 @@ class writeexcel_olewriter {
      *               - (1 x end words)) = 13842
      * $maxsize    = $big_blocks * 512 bytes = 7087104
      */
-    function set_size($size) {
+    function set_size($size): int {
         $maxsize = 7087104;
 
         if ($size > $maxsize) {
@@ -114,11 +114,7 @@ class writeexcel_olewriter {
         $this->_biffsize = $size;
 
         // Set the min file size to 4k to avoid having to use small blocks
-        if ($size > 4096) {
-            $this->_booksize = $size;
-        } else {
-            $this->_booksize = 4096;
-        }
+        $this->_booksize = $size > 4096 ? $size : 4096;
 
         return ($this->_size_allowed = 1);
     }
@@ -126,14 +122,10 @@ class writeexcel_olewriter {
     /*
      * Calculate various sizes needed for the OLE stream
      */
-    function _calculate_sizes() {
+    function _calculate_sizes(): void {
         $datasize = $this->_booksize;
 
-        if ($datasize % 512 == 0) {
-            $this->_big_blocks = $datasize/512;
-        } else {
-            $this->_big_blocks = floor($datasize/512)+1;
-        }
+        $this->_big_blocks = $datasize % 512 == 0 ? $datasize/512 : floor($datasize/512)+1;
         // There are 127 list blocks and 1 marker blocks for each big block
         // depot + 1 end of chain block
         $this->_list_blocks = floor(($this->_big_blocks)/127)+1;
@@ -149,7 +141,7 @@ class writeexcel_olewriter {
      * This method must be called so that the file contents are
      * actually written.
      */
-    function close() {
+    function close(): void {
 
         if (!$this->_size_allowed) {
             return;
@@ -182,14 +174,14 @@ class writeexcel_olewriter {
     /*
      * Write BIFF data to OLE file.
      */
-    function write($data) {
-        fputs($this->_filehandle, $data);
+    function write($data): void {
+        fwrite($this->_filehandle, $data);
     }
 
     /*
      * Write OLE header block.
      */
-    function write_header() {
+    function write_header(): void {
         if ($this->_biff_only) {
             return;
         }
@@ -213,32 +205,32 @@ class writeexcel_olewriter {
         $unknown7        = pack("VVV",  0x00, -2 ,0x00);
         $unused          = pack("V",    -1);
 
-        fputs($this->_filehandle, $id);
-        fputs($this->_filehandle, $unknown1);
-        fputs($this->_filehandle, $unknown2);
-        fputs($this->_filehandle, $unknown3);
-        fputs($this->_filehandle, $unknown4);
-        fputs($this->_filehandle, $unknown5);
-        fputs($this->_filehandle, $num_bbd_blocks);
-        fputs($this->_filehandle, $root_startblock);
-        fputs($this->_filehandle, $unknown6);
-        fputs($this->_filehandle, $sbd_startblock);
-        fputs($this->_filehandle, $unknown7);
+        fwrite($this->_filehandle, $id);
+        fwrite($this->_filehandle, $unknown1);
+        fwrite($this->_filehandle, $unknown2);
+        fwrite($this->_filehandle, $unknown3);
+        fwrite($this->_filehandle, $unknown4);
+        fwrite($this->_filehandle, $unknown5);
+        fwrite($this->_filehandle, $num_bbd_blocks);
+        fwrite($this->_filehandle, $root_startblock);
+        fwrite($this->_filehandle, $unknown6);
+        fwrite($this->_filehandle, $sbd_startblock);
+        fwrite($this->_filehandle, $unknown7);
 
         for ($c=1;$c<=$num_lists;$c++) {
             $root_start++;
-            fputs($this->_filehandle, pack("V", $root_start));
+            fwrite($this->_filehandle, pack("V", $root_start));
         }
 
         for ($c=$num_lists;$c<=108;$c++) {
-            fputs($this->_filehandle, $unused);
+            fwrite($this->_filehandle, $unused);
         }
     }
 
     /*
      * Write big block depot.
      */
-    function _write_big_block_depot() {
+    function _write_big_block_depot(): void {
         $num_blocks   = $this->_big_blocks;
         $num_lists    = $this->_list_blocks;
         $total_blocks = $num_lists * 128;
@@ -249,26 +241,25 @@ class writeexcel_olewriter {
         $unused       = pack("V", -1);
 
         for ($i=1;$i<=($num_blocks-1);$i++) {
-            fputs($this->_filehandle, pack("V", $i));
+            fwrite($this->_filehandle, pack("V", $i));
         }
 
-        fputs($this->_filehandle, $end_of_chain);
-        fputs($this->_filehandle, $end_of_chain);
+        fwrite($this->_filehandle, $end_of_chain);
+        fwrite($this->_filehandle, $end_of_chain);
 
         for ($c=1;$c<=$num_lists;$c++) {
-            fputs($this->_filehandle, $marker);
+            fwrite($this->_filehandle, $marker);
         }
 
         for ($c=$used_blocks;$c<=$total_blocks;$c++) {
-            fputs($this->_filehandle, $unused);
+            fwrite($this->_filehandle, $unused);
         }
     }
 
     /*
      * Write property storage. TODO: add summary sheets
      */
-    function _write_property_storage() {
-        $rootsize = -2;
+    function _write_property_storage(): void {
         $booksize = $this->_booksize;
 
         //                name          type  dir start  size
@@ -281,16 +272,16 @@ class writeexcel_olewriter {
     /*
      * Write property sheet in property storage
      */
-    function _write_pps($name, $type, $dir, $start, $size) {
+    function _write_pps(?string $name, $type, $dir, $start, $size): void {
         $names           = array();
         $length          = 0;
 
         if ($name != '') {
-            $name   = $name . "\0";
+            $name .= "\0";
             // Simulate a Unicode string
             $chars=preg_split("''", $name, -1, PREG_SPLIT_NO_EMPTY);
             foreach ($chars as $char) {
-                array_push($names, ord($char));
+                $names[] = ord($char);
             }
             $length = strlen($name) * 2;
         }
@@ -307,44 +298,39 @@ class writeexcel_olewriter {
         $unknown1        = pack("V",  0);
 
         $pps_ts1s        = pack("V",  0);         //0x64
-        $pps_ts1d        = pack("V",  0);         //0x68
-        $pps_ts2s        = pack("V",  0);         //0x6c
+        $pps_ts1d        = pack("V",  0);         //0x6c
         $pps_ts2d        = pack("V",  0);         //0x70
         $pps_sb          = pack("V",  $start);    //0x74
         $pps_size        = pack("V",  $size);     //0x78
 
-        fputs($this->_filehandle, $rawname);
-        fputs($this->_filehandle, str_repeat($zero, (64-$length)));
-        fputs($this->_filehandle, $pps_sizeofname);
-        fputs($this->_filehandle, $pps_type);
-        fputs($this->_filehandle, $pps_prev);
-        fputs($this->_filehandle, $pps_next);
-        fputs($this->_filehandle, $pps_dir);
-        fputs($this->_filehandle, str_repeat($unknown1, 5));
-        fputs($this->_filehandle, $pps_ts1s);
-        fputs($this->_filehandle, $pps_ts1d);
-        fputs($this->_filehandle, $pps_ts2d);
-        fputs($this->_filehandle, $pps_ts2d);
-        fputs($this->_filehandle, $pps_sb);
-        fputs($this->_filehandle, $pps_size);
-        fputs($this->_filehandle, $unknown1);
+        fwrite($this->_filehandle, $rawname);
+        fwrite($this->_filehandle, str_repeat($zero, (64-$length)));
+        fwrite($this->_filehandle, $pps_sizeofname);
+        fwrite($this->_filehandle, $pps_type);
+        fwrite($this->_filehandle, $pps_prev);
+        fwrite($this->_filehandle, $pps_next);
+        fwrite($this->_filehandle, $pps_dir);
+        fwrite($this->_filehandle, str_repeat($unknown1, 5));
+        fwrite($this->_filehandle, $pps_ts1s);
+        fwrite($this->_filehandle, $pps_ts1d);
+        fwrite($this->_filehandle, $pps_ts2d);
+        fwrite($this->_filehandle, $pps_ts2d);
+        fwrite($this->_filehandle, $pps_sb);
+        fwrite($this->_filehandle, $pps_size);
+        fwrite($this->_filehandle, $unknown1);
     }
 
     /*
      * Pad the end of the file
      */
-    function _write_padding() {
+    function _write_padding(): void {
         $biffsize = $this->_biffsize;
 
-        if ($biffsize < 4096) {
-            $min_size = 4096;
-        } else {
-            $min_size = 512;
-        }
+        $min_size = $biffsize < 4096 ? 4096 : 512;
 
         if ($biffsize % $min_size != 0) {
             $padding  = $min_size - ($biffsize % $min_size);
-            fputs($this->_filehandle, str_repeat("\0", $padding));
+            fwrite($this->_filehandle, str_repeat("\0", $padding));
         }
     }
 

@@ -36,7 +36,7 @@
  */
 class PHPExcel_Writer_OpenDocument_Cell_Comment
 {
-    public static function write(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Cell $cell)
+    public static function write(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Cell $cell): void
     {
         $comments = $cell->getWorksheet()->getComments();
         if (!isset($comments[$cell->getCoordinate()])) {

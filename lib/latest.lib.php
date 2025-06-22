@@ -4,7 +4,7 @@ if (!defined('_GNUBOARD_')) exit;
 
 // 최신글 추출
 // $cache_time 캐시 갱신시간
-function latest($skin_dir='', $bo_table='', $rows=10, $subject_len=40, $cache_time=1, $options='')
+function latest($skin_dir='', string $bo_table='', $rows=10, $subject_len=40, $cache_time=1, $options=''): string|false
 {
     global $g5;
 
@@ -12,7 +12,7 @@ function latest($skin_dir='', $bo_table='', $rows=10, $subject_len=40, $cache_ti
     
     $time_unit = 3600;  // 1시간으로 고정
 
-    if(preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
+    if (preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         if (G5_IS_MOBILE) {
             $latest_skin_path = G5_THEME_MOBILE_PATH.'/'.G5_SKIN_DIR.'/latest/'.$match[1];
             if(!is_dir($latest_skin_path))
@@ -23,21 +23,19 @@ function latest($skin_dir='', $bo_table='', $rows=10, $subject_len=40, $cache_ti
             $latest_skin_url = str_replace(G5_PATH, G5_URL, $latest_skin_path);
         }
         $skin_dir = $match[1];
+    } elseif (G5_IS_MOBILE) {
+        $latest_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/latest/'.$skin_dir;
+        $latest_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/latest/'.$skin_dir;
     } else {
-        if(G5_IS_MOBILE) {
-            $latest_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/latest/'.$skin_dir;
-            $latest_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/latest/'.$skin_dir;
-        } else {
-            $latest_skin_path = G5_SKIN_PATH.'/latest/'.$skin_dir;
-            $latest_skin_url  = G5_SKIN_URL.'/latest/'.$skin_dir;
-        }
+        $latest_skin_path = G5_SKIN_PATH.'/latest/'.$skin_dir;
+        $latest_skin_url  = G5_SKIN_URL.'/latest/'.$skin_dir;
     }
 
     $caches = false;
 
     if(G5_USE_CACHE) {
         $cache_file_name = "latest-{$bo_table}-{$skin_dir}-{$rows}-{$subject_len}-".g5_cache_secret_key();
-        $caches = g5_get_cache($cache_file_name, (int) $time_unit * (int) $cache_time);
+        $caches = g5_get_cache($cache_file_name, $time_unit * (int) $cache_time);
         $cache_list = isset($caches['list']) ? $caches['list'] : array();
         g5_latest_cache_data($bo_table, $cache_list);
     }
@@ -98,7 +96,7 @@ function latest($skin_dir='', $bo_table='', $rows=10, $subject_len=40, $cache_ti
                 'bo_subject' => sql_escape_string($bo_subject),
             );
 
-            g5_set_cache($cache_file_name, $caches, (int) $time_unit * (int) $cache_time);
+            g5_set_cache($cache_file_name, $caches, $time_unit * (int) $cache_time);
         }
     } else {
         $list = $cache_list;

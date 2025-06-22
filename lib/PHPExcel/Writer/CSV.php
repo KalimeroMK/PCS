@@ -29,10 +29,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 {
     /**
      * PHPExcel object
-     *
-     * @var PHPExcel
      */
-    private $phpExcel;
+    private \PHPExcel $phpExcel;
 
     /**
      * Delimiter
@@ -100,7 +98,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * @param    string        $pFilename
      * @throws    PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         // Fetch sheet
         $sheet = $this->phpExcel->getSheet($this->sheetIndex);
@@ -165,9 +163,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set delimiter
      *
      * @param    string    $pValue        Delimiter, defaults to ,
-     * @return PHPExcel_Writer_CSV
      */
-    public function setDelimiter($pValue = ',')
+    public function setDelimiter($pValue = ','): static
     {
         $this->delimiter = $pValue;
         return $this;
@@ -187,9 +184,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set enclosure
      *
      * @param    string    $pValue        Enclosure, defaults to "
-     * @return PHPExcel_Writer_CSV
      */
-    public function setEnclosure($pValue = '"')
+    public function setEnclosure($pValue = '"'): static
     {
         if ($pValue == '') {
             $pValue = null;
@@ -212,9 +208,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set line ending
      *
      * @param    string    $pValue        Line ending, defaults to OS line ending (PHP_EOL)
-     * @return PHPExcel_Writer_CSV
      */
-    public function setLineEnding($pValue = PHP_EOL)
+    public function setLineEnding($pValue = PHP_EOL): static
     {
         $this->lineEnding = $pValue;
         return $this;
@@ -234,9 +229,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set whether BOM should be used
      *
      * @param    boolean    $pValue        Use UTF-8 byte-order mark? Defaults to false
-     * @return PHPExcel_Writer_CSV
      */
-    public function setUseBOM($pValue = false)
+    public function setUseBOM($pValue = false): static
     {
         $this->useBOM = $pValue;
         return $this;
@@ -256,9 +250,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set whether a separator line should be included as the first line of the file
      *
      * @param    boolean    $pValue        Use separator line? Defaults to false
-     * @return PHPExcel_Writer_CSV
      */
-    public function setIncludeSeparatorLine($pValue = false)
+    public function setIncludeSeparatorLine($pValue = false): static
     {
         $this->includeSeparatorLine = $pValue;
         return $this;
@@ -279,9 +272,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      *
      * @param    boolean    $pValue        Set the file to be written as a fully Excel compatible csv file
      *                                Note that this overrides other settings such as useBOM, enclosure and delimiter
-     * @return PHPExcel_Writer_CSV
      */
-    public function setExcelCompatibility($pValue = false)
+    public function setExcelCompatibility($pValue = false): static
     {
         $this->excelCompatibility = $pValue;
         return $this;
@@ -301,9 +293,8 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * Set sheet index
      *
      * @param    int        $pValue        Sheet index
-     * @return PHPExcel_Writer_CSV
      */
-    public function setSheetIndex($pValue = 0)
+    public function setSheetIndex($pValue = 0): static
     {
         $this->sheetIndex = $pValue;
         return $this;
@@ -316,7 +307,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
      * @param    array    $pValues        Array containing values in a row
      * @throws    PHPExcel_Writer_Exception
      */
-    private function writeLine($pFileHandle = null, $pValues = null)
+    private function writeLine($pFileHandle = null, $pValues = null): void
     {
         if (is_array($pValues)) {
             // No leading delimiter

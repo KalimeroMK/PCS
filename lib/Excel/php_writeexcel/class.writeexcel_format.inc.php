@@ -26,47 +26,47 @@
 
 class writeexcel_format {
 
-    var $_xf_index;
-    var $_font_index;
-    var $_font;
-    var $_size;
-    var $_bold;
-    var $_italic;
-    var $_color;
-    var $_underline;
-    var $_font_strikeout;
-    var $_font_outline;
-    var $_font_shadow;
-    var $_font_script;
-    var $_font_family;
-    var $_font_charset;
-    var $_num_format;
-    var $_hidden;
-    var $_locked;
-    var $_text_h_align;
-    var $_text_wrap;
-    var $_text_v_align;
-    var $_text_justlast;
-    var $_rotation;
-    var $_fg_color;
-    var $_bg_color;
-    var $_pattern;
-    var $_bottom;
-    var $_top;
-    var $_left;
-    var $_right;
-    var $_bottom_color;
-    var $_top_color;
-    var $_left_color;
-    var $_right_color;
+    public $_xf_index;
+    public $_font_index;
+    public $_font;
+    public $_size;
+    public $_bold;
+    public $_italic;
+    public $_color;
+    public $_underline;
+    public $_font_strikeout;
+    public $_font_outline;
+    public $_font_shadow;
+    public $_font_script;
+    public $_font_family;
+    public $_font_charset;
+    public $_num_format;
+    public $_hidden;
+    public $_locked;
+    public $_text_h_align;
+    public $_text_wrap;
+    public $_text_v_align;
+    public $_text_justlast;
+    public $_rotation;
+    public $_fg_color;
+    public $_bg_color;
+    public $_pattern;
+    public $_bottom;
+    public $_top;
+    public $_left;
+    public $_right;
+    public $_bottom_color;
+    public $_top_color;
+    public $_left_color;
+    public $_right_color;
 
     /*
      * Constructor
      */
-    function writeexcel_format() {
+    function writeexcel_format(): void {
         $_=func_get_args();
 
-        $this->_xf_index       = (sizeof($_)>0) ? array_shift($_) : 0;
+        $this->_xf_index       = (count($_)>0) ? array_shift($_) : 0;
 
         $this->_font_index     = 0;
         $this->_font           = 'Arial';
@@ -109,7 +109,7 @@ class writeexcel_format {
         $this->_right_color    = 0x40;
 
         // Set properties passed to writeexcel_workbook::addformat()
-        if (sizeof($_)>0) {
+        if (count($_)>0) {
             call_user_func_array(array(&$this, 'set_properties'), $_);
         }
     }
@@ -117,7 +117,7 @@ class writeexcel_format {
     /*
      * Copy the attributes of another writeexcel_format object.
      */
-    function copy($other) {
+    function copy($other): void {
         $xf = $this->_xf_index;   // Backup XF index
         foreach ($other as $key->$value) {
                 $this->{$key} = $value;
@@ -128,7 +128,7 @@ class writeexcel_format {
     /*
      * Generate an Excel BIFF XF record.
      */
-    function get_xf() {
+    function get_xf(): string {
 
         $_=func_get_args();
 
@@ -255,7 +255,7 @@ class writeexcel_format {
     /*
      * Generate an Excel BIFF FONT record.
      */
-    function get_font() {
+    function get_font(): string {
 
         // $record     Record identifier
         // $length     Record length
@@ -316,7 +316,7 @@ class writeexcel_format {
      * Returns a unique hash key for a font.
      * Used by writeexcel_workbook::_store_all_fonts()
      */
-    function get_font_key() {
+    function get_font_key(): ?string {
 
         # The following elements are arranged to increase the probability of
         # generating a unique key. Elements that hold a large range of numbers
@@ -326,11 +326,9 @@ class writeexcel_format {
                 $this->_font_script.$this->_underline.
                 $this->_font_strikeout.$this->_bold.$this->_font_outline.
                 $this->_font_family.$this->_font_charset.
-                $this->_font_shadow.$this->_color.$this->_italic;
+                $this->_font_shadow.$this->_color.$this->_italic; # Convert the key to a single word
 
-        $key = preg_replace('/ /', '_', $key); # Convert the key to a single word
-
-        return $key;
+        return preg_replace('/ /', '_', $key);
     }
 
     /*
@@ -400,7 +398,7 @@ class writeexcel_format {
     /*
      * Set cell alignment.
      */
-    function set_align($location) {
+    function set_align($location): void {
 
         // Ignore numbers
         if (preg_match('/\d/', $location)) {
@@ -448,7 +446,6 @@ class writeexcel_format {
         case 'vcenter':
             $this->set_text_v_align(1);
             break;
-            break;
 
         case 'bottom':
             $this->set_text_v_align(2);
@@ -468,14 +465,14 @@ class writeexcel_format {
      * Set vertical cell alignment. This is required by the set_properties()
      * method to differentiate between the vertical and horizontal properties.
      */
-    function set_valign($location) {
+    function set_valign($location): void {
         $this->set_align($location);
     }
 
     /*
      * This is an alias for the unintuitive set_align('merge')
      */
-    function set_merge() {
+    function set_merge(): void {
         $this->set_text_h_align(6);
     }
 
@@ -483,7 +480,7 @@ class writeexcel_format {
      * Bold has a range 0x64..0x3E8.
      * 0x190 is normal. 0x2BC is bold.
      */
-    function set_bold($weight=1) {
+    function set_bold($weight=1): void {
 
         if ($weight == 1) {
             // Bold text
@@ -511,7 +508,7 @@ class writeexcel_format {
     /*
      * Set all cell borders (bottom, top, left, right) to the same style
      */
-    function set_border($style) {
+    function set_border($style): void {
         $this->set_bottom($style);
         $this->set_top($style);
         $this->set_left($style);
@@ -521,7 +518,7 @@ class writeexcel_format {
     /*
      * Set all cell borders (bottom, top, left, right) to the same color
      */
-    function set_border_color($color) {
+    function set_border_color($color): void {
         $this->set_bottom_color($color);
         $this->set_top_color($color);
         $this->set_left_color($color);
@@ -531,7 +528,7 @@ class writeexcel_format {
     /*
      * Convert hashes of properties to method calls.
      */
-    function set_properties() {
+    function set_properties(): void {
 
         $_=func_get_args();
 
@@ -568,125 +565,125 @@ class writeexcel_format {
         }
     }
 
-    function set_font($font) {
+    function set_font($font): void {
         $this->_font=$font;
     }
 
-    function set_size($size) {
+    function set_size($size): void {
         $this->_size=$size;
     }
 
-    function set_italic($italic=1) {
+    function set_italic($italic=1): void {
         $this->_italic=$italic;
     }
 
-    function set_color($color) {
+    function set_color($color): void {
         $this->_color=$this->_get_color($color);
     }
 
-    function set_underline($underline=1) {
+    function set_underline($underline=1): void {
         $this->_underline=$underline;
     }
 
-    function set_font_strikeout($font_strikeout=1) {
+    function set_font_strikeout($font_strikeout=1): void {
         $this->_font_strikeout=$font_strikeout;
     }
 
-    function set_font_outline($font_outline=1) {
+    function set_font_outline($font_outline=1): void {
         $this->_font_outline=$font_outline;
     }
 
-    function set_font_shadow($font_shadow=1) {
+    function set_font_shadow($font_shadow=1): void {
         $this->_font_shadow=$font_shadow;
     }
 
-    function set_font_script($font_script=1) {
+    function set_font_script($font_script=1): void {
         $this->_font_script=$font_script;
     }
 
     /* Undocumented */
-    function set_font_family($font_family=1) {
+    function set_font_family($font_family=1): void {
         $this->_font_family=$font_family;
     }
 
     /* Undocumented */
-    function set_font_charset($font_charset=1) {
+    function set_font_charset($font_charset=1): void {
         $this->_font_charset=$font_charset;
     }
 
-    function set_num_format($num_format=1) {
+    function set_num_format($num_format=1): void {
         $this->_num_format=$num_format;
     }
 
-    function set_hidden($hidden=1) {
+    function set_hidden($hidden=1): void {
         $this->_hidden=$hidden;
     }
 
-    function set_locked($locked=1) {
+    function set_locked($locked=1): void {
         $this->_locked=$locked;
     }
 
-    function set_text_h_align($align) {
+    function set_text_h_align($align): void {
         $this->_text_h_align=$align;
     }
 
-    function set_text_wrap($wrap=1) {
+    function set_text_wrap($wrap=1): void {
         $this->_text_wrap=$wrap;
     }
 
-    function set_text_v_align($align) {
+    function set_text_v_align($align): void {
         $this->_text_v_align=$align;
     }
 
-    function set_text_justlast($text_justlast=1) {
+    function set_text_justlast($text_justlast=1): void {
         $this->_text_justlast=$text_justlast;
     }
 
-    function set_rotation($rotation=1) {
+    function set_rotation($rotation=1): void {
         $this->_rotation=$rotation;
     }
 
-    function set_fg_color($color) {
+    function set_fg_color($color): void {
         $this->_fg_color=$this->_get_color($color);
     }
 
-    function set_bg_color($color) {
+    function set_bg_color($color): void {
         $this->_bg_color=$this->_get_color($color);
     }
 
-    function set_pattern($pattern=1) {
+    function set_pattern($pattern=1): void {
         $this->_pattern=$pattern;
     }
 
-    function set_bottom($bottom=1) {
+    function set_bottom($bottom=1): void {
         $this->_bottom=$bottom;
     }
 
-    function set_top($top=1) {
+    function set_top($top=1): void {
         $this->_top=$top;
     }
 
-    function set_left($left=1) {
+    function set_left($left=1): void {
         $this->_left=$left;
     }
 
-    function set_right($right=1) {
+    function set_right($right=1): void {
          $this->_right=$right;
     }
 
-    function set_bottom_color($color) {
+    function set_bottom_color($color): void {
         $this->_bottom_color=$this->_get_color($color);
     }
 
-    function set_top_color($color) {
+    function set_top_color($color): void {
         $this->_top_color=$this->_get_color($color);
     }
 
-    function set_left_color($color) {
+    function set_left_color($color): void {
         $this->_left_color=$this->_get_color($color);
     }
 
-    function set_right_color($color) {
+    function set_right_color($color): void {
         $this->_right_color=$this->_get_color($color);
     }
 

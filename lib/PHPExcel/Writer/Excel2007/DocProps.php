@@ -30,7 +30,6 @@ class PHPExcel_Writer_Excel2007_DocProps extends PHPExcel_Writer_Excel2007_Write
     /**
      * Write docProps/app.xml to XML format
      *
-     * @param     PHPExcel    $pPHPExcel
      * @return     string         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -127,7 +126,6 @@ class PHPExcel_Writer_Excel2007_DocProps extends PHPExcel_Writer_Excel2007_Write
     /**
      * Write docProps/core.xml to XML format
      *
-     * @param     PHPExcel    $pPHPExcel
      * @return     string         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -194,7 +192,6 @@ class PHPExcel_Writer_Excel2007_DocProps extends PHPExcel_Writer_Excel2007_Write
     /**
      * Write docProps/custom.xml to XML format
      *
-     * @param     PHPExcel    $pPHPExcel
      * @return     string         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -202,7 +199,7 @@ class PHPExcel_Writer_Excel2007_DocProps extends PHPExcel_Writer_Excel2007_Write
     {
         $customPropertyList = $pPHPExcel->getProperties()->getCustomProperties();
         if (empty($customPropertyList)) {
-            return;
+            return null;
         }
 
         // Create XML writer

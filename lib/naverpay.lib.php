@@ -14,15 +14,16 @@ class naverpay_register
         $this->send_cost = $send_cost;
     }
 
-    function get_sendcost()
+    /**
+     * @return mixed[]
+     */
+    function get_sendcost(): array
     {
         global $g5, $default;
 
         $options = $this->options;
         $send_cost = $this->send_cost;
         $keys = $this->keys;
-
-        $data = array();
 
         if($send_cost == 1)
             return array('type' => 'ONDELIVERY', 'cost' => 0);
@@ -57,13 +58,15 @@ class naverpay_register
                 $qty += $opt['qty'];
             }
 
-            if($it['it_sc_type'] > 1) {
-                if($it['it_sc_type'] == 2) { // 조건부무료
+            if ($it['it_sc_type'] > 1) {
+                if ($it['it_sc_type'] == 2) {
+                    // 조건부무료
                     if($price >= $it['it_sc_minimum'])
                         $cost += 0;
                     else
                         $cost += $it['it_sc_price'];
-                } else if($it['it_sc_type'] == 3) { // 유료배송
+                } elseif ($it['it_sc_type'] == 3) {
+                    // 유료배송
                     $cost += $it['it_sc_price'];
                 } else { // 수량별 부과
                     if(!$it['it_sc_qty'])
@@ -72,15 +75,14 @@ class naverpay_register
                     $q = ceil((int)$qty / (int)$it['it_sc_qty']);
                     $cost += (int)$it['it_sc_price'] * $q;
                 }
-            } else if($it['it_sc_type'] == 1) { // 무료배송
+            } elseif ($it['it_sc_type'] == 1) {
+                // 무료배송
                 $cost += 0;
+            } elseif ($default['de_send_cost_case'] == '차등') {
+                $total_price += $price;
+                $diff++;
             } else {
-                if($default['de_send_cost_case'] == '차등') {
-                    $total_price += $price;
-                    $diff++;
-                } else {
-                    $cost += 0;
-                }
+                $cost += 0;
             }
         }
 
@@ -88,8 +90,9 @@ class naverpay_register
             // 금액별차등 : 여러단계의 배송비 적용 가능
             $send_cost_limit = explode(";", $default['de_send_cost_limit']);
             $send_cost_list  = explode(";", $default['de_send_cost_list']);
+            $counter = count($send_cost_limit);
 
-            for ($k=0; $k<count($send_cost_limit); $k++) {
+            for ($k=0; $k<$counter; $k++) {
                 // 총판매금액이 배송비 상한가 보다 작다면
                 if ($total_price < preg_replace('/[^0-9]/', '', $send_cost_limit[$k])) {
                     $diff_cost = preg_replace('/[^0-9]/', '', $send_cost_list[$k]);
@@ -101,18 +104,13 @@ class naverpay_register
         $cost += $diff_cost;
 
         // 모두 착불상품이면
-        if(count($keys) == $cnt && $cnt > 0)
+        if(count($keys) === $cnt && $cnt > 0)
             return array('type' => 'ONDELIVERY', 'cost' => 0);
 
-        if($cost > 0)
-            $data = array('type' => 'PAYED', 'cost' => $cost);
-        else
-            $data = array('type' => 'FREE', 'cost' => 0);
-
-        return $data;
+        return $cost > 0 ? array('type' => 'PAYED', 'cost' => $cost) : array('type' => 'FREE', 'cost' => 0);
     }
 
-    function query()
+    function query(): string
     {
         global $g5, $default;
 
@@ -174,7 +172,7 @@ class naverpay_register
         if(defined('SHIPPING_ADDITIONAL_PRICE') && SHIPPING_ADDITIONAL_PRICE)
             $shipping .= '&SHIPPING_ADDITIONAL_PRICE='.urlencode(SHIPPING_ADDITIONAL_PRICE);
 
-        if($item) {
+        if($item !== '' && $item !== '0') {
             $na_co_val = isset($_COOKIE['NA_CO']) ? urlencode($_COOKIE['NA_CO']) : '';
             $query .= 'SHOP_ID='.urlencode($default['de_naverpay_mid']);
             $query .= '&CERTI_KEY='.urlencode($default['de_naverpay_cert_key']);
@@ -247,7 +245,7 @@ function get_naverpay_item_stock($it_id)
         return $it['it_stock_qty'];
 }
 
-function get_naverpay_item_option($it_id, $subject)
+function get_naverpay_item_option($it_id, $subject): string
 {
     global $g5;
 
@@ -258,8 +256,6 @@ function get_naverpay_item_option($it_id, $subject)
     $result = sql_query($sql);
     if(!sql_num_rows($result))
         return '';
-
-    $str = '';
     $subj = explode(',', $subject);
     $subj_count = count($subj);
 
@@ -285,11 +281,11 @@ function get_naverpay_item_option($it_id, $subject)
         for($i=0; $i<$subj_count; $i++) {
             $opt = $options[$i];
             $osl_count = count($opt);
-            if($osl_count) {
+            if($osl_count !== 0) {
                 $option .= '<option name="'.get_text($subj[$i]).'">'.PHP_EOL;
                 for($k=0; $k<$osl_count; $k++) {
                     $osl_val = $opt[$k];
-                    if(strlen($osl_val)) {
+                    if(strlen($osl_val) !== 0) {
                         $option .= '<select><![CDATA['.$osl_val.']]></select>'.PHP_EOL;
                     }
                 }
@@ -307,7 +303,7 @@ function get_naverpay_item_option($it_id, $subject)
     return '<options>'.$option.'</options>';
 }
 
-function get_naverpay_return_info($mb_id)
+function get_naverpay_return_info($mb_id): string
 {
     global $default;
 
@@ -321,12 +317,11 @@ function get_naverpay_return_info($mb_id)
     $data .= '<address2><![CDATA['.$address2.']]></address2>';
     $data .= '<sellername><![CDATA['.$default['de_admin_company_name'].']]></sellername>';
     $data .= '<contact1><![CDATA['.$default['de_admin_company_tel'].']]></contact1>';
-    $data .= '</returnInfo>';
 
-    return $data;
+    return $data . '</returnInfo>';
 }
 
-function return_error2json($str, $fld='error')
+function return_error2json($str, $fld='error'): void
 {
     $data = array();
     $data[$fld] = trim($str);

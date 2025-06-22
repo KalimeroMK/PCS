@@ -28,10 +28,10 @@
 class PHPExcel_Reader_Excel5_MD5
 {
     // Context
-    private $a;
-    private $b;
-    private $c;
-    private $d;
+    private int $a;
+    private int $b;
+    private int $c;
+    private int $d;
 
     /**
      * MD5 stream constructor
@@ -44,7 +44,7 @@ class PHPExcel_Reader_Excel5_MD5
     /**
      * Reset the MD5 stream context
      */
-    public function reset()
+    public function reset(): void
     {
         $this->a = 0x67452301;
         $this->b = 0xEFCDAB89;
@@ -54,10 +54,8 @@ class PHPExcel_Reader_Excel5_MD5
 
     /**
      * Get MD5 stream context
-     *
-     * @return string
      */
-    public function getContext()
+    public function getContext(): string
     {
         $s = '';
         foreach (array('a', 'b', 'c', 'd') as $i) {
@@ -76,7 +74,7 @@ class PHPExcel_Reader_Excel5_MD5
      *
      * @param string $data Data to add
      */
-    public function add($data)
+    public function add($data): void
     {
         $words = array_values(unpack('V16', $data));
 
@@ -168,34 +166,14 @@ class PHPExcel_Reader_Excel5_MD5
         $this->d = ($this->d + $D) & 0xffffffff;
     }
 
-    private static function f($X, $Y, $Z)
-    {
-        return (($X & $Y) | ((~ $X) & $Z)); // X AND Y OR NOT X AND Z
-    }
-
-    private static function g($X, $Y, $Z)
-    {
-        return (($X & $Z) | ($Y & (~ $Z))); // X AND Z OR Y AND NOT Z
-    }
-
-    private static function h($X, $Y, $Z)
-    {
-        return ($X ^ $Y ^ $Z); // X XOR Y XOR Z
-    }
-
-    private static function i($X, $Y, $Z)
-    {
-        return ($Y ^ ($X | (~ $Z))) ; // Y XOR (X OR NOT Z)
-    }
-
-    private static function step($func, &$A, $B, $C, $D, $M, $s, $t)
+    private static function step(array $func, &$A, $B, $C, $D, $M, int $s, int $t): void
     {
         $A = ($A + call_user_func($func, $B, $C, $D) + $M + $t) & 0xffffffff;
         $A = self::rotate($A, $s);
         $A = ($B + $A) & 0xffffffff;
     }
 
-    private static function rotate($decimal, $bits)
+    private static function rotate(int $decimal, int $bits): float|int
     {
         $binary = str_pad(decbin($decimal), 32, "0", STR_PAD_LEFT);
         return bindec(substr($binary, $bits).substr($binary, 0, $bits));

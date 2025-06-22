@@ -30,7 +30,6 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
     /**
      * Write comments to XML format
      *
-     * @param     PHPExcel_Worksheet                $pWorksheet
      * @return     string                                 XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -65,7 +64,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
 
         // Loop through authors
         $objWriter->startElement('authors');
-        foreach ($authors as $author => $index) {
+        foreach (array_keys($authors) as $author) {
             $objWriter->writeElement('author', $author);
         }
         $objWriter->endElement();
@@ -92,7 +91,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
      * @param    array                            $pAuthors            Array of authors
      * @throws     PHPExcel_Writer_Exception
      */
-    private function writeComment(PHPExcel_Shared_XMLWriter $objWriter = null, $pCellReference = 'A1', PHPExcel_Comment $pComment = null, $pAuthors = null)
+    private function writeComment(PHPExcel_Shared_XMLWriter $objWriter = null, $pCellReference = 'A1', PHPExcel_Comment $pComment = null, $pAuthors = null): void
     {
         // comment
         $objWriter->startElement('comment');
@@ -110,7 +109,6 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
     /**
      * Write VML comments to XML format
      *
-     * @param     PHPExcel_Worksheet                $pWorksheet
      * @return     string                                 XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -187,7 +185,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
      * @param     PHPExcel_Comment                $pComment            Comment
      * @throws     PHPExcel_Writer_Exception
      */
-    private function writeVMLComment(PHPExcel_Shared_XMLWriter $objWriter = null, $pCellReference = 'A1', PHPExcel_Comment $pComment = null)
+    private function writeVMLComment(PHPExcel_Shared_XMLWriter $objWriter = null, $pCellReference = 'A1', PHPExcel_Comment $pComment = null): void
     {
          // Metadata
          list($column, $row) = PHPExcel_Cell::coordinateFromString($pCellReference);

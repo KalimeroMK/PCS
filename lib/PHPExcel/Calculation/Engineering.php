@@ -44,7 +44,7 @@ class PHPExcel_Calculation_Engineering
      *
      * @var mixed[]
      */
-    private static $conversionUnits = array(
+    private static array $conversionUnits = array(
         'g'     => array('Group' => 'Mass',        'Unit Name' => 'Gram',                     'AllowPrefix' => true),
         'sg'    => array('Group' => 'Mass',        'Unit Name' => 'Slug',                     'AllowPrefix' => false),
         'lbm'   => array('Group' => 'Mass',        'Unit Name' => 'Pound mass (avoirdupois)', 'AllowPrefix' => false),
@@ -115,7 +115,7 @@ class PHPExcel_Calculation_Engineering
      *
      * @var mixed[]
      */
-    private static $conversionMultipliers = array(
+    private static array $conversionMultipliers = array(
         'Y' => array('multiplier' => 1E24,  'name' => 'yotta'),
         'Z' => array('multiplier' => 1E21,  'name' => 'zetta'),
         'E' => array('multiplier' => 1E18,  'name' => 'exa'),
@@ -143,7 +143,7 @@ class PHPExcel_Calculation_Engineering
      *
      * @var mixed[]
      */
-    private static $unitConversions = array(
+    private static array $unitConversions = array(
         'Mass' => array(
             'g' => array(
                 'g'   => 1.0,
@@ -752,7 +752,7 @@ class PHPExcel_Calculation_Engineering
      * @param    string        $complexNumber    The complex number
      * @return    string[]    Indexed on "real", "imaginary" and "suffix"
      */
-    public static function parseComplex($complexNumber)
+    public static function parseComplex($complexNumber): array
     {
         $workString = (string) $complexNumber;
 
@@ -772,23 +772,23 @@ class PHPExcel_Calculation_Engineering
         }
         $power = '';
         $realNumber = strtok($workString, '+-');
-        if (strtoupper(substr($realNumber, -1)) == 'E') {
+        if (strtoupper(substr($realNumber, -1)) === 'E') {
             $power = strtok('+-');
             ++$leadingSign;
         }
 
         $realNumber = substr($workString, 0, strlen($realNumber)+strlen($power)+$leadingSign);
 
-        if ($suffix != '') {
+        if ($suffix !== '') {
             $imaginary = substr($workString, strlen($realNumber));
 
-            if (($imaginary == '') && (($realNumber == '') || ($realNumber == '+') || ($realNumber == '-'))) {
+            if (($imaginary === '') && (($realNumber === '') || ($realNumber === '+') || ($realNumber === '-'))) {
                 $imaginary = $realNumber.'1';
                 $realNumber = '0';
-            } elseif ($imaginary == '') {
+            } elseif ($imaginary === '') {
                 $imaginary = $realNumber;
                 $realNumber = '0';
-            } elseif (($imaginary == '+') || ($imaginary == '-')) {
+            } elseif (($imaginary === '+') || ($imaginary === '-')) {
                 $imaginary .= '1';
             }
         }
@@ -954,7 +954,7 @@ class PHPExcel_Calculation_Engineering
     }
 
 
-    private static function besselK0($fNum)
+    private static function besselK0($fNum): float
     {
         if ($fNum <= 2) {
             $fNum2 = $fNum * 0.5;
@@ -972,7 +972,7 @@ class PHPExcel_Calculation_Engineering
     }
 
 
-    private static function besselK1($fNum)
+    private static function besselK1($fNum): float
     {
         if ($fNum <= 2) {
             $fNum2 = $fNum * 0.5;
@@ -1040,7 +1040,7 @@ class PHPExcel_Calculation_Engineering
     }
 
 
-    private static function besselY0($fNum)
+    private static function besselY0($fNum): float
     {
         if ($fNum < 8.0) {
             $y = ($fNum * $fNum);
@@ -1059,7 +1059,7 @@ class PHPExcel_Calculation_Engineering
     }
 
 
-    private static function besselY1($fNum)
+    private static function besselY1($fNum): float
     {
         if ($fNum < 8.0) {
             $y = ($fNum * $fNum);
@@ -1275,7 +1275,7 @@ class PHPExcel_Calculation_Engineering
             //    Two's Complement
             return str_repeat('7', 7).substr(strtoupper(decoct(bindec(substr($x, -9)))), -3);
         }
-        $octVal = (string) decoct(bindec($x));
+        $octVal = decoct(bindec($x));
 
         return self::nbrConversionFormat($octVal, $places);
     }
@@ -1746,24 +1746,24 @@ class PHPExcel_Calculation_Engineering
             }
             if ($realNumber == 0.0) {
                 if ($imaginary == 0.0) {
-                    return (string) '0';
+                    return '0';
                 } elseif ($imaginary == 1.0) {
                     return (string) $suffix;
                 } elseif ($imaginary == -1.0) {
-                    return (string) '-'.$suffix;
+                    return '-'.$suffix;
                 }
-                return (string) $imaginary.$suffix;
+                return $imaginary.$suffix;
             } elseif ($imaginary == 0.0) {
                 return (string) $realNumber;
             } elseif ($imaginary == 1.0) {
-                return (string) $realNumber.'+'.$suffix;
+                return $realNumber.'+'.$suffix;
             } elseif ($imaginary == -1.0) {
-                return (string) $realNumber.'-'.$suffix;
+                return $realNumber.'-'.$suffix;
             }
             if ($imaginary > 0) {
-                $imaginary = (string) '+'.$imaginary;
+                $imaginary = '+'.$imaginary;
             }
-            return (string) $realNumber.$imaginary.$suffix;
+            return $realNumber.$imaginary.$suffix;
         }
 
         return PHPExcel_Calculation_Functions::VALUE();
@@ -1824,9 +1824,8 @@ class PHPExcel_Calculation_Engineering
      *        IMABS(complexNumber)
      *
      * @param    string        $complexNumber    The complex number for which you want the absolute value.
-     * @return    float
      */
-    public static function IMABS($complexNumber)
+    public static function IMABS($complexNumber): float
     {
         $complexNumber = PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
 
@@ -1849,9 +1848,8 @@ class PHPExcel_Calculation_Engineering
      *        IMARGUMENT(complexNumber)
      *
      * @param    string        $complexNumber    The complex number for which you want the argument theta.
-     * @return    float
      */
-    public static function IMARGUMENT($complexNumber)
+    public static function IMARGUMENT($complexNumber): float
     {
         $complexNumber    = PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
 
@@ -1868,7 +1866,7 @@ class PHPExcel_Calculation_Engineering
         } elseif ($parsedComplex['real'] > 0.0) {
             return atan($parsedComplex['imaginary'] / $parsedComplex['real']);
         } elseif ($parsedComplex['imaginary'] < 0.0) {
-            return 0 - (M_PI - atan(abs($parsedComplex['imaginary']) / abs($parsedComplex['real'])));
+            return -(M_PI - atan(abs($parsedComplex['imaginary']) / abs($parsedComplex['real'])));
         } else {
             return M_PI - atan($parsedComplex['imaginary'] / abs($parsedComplex['real']));
         }
@@ -2321,9 +2319,8 @@ class PHPExcel_Calculation_Engineering
      *
      *    @param    float        $a    The first number.
      *    @param    float        $b    The second number. If omitted, b is assumed to be zero.
-     *    @return    int
      */
-    public static function DELTA($a, $b = 0)
+    public static function DELTA($a, $b = 0): int
     {
         $a = PHPExcel_Calculation_Functions::flattenSingleValue($a);
         $b = PHPExcel_Calculation_Functions::flattenSingleValue($b);
@@ -2345,9 +2342,8 @@ class PHPExcel_Calculation_Engineering
      *    @param    float        $number        The value to test against step.
      *    @param    float        $step        The threshold value.
      *                                    If you omit a value for step, GESTEP uses zero.
-     *    @return    int
      */
-    public static function GESTEP($number, $step = 0)
+    public static function GESTEP($number, $step = 0): int
     {
         $number    = PHPExcel_Calculation_Functions::flattenSingleValue($number);
         $step    = PHPExcel_Calculation_Functions::flattenSingleValue($step);
@@ -2359,9 +2355,9 @@ class PHPExcel_Calculation_Engineering
     //
     //    Private method to calculate the erf value
     //
-    private static $twoSqrtPi = 1.128379167095512574;
+    private static float $twoSqrtPi = 1.128379167095512574;
 
-    public static function erfVal($x)
+    public static function erfVal($x): int|float
     {
         if (abs($x) > 2.2) {
             return 1 - self::erfcVal($x);
@@ -2422,9 +2418,9 @@ class PHPExcel_Calculation_Engineering
     //
     //    Private method to calculate the erfc value
     //
-    private static $oneSqrtPi = 0.564189583547756287;
+    private static float $oneSqrtPi = 0.564189583547756287;
 
-    private static function erfcVal($x)
+    private static function erfcVal($x): int|float
     {
         if (abs($x) < 2.2) {
             return 1 - self::erfVal($x);
@@ -2482,10 +2478,8 @@ class PHPExcel_Calculation_Engineering
     /**
      *    getConversionGroups
      *    Returns a list of the different conversion groups for UOM conversions
-     *
-     *    @return    array
      */
-    public static function getConversionGroups()
+    public static function getConversionGroups(): array
     {
         $conversionGroups = array();
         foreach (self::$conversionUnits as $conversionUnit) {
@@ -2500,9 +2494,8 @@ class PHPExcel_Calculation_Engineering
      *    Returns an array of units of measure, for a specified conversion group, or for all groups
      *
      *    @param    string    $group    The group whose units of measure you want to retrieve
-     *    @return    array
      */
-    public static function getConversionGroupUnits($group = null)
+    public static function getConversionGroupUnits($group = null): array
     {
         $conversionGroups = array();
         foreach (self::$conversionUnits as $conversionUnit => $conversionGroup) {
@@ -2518,9 +2511,8 @@ class PHPExcel_Calculation_Engineering
      *    getConversionGroupUnitDetails
      *
      *    @param    string    $group    The group whose units of measure you want to retrieve
-     *    @return    array
      */
-    public static function getConversionGroupUnitDetails($group = null)
+    public static function getConversionGroupUnitDetails($group = null): array
     {
         $conversionGroups = array();
         foreach (self::$conversionUnits as $conversionUnit => $conversionGroup) {

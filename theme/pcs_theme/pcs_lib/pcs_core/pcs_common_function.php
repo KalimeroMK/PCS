@@ -1769,7 +1769,7 @@ function pcsthumbnail($filename, $source_path, $target_path, $thumb_width, $thum
 function pcs_sfl_select_options($sfl, string $sel){
 
     $str = '';
-    $str .= '<option value="wr_subject" '.get_selected($sfl, 'wr_subject', true).'>'.$sel.'</option>';
+    $str .= '<option value="wr_subject" '.get_selected($sfl, 'wr_subject').'>'.$sel.'</option>';
     if ($sel === 'Drawing information'){$str .= '<option value="wr_content" '.get_selected($sfl, 'wr_content').'>Shop drawing no.</option>';}
 
     return run_replace('get_board_sfl_select_options', $str, $sfl);

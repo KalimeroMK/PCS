@@ -134,11 +134,7 @@ class PHPExcel_Shared_OLE_PPS
         $this->Time2nd = $time_2nd;
         $this->_data      = $data;
         $this->children   = $children;
-        if ($data != '') {
-            $this->Size = strlen($data);
-        } else {
-            $this->Size = 0;
-        }
+        $this->Size = $data != '' ? strlen($data) : 0;
     }
 
     /**
@@ -147,9 +143,9 @@ class PHPExcel_Shared_OLE_PPS
     * @access public
     * @return integer The amount of data (in bytes)
     */
-    public function _DataLen()
+    public function _DataLen(): int
     {
-        if (!isset($this->_data)) {
+        if ($this->_data === null) {
             return 0;
         }
         //if (isset($this->_PPS_FILE)) {
@@ -167,28 +163,11 @@ class PHPExcel_Shared_OLE_PPS
     * @access public
     * @return string The binary string
     */
-    public function _getPpsWk()
+    public function _getPpsWk(): string
     {
-        $ret = str_pad($this->Name, 64, "\x00");
-
-        $ret .= pack("v", strlen($this->Name) + 2)  // 66
-              . pack("c", $this->Type)              // 67
-              . pack("c", 0x00) //UK                // 68
-              . pack("V", $this->PrevPps) //Prev    // 72
-              . pack("V", $this->NextPps) //Next    // 76
-              . pack("V", $this->DirPps)  //Dir     // 80
-              . "\x00\x09\x02\x00"                  // 84
-              . "\x00\x00\x00\x00"                  // 88
-              . "\xc0\x00\x00\x00"                  // 92
-              . "\x00\x00\x00\x46"                  // 96 // Seems to be ok only for Root
-              . "\x00\x00\x00\x00"                  // 100
-              . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time1st)       // 108
-              . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time2nd)       // 116
-              . pack("V", isset($this->_StartBlock)?
-                        $this->_StartBlock:0)        // 120
-              . pack("V", $this->Size)               // 124
-              . pack("V", 0);                        // 128
-        return $ret;
+        $ret = str_pad($this->Name, 64, "\x00");                        // 128
+        return $ret . (pack("v", strlen($this->Name) + 2) . pack("c", $this->Type) . pack("c", 0x00) . pack("V", $this->PrevPps) . pack("V", $this->NextPps) . pack("V", $this->DirPps) . "\x00\x09\x02\x00" . "\x00\x00\x00\x00" . "\xc0\x00\x00\x00" . "\x00\x00\x00\x46" . "\x00\x00\x00\x00" . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time1st) . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time2nd) . pack("V", $this->_StartBlock !== null?
+                  $this->_StartBlock:0) . pack("V", $this->Size) . pack("V", 0));
     }
 
     /**
@@ -200,7 +179,7 @@ class PHPExcel_Shared_OLE_PPS
     *                          container
     * @return integer          The index for this PPS
     */
-    public static function _savePpsSetPnt(&$raList, $to_save, $depth = 0)
+    public static function _savePpsSetPnt(array &$raList, $to_save, $depth = 0): int
     {
         if (!is_array($to_save) || (empty($to_save))) {
             return 0xFFFFFFFF;

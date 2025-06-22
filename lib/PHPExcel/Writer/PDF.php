@@ -33,7 +33,7 @@ class PHPExcel_Writer_PDF implements PHPExcel_Writer_IWriter
      *
      * @var PHPExcel_Writer_PDF_Core
      */
-    private $renderer = null;
+    private object $renderer;
 
     /**
      *  Instantiate a new renderer of the configured type within this container class
@@ -82,7 +82,7 @@ class PHPExcel_Writer_PDF implements PHPExcel_Writer_IWriter
     /**
      * {@inheritdoc}
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         $this->renderer->save($pFilename);
     }

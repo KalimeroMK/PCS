@@ -45,9 +45,10 @@ function g5_latest_cache_data($bo_table, $cache_list=array(), $find_wr_id=0){
     if( $find_wr_id && isset($cache[$bo_table][$find_wr_id]) ){
         return $cache[$bo_table][$find_wr_id];
     }
+    return null;
 }
 
-function g5_set_cache($key, $save_data, $ttl = null){
+function g5_set_cache($key, $save_data, $ttl = null): void{
 
     if( $cache = get_cachemanage_instance() ){
         run_event('g5_set_cache_event', $cache, $key, $save_data, $ttl);
@@ -79,7 +80,7 @@ function g5_delete_cache($key){
     return false;
 }
 
-function g5_delete_all_cache(){
+function g5_delete_all_cache(): void{
 
     $board_tables = get_board_names();
 
@@ -91,7 +92,7 @@ function g5_delete_all_cache(){
 
 }
 
-function g5_delete_cache_by_prefix($key){
+function g5_delete_cache_by_prefix(string $key): bool{
 
     $cache = get_cachemanage_instance();
     $files = null;
@@ -108,5 +109,5 @@ function g5_delete_cache_by_prefix($key){
 
     $files = run_replace('g5_delete_cache_by_prefix', $files, $key, $cache);
 
-    return ($files) ? true : false;
+    return (bool) $files;
 }

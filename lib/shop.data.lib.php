@@ -46,7 +46,10 @@ function get_shop_item_with_category($it_id, $seo_title='', $add_query=''){
     return $item;
 }
 
-function get_shop_navigation_data($is_cache, $ca_id, $ca_id2='', $ca_id3=''){
+/**
+ * @return array{}|array{0?: non-empty-list, 1?: non-empty-list, 2?: non-empty-list}
+ */
+function get_shop_navigation_data($is_cache, $ca_id, $ca_id2='', $ca_id3=''): array{
     
     $all_categories = get_shop_category_array($is_cache);
 
@@ -116,7 +119,7 @@ function get_shop_category_array($is_cache=false){
 
         $row['url'] = shop_category_url($row['ca_id']);
         $categories[$row['ca_id']]['text'] = $row;
-        
+
         if( $row['ca_id'] ){
             $result2 = sql_query(get_shop_category_sql($row['ca_id'], 4));
 
@@ -124,7 +127,7 @@ function get_shop_category_array($is_cache=false){
 
                 $row2['url'] = shop_category_url($row2['ca_id']);
                 $categories[$row['ca_id']][$row2['ca_id']]['text'] = $row2;
-                
+
                 if( $row2['ca_id'] ){
                     $result3 = sql_query(get_shop_category_sql($row2['ca_id'], 6));
                     for($k=0; $row3=sql_fetch_array($result3); $k++) {
@@ -140,16 +143,15 @@ function get_shop_category_array($is_cache=false){
     return $categories;
 }
 
-function get_shop_category_sql($ca_id, $len){
+function get_shop_category_sql($ca_id, $len): string{
     global $g5;
 
     $sql = " select * from {$g5['g5_shop_category_table']}
                 where ca_use = '1' ";
     if($ca_id)
         $sql .= " and ca_id like '$ca_id%' ";
-    $sql .= " and length(ca_id) = '$len' order by ca_order, ca_id ";
 
-    return $sql;
+    return $sql . " and length(ca_id) = '$len' order by ca_order, ca_id ";
 }
 
 function get_shop_member_coupon_count($mb_id='', $is_cache=false){
@@ -187,7 +189,7 @@ function get_shop_member_coupon_count($mb_id='', $is_cache=false){
 }
 
 // 상품리스트에서 옵션항목
-function get_shop_item_options($it_id, $subject, $no)
+function get_shop_item_options($it_id, $subject, string $no): string
 {
     global $g5;
 
@@ -224,7 +226,7 @@ function get_shop_item_options($it_id, $subject, $no)
             $opt = $options[$i];
             $opt_count = count($opt);
             $disabled = '';
-            if($opt_count) {
+            if($opt_count !== 0) {
                 $seq = $no.'_'.($i + 1);
                 if($i > 0)
                     $disabled = ' disabled="disabled"';
@@ -235,7 +237,7 @@ function get_shop_item_options($it_id, $subject, $no)
                 $select .= '<option value="">'.$subj[$i].'</option>'.PHP_EOL;
                 for($k=0; $k<$opt_count; $k++) {
                     $opt_val = $opt[$k];
-                    if(strlen($opt_val)) {
+                    if(strlen($opt_val) !== 0) {
                         $select .= '<option value="'.$opt_val.'">'.$opt_val.'</option>'.PHP_EOL;
                     }
                 }
@@ -255,10 +257,7 @@ function get_shop_item_options($it_id, $subject, $no)
             else
                 $price = '&nbsp;&nbsp; '.number_format($row['io_price']).'원';
 
-            if(!$row['io_stock_qty'])
-                $soldout = '&nbsp;&nbsp;[품절]';
-            else
-                $soldout = '';
+            $soldout = $row['io_stock_qty'] ? '' : '&nbsp;&nbsp;[품절]';
 
             $select .= '<option value="'.$row['io_id'].','.$row['io_price'].','.$row['io_stock_qty'].'">'.$row['io_id'].$price.$soldout.'</option>'.PHP_EOL;
         }

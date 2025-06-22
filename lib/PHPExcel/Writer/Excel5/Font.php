@@ -29,22 +29,16 @@ class PHPExcel_Writer_Excel5_Font
 {
     /**
      * Color index
-     *
-     * @var int
      */
-    private $colorIndex;
+    private int $colorIndex;
 
     /**
      * Font
-     *
-     * @var PHPExcel_Style_Font
      */
-    private $font;
+    private ?\PHPExcel_Style_Font $font;
 
     /**
      * Constructor
-     *
-     * @param PHPExcel_Style_Font $font
      */
     public function __construct(PHPExcel_Style_Font $font = null)
     {
@@ -57,17 +51,15 @@ class PHPExcel_Writer_Excel5_Font
      *
      * @param int $colorIndex
      */
-    public function setColorIndex($colorIndex)
+    public function setColorIndex($colorIndex): void
     {
         $this->colorIndex = $colorIndex;
     }
 
     /**
      * Get font record data
-     *
-     * @return string
      */
-    public function writeFont()
+    public function writeFont(): string
     {
         $font_outline = 0;
         $font_shadow = 0;
@@ -92,10 +84,10 @@ class PHPExcel_Writer_Excel5_Font
         if ($this->font->getStrikethrough()) {
             $grbit |= 0x08;
         }
-        if ($font_outline) {
+        if ($font_outline !== 0) {
             $grbit |= 0x10;
         }
-        if ($font_shadow) {
+        if ($font_shadow !== 0) {
             $grbit |= 0x20;
         }
 
@@ -127,9 +119,8 @@ class PHPExcel_Writer_Excel5_Font
      * Map to BIFF5-BIFF8 codes for bold
      *
      * @param boolean $bold
-     * @return int
      */
-    private static function mapBold($bold)
+    private static function mapBold($bold): int
     {
         if ($bold) {
             return 0x2BC;  //  700 = Bold font weight
@@ -142,7 +133,7 @@ class PHPExcel_Writer_Excel5_Font
      * @static    array of int
      *
      */
-    private static $mapUnderline = array(
+    private static array $mapUnderline = array(
         PHPExcel_Style_Font::UNDERLINE_NONE              => 0x00,
         PHPExcel_Style_Font::UNDERLINE_SINGLE            => 0x01,
         PHPExcel_Style_Font::UNDERLINE_DOUBLE            => 0x02,

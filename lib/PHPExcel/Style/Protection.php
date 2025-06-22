@@ -83,9 +83,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
      * Build style array from subcomponents
      *
      * @param array $array
-     * @return array
      */
-    public function getStyleArray($array)
+    public function getStyleArray($array): array
     {
         return array('protection' => $array);
     }
@@ -104,9 +103,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
      *
      * @param    array    $pStyles    Array containing style information
      * @throws    PHPExcel_Exception
-     * @return PHPExcel_Style_Protection
      */
-    public function applyFromArray($pStyles = null)
+    public function applyFromArray($pStyles = null): static
     {
         if (is_array($pStyles)) {
             if ($this->isSupervisor) {
@@ -142,9 +140,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
      * Set locked
      *
      * @param string $pValue
-     * @return PHPExcel_Style_Protection
      */
-    public function setLocked($pValue = self::PROTECTION_INHERIT)
+    public function setLocked($pValue = self::PROTECTION_INHERIT): static
     {
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(array('locked' => $pValue));
@@ -172,9 +169,8 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
      * Set hidden
      *
      * @param string $pValue
-     * @return PHPExcel_Style_Protection
      */
-    public function setHidden($pValue = self::PROTECTION_INHERIT)
+    public function setHidden($pValue = self::PROTECTION_INHERIT): static
     {
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(array('hidden' => $pValue));

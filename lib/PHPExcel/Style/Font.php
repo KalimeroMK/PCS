@@ -92,10 +92,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 
     /**
      * Foreground color
-     *
-     * @var PHPExcel_Style_Color
      */
-    protected $color;
+    protected \PHPExcel_Style_Color $color;
 
     /**
      * Create a new PHPExcel_Style_Font
@@ -147,9 +145,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Build style array from subcomponents
      *
      * @param array $array
-     * @return array
      */
-    public function getStyleArray($array)
+    public function getStyleArray($array): array
     {
         return array('font' => $array);
     }
@@ -174,9 +171,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      *
      * @param    array    $pStyles    Array containing style information
      * @throws    PHPExcel_Exception
-     * @return PHPExcel_Style_Font
      */
-    public function applyFromArray($pStyles = null)
+    public function applyFromArray($pStyles = null): static
     {
         if (is_array($pStyles)) {
             if ($this->isSupervisor) {
@@ -233,9 +229,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set Name
      *
      * @param string $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setName($pValue = 'Calibri')
+    public function setName($pValue = 'Calibri'): static
     {
         if ($pValue == '') {
             $pValue = 'Calibri';
@@ -266,9 +261,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set Size
      *
      * @param double $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setSize($pValue = 10)
+    public function setSize($pValue = 10): static
     {
         if ($pValue == '') {
             $pValue = 10;
@@ -299,9 +293,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set Bold
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setBold($pValue = false)
+    public function setBold($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -332,9 +325,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set Italic
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setItalic($pValue = false)
+    public function setItalic($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -365,9 +357,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set SuperScript
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setSuperScript($pValue = false)
+    public function setSuperScript($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -399,9 +390,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set SubScript
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setSubScript($pValue = false)
+    public function setSubScript($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -435,9 +425,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * @param string|boolean $pValue    PHPExcel_Style_Font underline type
      *                                    If a boolean is passed, then TRUE equates to UNDERLINE_SINGLE,
      *                                        false equates to UNDERLINE_NONE
-     * @return PHPExcel_Style_Font
      */
-    public function setUnderline($pValue = self::UNDERLINE_NONE)
+    public function setUnderline($pValue = self::UNDERLINE_NONE): static
     {
         if (is_bool($pValue)) {
             $pValue = ($pValue) ? self::UNDERLINE_SINGLE : self::UNDERLINE_NONE;
@@ -470,9 +459,8 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
      * Set Strikethrough
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Font
      */
-    public function setStrikethrough($pValue = false)
+    public function setStrikethrough($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -499,11 +487,9 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
     /**
      * Set Color
      *
-     * @param    PHPExcel_Style_Color $pValue
      * @throws    PHPExcel_Exception
-     * @return PHPExcel_Style_Font
      */
-    public function setColor(PHPExcel_Style_Color $pValue = null)
+    public function setColor(PHPExcel_Style_Color $pValue = null): static
     {
         // make sure parameter is a real color and not a supervisor
         $color = $pValue->getIsSupervisor() ? $pValue->getSharedComponent() : $pValue;

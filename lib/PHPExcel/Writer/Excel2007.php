@@ -117,8 +117,6 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 
     /**
      * Create a new PHPExcel_Writer_Excel2007
-     *
-     * @param     PHPExcel    $pPHPExcel
      */
     public function __construct(PHPExcel $pPHPExcel = null)
     {
@@ -178,7 +176,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
      * @param     string         $pFilename
      * @throws     PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         if ($this->spreadSheet !== null) {
             // garbage collect
@@ -186,11 +184,8 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 
             // If $pFilename is php://output or php://stdout, make it a temporary file...
             $originalFilename = $pFilename;
-            if (strtolower($pFilename) == 'php://output' || strtolower($pFilename) == 'php://stdout') {
-                $pFilename = @tempnam(PHPExcel_Shared_File::sys_get_temp_dir(), 'phpxltmp');
-                if ($pFilename == '') {
-                    $pFilename = $originalFilename;
-                }
+            if (strtolower($pFilename) === 'php://output' || strtolower($pFilename) === 'php://stdout') {
+                $pFilename = $originalFilename;
             }
 
             $saveDebugLog = PHPExcel_Calculation::getInstance($this->spreadSheet)->getDebugLog()->getWriteDebugLog();
@@ -229,10 +224,8 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
                 unlink($pFilename);
             }
             // Try opening the ZIP file
-            if ($objZip->open($pFilename, $zipOverWrite) !== true) {
-                if ($objZip->open($pFilename, $zipCreate) !== true) {
-                    throw new PHPExcel_Writer_Exception("Could not open " . $pFilename . " for writing.");
-                }
+            if ($objZip->open($pFilename, $zipOverWrite) !== true && $objZip->open($pFilename, $zipCreate) !== true) {
+                throw new PHPExcel_Writer_Exception("Could not open " . $pFilename . " for writing.");
             }
 
             // Add [Content_Types].xml to ZIP file
@@ -421,9 +414,8 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
      *
      * @param     PHPExcel     $pPHPExcel    PHPExcel object
      * @throws    PHPExcel_Writer_Exception
-     * @return PHPExcel_Writer_Excel2007
      */
-    public function setPHPExcel(PHPExcel $pPHPExcel = null)
+    public function setPHPExcel(PHPExcel $pPHPExcel = null): static
     {
         $this->spreadSheet = $pPHPExcel;
         return $this;
@@ -523,9 +515,8 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
      * Set Office2003 compatibility
      *
      * @param boolean $pValue    Office2003 compatibility?
-     * @return PHPExcel_Writer_Excel2007
      */
-    public function setOffice2003Compatibility($pValue = false)
+    public function setOffice2003Compatibility($pValue = false): static
     {
         $this->office2003compatibility = $pValue;
         return $this;

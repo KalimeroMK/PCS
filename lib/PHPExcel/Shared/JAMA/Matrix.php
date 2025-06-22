@@ -89,11 +89,7 @@ class PHPExcel_Shared_JAMA_Matrix
                 //Rectangular matrix - m x n initialized from packed array
                 case 'array,integer':
                     $this->m = $args[1];
-                    if ($this->m != 0) {
-                        $this->n = count($args[0]) / $this->m;
-                    } else {
-                        $this->n = 0;
-                    }
+                    $this->n = $this->m != 0 ? count($args[0]) / $this->m : 0;
                     if (($this->m * $this->n) == count($args[0])) {
                         for ($i = 0; $i < $this->m; ++$i) {
                             for ($j = 0; $j < $this->n; ++$j) {
@@ -106,7 +102,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
         } else {
             throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
@@ -166,7 +161,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param int $jF Final column index
      *    @return Matrix Submatrix
      */
-    public function getMatrix()
+    public function getMatrix(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -193,7 +188,6 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 //A($i0...$iF; $j0...$jF)
                 case 'integer,integer,integer,integer':
                     list($i0, $iF, $j0, $jF) = $args;
@@ -214,7 +208,6 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 //$R = array of row indices; $C = array of column indices
                 case 'array,array':
                     list($RL, $CL) = $args;
@@ -235,7 +228,6 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 //$RL = array of row indices; $CL = array of column indices
                 case 'array,array':
                     list($RL, $CL) = $args;
@@ -256,7 +248,6 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 //A($i0...$iF); $CL = array of column indices
                 case 'integer,integer,array':
                     list($i0, $iF, $CL) = $args;
@@ -277,7 +268,6 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 //$RL = array of row indices
                 case 'array,integer,integer':
                     list($RL, $j0, $jF) = $args;
@@ -298,10 +288,8 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $R;
-                    break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
         } else {
             throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
@@ -313,9 +301,8 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Is matrix B the same size?
      *    @param Matrix $B Matrix B
-     *    @return boolean
      */
-    public function checkMatrixDimensions($B = null)
+    public function checkMatrixDimensions($B = null): bool
     {
         if ($B instanceof PHPExcel_Shared_JAMA_Matrix) {
             if (($this->m == $B->getRowDimension()) && ($this->n == $B->getColumnDimension())) {
@@ -337,7 +324,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $c Int/float/double value
      *    @return mixed Element (int/float/double)
      */
-    public function set($i = null, $j = null, $c = null)
+    public function set($i = null, $j = null, $c = null): void
     {
         // Optimized set version just has this
         $this->A[$i][$j] = $c;
@@ -365,7 +352,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $c Diagonal value
      *    @return Matrix Diagonal matrix
      */
-    public function diagonal($m = null, $n = null, $c = 1)
+    public function diagonal($m = null, $n = null, $c = 1): \PHPExcel_Shared_JAMA_Matrix
     {
         $R = new PHPExcel_Shared_JAMA_Matrix($m, $n);
         for ($i = 0; $i < $m; ++$i) {
@@ -422,7 +409,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    Tranpose matrix
      *    @return Matrix Transposed matrix
      */
-    public function transpose()
+    public function transpose(): \PHPExcel_Shared_JAMA_Matrix
     {
         $R = new PHPExcel_Shared_JAMA_Matrix($this->n, $this->m);
         for ($i = 0; $i < $this->m; ++$i) {
@@ -439,7 +426,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    Sum of diagonal elements
      *    @return float Sum of diagonal elements
      */
-    public function trace()
+    public function trace(): int|float
     {
         $s = 0;
         $n = min($this->m, $this->n);
@@ -466,7 +453,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function plus()
+    public function plus(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -485,7 +472,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -506,7 +492,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function plusEquals()
+    public function plusEquals(): static
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -525,7 +511,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -560,7 +545,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function minus()
+    public function minus(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -579,7 +564,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -600,7 +584,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function minusEquals()
+    public function minusEquals(): static
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -619,7 +603,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -655,7 +638,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Matrix Cij
      */
-    public function arrayTimes()
+    public function arrayTimes(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -674,7 +657,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -696,7 +678,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Matrix Aij
      */
-    public function arrayTimesEquals()
+    public function arrayTimesEquals(): static
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -715,7 +697,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -751,7 +732,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param Matrix $B Matrix B
      *    @return Matrix Division result
      */
-    public function arrayRightDivide()
+    public function arrayRightDivide(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -770,7 +751,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -812,7 +792,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Matrix Aij
      */
-    public function arrayRightDivideEquals()
+    public function arrayRightDivideEquals(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -831,12 +811,11 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
                 for ($j = 0; $j < $this->n; ++$j) {
-                    $this->A[$i][$j] = $this->A[$i][$j] / $M->get($i, $j);
+                    $this->A[$i][$j] /= $M->get($i, $j);
                 }
             }
             return $M;
@@ -854,7 +833,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param Matrix $B Matrix B
      *    @return Matrix Division result
      */
-    public function arrayLeftDivide()
+    public function arrayLeftDivide(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -873,7 +852,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -896,7 +874,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Matrix Aij
      */
-    public function arrayLeftDivideEquals()
+    public function arrayLeftDivideEquals(): self
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -915,7 +893,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -988,25 +965,7 @@ class PHPExcel_Shared_JAMA_Matrix
                         throw new PHPExcel_Calculation_Exception(JAMAError(MatrixDimensionMismatch));
                     }
                     return $M;
-                    break;
                 case 'integer':
-                    $C = new PHPExcel_Shared_JAMA_Matrix($this->A);
-                    for ($i = 0; $i < $C->m; ++$i) {
-                        for ($j = 0; $j < $C->n; ++$j) {
-                            $C->A[$i][$j] *= $args[0];
-                        }
-                    }
-                    return $C;
-                    break;
-                case 'double':
-                    $C = new PHPExcel_Shared_JAMA_Matrix($this->m, $this->n);
-                    for ($i = 0; $i < $C->m; ++$i) {
-                        for ($j = 0; $j < $C->n; ++$j) {
-                            $C->A[$i][$j] = $args[0] * $this->A[$i][$j];
-                        }
-                    }
-                    return $C;
-                    break;
                 case 'float':
                     $C = new PHPExcel_Shared_JAMA_Matrix($this->A);
                     for ($i = 0; $i < $C->m; ++$i) {
@@ -1015,10 +974,16 @@ class PHPExcel_Shared_JAMA_Matrix
                         }
                     }
                     return $C;
-                    break;
+                case 'double':
+                    $C = new PHPExcel_Shared_JAMA_Matrix($this->m, $this->n);
+                    for ($i = 0; $i < $C->m; ++$i) {
+                        for ($j = 0; $j < $C->n; ++$j) {
+                            $C->A[$i][$j] = $args[0] * $this->A[$i][$j];
+                        }
+                    }
+                    return $C;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
         } else {
             throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
@@ -1032,7 +997,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function power()
+    public function power(): static
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -1051,7 +1016,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {
@@ -1066,11 +1030,7 @@ class PHPExcel_Shared_JAMA_Matrix
                         $value = trim($value, '"');
                         $validValues &= PHPExcel_Shared_String::convertToNumberIfFraction($value);
                     }
-                    if ($validValues) {
-                        $this->A[$i][$j] = pow($this->A[$i][$j], $value);
-                    } else {
-                        $this->A[$i][$j] = PHPExcel_Calculation_Functions::NaN();
-                    }
+                    $this->A[$i][$j] = $validValues ? pow($this->A[$i][$j], $value) : PHPExcel_Calculation_Functions::NaN();
                 }
             }
             return $this;
@@ -1086,7 +1046,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    @param mixed $B Matrix/Array
      *    @return Matrix Sum
      */
-    public function concat()
+    public function concat(): static
     {
         if (func_num_args() > 0) {
             $args = func_get_args();
@@ -1104,7 +1064,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
                 default:
                     throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
-                    break;
             }
             $this->checkMatrixDimensions($M);
             for ($i = 0; $i < $this->m; ++$i) {

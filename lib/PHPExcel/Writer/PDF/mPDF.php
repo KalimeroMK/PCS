@@ -51,7 +51,7 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
      *  @param     string     $pFilename   Name of the file to save as
      *  @throws    PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         $fileHandle = parent::prepareForSave($pFilename);
 

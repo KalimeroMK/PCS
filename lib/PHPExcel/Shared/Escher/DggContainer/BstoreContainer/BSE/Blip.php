@@ -56,7 +56,7 @@ class PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE_Blip
      *
      * @param string
      */
-    public function setData($data)
+    public function setData($data): void
     {
         $this->data = $data;
     }
@@ -66,7 +66,7 @@ class PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE_Blip
      *
      * @param PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE $parent
      */
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         $this->parent = $parent;
     }

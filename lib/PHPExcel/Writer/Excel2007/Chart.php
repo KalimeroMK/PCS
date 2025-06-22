@@ -27,12 +27,12 @@
  */
 class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPart
 {
+    public $_seriesIndex;
     protected $calculateCellValues;
 
     /**
      * Write charts to XML format
      *
-     * @param  PHPExcel_Chart $pChart
      *
      * @return  string            XML Output
      * @throws  PHPExcel_Writer_Exception
@@ -82,7 +82,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
         $objWriter->writeAttribute('val', 0);
         $objWriter->endElement();
 
-        $this->writePlotArea($pChart->getPlotArea(), $pChart->getXAxisLabel(), $pChart->getYAxisLabel(), $objWriter, $pChart->getWorksheet(), $pChart->getChartAxisX(), $pChart->getChartAxisY(), $pChart->getMajorGridlines(), $pChart->getMinorGridlines());
+        $this->writePlotArea($pChart->getPlotArea(), $pChart->getXAxisLabel(), $pChart->getYAxisLabel(), $objWriter, $pChart->getChartAxisX(), $pChart->getChartAxisY(), $pChart->getMajorGridlines(), $pChart->getMinorGridlines());
 
         $this->writeLegend($pChart->getLegend(), $objWriter);
 
@@ -111,12 +111,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write Chart Title
      *
-     * @param  PHPExcel_Chart_Title $title
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
-     *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeTitle(PHPExcel_Chart_Title $title = null, $objWriter)
+    private function writeTitle(PHPExcel_Chart_Title $title = null, \PHPExcel_Shared_XMLWriter $objWriter): void
     {
         if (is_null($title)) {
             return;
@@ -156,12 +154,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write Chart Legend
      *
-     * @param  PHPExcel_Chart_Legend $legend
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
-     *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeLegend(PHPExcel_Chart_Legend $legend = null, $objWriter)
+    private function writeLegend(PHPExcel_Chart_Legend $legend = null, \PHPExcel_Shared_XMLWriter $objWriter): void
     {
         if (is_null($legend)) {
             return;
@@ -207,16 +203,11 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write Chart Plot Area
      *
-     * @param  PHPExcel_Chart_PlotArea $plotArea
-     * @param  PHPExcel_Chart_Title $xAxisLabel
-     * @param  PHPExcel_Chart_Title $yAxisLabel
-     * @param  PHPExcel_Chart_Axis $xAxis
-     * @param  PHPExcel_Chart_Axis $yAxis
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePlotArea(PHPExcel_Chart_PlotArea $plotArea, PHPExcel_Chart_Title $xAxisLabel = null, PHPExcel_Chart_Title $yAxisLabel = null, $objWriter, PHPExcel_Worksheet $pSheet, PHPExcel_Chart_Axis $xAxis, PHPExcel_Chart_Axis $yAxis, PHPExcel_Chart_GridLines $majorGridlines, PHPExcel_Chart_GridLines $minorGridlines)
+    private function writePlotArea(PHPExcel_Chart_PlotArea $plotArea, PHPExcel_Chart_Title $xAxisLabel = null, PHPExcel_Chart_Title $yAxisLabel = null, \PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Chart_Axis $xAxis, PHPExcel_Chart_Axis $yAxis, PHPExcel_Chart_GridLines $majorGridlines, PHPExcel_Chart_GridLines $minorGridlines): void
     {
         if (is_null($plotArea)) {
             return;
@@ -252,7 +243,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                         $objWriter->endElement();
                     }
 
-                    $this->writePlotGroup($plotGroup, $chartType, $objWriter, $catIsMultiLevelSeries, $valIsMultiLevelSeries, $plotGroupingType, $pSheet);
+                    $this->writePlotGroup($plotGroup, $chartType, $objWriter, $catIsMultiLevelSeries, $valIsMultiLevelSeries, $plotGroupingType);
                 }
             }
 
@@ -269,7 +260,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                 $objWriter->writeAttribute('val', 150);
                 $objWriter->endElement();
 
-                if ($plotGroupingType == 'percentStacked' || $plotGroupingType == 'stacked') {
+                if ($plotGroupingType === 'percentStacked' || $plotGroupingType === 'stacked') {
                     $objWriter->startElement('c:overlap');
                     $objWriter->writeAttribute('val', 100);
                     $objWriter->endElement();
@@ -333,12 +324,12 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 
         if (($chartType !== PHPExcel_Chart_DataSeries::TYPE_PIECHART) && ($chartType !== PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) && ($chartType !== PHPExcel_Chart_DataSeries::TYPE_DONUTCHART)) {
             if ($chartType === PHPExcel_Chart_DataSeries::TYPE_BUBBLECHART) {
-                $this->writeValueAxis($objWriter, $plotArea, $xAxisLabel, $chartType, $id1, $id2, $catIsMultiLevelSeries, $xAxis, $yAxis, $majorGridlines, $minorGridlines);
+                $this->writeValueAxis($objWriter, $xAxisLabel, $chartType, $id1, $id2, $catIsMultiLevelSeries, $xAxis, $majorGridlines, $minorGridlines);
             } else {
-                $this->writeCategoryAxis($objWriter, $plotArea, $xAxisLabel, $chartType, $id1, $id2, $catIsMultiLevelSeries, $xAxis, $yAxis);
+                $this->writeCategoryAxis($objWriter, $xAxisLabel, $id1, $id2, $catIsMultiLevelSeries, $yAxis);
             }
 
-            $this->writeValueAxis($objWriter, $plotArea, $yAxisLabel, $chartType, $id1, $id2, $valIsMultiLevelSeries, $xAxis, $yAxis, $majorGridlines, $minorGridlines);
+            $this->writeValueAxis($objWriter, $yAxisLabel, $chartType, $id1, $id2, $valIsMultiLevelSeries, $xAxis, $majorGridlines, $minorGridlines);
         }
 
         $objWriter->endElement();
@@ -352,7 +343,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeDataLabels($objWriter, $chartLayout)
+    private function writeDataLabels(\PHPExcel_Shared_XMLWriter $objWriter, $chartLayout): void
     {
         $objWriter->startElement('c:dLbls');
 
@@ -398,16 +389,13 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      * Write Category Axis
      *
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
-     * @param  PHPExcel_Chart_PlotArea $plotArea
      * @param  PHPExcel_Chart_Title $xAxisLabel
-     * @param  string $groupType Chart type
      * @param  string $id1
      * @param  string $id2
-     * @param  boolean $isMultiLevelSeries
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeCategoryAxis($objWriter, PHPExcel_Chart_PlotArea $plotArea, $xAxisLabel, $groupType, $id1, $id2, $isMultiLevelSeries, $xAxis, $yAxis)
+    private function writeCategoryAxis(\PHPExcel_Shared_XMLWriter $objWriter, ?\PHPExcel_Chart_Title $xAxisLabel, string|int $id1, string|int $id2, bool $isMultiLevelSeries, \PHPExcel_Chart_Axis $yAxis): void
     {
         $objWriter->startElement('c:catAx');
 
@@ -520,16 +508,14 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      * Write Value Axis
      *
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
-     * @param  PHPExcel_Chart_PlotArea $plotArea
      * @param  PHPExcel_Chart_Title $yAxisLabel
      * @param  string $groupType Chart type
      * @param  string $id1
      * @param  string $id2
-     * @param  boolean $isMultiLevelSeries
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeValueAxis($objWriter, PHPExcel_Chart_PlotArea $plotArea, $yAxisLabel, $groupType, $id1, $id2, $isMultiLevelSeries, $xAxis, $yAxis, $majorGridlines, $minorGridlines)
+    private function writeValueAxis(\PHPExcel_Shared_XMLWriter $objWriter, ?\PHPExcel_Chart_Title $yAxisLabel, $groupType, string|int $id1, string|int $id2, bool $isMultiLevelSeries, \PHPExcel_Chart_Axis $xAxis, \PHPExcel_Chart_GridLines $majorGridlines, \PHPExcel_Chart_GridLines $minorGridlines): void
     {
         $objWriter->startElement('c:valAx');
 
@@ -993,12 +979,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
             }
         }
 
-        if ($isMultiLevelSeries) {
-            if ($groupType !== PHPExcel_Chart_DataSeries::TYPE_BUBBLECHART) {
-                $objWriter->startElement('c:noMultiLvlLbl');
-                $objWriter->writeAttribute('val', 0);
-                $objWriter->endElement();
-            }
+        if ($isMultiLevelSeries && $groupType !== PHPExcel_Chart_DataSeries::TYPE_BUBBLECHART) {
+            $objWriter->startElement('c:noMultiLvlLbl');
+            $objWriter->writeAttribute('val', 0);
+            $objWriter->endElement();
         }
 
         $objWriter->endElement();
@@ -1007,12 +991,11 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Get the data series type(s) for a chart plot series
      *
-     * @param  PHPExcel_Chart_PlotArea $plotArea
      *
      * @return  string|array
      * @throws  PHPExcel_Writer_Exception
      */
-    private static function getChartType($plotArea)
+    private static function getChartType(\PHPExcel_Chart_PlotArea $plotArea)
     {
         $groupCount = $plotArea->getPlotGroupCount();
 
@@ -1041,11 +1024,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      * @param  boolean &$catIsMultiLevelSeries Is category a multi-series category
      * @param  boolean &$valIsMultiLevelSeries Is value set a multi-series set
      * @param  string &$plotGroupingType Type of grouping for multi-series values
-     * @param  PHPExcel_Worksheet $pSheet
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePlotGroup($plotGroup, $groupType, $objWriter, &$catIsMultiLevelSeries, &$valIsMultiLevelSeries, &$plotGroupingType, PHPExcel_Worksheet $pSheet)
+    private function writePlotGroup($plotGroup, $groupType, \PHPExcel_Shared_XMLWriter $objWriter, bool &$catIsMultiLevelSeries, bool &$valIsMultiLevelSeries, string &$plotGroupingType): void
     {
         if (is_null($plotGroup)) {
             return;
@@ -1068,17 +1050,15 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
         $plotSeriesOrder = $plotGroup->getPlotOrder();
         $plotSeriesCount = count($plotSeriesOrder);
 
-        if (($groupType !== PHPExcel_Chart_DataSeries::TYPE_RADARCHART) && ($groupType !== PHPExcel_Chart_DataSeries::TYPE_STOCKCHART)) {
-            if ($groupType !== PHPExcel_Chart_DataSeries::TYPE_LINECHART) {
-                if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART) || ($plotSeriesCount > 1)) {
-                    $objWriter->startElement('c:varyColors');
-                    $objWriter->writeAttribute('val', 1);
-                    $objWriter->endElement();
-                } else {
-                    $objWriter->startElement('c:varyColors');
-                    $objWriter->writeAttribute('val', 0);
-                    $objWriter->endElement();
-                }
+        if ($groupType !== PHPExcel_Chart_DataSeries::TYPE_RADARCHART && $groupType !== PHPExcel_Chart_DataSeries::TYPE_STOCKCHART && $groupType !== PHPExcel_Chart_DataSeries::TYPE_LINECHART) {
+            if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART) || ($plotSeriesCount > 1)) {
+                $objWriter->startElement('c:varyColors');
+                $objWriter->writeAttribute('val', 1);
+                $objWriter->endElement();
+            } else {
+                $objWriter->startElement('c:varyColors');
+                $objWriter->writeAttribute('val', 0);
+                $objWriter->endElement();
             }
         }
 
@@ -1128,7 +1108,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                 $objWriter->startElement('c:spPr');
                 $objWriter->startElement('a:ln');
                 $objWriter->writeAttribute('w', 12700);
-                if ($groupType == PHPExcel_Chart_DataSeries::TYPE_STOCKCHART) {
+                if ($groupType === PHPExcel_Chart_DataSeries::TYPE_STOCKCHART) {
                     $objWriter->startElement('a:noFill');
                     $objWriter->endElement();
                 }
@@ -1166,14 +1146,12 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
             if ($plotSeriesCategory && ($plotSeriesCategory->getPointCount() > 0)) {
                 $catIsMultiLevelSeries = $catIsMultiLevelSeries || $plotSeriesCategory->isMultiLevelSeries();
 
-                if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART)) {
-                    if (!is_null($plotGroup->getPlotStyle())) {
-                        $plotStyle = $plotGroup->getPlotStyle();
-                        if ($plotStyle) {
-                            $objWriter->startElement('c:explosion');
-                            $objWriter->writeAttribute('val', 25);
-                            $objWriter->endElement();
-                        }
+                if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART || $groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D || $groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART) && !is_null($plotGroup->getPlotStyle())) {
+                    $plotStyle = $plotGroup->getPlotStyle();
+                    if ($plotStyle) {
+                        $objWriter->startElement('c:explosion');
+                        $objWriter->writeAttribute('val', 25);
+                        $objWriter->endElement();
                     }
                 }
 
@@ -1183,7 +1161,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                     $objWriter->startElement('c:cat');
                 }
 
-                $this->writePlotSeriesValues($plotSeriesCategory, $objWriter, $groupType, 'str', $pSheet);
+                $this->writePlotSeriesValues($plotSeriesCategory, $objWriter, $groupType, 'str');
                 $objWriter->endElement();
             }
 
@@ -1197,12 +1175,12 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                     $objWriter->startElement('c:val');
                 }
 
-                $this->writePlotSeriesValues($plotSeriesValues, $objWriter, $groupType, 'num', $pSheet);
+                $this->writePlotSeriesValues($plotSeriesValues, $objWriter, $groupType, 'num');
                 $objWriter->endElement();
             }
 
             if ($groupType === PHPExcel_Chart_DataSeries::TYPE_BUBBLECHART) {
-                $this->writeBubbles($plotSeriesValues, $objWriter, $pSheet);
+                $this->writeBubbles($plotSeriesValues, $objWriter);
             }
 
             $objWriter->endElement();
@@ -1219,7 +1197,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePlotSeriesLabel($plotSeriesLabel, $objWriter)
+    private function writePlotSeriesLabel($plotSeriesLabel, \PHPExcel_Shared_XMLWriter $objWriter): void
     {
         if (is_null($plotSeriesLabel)) {
             return;
@@ -1253,11 +1231,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
      * @param  string $groupType Type of plot for dataseries
      * @param  string $dataType Datatype of series values
-     * @param  PHPExcel_Worksheet $pSheet
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePlotSeriesValues($plotSeriesValues, $objWriter, $groupType, $dataType = 'str', PHPExcel_Worksheet $pSheet)
+    private function writePlotSeriesValues($plotSeriesValues, \PHPExcel_Shared_XMLWriter $objWriter, $groupType, string $dataType = 'str'): void
     {
         if (is_null($plotSeriesValues)) {
             return;
@@ -1308,12 +1285,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 
             $objWriter->startElement('c:' . $dataType . 'Cache');
 
-            if (($groupType != PHPExcel_Chart_DataSeries::TYPE_PIECHART) && ($groupType != PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) && ($groupType != PHPExcel_Chart_DataSeries::TYPE_DONUTCHART)) {
-                if (($plotSeriesValues->getFormatCode() !== null) && ($plotSeriesValues->getFormatCode() !== '')) {
-                    $objWriter->startElement('c:formatCode');
-                    $objWriter->writeRawData($plotSeriesValues->getFormatCode());
-                    $objWriter->endElement();
-                }
+            if ($groupType != PHPExcel_Chart_DataSeries::TYPE_PIECHART && $groupType != PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D && $groupType != PHPExcel_Chart_DataSeries::TYPE_DONUTCHART && ($plotSeriesValues->getFormatCode() !== null && $plotSeriesValues->getFormatCode() !== '')) {
+                $objWriter->startElement('c:formatCode');
+                $objWriter->writeRawData($plotSeriesValues->getFormatCode());
+                $objWriter->endElement();
             }
 
             $objWriter->startElement('c:ptCount');
@@ -1321,17 +1296,15 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
             $objWriter->endElement();
 
             $dataValues = $plotSeriesValues->getDataValues();
-            if (!empty($dataValues)) {
-                if (is_array($dataValues)) {
-                    foreach ($dataValues as $plotSeriesKey => $plotSeriesValue) {
-                        $objWriter->startElement('c:pt');
-                        $objWriter->writeAttribute('idx', $plotSeriesKey);
+            if (!empty($dataValues) && is_array($dataValues)) {
+                foreach ($dataValues as $plotSeriesKey => $plotSeriesValue) {
+                    $objWriter->startElement('c:pt');
+                    $objWriter->writeAttribute('idx', $plotSeriesKey);
 
-                        $objWriter->startElement('c:v');
-                        $objWriter->writeRawData($plotSeriesValue);
-                        $objWriter->endElement();
-                        $objWriter->endElement();
-                    }
+                    $objWriter->startElement('c:v');
+                    $objWriter->writeRawData($plotSeriesValue);
+                    $objWriter->endElement();
+                    $objWriter->endElement();
                 }
             }
 
@@ -1349,7 +1322,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeBubbles($plotSeriesValues, $objWriter, PHPExcel_Worksheet $pSheet)
+    private function writeBubbles($plotSeriesValues, \PHPExcel_Shared_XMLWriter $objWriter): void
     {
         if (is_null($plotSeriesValues)) {
             return;
@@ -1367,16 +1340,14 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
         $objWriter->endElement();
 
         $dataValues = $plotSeriesValues->getDataValues();
-        if (!empty($dataValues)) {
-            if (is_array($dataValues)) {
-                foreach ($dataValues as $plotSeriesKey => $plotSeriesValue) {
-                    $objWriter->startElement('c:pt');
-                    $objWriter->writeAttribute('idx', $plotSeriesKey);
-                    $objWriter->startElement('c:v');
-                    $objWriter->writeRawData(1);
-                    $objWriter->endElement();
-                    $objWriter->endElement();
-                }
+        if (!empty($dataValues) && is_array($dataValues)) {
+            foreach (array_keys($dataValues) as $plotSeriesKey) {
+                $objWriter->startElement('c:pt');
+                $objWriter->writeAttribute('idx', $plotSeriesKey);
+                $objWriter->startElement('c:v');
+                $objWriter->writeRawData(1);
+                $objWriter->endElement();
+                $objWriter->endElement();
             }
         }
 
@@ -1391,12 +1362,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write Layout
      *
-     * @param  PHPExcel_Chart_Layout $layout
      * @param  PHPExcel_Shared_XMLWriter $objWriter XML Writer
-     *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeLayout(PHPExcel_Chart_Layout $layout = null, $objWriter)
+    private function writeLayout(PHPExcel_Chart_Layout $layout = null, \PHPExcel_Shared_XMLWriter $objWriter): void
     {
         $objWriter->startElement('c:layout');
 
@@ -1465,7 +1434,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writeAlternateContent($objWriter)
+    private function writeAlternateContent(\PHPExcel_Shared_XMLWriter $objWriter): void
     {
         $objWriter->startElement('mc:AlternateContent');
         $objWriter->writeAttribute('xmlns:mc', 'http://schemas.openxmlformats.org/markup-compatibility/2006');
@@ -1495,7 +1464,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePrintSettings($objWriter)
+    private function writePrintSettings(\PHPExcel_Shared_XMLWriter $objWriter): void
     {
         $objWriter->startElement('c:printSettings');
 

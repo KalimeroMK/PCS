@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit;
 
 // 현재 접속자수 출력
-function connect($skin_dir='basic')
+function connect($skin_dir='basic'): string|false
 {
     global $config, $g5;
 
@@ -10,7 +10,7 @@ function connect($skin_dir='basic')
     $sql = " select sum(IF(mb_id<>'',1,0)) as mb_cnt, count(*) as total_cnt from {$g5['login_table']}  where mb_id <> '{$config['cf_admin']}' ";
     $row = sql_fetch($sql);
 
-    if(preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
+    if (preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         if (G5_IS_MOBILE) {
             $connect_skin_path = G5_THEME_MOBILE_PATH.'/'.G5_SKIN_DIR.'/connect/'.$match[1];
             if(!is_dir($connect_skin_path))
@@ -21,14 +21,12 @@ function connect($skin_dir='basic')
             $connect_skin_url = str_replace(G5_PATH, G5_URL, $connect_skin_path);
         }
         $skin_dir = $match[1];
+    } elseif (G5_IS_MOBILE) {
+        $connect_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/connect/'.$skin_dir;
+        $connect_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/connect/'.$skin_dir;
     } else {
-        if(G5_IS_MOBILE) {
-            $connect_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/connect/'.$skin_dir;
-            $connect_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/connect/'.$skin_dir;
-        } else {
-            $connect_skin_path = G5_SKIN_PATH.'/connect/'.$skin_dir;
-            $connect_skin_url  = G5_SKIN_URL.'/connect/'.$skin_dir;
-        }
+        $connect_skin_path = G5_SKIN_PATH.'/connect/'.$skin_dir;
+        $connect_skin_url  = G5_SKIN_URL.'/connect/'.$skin_dir;
     }
 
     ob_start();

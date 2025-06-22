@@ -68,9 +68,8 @@ class PHPExcel_Cell_Hyperlink
      * Set URL
      *
      * @param  string    $value
-     * @return PHPExcel_Cell_Hyperlink
      */
-    public function setUrl($value = '')
+    public function setUrl($value = ''): static
     {
         $this->url = $value;
         return $this;
@@ -90,9 +89,8 @@ class PHPExcel_Cell_Hyperlink
      * Set tooltip
      *
      * @param  string    $value
-     * @return PHPExcel_Cell_Hyperlink
      */
-    public function setTooltip($value = '')
+    public function setTooltip($value = ''): static
     {
         $this->tooltip = $value;
         return $this;
@@ -100,10 +98,8 @@ class PHPExcel_Cell_Hyperlink
 
     /**
      * Is this hyperlink internal? (to another worksheet)
-     *
-     * @return boolean
      */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return strpos($this->url, 'sheet://') !== false;
     }
@@ -113,7 +109,7 @@ class PHPExcel_Cell_Hyperlink
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             $this->url .

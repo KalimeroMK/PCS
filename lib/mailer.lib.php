@@ -11,7 +11,7 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
     global $g5;
 
     // 메일발송 사용을 하지 않는다면
-    if (!$config['cf_email_use']) return;
+    if (!$config['cf_email_use']) return null;
 
     if ($type != 1)
         $content = nl2br($content);
@@ -66,11 +66,10 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
 }
 
 // 파일을 첨부함
-function attach_file($filename, $tmp_name)
+function attach_file($filename, $tmp_name): array
 {
     // 서버에 업로드 되는 파일은 확장자를 주지 않는다. (보안 취약점)
     $dest_file = G5_DATA_PATH.'/tmp/'.str_replace('/', '_', $tmp_name);
     move_uploaded_file($tmp_name, $dest_file);
-    $tmpfile = array("name" => $filename, "path" => $dest_file);
-    return $tmpfile;
+    return array("name" => $filename, "path" => $dest_file);
 }

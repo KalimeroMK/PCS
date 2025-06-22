@@ -32,14 +32,12 @@ class PHPExcel_Calculation_Token_Stack
      *
      *  @var mixed[]
      */
-    private $stack = array();
+    private array $stack = array();
 
     /**
      *  Count of entries in the parser stack
-     *
-     *  @var integer
      */
-    private $count = 0;
+    private int $count = 0;
 
     /**
      * Return the number of entries on the stack
@@ -58,7 +56,7 @@ class PHPExcel_Calculation_Token_Stack
      * @param  mixed  $value
      * @param  mixed  $reference
      */
-    public function push($type, $value, $reference = null)
+    public function push($type, $value, $reference = null): void
     {
         $this->stack[$this->count++] = array(
             'type'      => $type,
@@ -103,7 +101,7 @@ class PHPExcel_Calculation_Token_Stack
     /**
      * Clear the stack
      */
-    public function clear()
+    public function clear(): void
     {
         $this->stack = array();
         $this->count = 0;

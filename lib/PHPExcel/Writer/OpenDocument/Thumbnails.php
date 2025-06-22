@@ -30,11 +30,10 @@ class PHPExcel_Writer_OpenDocument_Thumbnails extends PHPExcel_Writer_OpenDocume
     /**
      * Write Thumbnails/thumbnail.png to PNG format
      *
-     * @param   PHPExcel                   $pPHPExcel
      * @return  string                     XML Output
      * @throws  PHPExcel_Writer_Exception
      */
-    public function writeThumbnail(PHPExcel $pPHPExcel = null)
+    public function writeThumbnail(PHPExcel $pPHPExcel = null): string
     {
         return '';
     }

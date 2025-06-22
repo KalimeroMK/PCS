@@ -4,7 +4,7 @@ if (!defined('_GNUBOARD_')) exit;
 @ini_set('memory_limit', '-1');
 
 // 게시글리스트 썸네일 생성
-function get_list_thumbnail($bo_table, $wr_id, $thumb_width, $thumb_height, $is_create=false, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3')
+function get_list_thumbnail(string $bo_table, $wr_id, $thumb_width, $thumb_height, $is_create=false, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3')
 {
     global $g5, $config;
     $filename = $alt = $data_path = '';
@@ -27,9 +27,10 @@ function get_list_thumbnail($bo_table, $wr_id, $thumb_width, $thumb_height, $is_
         $alt = get_text($row['bf_content']);
     } else {
         $edt = true;
-        
+
         if( $matches = get_editor_image($write['wr_content'], false) ){
-            for($i=0; $i<count($matches[1]); $i++)
+            $counter = count($matches[1]);
+            for($i=0; $i<$counter; $i++)
             {
                 // 이미지 path 구함
                 $p = parse_url($matches[1][$i]);
@@ -82,9 +83,7 @@ function get_list_thumbnail($bo_table, $wr_id, $thumb_width, $thumb_height, $is_
         return $empty_array;
     }
 
-    $thumb = array("src"=>$src, "ori"=>$ori, "alt"=>$alt);
-
-    return $thumb;
+    return array("src"=>$src, "ori"=>$ori, "alt"=>$alt);
 }
 
 // 게시글보기 파일 썸네일 리턴
@@ -92,9 +91,9 @@ function get_file_thumbnail($file){
     
     if( ! is_array($file) ) return '';
 
-    if( preg_match('/(\.jpg|\.jpeg|\.gif|\.png|\.bmp|\.webp)$/i', $file['file']) && $contents = run_replace('get_file_thumbnail_tags', '', $file) ){
+    if (preg_match('/(\.jpg|\.jpeg|\.gif|\.png|\.bmp|\.webp)$/i', $file['file']) && $contents = run_replace('get_file_thumbnail_tags', '', $file)) {
         return $contents;
-    } else if ($file['view']) {
+    } elseif ($file['view']) {
         return get_view_thumbnail($file['view']);
     }
 
@@ -116,8 +115,9 @@ function get_view_thumbnail($contents, $thumb_width=0)
         return $contents;
 
     $extensions = array(1=>'gif', 2=>'jpg', 3=>'png', 18=>'webp');
+    $counter = count($matches[1]);
 
-    for($i=0; $i<count($matches[1]); $i++) {
+    for($i=0; $i<$counter; $i++) {
 
         $img = $matches[1][$i];
         $img_tag = isset($matches[0][$i]) ? $matches[0][$i] : '';
@@ -148,7 +148,7 @@ function get_view_thumbnail($contents, $thumb_width=0)
                 continue;
 
             $file_ext = $extensions[$size[2]];
-            if (!$file_ext) continue;
+            if ($file_ext === '0') continue;
 
             // jpg 이면 exif 체크
             if( $file_ext === 'jpg' && function_exists('exif_read_data')) {
@@ -206,7 +206,7 @@ function get_view_thumbnail($contents, $thumb_width=0)
             if(!$thumb_file)
                 continue;
 
-            if ($width) {
+            if ($width !== '' && $width !== '0') {
                 $thumb_tag = '<img src="'.G5_URL.str_replace($filename, $thumb_file, $data_path).'" alt="'.$alt.'" width="'.$width.'" height="'.$height.'"/>';
             } else {
                 $thumb_tag = '<img src="'.G5_URL.str_replace($filename, $thumb_file, $data_path).'" alt="'.$alt.'"/>';
@@ -226,24 +226,24 @@ function get_view_thumbnail($contents, $thumb_width=0)
     return run_replace('get_view_thumbnail', $contents);
 }
 
-function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_height, $is_create, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3')
+function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_height, $is_create, $is_crop=false, $crop_mode='center', $is_sharpen=false, $um_value='80/0.5/3'): ?string
 {
     global $g5;
 
     if(!$thumb_width && !$thumb_height)
-        return;
+        return null;
 
     $source_file = "$source_path/$filename";
 
     if(!is_file($source_file)) // 원본 파일이 없다면
-        return;
+        return null;
 
 
     $size = @getimagesize($source_file);
 
     $extensions = array(1 => 'gif', 2 => 'jpg', 3 => 'png', 18 => 'webp');
     $file_ext = $extensions[$size[2]]; // 파일 확장자
-    if (!$file_ext) return;
+    if ($file_ext === '0') return null;
 
     // gif, jpg, png, webp 에 대해서만 적용
     // if ( !(isset($size[2]) && ($size[2] == 1 || $size[2] == 2 || $size[2] == 3 || $size[2] == 18)) ) 
@@ -263,10 +263,10 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         return '';
 
     // Animated GIF는 썸네일 생성하지 않음
-    if($file_ext === 'gif') {
+    if ($file_ext === 'gif') {
         if(is_animated_gif($source_file))
             return basename($source_file);
-    } else if ($file_ext === 'webp') {
+    } elseif ($file_ext === 'webp') {
         if(is_animated_webp($source_file))
             return basename($source_file);
     }
@@ -279,10 +279,8 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
     $thumb_time = @filemtime($thumb_file);
     $source_time = @filemtime($source_file);
 
-    if (file_exists($thumb_file)) {
-        if ($is_create == false && $source_time < $thumb_time) {
-            return basename($thumb_file);
-        }
+    if (file_exists($thumb_file) && ($is_create == false && $source_time < $thumb_time)) {
+        return basename($thumb_file);
     }
 
     // 원본파일의 GD 이미지 생성
@@ -292,9 +290,8 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
     if ($file_ext === 'gif') {
         $src = @imagecreatefromgif($source_file);
         $src_transparency = @imagecolortransparent($src);
-    } else if ($file_ext === 'jpg') {
+    } elseif ($file_ext === 'jpg') {
         $src = @imagecreatefromjpeg($source_file);
-
         if(function_exists('exif_read_data')) {
             // exif 정보를 기준으로 회전각도 구함
             $exif = @exif_read_data($source_file);
@@ -312,7 +309,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
                 }
 
                 // 회전각도 있으면 이미지 회전
-                if($degree) {
+                if($degree !== 0) {
                     $src = imagerotate($src, $degree, 0);
 
                     // 세로사진의 경우 가로, 세로 값 바꿈
@@ -324,36 +321,32 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
                 }
             }
         }
-    } else if ($file_ext === 'png') {
+    } elseif ($file_ext === 'png') {
         $src = @imagecreatefrompng($source_file);
         @imagealphablending($src, true);
-    } else if ($file_ext === 'webp') {
+    } elseif ($file_ext === 'webp') {
         $src = @imagecreatefromwebp($source_file);
         @imagealphablending($src, true);
     } else {
-        return;
+        return null;
     }
 
     if(!$src)
-        return;
+        return null;
 
     $is_large = true;
     // width, height 설정
 
-    if($thumb_width) {
-        if(!$thumb_height) {
+    if ($thumb_width) {
+        if (!$thumb_height) {
             $thumb_height = round(($thumb_width * $size[1]) / $size[0]);
-        } else {
-            if($crop_mode === 'center' && ($size[0] > $thumb_width || $size[1] > $thumb_height)){
-                $is_large = true;
-            } else if($size[0] < $thumb_width || $size[1] < $thumb_height) {
-                $is_large = false;
-            }
+        } elseif ($crop_mode === 'center' && ($size[0] > $thumb_width || $size[1] > $thumb_height)) {
+            $is_large = true;
+        } elseif ($size[0] < $thumb_width || $size[1] < $thumb_height) {
+            $is_large = false;
         }
-    } else {
-        if($thumb_height) {
-            $thumb_width = round(($thumb_height * $size[0]) / $size[1]);
-        }
+    } elseif ($thumb_height) {
+        $thumb_width = round(($thumb_height * $size[0]) / $size[1]);
     }
 
     $dst_x = 0;
@@ -392,10 +385,10 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
 
             $dst = imagecreatetruecolor($dst_w, $dst_h);
 
-            if($file_ext === 'png') {
+            if ($file_ext === 'png') {
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
-            } else if($file_ext === 'gif') {
+            } elseif ($file_ext === 'gif') {
                 $palletsize = imagecolorstotal($src);
                 if($src_transparency >= 0 && $src_transparency < $palletsize) {
                     $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -408,7 +401,7 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
             $dst = imagecreatetruecolor($dst_w, $dst_h);
             $bgcolor = imagecolorallocate($dst, 255, 255, 255); // 배경색
 
-            if ( !((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
+            if ( !(defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) && !(defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO) ){
                 if($src_w > $src_h) {
                     $tmp_h = round(($dst_w * $src_h) / $src_w);
                     $dst_y = round(($dst_h - $tmp_h) / 2);
@@ -420,12 +413,12 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
                 }
             }
 
-            if($file_ext === 'png') {
+            if ($file_ext === 'png') {
                 $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
                 imagefill($dst, 0, 0, $bgcolor);
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
-            } else if($file_ext === 'gif') {
+            } elseif ($file_ext === 'gif') {
                 $palletsize = imagecolorstotal($src);
                 if($src_transparency >= 0 && $src_transparency < $palletsize) {
                     $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -443,10 +436,9 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         $dst = imagecreatetruecolor($dst_w, $dst_h);
         $bgcolor = imagecolorallocate($dst, 255, 255, 255); // 배경색
 
-        if ( ((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) ){
+        if ((defined('G5_USE_THUMB_RATIO') && false === G5_USE_THUMB_RATIO) || (defined('G5_THEME_USE_THUMB_RATIO') && false === G5_THEME_USE_THUMB_RATIO)) {
             //이미지 썸네일을 비율 유지하지 않습니다.  (5.2.6 버전 이하에서 처리된 부분과 같음)
-
-            if($src_w < $dst_w) {
+            if ($src_w < $dst_w) {
                 if($src_h >= $dst_h) {
                     $dst_x = round(($dst_w - $src_w) / 2);
                     $src_h = $dst_h;
@@ -459,56 +451,49 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
                     $dst_w = $src_w;
                     $dst_h = $src_h;
                 }
-            } else {
-                if($src_h < $dst_h) {
-                    $dst_y = round(($dst_h - $src_h) / 2);
-                    $dst_h = $src_h;
-                    $src_w = $dst_w;
-                }
+            } elseif ($src_h < $dst_h) {
+                $dst_y = round(($dst_h - $src_h) / 2);
+                $dst_h = $src_h;
+                $src_w = $dst_w;
             }
-
-        } else {
+        } elseif ($src_w < $dst_w) {
             //이미지 썸네일을 비율 유지하며 썸네일 생성합니다.
-            if($src_w < $dst_w) {
-                if($src_h >= $dst_h) {
-                    if( $src_h > $src_w ){
-                        $tmp_w = round(($dst_h * $src_w) / $src_h);
-                        $dst_x = round(($dst_w - $tmp_w) / 2);
-                        $dst_w = $tmp_w;
-                    } else {
-                        $dst_x = round(($dst_w - $src_w) / 2);
-                        $src_h = $dst_h;
-                        if( $dst_w > $src_w ){
-                            $dst_w = $src_w;
-                        }
-                    }
+            if($src_h >= $dst_h) {
+                if( $src_h > $src_w ){
+                    $tmp_w = round(($dst_h * $src_w) / $src_h);
+                    $dst_x = round(($dst_w - $tmp_w) / 2);
+                    $dst_w = $tmp_w;
                 } else {
                     $dst_x = round(($dst_w - $src_w) / 2);
-                    $dst_y = round(($dst_h - $src_h) / 2);
-                    $dst_w = $src_w;
-                    $dst_h = $src_h;
-                }
-            } else {
-                if($src_h < $dst_h) {
-                    if( $src_w > $dst_w ){
-                        $tmp_h = round(($dst_w * $src_h) / $src_w);
-                        $dst_y = round(($dst_h - $tmp_h) / 2);
-                        $dst_h = $tmp_h;
-                    } else {
-                        $dst_y = round(($dst_h - $src_h) / 2);
-                        $dst_h = $src_h;
-                        $src_w = $dst_w;
+                    $src_h = $dst_h;
+                    if( $dst_w > $src_w ){
+                        $dst_w = $src_w;
                     }
                 }
+            } else {
+                $dst_x = round(($dst_w - $src_w) / 2);
+                $dst_y = round(($dst_h - $src_h) / 2);
+                $dst_w = $src_w;
+                $dst_h = $src_h;
+            }
+        } elseif ($src_h < $dst_h) {
+            if( $src_w > $dst_w ){
+                $tmp_h = round(($dst_w * $src_h) / $src_w);
+                $dst_y = round(($dst_h - $tmp_h) / 2);
+                $dst_h = $tmp_h;
+            } else {
+                $dst_y = round(($dst_h - $src_h) / 2);
+                $dst_h = $src_h;
+                $src_w = $dst_w;
             }
         }
 
-        if($file_ext === 'png') {
+        if ($file_ext === 'png') {
             $bgcolor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
             imagefill($dst, 0, 0, $bgcolor);
             imagealphablending($dst, false);
             imagesavealpha($dst, true);
-        } else if($file_ext === 'gif') {
+        } elseif ($file_ext === 'gif') {
             $palletsize = imagecolorstotal($src);
             if($src_transparency >= 0 && $src_transparency < $palletsize) {
                 $transparent_color   = imagecolorsforindex($src, $src_transparency);
@@ -531,23 +516,15 @@ function thumbnail($filename, $source_path, $target_path, $thumb_width, $thumb_h
         UnsharpMask($dst, $val[0], $val[1], $val[2]);
     }
 
-    if($file_ext === 'gif') {
+    if ($file_ext === 'gif') {
         imagegif($dst, $thumb_file);
-    } else if($file_ext === 'png') {
-        if(!defined('G5_THUMB_PNG_COMPRESS'))
-            $png_compress = 5;
-        else
-            $png_compress = G5_THUMB_PNG_COMPRESS;
-
+    } elseif ($file_ext === 'png') {
+        $png_compress = defined('G5_THUMB_PNG_COMPRESS') ? G5_THUMB_PNG_COMPRESS : 5;
         imagepng($dst, $thumb_file, $png_compress);
-    } else if ($file_ext === 'jpg') {
-        if(!defined('G5_THUMB_JPG_QUALITY'))
-            $jpg_quality = 90;
-        else
-            $jpg_quality = G5_THUMB_JPG_QUALITY;
-
+    } elseif ($file_ext === 'jpg') {
+        $jpg_quality = defined('G5_THUMB_JPG_QUALITY') ? G5_THUMB_JPG_QUALITY : 90;
         imagejpeg($dst, $thumb_file, $jpg_quality);
-    } else if ($file_ext === 'webp') {
+    } elseif ($file_ext === 'webp') {
         imagewebp($dst, $thumb_file);
     }
 
@@ -604,14 +581,14 @@ and the roundoff errors in the Gaussian blur process, are welcome.
 
     // Attempt to calibrate the parameters to Photoshop:
     if ($amount > 500)    $amount = 500;
-    $amount = $amount * 0.016;
+    $amount *= 0.016;
     if ($radius > 50)    $radius = 50;
-    $radius = $radius * 2;
+    $radius *= 2;
     if ($threshold > 255)    $threshold = 255;
 
     $radius = abs(round($radius));     // Only integers make sense.
     if ($radius == 0) {
-        return $img; imagedestroy($img);        }
+        return $img;        }
     $w = imagesx($img); $h = imagesy($img);
     $imgCanvas = imagecreatetruecolor($w, $h);
     $imgBlur = imagecreatetruecolor($w, $h);
@@ -773,7 +750,7 @@ function is_animated_gif($filename) {
 
     fclose($fh);
 
-    $cache[$key] = ($count > 1) ? true : false;
+    $cache[$key] = $count > 1;
 
     run_event('is_animated_gif_after', $filename, $cache[$key]);
 

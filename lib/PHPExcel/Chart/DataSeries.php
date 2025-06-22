@@ -110,14 +110,14 @@ class PHPExcel_Chart_DataSeries
      *
      * @var array of PHPExcel_Chart_DataSeriesValues
      */
-    private $plotLabel = array();
+    private array $plotLabel;
 
     /**
      * Plot Category
      *
      * @var array of PHPExcel_Chart_DataSeriesValues
      */
-    private $plotCategory = array();
+    private array $plotCategory;
 
     /**
      * Smooth Line
@@ -136,7 +136,7 @@ class PHPExcel_Chart_DataSeries
     /**
      * Create a new PHPExcel_Chart_DataSeries
      */
-    public function __construct($plotType = null, $plotGrouping = null, $plotOrder = array(), $plotLabel = array(), $plotCategory = array(), $plotValues = array(), $plotDirection = null, $smoothLine = null, $plotStyle = null)
+    public function __construct($plotType = null, $plotGrouping = null, $plotOrder = array(), array $plotLabel = array(), array $plotCategory = array(), $plotValues = array(), $plotDirection = null, $smoothLine = null, $plotStyle = null)
     {
         $this->plotType = $plotType;
         $this->plotGrouping = $plotGrouping;
@@ -175,9 +175,8 @@ class PHPExcel_Chart_DataSeries
      * Set Plot Type
      *
      * @param string $plotType
-     * @return PHPExcel_Chart_DataSeries
      */
-    public function setPlotType($plotType = '')
+    public function setPlotType($plotType = ''): static
     {
         $this->plotType = $plotType;
         return $this;
@@ -197,9 +196,8 @@ class PHPExcel_Chart_DataSeries
      * Set Plot Grouping Type
      *
      * @param string $groupingType
-     * @return PHPExcel_Chart_DataSeries
      */
-    public function setPlotGrouping($groupingType = null)
+    public function setPlotGrouping($groupingType = null): static
     {
         $this->plotGrouping = $groupingType;
         return $this;
@@ -219,9 +217,8 @@ class PHPExcel_Chart_DataSeries
      * Set Plot Direction
      *
      * @param string $plotDirection
-     * @return PHPExcel_Chart_DataSeries
      */
-    public function setPlotDirection($plotDirection = null)
+    public function setPlotDirection($plotDirection = null): static
     {
         $this->plotDirection = $plotDirection;
         return $this;
@@ -303,9 +300,8 @@ class PHPExcel_Chart_DataSeries
      * Set Plot Style
      *
      * @param string $plotStyle
-     * @return PHPExcel_Chart_DataSeries
      */
-    public function setPlotStyle($plotStyle = null)
+    public function setPlotStyle($plotStyle = null): static
     {
         $this->plotStyle = $plotStyle;
         return $this;
@@ -339,10 +335,8 @@ class PHPExcel_Chart_DataSeries
 
     /**
      * Get Number of Plot Series
-     *
-     * @return integer
      */
-    public function getPlotSeriesCount()
+    public function getPlotSeriesCount(): int
     {
         return count($this->plotValues);
     }
@@ -361,15 +355,14 @@ class PHPExcel_Chart_DataSeries
      * Set Smooth Line
      *
      * @param boolean $smoothLine
-     * @return PHPExcel_Chart_DataSeries
      */
-    public function setSmoothLine($smoothLine = true)
+    public function setSmoothLine($smoothLine = true): static
     {
         $this->smoothLine = $smoothLine;
         return $this;
     }
 
-    public function refresh(PHPExcel_Worksheet $worksheet)
+    public function refresh(PHPExcel_Worksheet $worksheet): void
     {
         foreach ($this->plotValues as $plotValues) {
             if ($plotValues !== null) {

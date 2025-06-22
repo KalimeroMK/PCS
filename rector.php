@@ -8,7 +8,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/bbs',
         __DIR__ . '/extend',
-        __DIR__ . '/theme',
+        __DIR__ . '/theme'
     ])
     ->withDeadCodeLevel(51)
     ->withCodeQualityLevel(51)

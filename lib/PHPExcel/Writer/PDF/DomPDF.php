@@ -51,7 +51,7 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
      *  @param   string     $pFilename   Name of the file to save as
      *  @throws  PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         $fileHandle = parent::prepareForSave($pFilename);
 
@@ -71,7 +71,7 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
             $printMargins = $this->phpExcel->getSheet($this->getSheetIndex())->getPageMargins();
         }
         
-        $orientation = ($orientation == 'L') ? 'landscape' : 'portrait';
+        $orientation = ($orientation === 'L') ? 'landscape' : 'portrait';
 
         //  Override Page Orientation
         if (!is_null($this->getOrientation())) {

@@ -63,9 +63,8 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 {
     /**
      * The byte order of this architecture. 0 => little endian, 1 => big endian
-     * @var integer
      */
-    private static $byteOrder;
+    private static ?int $byteOrder = null;
 
     /**
      * The string containing the data of the BIFF stream
@@ -81,10 +80,9 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 
     /**
      * The maximum length for a BIFF record (excluding record header and length field). See addContinue()
-     * @var integer
      * @see addContinue()
      */
-    private $limit    = 8224;
+    private int $limit    = 8224;
 
     /**
      * Constructor
@@ -108,9 +106,9 @@ class PHPExcel_Writer_Excel5_BIFFwriter
             // Check if "pack" gives the required IEEE 64bit float
             $teststr = pack("d", 1.2345);
             $number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
-            if ($number == $teststr) {
+            if ($number === $teststr) {
                 $byte_order = 0;    // Little Endian
-            } elseif ($number == strrev($teststr)) {
+            } elseif ($number === strrev($teststr)) {
                 $byte_order = 1;    // Big Endian
             } else {
                 // Give up. I'll fix this in a later version.
@@ -218,7 +216,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
      * @return string        A very convenient string of continue blocks
      * @access private
      */
-    private function addContinue($data)
+    private function addContinue($data): string
     {
         $limit  = $this->limit;
         $record = 0x003C;         // Record identifier
@@ -239,8 +237,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
         // Retrieve the last chunk of data
         $header  = pack("vv", $record, strlen($data) - $i);
         $tmp    .= $header;
-        $tmp    .= substr($data, $i, strlen($data) - $i);
 
-        return $tmp;
+        return $tmp . substr($data, $i, strlen($data) - $i);
     }
 }

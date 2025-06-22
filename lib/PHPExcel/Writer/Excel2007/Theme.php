@@ -40,7 +40,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
      * @static    array of string
      *
      */
-    private static $majorFonts = array(
+    private static array $majorFonts = array(
         'Jpan' => 'ＭＳ Ｐゴシック',
         'Hang' => '맑은 고딕',
         'Hans' => '宋体',
@@ -78,7 +78,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
      * @static    array of string
      *
      */
-    private static $minorFonts = array(
+    private static array $minorFonts = array(
         'Jpan' => 'ＭＳ Ｐゴシック',
         'Hang' => '맑은 고딕',
         'Hans' => '宋体',
@@ -116,7 +116,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
      * @static    array of string
      *
      */
-    private static $colourScheme = array(
+    private static array $colourScheme = array(
         'dk2'        => '1F497D',
         'lt2'        => 'EEECE1',
         'accent1'    => '4F81BD',
@@ -132,7 +132,6 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write theme to XML format
      *
-     * @param     PHPExcel    $pPHPExcel
      * @return     string         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -816,13 +815,11 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write fonts to XML format
      *
-     * @param     PHPExcel_Shared_XMLWriter    $objWriter
-     * @param     string                        $latinFont
      * @param     array of string                $fontSet
      * @return     string                         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
-    private function writeFonts($objWriter, $latinFont, $fontSet)
+    private function writeFonts(\PHPExcel_Shared_XMLWriter $objWriter, string $latinFont, $fontSet): void
     {
         // a:latin
         $objWriter->startElement('a:latin');
@@ -850,11 +847,10 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
     /**
      * Write colour scheme to XML format
      *
-     * @param     PHPExcel_Shared_XMLWriter    $objWriter
      * @return     string                         XML Output
      * @throws     PHPExcel_Writer_Exception
      */
-    private function writeColourScheme($objWriter)
+    private function writeColourScheme(\PHPExcel_Shared_XMLWriter $objWriter): void
     {
         foreach (self::$colourScheme as $colourName => $colourValue) {
             $objWriter->startElement('a:'.$colourName);

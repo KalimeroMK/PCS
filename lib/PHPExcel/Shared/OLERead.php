@@ -30,7 +30,17 @@ defined('IDENTIFIER_OLE') ||
 
 class PHPExcel_Shared_OLERead
 {
-    private $data = '';
+    public $numBigBlockDepotBlocks;
+    public $rootStartBlock;
+    public $sbdStartBlock;
+    public $extensionBlock;
+    public $numExtensionBlocks;
+    public $bigBlockChain;
+    public $smallBlockChain;
+    public $entry;
+    public $props;
+    public $rootentry;
+    private string|bool $data = '';
 
     // OLE identifier
     const IDENTIFIER_OLE                    = IDENTIFIER_OLE;
@@ -63,9 +73,9 @@ class PHPExcel_Shared_OLERead
 
 
 
-    public $wrkbook                         = null;
-    public $summaryInformation              = null;
-    public $documentSummaryInformation      = null;
+    public $wrkbook;
+    public $summaryInformation;
+    public $documentSummaryInformation;
 
 
     /**
@@ -74,7 +84,7 @@ class PHPExcel_Shared_OLERead
      * @param $sFileName string Filename
      * @throws PHPExcel_Reader_Exception
      */
-    public function read($sFileName)
+    public function read(string $sFileName): void
     {
         // Check if file exists and is readable
         if (!is_readable($sFileName)) {
@@ -171,7 +181,7 @@ class PHPExcel_Shared_OLERead
      *
      * @return string
      */
-    public function getStream($stream)
+    public function getStream($stream): ?string
     {
         if ($stream === null) {
             return null;
@@ -220,7 +230,7 @@ class PHPExcel_Shared_OLERead
      * @param int $bl Sector ID where the stream starts
      * @return string Data for standard stream
      */
-    private function _readData($bl)
+    private function _readData($bl): string
     {
         $block = $bl;
         $data = '';
@@ -236,7 +246,7 @@ class PHPExcel_Shared_OLERead
     /**
      * Read entries in the directory stream.
      */
-    private function readPropertySets()
+    private function readPropertySets(): void
     {
         $offset = 0;
 
@@ -299,9 +309,8 @@ class PHPExcel_Shared_OLERead
      *
      * @param string $data
      * @param int $pos
-     * @return int
      */
-    private static function getInt4d($data, $pos)
+    private static function getInt4d($data, int|float $pos): int
     {
         // FIX: represent numbers correctly on 64-bit system
         // http://sourceforge.net/tracker/index.php?func=detail&aid=1487372&group_id=99160&atid=623334

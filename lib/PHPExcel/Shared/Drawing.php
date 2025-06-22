@@ -41,7 +41,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Value in pixels
      * @return     int            Value in EMU
      */
-    public static function pixelsToEMU($pValue = 0)
+    public static function pixelsToEMU($pValue = 0): float
     {
         return round($pValue * 9525);
     }
@@ -52,7 +52,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Value in EMU
      * @return     int            Value in pixels
      */
-    public static function EMUToPixels($pValue = 0)
+    public static function EMUToPixels($pValue = 0): float|int
     {
         if ($pValue != 0) {
             return round($pValue / 9525);
@@ -70,7 +70,7 @@ class PHPExcel_Shared_Drawing
      * @param     PHPExcel_Style_Font $pDefaultFont    Default font of the workbook
      * @return     int            Value in cell dimension
      */
-    public static function pixelsToCellDimension($pValue = 0, PHPExcel_Style_Font $pDefaultFont)
+    public static function pixelsToCellDimension($pValue = 0, PHPExcel_Style_Font $pDefaultFont): int|float
     {
         // Font name and size
         $name = $pDefaultFont->getName();
@@ -95,7 +95,7 @@ class PHPExcel_Shared_Drawing
      * @param     PHPExcel_Style_Font $pDefaultFont    Default font of the workbook
      * @return     int        Value in pixels
      */
-    public static function cellDimensionToPixels($pValue = 0, PHPExcel_Style_Font $pDefaultFont)
+    public static function cellDimensionToPixels($pValue = 0, PHPExcel_Style_Font $pDefaultFont): int
     {
         // Font name and size
         $name = $pDefaultFont->getName();
@@ -122,7 +122,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Value in pixels
      * @return     int            Value in points
      */
-    public static function pixelsToPoints($pValue = 0)
+    public static function pixelsToPoints($pValue = 0): float
     {
         return $pValue * 0.67777777;
     }
@@ -133,7 +133,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Value in points
      * @return     int            Value in pixels
      */
-    public static function pointsToPixels($pValue = 0)
+    public static function pointsToPixels($pValue = 0): int
     {
         if ($pValue != 0) {
             return (int) ceil($pValue * 1.333333333);
@@ -148,7 +148,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Degrees
      * @return     int            Angle
      */
-    public static function degreesToAngle($pValue = 0)
+    public static function degreesToAngle($pValue = 0): int
     {
         return (int)round($pValue * 60000);
     }
@@ -159,7 +159,7 @@ class PHPExcel_Shared_Drawing
      * @param     int $pValue    Angle
      * @return     int            Degrees
      */
-    public static function angleToDegrees($pValue = 0)
+    public static function angleToDegrees($pValue = 0): float|int
     {
         if ($pValue != 0) {
             return round($pValue / 60000);
@@ -175,12 +175,12 @@ class PHPExcel_Shared_Drawing
      * @param string $filename Path to Windows DIB (BMP) image
      * @return resource
      */
-    public static function imagecreatefrombmp($p_sFile)
+    public static function imagecreatefrombmp($p_sFile): \GdImage|false
     {
         //    Load the image into a string
         $file = fopen($p_sFile, "rb");
         $read = fread($file, 10);
-        while (!feof($file) && ($read<>"")) {
+        while (!feof($file) && ($read != "")) {
             $read .= fread($file, 1024);
         }
 
@@ -190,7 +190,7 @@ class PHPExcel_Shared_Drawing
 
         //    Process the header
         //    Structure: http://www.fastgraph.com/help/bmp_header_format.html
-        if (substr($header, 0, 4)=="424d") {
+        if (substr($header, 0, 4) === "424d") {
             //    Cut it in parts of 2 bytes
             $header_parts = str_split($header, 2);
 

@@ -41,7 +41,7 @@ class PHPExcel_Chart_Legend
     const POSITION_TOP      = 't';
     const POSITION_TOPRIGHT = 'tr';
 
-    private static $positionXLref = array(
+    private static array $positionXLref = array(
         self::xlLegendPositionBottom => self::POSITION_BOTTOM,
         self::xlLegendPositionCorner => self::POSITION_TOPRIGHT,
         self::xlLegendPositionCustom => '??',
@@ -59,17 +59,13 @@ class PHPExcel_Chart_Legend
 
     /**
      * Allow overlay of other elements?
-     *
-     * @var    boolean
      */
-    private $overlay = true;
+    private bool $overlay = true;
 
     /**
      * Legend Layout
-     *
-     * @var    PHPExcel_Chart_Layout
      */
-    private $layout = null;
+    private ?\PHPExcel_Chart_Layout $layout;
 
 
     /**
@@ -97,7 +93,7 @@ class PHPExcel_Chart_Legend
      *
      * @param    string    $position
      */
-    public function setPosition($position = self::POSITION_RIGHT)
+    public function setPosition($position = self::POSITION_RIGHT): bool
     {
         if (!in_array($position, self::$positionXLref)) {
             return false;
@@ -112,7 +108,7 @@ class PHPExcel_Chart_Legend
      *
      * @return    number
      */
-    public function getPositionXL()
+    public function getPositionXL(): int|string|false
     {
         return array_search($this->position, self::$positionXLref);
     }
@@ -122,7 +118,7 @@ class PHPExcel_Chart_Legend
      *
      * @param    number    $positionXL
      */
-    public function setPositionXL($positionXL = self::xlLegendPositionRight)
+    public function setPositionXL($positionXL = self::xlLegendPositionRight): bool
     {
         if (!array_key_exists($positionXL, self::$positionXLref)) {
             return false;
@@ -146,9 +142,8 @@ class PHPExcel_Chart_Legend
      * Set allow overlay of other elements?
      *
      * @param    boolean    $overlay
-     * @return    boolean
      */
-    public function setOverlay($overlay = false)
+    public function setOverlay($overlay = false): bool
     {
         if (!is_bool($overlay)) {
             return false;

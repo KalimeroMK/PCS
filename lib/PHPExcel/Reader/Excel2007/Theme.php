@@ -117,11 +117,7 @@ class PHPExcel_Reader_Excel2007_Theme
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if ((is_object($value)) && ($key != '_parent')) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) && $key !== '_parent' ? clone $value : $value;
         }
     }
 }

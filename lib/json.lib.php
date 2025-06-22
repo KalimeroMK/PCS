@@ -5,7 +5,7 @@ if (!defined('_GNUBOARD_')) exit;
 
 if(!function_exists('json_encode'))
 {
-    function json_encode($a=false)
+    function json_encode($a=false): float|string|int
     {
         // Some basic debugging to ensure we have something returned
         if (is_null($a)) return 'null';
@@ -38,12 +38,12 @@ if(!function_exists('json_encode'))
         if ($isList)
         {
             foreach ($a as $v) $result[] = json_encode($v);
-            return '[' . join(',', $result) . ']';
+            return '[' . implode(',', $result) . ']';
         }
         else
         {
             foreach ($a as $k => $v) $result[] = json_encode($k).':'.json_encode($v);
-            return '{' . join(',', $result) . '}';
+            return '{' . implode(',', $result) . '}';
         }
     }
 }
@@ -58,13 +58,13 @@ if(!function_exists('json_decode'))
         {
             if (!$comment)
             {
-                if (($json[$i] == '{') || ($json[$i] == '['))
+                if (($json[$i] == '{') || ($json[$i] == '[')) {
                     $out .= ' array(';
-                else if (($json[$i] == '}') || ($json[$i] == ']'))
+                } elseif (($json[$i] == '}') || ($json[$i] == ']')) {
                     $out .= ')';
-                else if ($json[$i] == ':')
+                } elseif ($json[$i] == ':') {
                     $out .= '=>';
-                else
+                } else
                     $out .= $json[$i];
             }
             else

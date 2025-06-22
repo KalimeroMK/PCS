@@ -2,11 +2,11 @@
 if (!defined('_GNUBOARD_')) exit;
 
 Class GML_Hook extends Hook {
-    
+
     protected $filters = array('count' => 0);
-    
+
     protected $callback_filters = array();
-    
+
     protected static $current_filter = false;
 
     protected function runAction($action, $args)
@@ -22,14 +22,13 @@ Class GML_Hook extends Hook {
         if (! ($class && $method) && is_callable($function)) {
             return call_user_func_array($function, $args);
         } elseif ($obj = call_user_func(array($class, $this->singleton))) {
-            if ($obj !== false) {
-                return call_user_func_array(array($obj, $method), $args);
-            }
+            return call_user_func_array(array($obj, $method), $args);
         } elseif (class_exists($class)) {
             $instance = new $class;
 
             return call_user_func_array(array($instance, $method), $args);
         }
+        return null;
     }
 
     protected function getFilters($tag, $remove)
@@ -55,7 +54,7 @@ Class GML_Hook extends Hook {
         return $is_callback ? $that->callback_filters : $that->filters;
     }
 
-    public static function addFilter($tag, $func, $priority = 8, $args = 0)
+    public static function addFilter($tag, $func, $priority = 8, $args = 0): bool
     {
         $that = self::getInstance(self::$id);
 
@@ -129,7 +128,7 @@ Class GML_Hook extends Hook {
         $is_remove = false;
 
         if (isset($that->callback_filters[$tag]) && isset($that->callback_filters[$tag][$priority]) ) {
-            
+
             foreach((array) $that->callback_filters[$tag][$priority] as $key=>$value){
                 if(isset($value['function']) && $value['function'] === $func) {
                     unset($that->callback_filters[$tag][$priority][$key]);
@@ -148,7 +147,7 @@ Class GML_Hook extends Hook {
         $is_remove = false;
 
         if (isset($that->callbacks[$tag]) && isset($that->callbacks[$tag][$priority]) ) {
-            
+
             foreach((array) $that->callbacks[$tag][$priority] as $key=>$value){
                 if(isset($value['function']) && $value['function'] === $func) {
                     unset($that->callbacks[$tag][$priority][$key]);

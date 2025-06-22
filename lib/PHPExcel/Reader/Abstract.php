@@ -68,7 +68,7 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader
      */
     protected $readFilter;
 
-    protected $fileHandle = null;
+    protected $fileHandle;
 
 
     /**
@@ -210,7 +210,6 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader
     /**
      * Set read filter
      *
-     * @param PHPExcel_Reader_IReadFilter $pValue
      * @return PHPExcel_Reader_IReader
      */
     public function setReadFilter(PHPExcel_Reader_IReadFilter $pValue)
@@ -222,11 +221,10 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader
     /**
      * Open file for reading
      *
-     * @param string $pFilename
      * @throws    PHPExcel_Reader_Exception
      * @return resource
      */
-    protected function openFile($pFilename)
+    protected function openFile(string $pFilename)
     {
         // Check if file exists
         if (!file_exists($pFilename) || !is_readable($pFilename)) {

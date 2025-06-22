@@ -62,10 +62,10 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
      * @param    string  &$openedPath    absolute path of the opened stream (out parameter)
      * @return    bool    true on success
      */
-    public function stream_open($path, $mode, $options, &$openedPath)
+    public function stream_open($path, $mode, $options, &$openedPath): bool
     {
         if ($mode != 'r') {
-            if ($options & STREAM_REPORT_ERRORS) {
+            if (($options & STREAM_REPORT_ERRORS) !== 0) {
                 trigger_error('Only reading is supported', E_USER_WARNING);
             }
             return false;
@@ -74,7 +74,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
         // 25 is length of "ole-chainedblockstream://"
         parse_str(substr($path, 25), $this->params);
         if (!isset($this->params['oleInstanceId'], $this->params['blockId'], $GLOBALS['_OLE_INSTANCES'][$this->params['oleInstanceId']])) {
-            if ($options & STREAM_REPORT_ERRORS) {
+            if (($options & STREAM_REPORT_ERRORS) !== 0) {
                 trigger_error('OLE stream not found', E_USER_WARNING);
             }
             return false;
@@ -105,7 +105,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
             $this->data = substr($this->data, 0, $this->params['size']);
         }
 
-        if ($options & STREAM_USE_PATH) {
+        if (($options & STREAM_USE_PATH) !== 0) {
             $openedPath = $path;
         }
 
@@ -116,7 +116,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
      * Implements support for fclose().
      *
      */
-    public function stream_close()
+    public function stream_close(): void
     {
         $this->ole = null;
         unset($GLOBALS['_OLE_INSTANCES']);
@@ -128,7 +128,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
      * @param   int        $count    maximum number of bytes to read
      * @return  string
      */
-    public function stream_read($count)
+    public function stream_read($count): false|string
     {
         if ($this->stream_eof()) {
             return false;
@@ -143,7 +143,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
      *
      * @return  bool  TRUE if the file pointer is at EOF; otherwise FALSE
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         return $this->pos >= strlen($this->data);
     }
@@ -164,15 +164,14 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
      *
      * @param    int        $offset    byte offset
      * @param    int        $whence    SEEK_SET, SEEK_CUR or SEEK_END
-     * @return    bool
      */
-    public function stream_seek($offset, $whence)
+    public function stream_seek($offset, $whence): bool
     {
         if ($whence == SEEK_SET && $offset >= 0) {
             $this->pos = $offset;
         } elseif ($whence == SEEK_CUR && -$offset <= $this->pos) {
             $this->pos += $offset;
-        } elseif ($whence == SEEK_END && -$offset <= sizeof($this->data)) {
+        } elseif ($whence == SEEK_END && -$offset <= count($this->data)) {
             $this->pos = strlen($this->data) + $offset;
         } else {
             return false;
@@ -183,9 +182,8 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
     /**
      * Implements support for fstat(). Currently the only supported field is
      * "size".
-     * @return  array
      */
-    public function stream_stat()
+    public function stream_stat(): array
     {
         return array(
             'size' => strlen($this->data),

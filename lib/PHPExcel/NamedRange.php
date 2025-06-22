@@ -36,10 +36,8 @@ class PHPExcel_NamedRange
 
     /**
      * Worksheet on which the named range can be resolved
-     *
-     * @var PHPExcel_Worksheet
      */
-    private $worksheet;
+    private \PHPExcel_Worksheet $worksheet;
 
     /**
      * Range of the referenced cells
@@ -66,7 +64,6 @@ class PHPExcel_NamedRange
      * Create a new NamedRange
      *
      * @param string $pName
-     * @param PHPExcel_Worksheet $pWorksheet
      * @param string $pRange
      * @param bool $pLocalOnly
      * @param PHPExcel_Worksheet|null $pScope    Scope. Only applies when $pLocalOnly = true. Null for global scope.
@@ -101,9 +98,8 @@ class PHPExcel_NamedRange
      * Set name
      *
      * @param string $value
-     * @return PHPExcel_NamedRange
      */
-    public function setName($value = null)
+    public function setName($value = null): static
     {
         if ($value !== null) {
             // Old title
@@ -138,11 +134,8 @@ class PHPExcel_NamedRange
 
     /**
      * Set worksheet
-     *
-     * @param PHPExcel_Worksheet $value
-     * @return PHPExcel_NamedRange
      */
-    public function setWorksheet(PHPExcel_Worksheet $value = null)
+    public function setWorksheet(PHPExcel_Worksheet $value = null): static
     {
         if ($value !== null) {
             $this->worksheet = $value;
@@ -164,9 +157,8 @@ class PHPExcel_NamedRange
      * Set range
      *
      * @param string $value
-     * @return PHPExcel_NamedRange
      */
-    public function setRange($value = null)
+    public function setRange($value = null): static
     {
         if ($value !== null) {
             $this->range = $value;
@@ -188,9 +180,8 @@ class PHPExcel_NamedRange
      * Set localOnly
      *
      * @param bool $value
-     * @return PHPExcel_NamedRange
      */
-    public function setLocalOnly($value = false)
+    public function setLocalOnly($value = false): static
     {
         $this->localOnly = $value;
         $this->scope = $value ? $this->worksheet : null;
@@ -211,12 +202,11 @@ class PHPExcel_NamedRange
      * Set scope
      *
      * @param PHPExcel_Worksheet|null $value
-     * @return PHPExcel_NamedRange
      */
-    public function setScope(PHPExcel_Worksheet $value = null)
+    public function setScope(PHPExcel_Worksheet $value = null): static
     {
         $this->scope = $value;
-        $this->localOnly = ($value == null) ? false : true;
+        $this->localOnly = $value != null;
         return $this;
     }
 
@@ -239,11 +229,7 @@ class PHPExcel_NamedRange
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit;
 
 // 설문조사
-function poll($skin_dir='basic', $po_id=false)
+function poll(string $skin_dir='basic', $po_id=false): null|string|false
 {
     global $config, $member, $g5, $is_admin;
 
@@ -13,9 +13,9 @@ function poll($skin_dir='basic', $po_id=false)
     }
 
     if(!$po_id)
-        return;
+        return null;
 
-    if(preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
+    if (preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         if (G5_IS_MOBILE) {
             $poll_skin_path = G5_THEME_MOBILE_PATH.'/'.G5_SKIN_DIR.'/poll/'.$match[1];
             if(!is_dir($poll_skin_path))
@@ -26,14 +26,12 @@ function poll($skin_dir='basic', $po_id=false)
             $poll_skin_url = str_replace(G5_PATH, G5_URL, $poll_skin_path);
         }
         //$skin_dir = $match[1];
+    } elseif (G5_IS_MOBILE) {
+        $poll_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
+        $poll_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
     } else {
-        if (G5_IS_MOBILE) {
-            $poll_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
-            $poll_skin_url  = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/poll/'.$skin_dir;
-        } else {
-            $poll_skin_path = G5_SKIN_PATH.'/poll/'.$skin_dir;
-            $poll_skin_url  = G5_SKIN_URL.'/poll/'.$skin_dir;
-        }
+        $poll_skin_path = G5_SKIN_PATH.'/poll/'.$skin_dir;
+        $poll_skin_url  = G5_SKIN_URL.'/poll/'.$skin_dir;
     }
 
     $po = sql_fetch(" select * from {$g5['poll_table']} where po_id = '$po_id' and po_use = 1 ");

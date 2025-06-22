@@ -54,14 +54,14 @@ class PHPExcel_DocumentProperties
      *
      * @var datetime
      */
-    private $created;
+    private int $created;
 
     /**
      * Modified
      *
      * @var datetime
      */
-    private $modified;
+    private int $modified;
 
     /**
      * Title
@@ -145,9 +145,8 @@ class PHPExcel_DocumentProperties
      * Set Creator
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setCreator($pValue = '')
+    public function setCreator($pValue = ''): static
     {
         $this->creator = $pValue;
         return $this;
@@ -167,9 +166,8 @@ class PHPExcel_DocumentProperties
      * Set Last Modified By
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setLastModifiedBy($pValue = '')
+    public function setLastModifiedBy($pValue = ''): static
     {
         $this->lastModifiedBy = $pValue;
         return $this;
@@ -189,18 +187,13 @@ class PHPExcel_DocumentProperties
      * Set Created
      *
      * @param datetime $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setCreated($pValue = null)
+    public function setCreated($pValue = null): static
     {
         if ($pValue === null) {
             $pValue = time();
         } elseif (is_string($pValue)) {
-            if (is_numeric($pValue)) {
-                $pValue = intval($pValue);
-            } else {
-                $pValue = strtotime($pValue);
-            }
+            $pValue = is_numeric($pValue) ? intval($pValue) : strtotime($pValue);
         }
 
         $this->created = $pValue;
@@ -221,18 +214,13 @@ class PHPExcel_DocumentProperties
      * Set Modified
      *
      * @param datetime $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setModified($pValue = null)
+    public function setModified($pValue = null): static
     {
         if ($pValue === null) {
             $pValue = time();
         } elseif (is_string($pValue)) {
-            if (is_numeric($pValue)) {
-                $pValue = intval($pValue);
-            } else {
-                $pValue = strtotime($pValue);
-            }
+            $pValue = is_numeric($pValue) ? intval($pValue) : strtotime($pValue);
         }
 
         $this->modified = $pValue;
@@ -253,9 +241,8 @@ class PHPExcel_DocumentProperties
      * Set Title
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setTitle($pValue = '')
+    public function setTitle($pValue = ''): static
     {
         $this->title = $pValue;
         return $this;
@@ -275,9 +262,8 @@ class PHPExcel_DocumentProperties
      * Set Description
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setDescription($pValue = '')
+    public function setDescription($pValue = ''): static
     {
         $this->description = $pValue;
         return $this;
@@ -297,9 +283,8 @@ class PHPExcel_DocumentProperties
      * Set Subject
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setSubject($pValue = '')
+    public function setSubject($pValue = ''): static
     {
         $this->subject = $pValue;
         return $this;
@@ -319,9 +304,8 @@ class PHPExcel_DocumentProperties
      * Set Keywords
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setKeywords($pValue = '')
+    public function setKeywords($pValue = ''): static
     {
         $this->keywords = $pValue;
         return $this;
@@ -341,9 +325,8 @@ class PHPExcel_DocumentProperties
      * Set Category
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setCategory($pValue = '')
+    public function setCategory($pValue = ''): static
     {
         $this->category = $pValue;
         return $this;
@@ -363,9 +346,8 @@ class PHPExcel_DocumentProperties
      * Set Company
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setCompany($pValue = '')
+    public function setCompany($pValue = ''): static
     {
         $this->company = $pValue;
         return $this;
@@ -385,9 +367,8 @@ class PHPExcel_DocumentProperties
      * Set Manager
      *
      * @param string $pValue
-     * @return PHPExcel_DocumentProperties
      */
-    public function setManager($pValue = '')
+    public function setManager($pValue = ''): static
     {
         $this->manager = $pValue;
         return $this;
@@ -407,9 +388,8 @@ class PHPExcel_DocumentProperties
      * Check if a Custom Property is defined
      *
      * @param string $propertyName
-     * @return boolean
      */
-    public function isCustomPropertySet($propertyName)
+    public function isCustomPropertySet($propertyName): bool
     {
         return isset($this->customProperties[$propertyName]);
     }
@@ -425,6 +405,7 @@ class PHPExcel_DocumentProperties
         if (isset($this->customProperties[$propertyName])) {
             return $this->customProperties[$propertyName]['value'];
         }
+        return null;
 
     }
 
@@ -439,6 +420,7 @@ class PHPExcel_DocumentProperties
         if (isset($this->customProperties[$propertyName])) {
             return $this->customProperties[$propertyName]['type'];
         }
+        return null;
 
     }
 
@@ -453,9 +435,8 @@ class PHPExcel_DocumentProperties
      *   's' : String
      *   'd' : Date/Time
      *   'b' : Boolean
-     * @return PHPExcel_DocumentProperties
      */
-    public function setCustomProperty($propertyName, $propertyValue = '', $propertyType = null)
+    public function setCustomProperty($propertyName, $propertyValue = '', $propertyType = null): static
     {
         if (($propertyType === null) || (!in_array($propertyType, array(self::PROPERTY_TYPE_INTEGER,
                                                                         self::PROPERTY_TYPE_FLOAT,
@@ -489,11 +470,7 @@ class PHPExcel_DocumentProperties
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 
@@ -502,41 +479,33 @@ class PHPExcel_DocumentProperties
         switch ($propertyType) {
             case 'empty':     //    Empty
                 return '';
-                break;
             case 'null':      //    Null
                 return null;
-                break;
             case 'i1':        //    1-Byte Signed Integer
             case 'i2':        //    2-Byte Signed Integer
             case 'i4':        //    4-Byte Signed Integer
             case 'i8':        //    8-Byte Signed Integer
             case 'int':       //    Integer
                 return (int) $propertyValue;
-                break;
             case 'ui1':       //    1-Byte Unsigned Integer
             case 'ui2':       //    2-Byte Unsigned Integer
             case 'ui4':       //    4-Byte Unsigned Integer
             case 'ui8':       //    8-Byte Unsigned Integer
             case 'uint':      //    Unsigned Integer
                 return abs((int) $propertyValue);
-                break;
             case 'r4':        //    4-Byte Real Number
             case 'r8':        //    8-Byte Real Number
             case 'decimal':   //    Decimal
                 return (float) $propertyValue;
-                break;
             case 'lpstr':     //    LPSTR
             case 'lpwstr':    //    LPWSTR
             case 'bstr':      //    Basic String
                 return $propertyValue;
-                break;
             case 'date':      //    Date and Time
             case 'filetime':  //    File Time
                 return strtotime($propertyValue);
-                break;
             case 'bool':     //    Boolean
-                return ($propertyValue == 'true') ? true : false;
-                break;
+                return $propertyValue == 'true';
             case 'cy':       //    Currency
             case 'error':    //    Error Status Code
             case 'vector':   //    Vector
@@ -551,12 +520,11 @@ class PHPExcel_DocumentProperties
             case 'clsid':    //    Class ID
             case 'cf':       //    Clipboard Data
                 return $propertyValue;
-                break;
         }
         return $propertyValue;
     }
 
-    public static function convertPropertyType($propertyType)
+    public static function convertPropertyType($propertyType): string
     {
         switch ($propertyType) {
             case 'i1':       //    1-Byte Signed Integer
@@ -570,26 +538,21 @@ class PHPExcel_DocumentProperties
             case 'ui8':      //    8-Byte Unsigned Integer
             case 'uint':     //    Unsigned Integer
                 return self::PROPERTY_TYPE_INTEGER;
-                break;
             case 'r4':       //    4-Byte Real Number
             case 'r8':       //    8-Byte Real Number
             case 'decimal':  //    Decimal
                 return self::PROPERTY_TYPE_FLOAT;
-                break;
             case 'empty':    //    Empty
             case 'null':     //    Null
             case 'lpstr':    //    LPSTR
             case 'lpwstr':   //    LPWSTR
             case 'bstr':     //    Basic String
                 return self::PROPERTY_TYPE_STRING;
-                break;
             case 'date':     //    Date and Time
             case 'filetime': //    File Time
                 return self::PROPERTY_TYPE_DATE;
-                break;
             case 'bool':     //    Boolean
                 return self::PROPERTY_TYPE_BOOLEAN;
-                break;
             case 'cy':       //    Currency
             case 'error':    //    Error Status Code
             case 'vector':   //    Vector
@@ -604,7 +567,6 @@ class PHPExcel_DocumentProperties
             case 'clsid':    //    Class ID
             case 'cf':       //    Clipboard Data
                 return self::PROPERTY_TYPE_UNKNOWN;
-                break;
         }
         return self::PROPERTY_TYPE_UNKNOWN;
     }

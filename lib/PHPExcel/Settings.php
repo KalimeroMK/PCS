@@ -50,11 +50,11 @@ class PHPExcel_Settings
     const PDF_RENDERER_MPDF   = 'mPDF';
 
 
-    private static $chartRenderers = array(
+    private static array $chartRenderers = array(
         self::CHART_RENDERER_JPGRAPH,
     );
 
-    private static $pdfRenderers = array(
+    private static array $pdfRenderers = array(
         self::PDF_RENDERER_TCPDF,
         self::PDF_RENDERER_DOMPDF,
         self::PDF_RENDERER_MPDF,
@@ -65,10 +65,8 @@ class PHPExcel_Settings
      * Name of the class used for Zip file management
      *    e.g.
      *        ZipArchive
-     *
-     * @var string
      */
-    private static $zipClass = self::ZIPARCHIVE;
+    private static string $zipClass = self::ZIPARCHIVE;
 
 
     /**
@@ -109,7 +107,7 @@ class PHPExcel_Settings
      *
      * @var int
      */
-    private static $libXmlLoaderOptions = null;
+    private static $libXmlLoaderOptions;
 
     /**
      * Set the Zip handler Class that PHPExcel should use for Zip file management (PCLZip or ZipArchive)
@@ -118,7 +116,7 @@ class PHPExcel_Settings
      *      e.g. PHPExcel_Settings::PCLZip or PHPExcel_Settings::ZipArchive
      * @return    boolean    Success or failure
      */
-    public static function setZipClass($zipClass)
+    public static function setZipClass($zipClass): bool
     {
         if (($zipClass === self::PCLZIP) ||
             ($zipClass === self::ZIPARCHIVE)) {
@@ -172,7 +170,7 @@ class PHPExcel_Settings
      * @param array $arguments Optional configuration arguments for the cacheing method
      * @return boolean Success or failure
      */
-    public static function setCacheStorageMethod($method = PHPExcel_CachedObjectStorageFactory::cache_in_memory, $arguments = array())
+    public static function setCacheStorageMethod($method = PHPExcel_CachedObjectStorageFactory::cache_in_memory, $arguments = array()): bool
     {
         return PHPExcel_CachedObjectStorageFactory::initialize($method, $arguments);
     }
@@ -216,7 +214,7 @@ class PHPExcel_Settings
      *
      * @return    boolean    Success or failure
      */
-    public static function setChartRendererName($libraryName)
+    public static function setChartRendererName($libraryName): bool
     {
         if (!in_array($libraryName, self::$chartRenderers)) {
             return false;
@@ -233,7 +231,7 @@ class PHPExcel_Settings
      * @param string $libraryBaseDir    Directory path to the library's base folder
      * @return    boolean    Success or failure
      */
-    public static function setChartRendererPath($libraryBaseDir)
+    public static function setChartRendererPath($libraryBaseDir): bool
     {
         if ((file_exists($libraryBaseDir) === false) || (is_readable($libraryBaseDir) === false)) {
             return false;
@@ -299,7 +297,7 @@ class PHPExcel_Settings
      *
      * @return boolean Success or failure
      */
-    public static function setPdfRendererName($libraryName)
+    public static function setPdfRendererName($libraryName): bool
     {
         if (!in_array($libraryName, self::$pdfRenderers)) {
             return false;
@@ -316,7 +314,7 @@ class PHPExcel_Settings
      * @param string $libraryBaseDir Directory path to the library's base folder
      * @return boolean Success or failure
      */
-    public static function setPdfRendererPath($libraryBaseDir)
+    public static function setPdfRendererPath($libraryBaseDir): bool
     {
         if ((file_exists($libraryBaseDir) === false) || (is_readable($libraryBaseDir) === false)) {
             return false;
@@ -357,7 +355,7 @@ class PHPExcel_Settings
      *
      * @param   int   $options   Options for libxml loader
      */
-    public static function setLibXmlLoaderOptions($options = null)
+    public static function setLibXmlLoaderOptions($options = null): void
     {
         if (is_null($options) && defined('LIBXML_DTDLOAD')) {
             $options = LIBXML_DTDLOAD | LIBXML_DTDATTR;

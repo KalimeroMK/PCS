@@ -591,7 +591,7 @@ class PHPExcel_Helper_HTML
         $dom = new \DOMDocument;
         //  Load the HTML file into the DOM object
         //  Note the use of error suppression, because typically this will be an html fragment, so not fully valid markup
-        $loaded = @$dom->loadHTML($html);
+        @$dom->loadHTML($html);
 
         //  Discard excess white space
         $dom->preserveWhiteSpace = false;
@@ -657,7 +657,7 @@ class PHPExcel_Helper_HTML
         $this->stringData = '';
     }
 
-    protected function rgbToColour($rgb)
+    protected function rgbToColour($rgb): string
     {
         preg_match_all('/\d+/', $rgb, $values);
         foreach ($values[0] as &$value) {
@@ -677,7 +677,7 @@ class PHPExcel_Helper_HTML
             $attributeName = strtolower($attribute->name);
             $attributeValue = $attribute->value;
 
-            if ($attributeName == 'color') {
+            if ($attributeName === 'color') {
                 if (preg_match('/rgb\s*\(/', $attributeValue)) {
                     $this->$attributeName = $this->rgbToColour($attributeValue);
                 } elseif (strpos(trim($attributeValue), '#') === 0) {

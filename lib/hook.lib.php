@@ -4,7 +4,7 @@ if (!defined('_GNUBOARD_')) exit;
 define('G5_HOOK_DEFAULT_PRIORITY', 8);
 
 if (!function_exists('get_called_class')) {
-    function get_called_class() {
+    function get_called_class(): string {
         $bt = debug_backtrace();
         $lines = file($bt[1]['file']);
         preg_match(
@@ -28,14 +28,14 @@ function get_hook_class(){
     return null;
 }
 
-function add_event($tag, $func, $priority=G5_HOOK_DEFAULT_PRIORITY, $args=0){
+function add_event($tag, $func, $priority=G5_HOOK_DEFAULT_PRIORITY, $args=0): void{
 
     if( $hook = get_hook_class() ){
         $hook->addAction($tag, $func, $priority, $args);
     }
 }
 
-function run_event($tag, $arg = ''){
+function run_event($tag, $arg = ''): void{
 
     if( $hook = get_hook_class() ){
 

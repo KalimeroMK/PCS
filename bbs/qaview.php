@@ -179,10 +179,10 @@ if (is_file($skin_file)) {
     if ($config['cf_editor'] && $qaconfig['qa_use_editor'] && !G5_IS_MOBILE) {
         $is_dhtml_editor = true;
     }
-    $editor_html = editor_html('qa_content', $content, $is_dhtml_editor);
+    $editor_html = editor_html('qa_content', $content);
     $editor_js = '';
-    $editor_js .= get_editor_js('qa_content', $is_dhtml_editor);
-    $editor_js .= chk_editor_js('qa_content', $is_dhtml_editor);
+    $editor_js .= get_editor_js('qa_content');
+    $editor_js .= chk_editor_js('qa_content');
 
     $ss_name = 'ss_qa_view_'.$qa_id;
     if (!get_session($ss_name)) {

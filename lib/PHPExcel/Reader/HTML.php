@@ -125,19 +125,13 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 
     /**
      * Validate that the current file is an HTML file
-     *
-     * @return boolean
      */
-    protected function isValidFormat()
+    protected function isValidFormat(): bool
     {
         //    Reading 2048 bytes should be enough to validate that the format is HTML
         $data = fread($this->fileHandle, 2048);
-        if ((strpos($data, '<') !== false) &&
-                (strlen($data) !== strlen(strip_tags($data)))) {
-            return true;
-        }
-
-        return false;
+        return (strpos($data, '<') !== false) &&
+                (strlen($data) !== strlen(strip_tags($data)));
     }
 
     /**
@@ -161,7 +155,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
      *
      * @param string $pValue Input encoding
      */
-    public function setInputEncoding($pValue = 'ANSI')
+    public function setInputEncoding($pValue = 'ANSI'): static
     {
         $this->inputEncoding = $pValue;
 
@@ -199,14 +193,14 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
         return $this->nestedColumn[$this->tableLevel];
     }
 
-    protected function releaseTableStartColumn()
+    protected function releaseTableStartColumn(): mixed
     {
         --$this->tableLevel;
 
         return array_pop($this->nestedColumn);
     }
 
-    protected function flushCell($sheet, $column, $row, &$cellContent)
+    protected function flushCell($sheet, string $column, string $row, &$cellContent)
     {
         if (is_string($cellContent)) {
             //    Simple String content
@@ -223,7 +217,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
             //    TODO
             $this->dataArray[$row][$column] = 'RICH TEXT: ' . $cellContent;
         }
-        $cellContent = (string) '';
+        $cellContent = '';
     }
 
     protected function processDomElement(DOMNode $element, $sheet, &$row, &$column, &$cellContent, $format = null)
@@ -249,14 +243,8 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 
                 switch ($child->nodeName) {
                     case 'meta':
-                        foreach ($attributeArray as $attributeName => $attributeValue) {
-                            switch ($attributeName) {
-                                case 'content':
-                                    //    TODO
-                                    //    Extract character set, so we can convert to UTF-8 if required
-                                    break;
-                            }
-                        }
+                    case 'thead':
+                    case 'tbody':
                         $this->processDomElement($child, $sheet, $row, $column, $cellContent);
                         break;
                     case 'title':
@@ -306,14 +294,12 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
                     case 'a':
 //                        echo 'START OF HYPERLINK: ' , '<br />';
                         foreach ($attributeArray as $attributeName => $attributeValue) {
-                            switch ($attributeName) {
-                                case 'href':
-//                                    echo 'Link to ' , $attributeValue , '<br />';
-                                    $sheet->getCell($column . $row)->getHyperlink()->setUrl($attributeValue);
-                                    if (isset($this->formats[$child->nodeName])) {
-                                        $sheet->getStyle($column . $row)->applyFromArray($this->formats[$child->nodeName]);
-                                    }
-                                    break;
+                            if ($attributeName === 'href') {
+                                //                                    echo 'Link to ' , $attributeValue , '<br />';
+                                $sheet->getCell($column . $row)->getHyperlink()->setUrl($attributeValue);
+                                if (isset($this->formats[$child->nodeName])) {
+                                    $sheet->getStyle($column . $row)->applyFromArray($this->formats[$child->nodeName]);
+                                }
                             }
                         }
                         $cellContent .= ' ';
@@ -387,10 +373,6 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
                         } else {
                             ++$row;
                         }
-                        break;
-                    case 'thead':
-                    case 'tbody':
-                        $this->processDomElement($child, $sheet, $row, $column, $cellContent);
                         break;
                     case 'tr':
                         $column = $this->getTableStartColumn();
@@ -467,12 +449,9 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
     /**
      * Loads PHPExcel from file into PHPExcel instance
      *
-     * @param  string                    $pFilename
-     * @param  PHPExcel                  $objPHPExcel
-     * @return PHPExcel
      * @throws PHPExcel_Reader_Exception
      */
-    public function loadIntoExisting($pFilename, PHPExcel $objPHPExcel)
+    public function loadIntoExisting(string $pFilename, PHPExcel $objPHPExcel): PHPExcel
     {
         // Open file to validate
         $this->openFile($pFilename);
@@ -523,9 +502,8 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
      * Set sheet index
      *
      * @param  int                  $pValue Sheet index
-     * @return PHPExcel_Reader_HTML
      */
-    public function setSheetIndex($pValue = 0)
+    public function setSheetIndex($pValue = 0): static
     {
         $this->sheetIndex = $pValue;
 

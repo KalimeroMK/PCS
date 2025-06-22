@@ -28,7 +28,7 @@
 
 
 //require_once 'PEAR.php';
-require_once 'oleread.inc.php';
+require_once __DIR__ . '/oleread.inc.php';
 //require_once 'OLE.php';
 
 define('SPREADSHEET_EXCEL_READER_BIFF8',             0x600);
@@ -102,13 +102,20 @@ define('SPREADSHEET_EXCEL_READER_DEF_NUM_FORMAT',    "%s");
 */
 class Spreadsheet_Excel_Reader
 {
+    public $_encoderFunction;
+    public $nineteenFour;
+    public $sn;
+    public $rectype;
+    public $multiplier;
+    public $numRows;
+    public $curformat;
     /**
      * Array of worksheets found
      *
      * @var array
      * @access public
      */
-    var $boundsheets = array();
+    public $boundsheets = array();
 
     /**
      * Array of format records found
@@ -116,7 +123,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access public
      */
-    var $formatRecords = array();
+    public $formatRecords = array();
 
     /**
      * todo
@@ -124,7 +131,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access public
      */
-    var $sst = array();
+    public $sst = array();
 
     /**
      * Array of worksheets
@@ -141,7 +148,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access public
      */
-    var $sheets = array();
+    public $sheets = array();
 
     /**
      * The data returned by OLE
@@ -149,7 +156,7 @@ class Spreadsheet_Excel_Reader
      * @var string
      * @access public
      */
-    var $data;
+    public $data;
 
     /**
      * OLE object for reading the file
@@ -157,7 +164,7 @@ class Spreadsheet_Excel_Reader
      * @var OLE object
      * @access private
      */
-    var $_ole;
+    public $_ole;
 
     /**
      * Default encoding
@@ -165,7 +172,7 @@ class Spreadsheet_Excel_Reader
      * @var string
      * @access private
      */
-    var $_defaultEncoding;
+    public $_defaultEncoding;
 
     /**
      * Default number format
@@ -173,7 +180,7 @@ class Spreadsheet_Excel_Reader
      * @var integer
      * @access private
      */
-    var $_defaultFormat = SPREADSHEET_EXCEL_READER_DEF_NUM_FORMAT;
+    public $_defaultFormat = SPREADSHEET_EXCEL_READER_DEF_NUM_FORMAT;
 
     /**
      * todo
@@ -182,7 +189,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access private
      */
-    var $_columnsFormat = array();
+    public $_columnsFormat = array();
 
     /**
      * todo
@@ -190,7 +197,7 @@ class Spreadsheet_Excel_Reader
      * @var integer
      * @access private
      */
-    var $_rowoffset = 1;
+    public $_rowoffset = 1;
 
     /**
      * todo
@@ -198,7 +205,7 @@ class Spreadsheet_Excel_Reader
      * @var integer
      * @access private
      */
-    var $_coloffset = 1;
+    public $_coloffset = 1;
 
     /**
      * List of default date formats used by Excel
@@ -206,7 +213,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access public
      */
-    var $dateFormats = array (
+    public $dateFormats = array (
         0xe => "d/m/Y",
         0xf => "d-M-Y",
         0x10 => "d-M",
@@ -226,7 +233,7 @@ class Spreadsheet_Excel_Reader
      * @var array
      * @access public
      */
-    var $numberFormats = array(
+    public $numberFormats = array(
         0x1 => "%1.0f",     // "0"
         0x2 => "%1.2f",     // "0.00",
         0x3 => "%1.0f",     //"#,##0",
@@ -256,7 +263,7 @@ class Spreadsheet_Excel_Reader
      *
      * Some basic initialisation
      */
-    function Spreadsheet_Excel_Reader()
+    function Spreadsheet_Excel_Reader(): void
     {
         $this->_ole = new OLERead();
         $this->setUTFEncoder('iconv');
@@ -271,7 +278,7 @@ class Spreadsheet_Excel_Reader
      * @param string Encoding to use
      * @access public
      */
-    function setOutputEncoding($encoding)
+    function setOutputEncoding($encoding): void
     {
         $this->_defaultEncoding = $encoding;
     }
@@ -287,7 +294,7 @@ class Spreadsheet_Excel_Reader
      * @access public
      * @param string Encoding type to use.  Either 'iconv' or 'mb'
      */
-    function setUTFEncoder($encoder = 'iconv')
+    function setUTFEncoder($encoder = 'iconv'): void
     {
         $this->_encoderFunction = '';
 
@@ -309,7 +316,7 @@ class Spreadsheet_Excel_Reader
      * @access public
      * @param offset
      */
-    function setRowColOffset($iOffset)
+    function setRowColOffset($iOffset): void
     {
         $this->_rowoffset = $iOffset;
         $this->_coloffset = $iOffset;
@@ -324,7 +331,7 @@ class Spreadsheet_Excel_Reader
      * @access public
      * @param Default format
      */
-    function setDefaultFormat($sFormat)
+    function setDefaultFormat($sFormat): void
     {
         $this->_defaultFormat = $sFormat;
     }
@@ -339,7 +346,7 @@ class Spreadsheet_Excel_Reader
      * @param integer Column number
      * @param string Format
      */
-    function setColumnFormat($column, $sFormat)
+    function setColumnFormat($column, $sFormat): void
     {
         $this->_columnsFormat[$column] = $sFormat;
     }
@@ -355,7 +362,7 @@ class Spreadsheet_Excel_Reader
      * @param filename
      * @todo return a valid value
      */
-    function read($sFileName)
+    function read(string $sFileName): void
     {
     /*
         require_once 'OLE.php';
@@ -434,15 +441,15 @@ class Spreadsheet_Excel_Reader
      * @access private
      * @return bool
      */
-    function _parse()
+    function _parse(): int|bool
     {
         $pos = 0;
 
-        $code = ord($this->data[$pos]) | ord($this->data[$pos+1])<<8;
-        $length = ord($this->data[$pos+2]) | ord($this->data[$pos+3])<<8;
+        $code = ord($this->data[$pos]) | ord($this->data[1])<<8;
+        $length = ord($this->data[2]) | ord($this->data[3])<<8;
 
-        $version = ord($this->data[$pos + 4]) | ord($this->data[$pos + 5])<<8;
-        $substreamType = ord($this->data[$pos + 6]) | ord($this->data[$pos + 7])<<8;
+        $version = ord($this->data[4]) | ord($this->data[5])<<8;
+        $substreamType = ord($this->data[6]) | ord($this->data[7])<<8;
         //echo "Start parse code=".base_convert($code,10,16)." version=".base_convert($version,10,16)." substreamType=".base_convert($substreamType,10,16).""."\n";
 
         if (($version != SPREADSHEET_EXCEL_READER_BIFF8) &&
@@ -586,7 +593,6 @@ class Spreadsheet_Excel_Reader
 
                 case SPREADSHEET_EXCEL_READER_TYPE_FILEPASS:
                     return false;
-                    break;
                 case SPREADSHEET_EXCEL_READER_TYPE_NAME:
                     //echo "Type_NAME\n";
                     break;
@@ -631,8 +637,8 @@ class Spreadsheet_Excel_Reader
                                     $formatstr = $this->formatRecords[$indexCode];
                                 //echo '.other.';
                                 //echo "\ndate-time=$formatstr=\n";
-                                if ($formatstr)
-                                if (preg_match("/[^hmsday\/\-:\s]/i", $formatstr) == 0) { // found day and time format
+                                if ($formatstr && preg_match("/[^hmsday\/\-:\s]/i", $formatstr) == 0) {
+                                    // found day and time format
                                     $isdate = TRUE;
                                     $formatstr = str_replace('mm', 'i', $formatstr);
                                     $formatstr = str_replace('h', 'H', $formatstr);
@@ -673,7 +679,7 @@ class Spreadsheet_Excel_Reader
                             } else {
                                 $rec_name    = $this->_encodeUTF16(substr($this->data, $pos+12, $rec_length*2));
                             }
-                        }elseif ($version == SPREADSHEET_EXCEL_READER_BIFF7){
+                        }elseif ($version === SPREADSHEET_EXCEL_READER_BIFF7){
                                 $rec_name    = substr($this->data, $pos+11, $rec_length);
                         }
                     $this->boundsheets[] = array('name'=>$rec_name,
@@ -707,7 +713,7 @@ class Spreadsheet_Excel_Reader
      * @param todo
      * @todo fix return codes
      */
-    function _parsesheet($spos)
+    function _parsesheet($spos): ?int
     {
         $cont = true;
         // read BOF
@@ -744,7 +750,7 @@ class Spreadsheet_Excel_Reader
             switch ($code) {
                 case SPREADSHEET_EXCEL_READER_TYPE_DIMENSION:
                     //echo 'Type_DIMENSION ';
-                    if (!isset($this->numRows)) {
+                    if (!property_exists($this, 'numRows') || $this->numRows === null) {
                         if (($length == 10) ||  ($version == SPREADSHEET_EXCEL_READER_BIFF7)){
                             $this->sheets[$this->sn]['numRows'] = ord($this->data[$spos+2]) | ord($this->data[$spos+3]) << 8;
                             $this->sheets[$this->sn]['numCols'] = ord($this->data[$spos+6]) | ord($this->data[$spos+7]) << 8;
@@ -916,6 +922,7 @@ class Spreadsheet_Excel_Reader
              $this->sheets[$this->sn]['numRows'] = $this->sheets[$this->sn]['maxrow'];
         if (!isset($this->sheets[$this->sn]['numCols']))
              $this->sheets[$this->sn]['numCols'] = $this->sheets[$this->sn]['maxcol'];
+        return null;
 
     }
 
@@ -925,7 +932,7 @@ class Spreadsheet_Excel_Reader
      * @param todo
      * @return boolean True if date, false otherwise
      */
-    function isDate($spos)
+    function isDate($spos): bool
     {
         //$xfindex = GetInt2d(, 4);
         $xfindex = ord($this->data[$spos+4]) | ord($this->data[$spos+5]) << 8;
@@ -963,7 +970,7 @@ class Spreadsheet_Excel_Reader
      * @param integer The raw Excel value to convert
      * @return array First element is the converted date, the second element is number a unix timestamp
      */
-    function createDate($numValue)
+    function createDate($numValue): array
     {
         if ($numValue > 1) {
             $utcDays = $numValue - ($this->nineteenFour ? SPREADSHEET_EXCEL_READER_UTCOFFSETDAYS1904 : SPREADSHEET_EXCEL_READER_UTCOFFSETDAYS);
@@ -981,7 +988,7 @@ class Spreadsheet_Excel_Reader
         return array($string, $raw);
     }
 
-    function createNumber($spos)
+    function createNumber($spos): float|int|array
     {
         $rknumhigh = $this->_GetInt4d($this->data, $spos + 10);
         $rknumlow = $this->_GetInt4d($this->data, $spos + 6);
@@ -995,11 +1002,11 @@ class Spreadsheet_Excel_Reader
         if ($mantissalow1 != 0) $value += 1 / pow (2 , (21 - ($exp - 1023)));
         $value += $mantissalow2 / pow (2 , (52 - ($exp - 1023)));
         //echo "Sign = $sign, Exp = $exp, mantissahighx = $mantissa, mantissalow1 = $mantissalow1, mantissalow2 = $mantissalow2<br>\n";
-        if ($sign) {$value = -1 * $value;}
+        if ($sign !== 0) {$value = -1 * $value;}
         return  $value;
     }
 
-    function addcell($row, $col, $string, $raw = '')
+    function addcell($row, $col, $string, $raw = ''): void
     {
         //echo "ADD cel $row-$col $string\n";
         $this->sheets[$this->sn]['maxrow'] = max($this->sheets[$this->sn]['maxrow'], $row + $this->_rowoffset);
@@ -1007,7 +1014,7 @@ class Spreadsheet_Excel_Reader
         $this->sheets[$this->sn]['cells'][$row + $this->_rowoffset][$col + $this->_coloffset] = $string;
         if ($raw)
             $this->sheets[$this->sn]['cellsInfo'][$row + $this->_rowoffset][$col + $this->_coloffset]['raw'] = $raw;
-        if (isset($this->rectype))
+        if (property_exists($this, 'rectype') && $this->rectype !== null)
             $this->sheets[$this->sn]['cellsInfo'][$row + $this->_rowoffset][$col + $this->_coloffset]['type'] = $this->rectype;
 
     }
@@ -1036,7 +1043,7 @@ class Spreadsheet_Excel_Reader
         $exp = ($rknum & 0x7ff00000) >> 20;
         $mantissa = (0x100000 | ($rknum & 0x000ffffc));
         $value = $mantissa / pow( 2 , (20- ($exp - 1023)));
-        if ($sign) {$value = -1 * $value;}
+        if ($sign !== 0) {$value = -1 * $value;}
 //end of changes by mmp
 
         }
@@ -1061,7 +1068,7 @@ class Spreadsheet_Excel_Reader
         return $result;
     }
 
-    function _GetInt4d($data, $pos)
+    function _GetInt4d(array $data, $pos): int
     {
         $value = ord($data[$pos]) | (ord($data[$pos+1]) << 8) | (ord($data[$pos+2]) << 16) | (ord($data[$pos+3]) << 24);
         if ($value>=4294967294)

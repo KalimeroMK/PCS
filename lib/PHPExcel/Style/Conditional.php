@@ -57,17 +57,13 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
 
     /**
      * Condition type
-     *
-     * @var int
      */
-    private $conditionType;
+    private string $conditionType;
 
     /**
      * Operator type
-     *
-     * @var int
      */
-    private $operatorType;
+    private string $operatorType;
 
     /**
      * Text
@@ -81,14 +77,12 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      *
      * @var string[]
      */
-    private $condition = array();
+    private array $condition;
 
     /**
      * Style
-     *
-     * @var PHPExcel_Style
      */
-    private $style;
+    private \PHPExcel_Style $style;
 
     /**
      * Create a new PHPExcel_Style_Conditional
@@ -117,9 +111,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Set Condition type
      *
      * @param string $pValue    PHPExcel_Style_Conditional condition type
-     * @return PHPExcel_Style_Conditional
      */
-    public function setConditionType($pValue = PHPExcel_Style_Conditional::CONDITION_NONE)
+    public function setConditionType($pValue = PHPExcel_Style_Conditional::CONDITION_NONE): static
     {
         $this->conditionType = $pValue;
         return $this;
@@ -139,9 +132,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Set Operator type
      *
      * @param string $pValue    PHPExcel_Style_Conditional operator type
-     * @return PHPExcel_Style_Conditional
      */
-    public function setOperatorType($pValue = PHPExcel_Style_Conditional::OPERATOR_NONE)
+    public function setOperatorType($pValue = PHPExcel_Style_Conditional::OPERATOR_NONE): static
     {
         $this->operatorType = $pValue;
         return $this;
@@ -161,9 +153,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Set text
      *
      * @param string $value
-     * @return PHPExcel_Style_Conditional
      */
-    public function setText($value = null)
+    public function setText($value = null): static
     {
         $this->text = $value;
         return $this;
@@ -173,9 +164,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Get Condition
      *
      * @deprecated Deprecated, use getConditions instead
-     * @return string
      */
-    public function getCondition()
+    public function getCondition(): string
     {
         if (isset($this->condition[0])) {
             return $this->condition[0];
@@ -214,9 +204,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Set Conditions
      *
      * @param string[] $pValue    Condition
-     * @return PHPExcel_Style_Conditional
      */
-    public function setConditions($pValue)
+    public function setConditions($pValue): static
     {
         if (!is_array($pValue)) {
             $pValue = array($pValue);
@@ -229,9 +218,8 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Add Condition
      *
      * @param string $pValue    Condition
-     * @return PHPExcel_Style_Conditional
      */
-    public function addCondition($pValue = '')
+    public function addCondition($pValue = ''): static
     {
         $this->condition[] = $pValue;
         return $this;
@@ -250,11 +238,9 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Set Style
      *
-     * @param     PHPExcel_Style $pValue
      * @throws     PHPExcel_Exception
-     * @return PHPExcel_Style_Conditional
      */
-    public function setStyle(PHPExcel_Style $pValue = null)
+    public function setStyle(PHPExcel_Style $pValue = null): static
     {
            $this->style = $pValue;
            return $this;
@@ -265,7 +251,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             $this->conditionType .
@@ -283,11 +269,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

@@ -93,7 +93,7 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter
      *
      * @return $data
      */
-    public function getData()
+    public function getData(): string|false
     {
         if ($this->tempFileName == '') {
             return $this->outputMemory(true);
@@ -107,9 +107,8 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter
      * Fallback method for writeRaw, introduced in PHP 5.2
      *
      * @param string $text
-     * @return string
      */
-    public function writeRawData($text)
+    public function writeRawData($text): bool
     {
         if (is_array($text)) {
             $text = implode("\n", $text);

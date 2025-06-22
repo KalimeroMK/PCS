@@ -30,7 +30,6 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
     /**
      * Write drawings to XML format
      *
-     * @param     PHPExcel_Worksheet    $pWorksheet
      * @param    int                    &$chartRef        Chart ID
      * @param    boolean                $includeCharts    Flag indicating if we should include drawing details for charts
      * @return     string                 XML Output
@@ -84,11 +83,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
      * Write drawings to XML format
      *
      * @param     PHPExcel_Shared_XMLWriter    $objWriter         XML Writer
-     * @param     PHPExcel_Chart                $pChart
      * @param     int                            $pRelationId
      * @throws     PHPExcel_Writer_Exception
      */
-    public function writeChart(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Chart $pChart = null, $pRelationId = -1)
+    public function writeChart(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Chart $pChart = null, $pRelationId = -1): void
     {
         $tl = $pChart->getTopLeftPosition();
         $tl['colRow'] = PHPExcel_Cell::coordinateFromString($tl['cell']);
@@ -156,11 +154,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
      * Write drawings to XML format
      *
      * @param     PHPExcel_Shared_XMLWriter            $objWriter         XML Writer
-     * @param     PHPExcel_Worksheet_BaseDrawing        $pDrawing
      * @param     int                                    $pRelationId
      * @throws     PHPExcel_Writer_Exception
      */
-    public function writeDrawing(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet_BaseDrawing $pDrawing = null, $pRelationId = -1)
+    public function writeDrawing(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet_BaseDrawing $pDrawing = null, $pRelationId = -1): void
     {
         if ($pRelationId >= 0) {
             // xdr:oneCellAnchor
@@ -373,7 +370,6 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
     /**
      * Write VML header/footer images to XML format
      *
-     * @param     PHPExcel_Worksheet                $pWorksheet
      * @return     string                                 XML Output
      * @throws     PHPExcel_Writer_Exception
      */
@@ -525,7 +521,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
      * @param     PHPExcel_Worksheet_HeaderFooterDrawing    $pImage        Image
      * @throws     PHPExcel_Writer_Exception
      */
-    private function writeVMLHeaderFooterImage(PHPExcel_Shared_XMLWriter $objWriter = null, $pReference = '', PHPExcel_Worksheet_HeaderFooterDrawing $pImage = null)
+    private function writeVMLHeaderFooterImage(PHPExcel_Shared_XMLWriter $objWriter = null, string $pReference = '', PHPExcel_Worksheet_HeaderFooterDrawing $pImage = null): void
     {
         // Calculate object id
         preg_match('{(\d+)}', md5($pReference), $m);
@@ -563,11 +559,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
     /**
      * Get an array of all drawings
      *
-     * @param     PHPExcel                            $pPHPExcel
      * @return     PHPExcel_Worksheet_Drawing[]        All drawings in PHPExcel
      * @throws     PHPExcel_Writer_Exception
      */
-    public function allDrawings(PHPExcel $pPHPExcel = null)
+    public function allDrawings(PHPExcel $pPHPExcel = null): array
     {
         // Get an array of all drawings
         $aDrawings    = array();

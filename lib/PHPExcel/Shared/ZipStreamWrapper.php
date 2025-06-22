@@ -29,17 +29,13 @@ class PHPExcel_Shared_ZipStreamWrapper
 {
     /**
      * Internal ZipAcrhive
-     *
-     * @var ZipArchive
      */
-    private $archive;
+    private ?\ZipArchive $archive = null;
 
     /**
      * Filename in ZipAcrhive
-     *
-     * @var string
      */
-    private $fileNameInArchive = '';
+    private string $fileNameInArchive = '';
 
     /**
      * Position in file
@@ -50,15 +46,13 @@ class PHPExcel_Shared_ZipStreamWrapper
 
     /**
      * Data
-     *
-     * @var mixed
      */
-    private $data = '';
+    private string|bool $data = '';
 
     /**
      * Register wrapper
      */
-    public static function register()
+    public static function register(): void
     {
         @stream_wrapper_unregister('zip');
         @stream_wrapper_register('zip', __CLASS__);
@@ -73,7 +67,7 @@ class PHPExcel_Shared_ZipStreamWrapper
      * @param    string  &$openedPath    absolute path of the opened stream (out parameter)
      * @return    bool    true on success
      */
-    public function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open($path, string $mode, $options, &$opened_path): bool
     {
         // Check for mode
         if ($mode[0] != 'r') {
@@ -112,7 +106,7 @@ class PHPExcel_Shared_ZipStreamWrapper
      */
     public function url_stat()
     {
-        return $this->statName($this->fileNameInArchive);
+        return $this->statName();
     }
 
     /**
@@ -120,7 +114,7 @@ class PHPExcel_Shared_ZipStreamWrapper
      *
      * @return  boolean
      */
-    public function stream_stat()
+    public function stream_stat(): array|false
     {
         return $this->archive->statName($this->fileNameInArchive);
     }
@@ -129,9 +123,8 @@ class PHPExcel_Shared_ZipStreamWrapper
      * Implements support for fread(), fgets() etc.
      *
      * @param   int        $count    maximum number of bytes to read
-     * @return  string
      */
-    public function stream_read($count)
+    public function stream_read($count): string
     {
         $ret = substr($this->data, $this->position, $count);
         $this->position += strlen($ret);
@@ -151,10 +144,8 @@ class PHPExcel_Shared_ZipStreamWrapper
 
     /**
      * EOF stream
-     *
-     * @return    bool
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         return $this->position >= strlen($this->data);
     }
@@ -164,9 +155,8 @@ class PHPExcel_Shared_ZipStreamWrapper
      *
      * @param    int        $offset    byte offset
      * @param    int        $whence    SEEK_SET, SEEK_CUR or SEEK_END
-     * @return    bool
      */
-    public function stream_seek($offset, $whence)
+    public function stream_seek($offset, $whence): bool
     {
         switch ($whence) {
             case SEEK_SET:

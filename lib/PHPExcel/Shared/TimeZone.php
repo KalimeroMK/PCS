@@ -50,12 +50,9 @@ class PHPExcel_Shared_TimeZone
      * @param     string        $timezone            Time zone (e.g. 'Europe/London')
      * @return     boolean                        Success or failure
      */
-    public static function _validateTimeZone($timezone)
+    public static function _validateTimeZone($timezone): bool
     {
-        if (in_array($timezone, DateTimeZone::listIdentifiers())) {
-            return true;
-        }
-        return false;
+        return in_array($timezone, DateTimeZone::listIdentifiers());
     }
 
     /**
@@ -64,7 +61,7 @@ class PHPExcel_Shared_TimeZone
      * @param     string        $timezone            Time zone (e.g. 'Europe/London')
      * @return     boolean                        Success or failure
      */
-    public static function setTimeZone($timezone)
+    public static function setTimeZone($timezone): bool
     {
         if (self::_validateTimezone($timezone)) {
             self::$timezone = $timezone;
@@ -92,7 +89,7 @@ class PHPExcel_Shared_TimeZone
      *    @param        integer                 $timestamp        PHP date/time value for finding the current transition
      *    @return         array                The current transition details
      */
-    private static function getTimezoneTransitions($objTimezone, $timestamp)
+    private static function getTimezoneTransitions(\DateTimeZone $objTimezone, $timestamp): array
     {
         $allTransitions = $objTimezone->getTransitions();
         $transitions = array();

@@ -41,10 +41,9 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
      *
      * @param    string            $pCoord        Coordinate address of the cell to update
      * @param    PHPExcel_Cell    $cell        Cell to update
-     * @return    PHPExcel_Cell
      * @throws    PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         $this->cellCache[$pCoord] = $cell;
 
@@ -84,7 +83,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
         parent::copyCellCollection($parent);
 
@@ -101,7 +100,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
      * Clear the cell collection and disconnect from our parent
      *
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         // Because cells are all stored as intact objects in memory, we need to detach each one from the parent
         foreach ($this->cellCache as $k => &$cell) {

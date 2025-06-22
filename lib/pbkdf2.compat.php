@@ -42,7 +42,7 @@ define('PBKDF2_COMPAT_HASH_BYTES', 24);
 
 // Calculates a hash from the given password.
 
-function create_hash($password, $force_compat = false)
+function create_hash($password, $force_compat = false): string
 {
     // Generate the salt.
     
@@ -92,7 +92,7 @@ function validate_password($password, $hash)
 
 // Checks whether a hash needs upgrading.
 
-function needs_upgrade($hash)
+function needs_upgrade($hash): bool
 {
     // Get the current algorithm and iteration count.
     
@@ -114,7 +114,7 @@ function needs_upgrade($hash)
 
 // Compares two strings $a and $b in length-constant time.
 
-function slow_equals($a, $b)
+function slow_equals($a, $b): bool
 {
     $diff = strlen($a) ^ strlen($b);
     for($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
@@ -128,7 +128,7 @@ function slow_equals($a, $b)
 // This implementation of PBKDF2 was originally created by https://defuse.ca
 // With improvements by http://www.variations-of-shadow.com
 
-function pbkdf2_default($algo, $password, $salt, $count, $key_length)
+function pbkdf2_default($algo, $password, string $salt, $count, $key_length)
 {
     // Sanity check.
     
@@ -184,7 +184,7 @@ function pbkdf2_default($algo, $password, $salt, $count, $key_length)
 // But it is approximately 1.6x slower than the hash_hmac() function of PHP 5.1.2+,
 // And approximately 2.3x slower than the hash_pbkdf2() function of PHP 5.5+.
 
-function pbkdf2_fallback($password, $salt, $count, $key_length)
+function pbkdf2_fallback($password, string $salt, $count, $key_length): string
 {
     // Count the blocks.
     
@@ -193,11 +193,7 @@ function pbkdf2_fallback($password, $salt, $count, $key_length)
     
     // Prepare the HMAC key and padding.
     
-    if (strlen($password) > 64) {
-        $password = str_pad(sha1($password, true), 64, chr(0));
-    } else {
-        $password = str_pad($password, 64, chr(0));
-    }
+    $password = strlen($password) > 64 ? str_pad(sha1($password, true), 64, chr(0)) : str_pad($password, 64, chr(0));
     
     $opad = str_repeat(chr(0x5C), 64) ^ $password;
     $ipad = str_repeat(chr(0x36), 64) ^ $password;

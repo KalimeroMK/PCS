@@ -78,9 +78,8 @@ class PHPExcel_Worksheet_RowDimension extends PHPExcel_Worksheet_Dimension
      * Set Row Index
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_RowDimension
      */
-    public function setRowIndex($pValue)
+    public function setRowIndex($pValue): static
     {
         $this->rowIndex = $pValue;
         return $this;
@@ -100,9 +99,8 @@ class PHPExcel_Worksheet_RowDimension extends PHPExcel_Worksheet_Dimension
      * Set Row Height
      *
      * @param double $pValue
-     * @return PHPExcel_Worksheet_RowDimension
      */
-    public function setRowHeight($pValue = -1)
+    public function setRowHeight($pValue = -1): static
     {
         $this->height = $pValue;
         return $this;
@@ -122,9 +120,8 @@ class PHPExcel_Worksheet_RowDimension extends PHPExcel_Worksheet_Dimension
      * Set ZeroHeight
      *
      * @param bool $pValue
-     * @return PHPExcel_Worksheet_RowDimension
      */
-    public function setZeroHeight($pValue = false)
+    public function setZeroHeight($pValue = false): static
     {
         $this->zeroHeight = $pValue;
         return $this;

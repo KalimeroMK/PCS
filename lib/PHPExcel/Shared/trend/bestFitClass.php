@@ -43,10 +43,8 @@ class PHPExcel_Best_Fit
 
     /**
      * Number of entries in the sets of x- and y-value arrays
-     *
-     * @var    int
      **/
-    protected $valueCount = 0;
+    protected int $valueCount;
 
     /**
      * X-value dataseries of values
@@ -122,7 +120,7 @@ class PHPExcel_Best_Fit
      * @param     float        $xValue            X-Value
      * @return     float                        Y-Value
      */
-    public function getValueOfYForX($xValue)
+    public function getValueOfYForX($xValue): bool
     {
         return false;
     }
@@ -133,7 +131,7 @@ class PHPExcel_Best_Fit
      * @param     float        $yValue            Y-Value
      * @return     float                        X-Value
      */
-    public function getValueOfXForY($yValue)
+    public function getValueOfXForY($yValue): bool
     {
         return false;
     }
@@ -152,9 +150,8 @@ class PHPExcel_Best_Fit
      * Return the Equation of the best-fit line
      *
      * @param     int        $dp        Number of places of decimal precision to display
-     * @return     string
      */
-    public function getEquation($dp = 0)
+    public function getEquation($dp = 0): bool
     {
         return false;
     }
@@ -229,7 +226,7 @@ class PHPExcel_Best_Fit
         return $this->goodnessOfFit;
     }
 
-    public function getGoodnessOfFitPercent($dp = 0)
+    public function getGoodnessOfFitPercent($dp = 0): float|int
     {
         if ($dp != 0) {
             return round($this->goodnessOfFit * 100, $dp);
@@ -327,16 +324,8 @@ class PHPExcel_Best_Fit
         $this->SSResiduals = $SSres;
         $this->DFResiduals = $this->valueCount - 1 - $const;
 
-        if ($this->DFResiduals == 0.0) {
-            $this->stdevOfResiduals = 0.0;
-        } else {
-            $this->stdevOfResiduals = sqrt($SSres / $this->DFResiduals);
-        }
-        if (($SStot == 0.0) || ($SSres == $SStot)) {
-            $this->goodnessOfFit = 1;
-        } else {
-            $this->goodnessOfFit = 1 - ($SSres / $SStot);
-        }
+        $this->stdevOfResiduals = $this->DFResiduals == 0.0 ? 0.0 : sqrt($SSres / $this->DFResiduals);
+        $this->goodnessOfFit = $SStot == 0.0 || $SSres === $SStot ? 1 : 1 - ($SSres / $SStot);
 
         $this->SSRegression = $this->goodnessOfFit * $SStot;
         $this->covariance = $SScov / $this->valueCount;
@@ -344,17 +333,11 @@ class PHPExcel_Best_Fit
         $this->slopeSE = $this->stdevOfResiduals / sqrt($SSsex);
         $this->intersectSE = $this->stdevOfResiduals * sqrt(1 / ($this->valueCount - ($sumX * $sumX) / $sumX2));
         if ($this->SSResiduals != 0.0) {
-            if ($this->DFResiduals == 0.0) {
-                $this->f = 0.0;
-            } else {
-                $this->f = $this->SSRegression / ($this->SSResiduals / $this->DFResiduals);
-            }
+            $this->f = $this->DFResiduals == 0.0 ? 0.0 : $this->SSRegression / ($this->SSResiduals / $this->DFResiduals);
+        } elseif ($this->DFResiduals == 0.0) {
+            $this->f = 0.0;
         } else {
-            if ($this->DFResiduals == 0.0) {
-                $this->f = 0.0;
-            } else {
-                $this->f = $this->SSRegression / $this->DFResiduals;
-            }
+            $this->f = $this->SSRegression / $this->DFResiduals;
         }
     }
 
@@ -386,11 +369,7 @@ class PHPExcel_Best_Fit
 
         // calculate intersect
 //        $this->intersect = ($y_sum - ($this->slope * $x_sum)) / $this->valueCount;
-        if ($const) {
-            $this->intersect = $meanY - ($this->slope * $meanX);
-        } else {
-            $this->intersect = 0;
-        }
+        $this->intersect = $const ? $meanY - ($this->slope * $meanX) : 0;
 
         $this->calculateGoodnessOfFit($x_sum, $y_sum, $xx_sum, $yy_sum, $xy_sum, $meanX, $meanY, $const);
     }
@@ -400,9 +379,8 @@ class PHPExcel_Best_Fit
      *
      * @param    float[]        $yValues    The set of Y-values for this regression
      * @param    float[]        $xValues    The set of X-values for this regression
-     * @param    boolean        $const
      */
-    public function __construct($yValues, $xValues = array(), $const = true)
+    public function __construct($yValues, $xValues = array())
     {
         //    Calculate number of points
         $nY = count($yValues);
@@ -415,7 +393,7 @@ class PHPExcel_Best_Fit
         } elseif ($nY != $nX) {
             //    Ensure both arrays of points are the same size
             $this->error = true;
-            return false;
+            return;
         }
 
         $this->valueCount = $nY;

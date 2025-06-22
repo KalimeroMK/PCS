@@ -41,9 +41,8 @@ class PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder
      *
      * @param  PHPExcel_Cell  $cell   Cell to bind value to
      * @param  mixed          $value  Value to bind in cell
-     * @return boolean
      */
-    public function bindValue(PHPExcel_Cell $cell, $value = null)
+    public function bindValue(PHPExcel_Cell $cell, $value = null): bool
     {
         // sanitize UTF-8 strings
         if (is_string($value)) {
@@ -68,9 +67,8 @@ class PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder
      * DataType for value
      *
      * @param   mixed  $pValue
-     * @return  string
      */
-    public static function dataTypeForValue($pValue = null)
+    public static function dataTypeForValue($pValue = null): string
     {
         // Match the value against a few data types
         if ($pValue === null) {
@@ -85,7 +83,7 @@ class PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder
             return PHPExcel_Cell_DataType::TYPE_BOOL;
         } elseif (is_float($pValue) || is_int($pValue)) {
             return PHPExcel_Cell_DataType::TYPE_NUMERIC;
-        } elseif (preg_match('/^[\+\-]?([0-9]+\\.?[0-9]*|[0-9]*\\.?[0-9]+)([Ee][\-\+]?[0-2]?\d{1,3})?$/', $pValue)) {
+        } elseif (preg_match('/^[\+\-]?(\d+\.?\d*|\d*\.?\d+)([Ee][\-\+]?[0-2]?\d{1,3})?$/', $pValue)) {
             $tValue = ltrim($pValue, '+-');
             if (is_string($pValue) && $tValue[0] === '0' && strlen($tValue) > 1 && $tValue[1] !== '.') {
                 return PHPExcel_Cell_DataType::TYPE_STRING;

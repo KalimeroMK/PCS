@@ -5,32 +5,31 @@ if (!defined('_GNUBOARD_')) exit;
 ///////////////////////////////////////////////////////////////////////////////////////////
 // 이 부분은 건드릴 필요가 없습니다.
 
-function spacing($text,$size) {
+function spacing(string $text,$size): string {
 	for ($i=0; $i<$size; $i++) $text.=" ";
-	$text = substr($text,0,$size);
-	return $text;
+	return substr($text,0,$size);
 }
 
-function cut_char($word, $cut) {
+function cut_char($word, $cut): string {
 //	$word=trim(stripslashes($word));
 	$word=substr($word,0,$cut);						// 필요한 길이만큼 취함.
 	for ($k=$cut-1; $k>1; $k--) {
 		if (ord(substr($word,$k,1))<128) break;		// 한글값은 160 이상.
 	}
-	$word=substr($word,0,$cut-($cut-$k+1)%2);
-	return $word;
+	return substr($word,0,$cut-($cut-$k+1)%2);
 }
 
-function CheckCommonType($dest, $rsvTime) {
+function CheckCommonType($dest, $rsvTime): ?string {
 	$dest=preg_replace("/[^0-9]/i","",$dest);
 	if (strlen($dest)<10 || strlen($dest)>11) return "휴대폰 번호가 틀렸습니다";
 	$CID=substr($dest,0,3);
-	if ( preg_match("/[^0-9]/i",$CID) || ($CID!='010' && $CID!='011' && $CID!='016' && $CID!='017' && $CID!='018' && $CID!='019') ) return "휴대폰 앞자리 번호가 잘못되었습니다";
+	if ( preg_match("/[^0-9]/i",$CID) || ($CID !== '010' && $CID !== '011' && $CID !== '016' && $CID !== '017' && $CID !== '018' && $CID !== '019') ) return "휴대폰 앞자리 번호가 잘못되었습니다";
 	$rsvTime=preg_replace("/[^0-9]/i","",$rsvTime);
 	if ($rsvTime) {
 		if (!checkdate(substr($rsvTime,4,2),substr($rsvTime,6,2),substr($rsvTime,0,4))) return "예약날짜가 잘못되었습니다";
 		if (substr($rsvTime,8,2)>23 || substr($rsvTime,10,2)>59) return "예약시간이 잘못되었습니다";
 	}
+    return null;
 }
 
 class SMS {
@@ -45,7 +44,7 @@ class SMS {
     public $socket_port;
     public $socket_host;
 
-	function SMS_con($sms_server,$sms_id,$sms_pw,$port) {
+	function SMS_con($sms_server,$sms_id,$sms_pw,$port): void {
         global $config;
 
         // 토큰키를 사용한다면
@@ -63,7 +62,7 @@ class SMS {
 		$this->PWD = spacing($this->PWD,10);
 	}
 
-	function Init() {
+	function Init(): void {
 		$this->Data = array();
 		$this->Result = array();
 	}
@@ -155,27 +154,20 @@ class SMS {
 		//$URL=str_replace("http://","",$URL);
 		if (strlen($URL)>50) return "URL이 50자가 넘었습니다";
 		switch (substr($dest,0,3)) {
-			case '010': //20바이트
-                $msg=cut_char($msg,20);
+			case '010':
+            case '018':
+            case '019': // 20바이트
+				$msg=cut_char($msg,20);
 				break;
-			case '011': //80바이트
-                $msg=cut_char($msg,80);
-				break;
+			case '011':
 			case '016': // 80바이트
 				$msg=cut_char($msg,80);
 				break;
 			case '017': // URL 포함 80바이트
 				$msg=cut_char($msg,80-strlen($URL));
 				break;
-			case '018': // 20바이트
-				$msg=cut_char($msg,20);
-				break;
-			case '019': // 20바이트
-				$msg=cut_char($msg,20);
-				break;
 			default:
 				return "아직 URL CallBack이 지원되지 않는 번호입니다";
-				break;
 		}
 		// 보낼 내용을 배열에 집어넣기
 		$dest = spacing($dest,11);
@@ -187,7 +179,7 @@ class SMS {
 		return "";
 	}
 
-    function Send() {
+    function Send(): bool {
         global $config;
 
         // 토큰키를 사용한다면
@@ -197,13 +189,13 @@ class SMS {
             set_time_limit(300);
 
             foreach($this->Data as $puts) {
-                fputs($fsocket, $puts);
+                fwrite($fsocket, $puts);
                 $gets = '';
                 while(!$gets) { $gets = fgets($fsocket,32); }
                 $json = json_decode(substr($puts,6), true);
 
                 $dest = $json["tel"];
-                if (substr($gets,0,20) == "0225  00".spacing($dest,12)) {
+                if (substr($gets,0,20) === "0225  00" . spacing($dest,12)) {
                     $this->Result[] = $dest.":".substr($gets,20,11);
 
                 } else {
@@ -225,10 +217,10 @@ class SMS {
 
             foreach($this->Data as $puts) {
                 $dest = substr($puts,26,11);
-                fputs($fp,$puts);
+                fwrite($fp,$puts);
                 $gets = '';
                 while(!$gets) { $gets=fgets($fp,30); }
-                if (substr($gets,0,19)=="0223  00".$dest) $this->Result[]=$dest.":".substr($gets,19,10);
+                if (substr($gets,0,19) === "0223  00" . $dest) $this->Result[]=$dest.":".substr($gets,19,10);
                 else $this->Result[$dest]=$dest.":Error";
             }
             fclose($fp);

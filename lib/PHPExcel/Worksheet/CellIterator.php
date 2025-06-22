@@ -39,7 +39,7 @@ abstract class PHPExcel_Worksheet_CellIterator
      *
      * @var mixed
      */
-    protected $position = null;
+    protected $position;
 
     /**
      * Iterate only existing cells
@@ -79,7 +79,7 @@ abstract class PHPExcel_Worksheet_CellIterator
      * @param    boolean        $value
      * @throws PHPExcel_Exception
      */
-    public function setIterateOnlyExistingCells($value = true)
+    public function setIterateOnlyExistingCells($value = true): void
     {
         $this->onlyExistingCells = (boolean) $value;
 

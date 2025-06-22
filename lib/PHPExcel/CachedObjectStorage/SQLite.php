@@ -32,14 +32,12 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      *
      * @var string
      */
-    private $TableName = null;
+    private $TableName;
 
     /**
      * Database handle
-     *
-     * @var resource
      */
-    private $DBHandle = null;
+    private ?\SQLiteDatabase $DBHandle = null;
 
     /**
      * Store cell data in cache for the current cell object if it's "dirty",
@@ -66,10 +64,9 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      *
      * @param    string            $pCoord        Coordinate address of the cell to update
      * @param    PHPExcel_Cell    $cell        Cell to update
-     * @return    PHPExcel_Cell
      * @throws    PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         if (($pCoord !== $this->currentObjectID) && ($this->currentObjectID !== null)) {
             $this->storeData();
@@ -121,9 +118,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      * Is a value set for an indexed cell?
      *
      * @param    string        $pCoord        Coordinate address of the cell to check
-     * @return    boolean
      */
-    public function isDataSet($pCoord)
+    public function isDataSet($pCoord): bool
     {
         if ($pCoord === $this->currentObjectID) {
             return true;
@@ -147,7 +143,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      * @param    string            $pCoord        Coordinate address of the cell to delete
      * @throws    PHPExcel_Exception
      */
-    public function deleteCacheData($pCoord)
+    public function deleteCacheData($pCoord): void
     {
         if ($pCoord === $this->currentObjectID) {
             $this->currentObject->detach();
@@ -168,9 +164,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      *
      * @param    string        $fromAddress    Current address of the cell to move
      * @param    string        $toAddress        Destination address of the cell to move
-     * @return    boolean
      */
-    public function moveCell($fromAddress, $toAddress)
+    public function moveCell($fromAddress, $toAddress): bool
     {
         if ($fromAddress === $this->currentObjectID) {
             $this->currentObjectID = $toAddress;
@@ -196,7 +191,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      *
      * @return    string[]
      */
-    public function getCellList()
+    public function getCellList(): array
     {
         if ($this->currentObjectID !== null) {
             $this->storeData();
@@ -220,11 +215,9 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      * Clone the cell collection
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
-     * @return    void
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
-        $this->currentCellIsDirty;
         $this->storeData();
 
         //    Get a new id for the new table name
@@ -241,10 +234,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 
     /**
      * Clear the cell collection and disconnect from our parent
-     *
-     * @return    void
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if (!is_null($this->currentObject)) {
             $this->currentObject->detach();
@@ -293,15 +284,9 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
     /**
      * Identify whether the caching method is currently available
      * Some methods are dependent on the availability of certain extensions being enabled in the PHP build
-     *
-     * @return    boolean
      */
-    public static function cacheMethodIsAvailable()
+    public static function cacheMethodIsAvailable(): bool
     {
-        if (!function_exists('sqlite_open')) {
-            return false;
-        }
-
-        return true;
+        return function_exists('sqlite_open');
     }
 }

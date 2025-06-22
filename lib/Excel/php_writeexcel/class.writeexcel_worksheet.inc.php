@@ -24,90 +24,90 @@
  * Spreadsheet::WriteExcel was written by John McNamara, jmcnamara@cpan.org
  */
 
-require_once "class.writeexcel_biffwriter.inc.php";
+require_once __DIR__ . "/class.writeexcel_biffwriter.inc.php";
 
 class writeexcel_worksheet extends writeexcel_biffwriter {
 
-    var $_name;
-    var $_index;
-    var $_activesheet;
-    var $_firstsheet;
-    var $_url_format;
-    var $_parser;
-    var $_tempdir;
+    public $_name;
+    public $_index;
+    public $_activesheet;
+    public $_firstsheet;
+    public $_url_format;
+    public $_parser;
+    public $_tempdir;
 
-    var $_ext_sheets;
-    var $_using_tmpfile;
-    var $_tmpfilename;
-    var $_filehandle;
-    var $_fileclosed;
-    var $_offset;
-    var $_xls_rowmax;
-    var $_xls_colmax;
-    var $_xls_strmax;
-    var $_dim_rowmin;
-    var $_dim_rowmax;
-    var $_dim_colmin;
-    var $_dim_colmax;
-    var $_colinfo;
-    var $_selection;
-    var $_panes;
-    var $_active_pane;
-    var $_frozen;
-    var $_selected;
+    public $_ext_sheets;
+    public $_using_tmpfile;
+    public $_tmpfilename;
+    public $_filehandle;
+    public $_fileclosed;
+    public $_offset;
+    public $_xls_rowmax;
+    public $_xls_colmax;
+    public $_xls_strmax;
+    public $_dim_rowmin;
+    public $_dim_rowmax;
+    public $_dim_colmin;
+    public $_dim_colmax;
+    public $_colinfo;
+    public $_selection;
+    public $_panes;
+    public $_active_pane;
+    public $_frozen;
+    public $_selected;
 
-    var $_paper_size;
-    var $_orientation;
-    var $_header;
-    var $_footer;
-    var $_hcenter;
-    var $_vcenter;
-    var $_margin_head;
-    var $_margin_foot;
-    var $_margin_left;
-    var $_margin_right;
-    var $_margin_top;
-    var $_margin_bottom;
+    public $_paper_size;
+    public $_orientation;
+    public $_header;
+    public $_footer;
+    public $_hcenter;
+    public $_vcenter;
+    public $_margin_head;
+    public $_margin_foot;
+    public $_margin_left;
+    public $_margin_right;
+    public $_margin_top;
+    public $_margin_bottom;
 
-    var $_title_rowmin;
-    var $_title_rowmax;
-    var $_title_colmin;
-    var $_title_colmax;
-    var $_print_rowmin;
-    var $_print_rowmax;
-    var $_print_colmin;
-    var $_print_colmax;
+    public $_title_rowmin;
+    public $_title_rowmax;
+    public $_title_colmin;
+    public $_title_colmax;
+    public $_print_rowmin;
+    public $_print_rowmax;
+    public $_print_colmin;
+    public $_print_colmax;
 
-    var $_print_gridlines;
-    var $_screen_gridlines;
-    var $_print_headers;
+    public $_print_gridlines;
+    public $_screen_gridlines;
+    public $_print_headers;
 
-    var $_fit_page;
-    var $_fit_width;
-    var $_fit_height;
+    public $_fit_page;
+    public $_fit_width;
+    public $_fit_height;
 
-    var $_hbreaks;
-    var $_vbreaks;
+    public $_hbreaks;
+    public $_vbreaks;
 
-    var $_protect;
-    var $_password;
+    public $_protect;
+    public $_password;
 
-    var $_col_sizes;
-    var $_row_sizes;
+    public $_col_sizes;
+    public $_row_sizes;
 
-    var $_col_formats;
-    var $_row_formats;
+    public $_col_formats;
+    public $_row_formats;
 
-    var $_zoom;
-    var $_print_scale;
+    public $_zoom;
+    public $_print_scale;
 
-    var $_debug;
+    public $_debug;
 
     /*
      * Constructor. Creates a new Worksheet object from a BIFFwriter object
      */
     function writeexcel_worksheet($name, $index, &$activesheet, &$firstsheet,
-                                  &$url_format, &$parser, $tempdir) {
+                                  &$url_format, &$parser, $tempdir): void {
 
         $this->writeexcel_biffwriter();
 
@@ -199,7 +199,7 @@ class writeexcel_worksheet extends writeexcel_biffwriter {
 # for example due to write permissions, store the data in memory. This can be
 # slow for large files.
 #
-function _initialize() {
+function _initialize(): void {
 
     # Open tmp file for storing Worksheet data.
     $this->_tmpfilename=tempnam($this->_tempdir, "php_writeexcel");
@@ -226,7 +226,7 @@ function _initialize() {
      * Add data to the beginning of the workbook (note the reverse order)
      * and to the end of the workbook.
      */
-    function _close($sheetnames) {
+    function _close($sheetnames): void {
 
         ///////////////////////////////
         // Prepend in reverse order!!
@@ -255,7 +255,7 @@ function _initialize() {
         $this->_store_print_headers();     // Prepend PRINTHEADERS
 
         // Prepend EXTERNSHEET references
-        $num_sheets = sizeof($sheetnames);
+        $num_sheets = count($sheetnames);
         for ($i = $num_sheets; $i > 0; $i--) {
             $sheetname = $sheetnames[$i-1];
             $this->_store_externsheet($sheetname);
@@ -265,8 +265,8 @@ function _initialize() {
                                                   // of external references.
 
         // Prepend the COLINFO records if they exist
-        if (sizeof($this->_colinfo)>0){
-            while (sizeof($this->_colinfo)>0) {
+        if (count($this->_colinfo)>0){
+            while (count($this->_colinfo)>0) {
                 $arrayref = array_pop ($this->_colinfo);
                 $this->_store_colinfo($arrayref);
             }
@@ -283,7 +283,7 @@ function _initialize() {
         $this->_store_window2();
         $this->_store_zoom();
 
-        if (sizeof($this->_panes)>0) {
+        if (count($this->_panes)>0) {
             $this->_store_panes($this->_panes);
         }
 
@@ -335,22 +335,18 @@ function get_data() {
     }
 
     # Return data stored on disk
-    if ($this->_using_tmpfile) {
-        if ($tmp=fread($this->_filehandle, $buffer)) {
-
-            if ($this->_debug) {
-                print "*** worksheet::get_data() called (2):";
-                for ($c=0;$c<strlen($tmp);$c++) {
-                    if ($c%16==0) {
-                        print "\n";
-                    }
-                    printf("%02X ", ord($tmp[$c]));
+    if ($this->_using_tmpfile && $tmp=fread($this->_filehandle, $buffer)) {
+        if ($this->_debug) {
+            print "*** worksheet::get_data() called (2):";
+            for ($c=0;$c<strlen($tmp);$c++) {
+                if ($c%16==0) {
+                    print "\n";
                 }
-                print "\n";
+                printf("%02X ", ord($tmp[$c]));
             }
-
-            return $tmp;
+            print "\n";
         }
+        return $tmp;
     }
 
     # No more data to return
@@ -358,7 +354,7 @@ function get_data() {
 }
 
     /* Remove the temporary file */
-    function cleanup() {
+    function cleanup(): void {
       if ($this->_using_tmpfile) {
         fclose($this->_filehandle);
         unlink($this->_tmpfilename);
@@ -371,7 +367,7 @@ function get_data() {
      * Set this worksheet as a selected worksheet, i.e. the worksheet has
      * its tab highlighted.
      */
-    function select() {
+    function select(): void {
         $this->_selected = 1;
     }
 
@@ -380,7 +376,7 @@ function get_data() {
      * that is displayed when the workbook is opened. Also set it as
      * selected.
      */
-    function activate() {
+    function activate(): void {
         $this->_selected = 1;
         $this->_activesheet = $this->_index;
     }
@@ -390,7 +386,7 @@ function get_data() {
      * when there are a large number of worksheets and the activated
      * worksheet is not visible on the screen.
      */
-    function set_first_sheet() {
+    function set_first_sheet(): void {
         $this->_firstsheet = $this->_index;
     }
 
@@ -399,7 +395,7 @@ function get_data() {
      * and to hide formulas if the locked and hidden format properties have
      * been set.
      */
-    function protect($password) {
+    function protect($password): void {
         $this->_protect   = 1;
         $this->_password  = $this->_encode_password($password);
     }
@@ -411,7 +407,7 @@ function get_data() {
 # Set the width of a single column or a range of column.
 # See also: _store_colinfo
 #
-function set_column() {
+function set_column(): void {
 
     $_=func_get_args();
 
@@ -422,12 +418,12 @@ function set_column() {
         $_ = $this->_substitute_cellref($_);
     }
 
-    array_push($this->_colinfo, $_);
+    $this->_colinfo[] = $_;
 
     # Store the col sizes for use when calculating image vertices taking
     # hidden columns into account. Also store the column formats.
     #
-    if (sizeof($_)<3) {
+    if (count($_)<3) {
         # Ensure at least $firstcol, $lastcol and $width
         return;
     }
@@ -452,7 +448,7 @@ function set_column() {
 # Set which cell or cells are selected in a worksheet: see also the
 # function _store_selection
 #
-function set_selection() {
+function set_selection(): void {
 
     $_=func_get_args();
 
@@ -470,7 +466,7 @@ function set_selection() {
 #
 # Set panes and mark them as frozen. See also _store_panes().
 #
-function freeze_panes() {
+function freeze_panes(): void {
 
     $_=func_get_args();
 
@@ -489,7 +485,7 @@ function freeze_panes() {
 #
 # Set panes and mark them as unfrozen. See also _store_panes().
 #
-function thaw_panes() {
+function thaw_panes(): void {
 
     $_=func_get_args();
 
@@ -500,28 +496,28 @@ function thaw_panes() {
     /*
      * Set the page orientation as portrait.
      */
-    function set_portrait() {
+    function set_portrait(): void {
         $this->_orientation = 1;
     }
 
     /*
      * Set the page orientation as landscape.
      */
-    function set_landscape() {
+    function set_landscape(): void {
         $this->_orientation = 0;
     }
 
     /*
      * Set the paper type. Ex. 1 = US Letter, 9 = A4
      */
-    function set_paper($type) {
+    function set_paper($type): void {
         $this->_paper_size = $type;
     }
 
     /*
      * Set the page header caption and optional margin.
      */
-    function set_header($string, $margin) {
+    function set_header($string, $margin): void {
 
         if (strlen($string) >= 255) {
             trigger_error("Header string must be less than 255 characters",
@@ -536,7 +532,7 @@ function thaw_panes() {
     /*
      * Set the page footer caption and optional margin.
      */
-    function set_footer($string, $margin) {
+    function set_footer($string, $margin): void {
         if (strlen($string) >= 255) {
             trigger_error("Footer string must be less than 255 characters",
                           E_USER_WARNING);
@@ -550,21 +546,21 @@ function thaw_panes() {
     /*
      * Center the page horizontally.
      */
-    function center_horizontally($hcenter=1) {
+    function center_horizontally($hcenter=1): void {
         $this->_hcenter = $hcenter;
     }
 
     /*
      * Center the page horizontally.
      */
-    function center_vertically($vcenter=1) {
+    function center_vertically($vcenter=1): void {
         $this->_vcenter = $vcenter;
     }
 
     /*
      * Set all the page margins to the same value in inches.
      */
-    function set_margins($margin) {
+    function set_margins($margin): void {
         $this->set_margin_left($margin);
         $this->set_margin_right($margin);
         $this->set_margin_top($margin);
@@ -574,7 +570,7 @@ function thaw_panes() {
     /*
      * Set the left and right margins to the same value in inches.
      */
-    function set_margins_LR($margin) {
+    function set_margins_LR($margin): void {
         $this->set_margin_left($margin);
         $this->set_margin_right($margin);
     }
@@ -582,7 +578,7 @@ function thaw_panes() {
     /*
      * Set the top and bottom margins to the same value in inches.
      */
-    function set_margins_TB($margin) {
+    function set_margins_TB($margin): void {
         $this->set_margin_top($margin);
         $this->set_margin_bottom($margin);
     }
@@ -590,28 +586,28 @@ function thaw_panes() {
     /*
      * Set the left margin in inches.
      */
-    function set_margin_left($margin=0.75) {
+    function set_margin_left($margin=0.75): void {
         $this->_margin_left = $margin;
     }
 
     /*
      * Set the right margin in inches.
      */
-    function set_margin_right($margin=0.75) {
+    function set_margin_right($margin=0.75): void {
         $this->_margin_right = $margin;
     }
 
     /*
      * Set the top margin in inches.
      */
-    function set_margin_top($margin=1.00) {
+    function set_margin_top($margin=1.00): void {
         $this->_margin_top = $margin;
     }
 
     /*
      * Set the bottom margin in inches.
      */
-    function set_margin_bottom($margin=1.00) {
+    function set_margin_bottom($margin=1.00): void {
         $this->_margin_bottom = $margin;
     }
 
@@ -622,7 +618,7 @@ function thaw_panes() {
 # Set the rows to repeat at the top of each printed page. See also the
 # _store_name_xxxx() methods in Workbook.pm.
 #
-function repeat_rows() {
+function repeat_rows(): void {
 
     $_=func_get_args();
 
@@ -637,7 +633,7 @@ function repeat_rows() {
 # Set the columns to repeat at the left hand side of each printed page.
 # See also the _store_names() methods in Workbook.pm.
 #
-function repeat_columns() {
+function repeat_columns(): void {
 
     $_=func_get_args();
 
@@ -657,7 +653,7 @@ function repeat_columns() {
 # Set the area of each worksheet that will be printed. See also the
 # _store_names() methods in Workbook.pm.
 #
-function print_area() {
+function print_area(): void {
 
     $_=func_get_args();
 
@@ -666,7 +662,7 @@ function print_area() {
         $_ = $this->_substitute_cellref($_);
     }
 
-    if (sizeof($_) != 4) {
+    if (count($_) != 4) {
         # Require 4 parameters
         return;
     }
@@ -686,7 +682,7 @@ function print_area() {
      * printed gridlines only. The first method is probably sufficient for
      * most cases. The second method is supported for backwards compatibility.
      */
-    function hide_gridlines($option=1) {
+    function hide_gridlines($option=1): void {
         if ($option == 0) {
             $this->_print_gridlines  = 1; # 1 = display, 0 = hide
             $this->_screen_gridlines = 1;
@@ -703,7 +699,7 @@ function print_area() {
      * Set the option to print the row and column headers on the printed page.
      * See also the _store_print_headers() method below.
      */
-    function print_row_col_headers($headers=1) {
+    function print_row_col_headers($headers=1): void {
         $this->_print_headers = $headers;
     }
 
@@ -712,7 +708,7 @@ function print_area() {
      * the maximum area printed. See also _store_setup() and _store_wsbool()
      * below.
      */
-    function fit_to_pages($width, $height) {
+    function fit_to_pages($width, $height): void {
         $this->_fit_page   = 1;
         $this->_fit_width  = $width;
         $this->_fit_height = $height;
@@ -721,21 +717,21 @@ function print_area() {
     /*
      * Store the horizontal page breaks on a worksheet.
      */
-    function set_h_pagebreaks($breaks) {
+    function set_h_pagebreaks($breaks): void {
         $this->_hbreaks=array_merge($this->_hbreaks, $breaks);
     }
 
     /*
      * Store the vertical page breaks on a worksheet.
      */
-    function set_v_pagebreaks($breaks) {
+    function set_v_pagebreaks($breaks): void {
         $this->_vbreaks=array_merge($this->_vbreaks, $breaks);
     }
 
     /*
      * Set the worksheet zoom factor.
      */
-    function set_zoom($scale=100) {
+    function set_zoom($scale=100): void {
         // Confine the scale to Excel's range
         if ($scale < 10 || $scale > 400) {
             trigger_error("Zoom factor $scale outside range: ".
@@ -749,7 +745,7 @@ function print_area() {
     /*
      * Set the scale factor for the printed page.
      */
-    function set_print_scale($scale=100) {
+    function set_print_scale($scale=100): void {
         // Confine the scale to Excel's range
         if ($scale < 10 || $scale > 400) {
             trigger_error("Print scale $scale outside range: ".
@@ -772,7 +768,7 @@ function print_area() {
 #
 # Returns: return value of called subroutine
 #
-function write() {
+function write(): mixed {
 
     $_=func_get_args();
 
@@ -829,7 +825,7 @@ function write() {
 #
 # Returns: the first encountered error value or zero for no errors
 #
-function write_row() {
+function write_row(): bool|int {
 
     $_=func_get_args();
 
@@ -850,11 +846,7 @@ function write_row() {
     foreach ($tokens as $token) {
 
         # Check for nested arrays
-        if (is_array($token)) {
-            $ret = $this->write_col($row, $col, $token, $options);
-        } else {
-            $ret = $this->write    ($row, $col, $token, $options);
-        }
+        $ret = is_array($token) ? $this->write_col($row, $col, $token, $options) : $this->write    ($row, $col, $token, $options);
 
         # Return only the first error encountered, if any.
         $error = $error || $ret;
@@ -896,7 +888,7 @@ function _XF($row=false, $col=false, $format=false) {
 #
 # Returns: the first encountered error value or zero for no errors
 #
-function write_col() {
+function write_col(): bool|int {
 
     $_=func_get_args();
 
@@ -943,7 +935,7 @@ function write_col() {
 # Store Worksheet data in memory using the base class _append() or to a
 # temporary file, the default.
 #
-function _append($data) {
+function _append($data): void {
 
     if (func_num_args()>1) {
         trigger_error("writeexcel_worksheet::_append() ".
@@ -968,7 +960,7 @@ function _append($data) {
             $data = $this->_add_continue($data);
         }
 
-        fputs($this->_filehandle, $data);
+        fwrite($this->_filehandle, $data);
         $this->_datasize += strlen($data);
     } else {
         parent::_append($data);
@@ -985,7 +977,7 @@ function _append($data) {
 # Ex: ("A4", "Hello") is converted to (3, 0, "Hello").
 #
 // Exactly one array must be passed!
-function _substitute_cellref($_) {
+function _substitute_cellref($_): array {
     $cell = strtoupper(array_shift($_));
 
     # Convert a column range: 'A:A' or 'B:G'
@@ -1023,7 +1015,7 @@ function _substitute_cellref($_) {
 #
 # TODO use functions in Utility.pm
 #
-function _cell_to_rowcol($cell) {
+function _cell_to_rowcol($cell): array {
 
     preg_match('/\$?([A-I]?[A-Z])\$?(\d+)/', $cell, $reg);
 
@@ -1036,7 +1028,7 @@ function _cell_to_rowcol($cell) {
     $expn  = 0;
     $col      = 0;
 
-    while (sizeof($chars)) {
+    while (count($chars)) {
         $char = array_pop($chars); # LS char first
         $col += (ord($char) -ord('A') +1) * pow(26, $expn);
         $expn++;
@@ -1057,7 +1049,10 @@ function _cell_to_rowcol($cell) {
      *   2. Sorts the list.
      *   3. Removes 0 from the list if present.
      */
-    function _sort_pagebreaks($breaks) {
+    /**
+     * @return int[]|string[]
+     */
+    function _sort_pagebreaks(array $breaks): array {
         // Hash slice to remove duplicates
         foreach ($breaks as $break) {
             $hash["$break"]=1;
@@ -1074,7 +1069,7 @@ function _cell_to_rowcol($cell) {
 
         // 1000 vertical pagebreaks appears to be an internal Excel 5 limit.
         // It is slightly higher in Excel 97/200, approx. 1026
-        if (sizeof($breaks) > 1000) {
+        if (count($breaks) > 1000) {
             array_splice($breaks, 1000);
         }
 
@@ -1084,17 +1079,18 @@ function _cell_to_rowcol($cell) {
     /*
      * Based on the algorithm provided by Daniel Rentz of OpenOffice.
      */
-    function _encode_password($plaintext) {
+    function _encode_password($plaintext): int {
         $chars=preg_split('//', $plaintext, -1, PREG_SPLIT_NO_EMPTY);
-        $count=sizeof($chars);
+        $count=count($chars);
         $i=0;
+        $counter = count($chars);
 
-        for ($c=0;$c<sizeof($chars);$c++) {
+        for ($c=0;$c<$counter;$c++) {
             $char=&$chars[$c];
             $char    = ord($char) << ++$i;
             $low_15  = $char & 0x7fff;
             $high_15 = $char & 0x7fff << 15;
-            $high_15 = $high_15 >> 15;
+            $high_15 >>= 15;
             $char    = $low_15 | $high_15;
         }
 
@@ -1105,9 +1101,8 @@ function _cell_to_rowcol($cell) {
         }
 
         $password ^= $count;
-        $password ^= 0xCE4B;
 
-        return $password;
+        return $password ^ 0xCE4B;
     }
 
 ###############################################################################
@@ -1128,7 +1123,7 @@ function _cell_to_rowcol($cell) {
 #         -1 : insufficient number of arguments
 #         -2 : row or column out of range
 #
-function write_number() {
+function write_number(): int {
 
     $_=func_get_args();
 
@@ -1138,7 +1133,7 @@ function write_number() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 3) {
+    if (count($_) < 3) {
         return -1;
     }
 
@@ -1185,7 +1180,7 @@ function write_number() {
 #         -2 : row or column out of range
 #         -3 : long string truncated to 255 chars
 #
-function write_string() {
+function write_string(): int {
 
     $_=func_get_args();
 
@@ -1195,7 +1190,7 @@ function write_string() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 3) {
+    if (count($_) < 3) {
         return -1;
     }
 
@@ -1249,7 +1244,7 @@ function write_string() {
 #         -1 : insufficient number of arguments
 #         -2 : row or column out of range
 #
-function write_blank() {
+function write_blank(): int {
 
     $_=func_get_args();
 
@@ -1259,7 +1254,7 @@ function write_blank() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 2) {
+    if (count($_) < 2) {
         return -1;
     }
 
@@ -1305,7 +1300,7 @@ function write_blank() {
 #         -1 : insufficient number of arguments
 #         -2 : row or column out of range
 #
-function write_formula() {
+function write_formula(): int {
 
     $_=func_get_args();
 
@@ -1315,7 +1310,7 @@ function write_formula() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 3) {
+    if (count($_) < 3) {
         return -1;
     }
 
@@ -1391,7 +1386,7 @@ function write_url() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 3) {
+    if (count($_) < 3) {
         return -1;
     }
 
@@ -1421,7 +1416,7 @@ function write_url_range() {
     }
 
     # Check the number of args
-    if (sizeof($_) < 5) {
+    if (count($_) < 5) {
         return -1;
     }
 
@@ -1488,8 +1483,8 @@ function _write_url_web() {
     $options     = pack("V", 0x03);
 
     # Convert URL to a null terminated wchar string
-    $url            = join("\0", preg_split("''", $url, -1, PREG_SPLIT_NO_EMPTY));
-    $url            = $url . "\0\0\0";
+    $url            = implode("\0", preg_split("''", $url, -1, PREG_SPLIT_NO_EMPTY));
+    $url .= "\0\0\0";
 
     # Pack the length of the URL
     $url_len     = pack("V", strlen($url));
@@ -1558,8 +1553,8 @@ function _write_url_internal() {
     $options     = pack("V", 0x08);
 
     # Convert the URL type and to a null terminated wchar string
-    $url            = join("\0", preg_split("''", $url, -1, PREG_SPLIT_NO_EMPTY));
-    $url            = $url . "\0\0\0";
+    $url            = implode("\0", preg_split("''", $url, -1, PREG_SPLIT_NO_EMPTY));
+    $url .= "\0\0\0";
 
     # Pack the length of the URL as chars (not wchars)
     $url_len     = pack("V", int(strlen($url)/2));
@@ -1657,7 +1652,7 @@ function _write_url_external() {
     if (isset($sheet)) {
         $link_type |= 0x08;
         $sheet_len  = pack("V", length($sheet) + 0x01);
-        $sheet      = join("\0", split('', $sheet));
+        $sheet      = implode("\0", explode('', $sheet));
         $sheet     .= "\0\0\0";
     } else {
         $sheet_len   = '';
@@ -1679,8 +1674,8 @@ function _write_url_external() {
     $dir_short   = $dir_long . "\0";
 
     # Store the long dir name as a wchar string (non-null terminated)
-    $dir_long       = join("\0", preg_split('', $dir_long, -1, PREG_SPLIT_NO_EMPTY));
-    $dir_long       = $dir_long . "\0";
+    $dir_long       = implode("\0", preg_split('', $dir_long, -1, PREG_SPLIT_NO_EMPTY));
+    $dir_long .= "\0";
 
     # Pack the lengths of the dir strings
     $dir_short_len = pack("V", strlen($dir_short)      );
@@ -1771,7 +1766,7 @@ function _write_url_external_net() {
     if (isset($sheet)) {
         $link_type |= 0x08;
         $sheet_len  = pack("V", strlen($sheet) + 0x01);
-        $sheet      = join("\0", preg_split("''", $sheet, -1, PREG_SPLIT_NO_EMPTY));
+        $sheet      = implode("\0", preg_split("''", $sheet, -1, PREG_SPLIT_NO_EMPTY));
         $sheet     .= "\0\0\0";
     } else {
         $sheet_len   = '';
@@ -1782,14 +1777,14 @@ function _write_url_external_net() {
     $link_type      = pack("V", $link_type);
 
     # Make the string null terminated
-    $dir_long       = $dir_long . "\0";
+    $dir_long .= "\0";
 
     # Pack the lengths of the dir string
     $dir_long_len  = pack("V", strlen($dir_long));
 
     # Store the long dir name as a wchar string (non-null terminated)
-    $dir_long       = join("\0", preg_split("''", $dir_long, -1, PREG_SPLIT_NO_EMPTY));
-    $dir_long       = $dir_long . "\0";
+    $dir_long       = implode("\0", preg_split("''", $dir_long, -1, PREG_SPLIT_NO_EMPTY));
+    $dir_long .= "\0";
 
     # Pack the undocumented part of the hyperlink stream
     $unknown1    = pack("H*",'D0C9EA79F9BACE118C8200AA004BA90B02000000');
@@ -1820,7 +1815,7 @@ function _write_url_external_net() {
 # This method is used to set the height and XF format for a row.
 # Writes the  BIFF record ROW.
 #
-function set_row() {
+function set_row(): void {
 
     $_=func_get_args();
 
@@ -1840,18 +1835,10 @@ function set_row() {
     }
 
     # Check for a format object
-    if (isset($_[2])) {
-        $ixfe = $format->get_xf_index();
-    } else {
-        $ixfe = 0x0F;
-    }
+    $ixfe = isset($_[2]) ? $format->get_xf_index() : 0x0F;
 
     # Use set_row($row, undef, $XF) to set XF without setting height
-    if (isset($_[1])) {
-        $miyRw = $_[1] *20;
-    } else {
-        $miyRw = 0xff;
-    }
+    $miyRw = isset($_[1]) ? $_[1] *20 : 0xff;
 
     $header   = pack("vv",       $record, $length);
     $data     = pack("vvvvvvvv", $rw, $colMic, $colMac, $miyRw,
@@ -1863,7 +1850,7 @@ function set_row() {
     # Also store the column formats.
     #
     # Ensure at least $row and $height
-    if (sizeof($_) < 2) {
+    if (count($_) < 2) {
         return;
     }
 
@@ -1876,7 +1863,7 @@ function set_row() {
     /*
      * Writes Excel DIMENSIONS to define the area in which there is data.
      */
-    function _store_dimensions() {
+    function _store_dimensions(): void {
         $record    = 0x0000;               // Record identifier
         $length    = 0x000A;               // Number of bytes to follow
         $row_min   = $this->_dim_rowmin;   // First row
@@ -1894,7 +1881,7 @@ function set_row() {
     /*
      * Write BIFF record Window2.
      */
-    function _store_window2() {
+    function _store_window2(): void {
         $record         = 0x023E;       // Record identifier
         $length         = 0x000A;       // Number of bytes to follow
 
@@ -1938,7 +1925,7 @@ function set_row() {
     /*
      * Write BIFF record DEFCOLWIDTH if COLINFO records are in use.
      */
-    function _store_defcol() {
+    function _store_defcol(): void {
         $record   = 0x0055;   // Record identifier
         $length   = 0x0002;   // Number of bytes to follow
 
@@ -1959,7 +1946,7 @@ function set_row() {
 # Note: The SDK says the record length is 0x0B but Excel writes a 0x0C
 # length record.
 #
-function _store_colinfo($_) {
+function _store_colinfo($_): void {
 
     $record   = 0x007D;          # Record identifier
     $length   = 0x000B;          # Number of bytes to follow
@@ -1977,11 +1964,7 @@ function _store_colinfo($_) {
     $format   = $_[3];           # Format object
 
     # Check for a format object
-    if (isset($_[3])) {
-        $ixfe = $format->get_xf_index();
-    } else {
-        $ixfe = 0x0F;
-    }
+    $ixfe = isset($_[3]) ? $format->get_xf_index() : 0x0F;
 
     $header   = pack("vv",     $record, $length);
     $data     = pack("vvvvvC", $colFirst, $colLast, $coldx,
@@ -1995,7 +1978,7 @@ function _store_colinfo($_) {
 #
 # Write BIFF record SELECTION.
 #
-function _store_selection($_) {
+function _store_selection($_): void {
 
     $record   = 0x001D;                  # Record identifier
     $length   = 0x000F;                  # Number of bytes to follow
@@ -2039,7 +2022,7 @@ function _store_selection($_) {
      * the overall complexity and eliminates the need for a two way dialogue
      * between the formula parser the worksheet objects.
      */
-    function _store_externcount($cxals) {
+    function _store_externcount($cxals): void {
         // $cxals   Number of external references
 
         $record   = 0x0016;   // Record identifier
@@ -2057,7 +2040,7 @@ function _store_selection($_) {
      * store a reference to all of the external worksheets the EXTERNSHEET
      * index is the same as the worksheet index.
      */
-    function _store_externsheet($sheetname) {
+    function _store_externsheet($sheetname): void {
         $record    = 0x0017;         # Record identifier
         // $length   Number of bytes to follow
 
@@ -2094,7 +2077,7 @@ function _store_selection($_) {
 # Frozen panes are specified in terms of a integer number of rows and columns.
 # Thawed panes are specified in terms of Excel's units for rows and columns.
 #
-function _store_panes($_) {
+function _store_panes($_): void {
 
     $record  = 0x0041;       # Record identifier
     $length  = 0x000A;       # Number of bytes to follow
@@ -2171,7 +2154,7 @@ function _store_panes($_) {
     /*
      * Store the page setup SETUP BIFF record.
      */
-    function _store_setup() {
+    function _store_setup(): void {
         $record       = 0x00A1;                // Record identifier
         $length       = 0x0022;                // Number of bytes to follow
 
@@ -2231,7 +2214,7 @@ function _store_panes($_) {
     /*
      * Store the header caption BIFF record.
      */
-    function _store_header() {
+    function _store_header(): void {
         $record  = 0x0014;           // Record identifier
 
         $str     = $this->_header;   // header string
@@ -2247,7 +2230,7 @@ function _store_panes($_) {
     /*
      * Store the footer caption BIFF record.
      */
-    function _store_footer() {
+    function _store_footer(): void {
         $record  = 0x0015;           // Record identifier
 
         $str     = $this->_footer;   // Footer string
@@ -2263,7 +2246,7 @@ function _store_panes($_) {
     /*
      * Store the horizontal centering HCENTER BIFF record.
      */
-    function _store_hcenter() {
+    function _store_hcenter(): void {
         $record   = 0x0083;   // Record identifier
         $length   = 0x0002;   // Bytes to follow
 
@@ -2278,7 +2261,7 @@ function _store_panes($_) {
      /*
       * Store the vertical centering VCENTER BIFF record.
       */
-    function _store_vcenter() {
+    function _store_vcenter(): void {
         $record   = 0x0084;   // Record identifier
         $length   = 0x0002;   // Bytes to follow
 
@@ -2293,7 +2276,7 @@ function _store_panes($_) {
     /*
      * Store the LEFTMARGIN BIFF record.
      */
-    function _store_margin_left() {
+    function _store_margin_left(): void {
         $record  = 0x0026;   // Record identifier
         $length  = 0x0008;   // Bytes to follow
 
@@ -2312,7 +2295,7 @@ function _store_panes($_) {
     /*
      * Store the RIGHTMARGIN BIFF record.
      */
-    function _store_margin_right() {
+    function _store_margin_right(): void {
         $record  = 0x0027;   // Record identifier
         $length  = 0x0008;   // Bytes to follow
 
@@ -2331,7 +2314,7 @@ function _store_panes($_) {
     /*
      * Store the TOPMARGIN BIFF record.
      */
-    function _store_margin_top() {
+    function _store_margin_top(): void {
         $record  = 0x0028;   // Record identifier
         $length  = 0x0008;   // Bytes to follow
 
@@ -2350,7 +2333,7 @@ function _store_panes($_) {
     /*
      * Store the BOTTOMMARGIN BIFF record.
      */
-    function _store_margin_bottom() {
+    function _store_margin_bottom(): void {
         $record  = 0x0029;   // Record identifier
         $length  = 0x0008;   // Bytes to follow
 
@@ -2373,7 +2356,7 @@ function _store_panes($_) {
 # This is an Excel97/2000 method. It is required to perform more complicated
 # merging than the normal align merge in Format.pm
 #
-function merge_cells() {
+function merge_cells(): void {
 
     $_=func_get_args();
 
@@ -2411,7 +2394,7 @@ function merge_cells() {
     /*
      * Write the PRINTHEADERS BIFF record.
      */
-    function _store_print_headers() {
+    function _store_print_headers(): void {
         $record      = 0x002a;   // Record identifier
         $length      = 0x0002;   // Bytes to follow
 
@@ -2427,7 +2410,7 @@ function merge_cells() {
      * Write the PRINTGRIDLINES BIFF record. Must be used in conjunction
      * with the GRIDSET record.
      */
-    function _store_print_gridlines() {
+    function _store_print_gridlines(): void {
         $record      = 0x002b;   // Record identifier
         $length      = 0x0002;   // Bytes to follow
 
@@ -2443,7 +2426,7 @@ function merge_cells() {
      * Write the GRIDSET BIFF record. Must be used in conjunction with the
      * PRINTGRIDLINES record.
      */
-    function _store_gridset() {
+    function _store_gridset(): void {
         $record      = 0x0082;   // Record identifier
         $length      = 0x0002;   // Bytes to follow
 
@@ -2459,7 +2442,7 @@ function merge_cells() {
      * Write the WSBOOL BIFF record, mainly for fit-to-page. Used in
      * conjunction with the SETUP record.
      */
-    function _store_wsbool() {
+    function _store_wsbool(): void {
         $record      = 0x0081;   # Record identifier
         $length      = 0x0002;   # Bytes to follow
 
@@ -2467,11 +2450,7 @@ function merge_cells() {
 
         // The only option that is of interest is the flag for fit to page.
         // So we set all the options in one go.
-        if ($this->_fit_page) {
-            $grbit = 0x05c1;
-        } else {
-            $grbit = 0x04c1;
-        }
+        $grbit = $this->_fit_page ? 0x05c1 : 0x04c1;
 
         $header      = pack("vv",  $record, $length);
         $data        = pack("v",   $grbit);
@@ -2482,9 +2461,9 @@ function merge_cells() {
     /*
      * Write the HORIZONTALPAGEBREAKS BIFF record.
      */
-    function _store_hbreak() {
+    function _store_hbreak(): void {
         // Return if the user hasn't specified pagebreaks
-        if(sizeof($this->_hbreaks)==0) {
+        if(count($this->_hbreaks)==0) {
             return;
         }
 
@@ -2492,7 +2471,7 @@ function merge_cells() {
         $breaks  = $this->_sort_pagebreaks($this->_hbreaks);
 
         $record  = 0x001b;             // Record identifier
-        $cbrk    = sizeof($breaks);    // Number of page breaks
+        $cbrk    = count($breaks);    // Number of page breaks
         $length  = ($cbrk + 1) * 2;    // Bytes to follow
 
         $header  = pack("vv",  $record, $length);
@@ -2509,9 +2488,9 @@ function merge_cells() {
     /*
      * Write the VERTICALPAGEBREAKS BIFF record.
      */
-    function _store_vbreak() {
+    function _store_vbreak(): void {
         // Return if the user hasn't specified pagebreaks
-        if(sizeof($this->_vbreaks)==0) {
+        if(count($this->_vbreaks)==0) {
             return;
         }
 
@@ -2519,7 +2498,7 @@ function merge_cells() {
         $breaks  = $this->_sort_pagebreaks($this->_vbreaks);
 
         $record  = 0x001a;            // Record identifier
-        $cbrk    = sizeof($breaks);   // Number of page breaks
+        $cbrk    = count($breaks);   // Number of page breaks
         $length  = ($cbrk + 1) * 2;   // Bytes to follow
 
         $header  = pack("vv",  $record, $length);
@@ -2537,7 +2516,7 @@ function merge_cells() {
      * Set the Biff PROTECT record to indicate that the worksheet is
      * protected.
      */
-    function _store_protect() {
+    function _store_protect(): void {
         // Exit unless sheet protection has been specified
         if (!$this->_protect) {
             return;
@@ -2557,7 +2536,7 @@ function merge_cells() {
     /*
      * Write the worksheet PASSWORD record.
      */
-    function _store_password() {
+    function _store_password(): void {
         // Exit unless sheet protection and password have been specified
         if (!$this->_protect || !$this->_password) {
             return;
@@ -2581,7 +2560,7 @@ function merge_cells() {
 # Insert a 24bit bitmap image in a worksheet. The main record required is
 # IMDATA but it must be proceeded by a OBJ record to define its position.
 #
-function insert_bitmap() {
+function insert_bitmap(): void {
 
     $_=func_get_args();
 
@@ -2666,7 +2645,7 @@ function insert_bitmap() {
      * as a percentage of 1024.
      */
     function _position_image($col_start, $row_start, $x1, $y1,
-                             $width, $height) {
+                             $width, $height): void {
         // $col_start   Col containing upper left corner of object
         // $x1          Distance to left side of object
 
@@ -2734,7 +2713,7 @@ function insert_bitmap() {
      * hasn't been set by the user we use the default value. If the
      * col is hidden we use a value of zero.
      */
-    function _size_col($col) {
+    function _size_col($col): int|float {
         // Look up the cell value to see if it has been changed
         if (isset($this->_col_sizes[$col])) {
             if ($this->_col_sizes[$col] == 0) {
@@ -2754,7 +2733,7 @@ function insert_bitmap() {
      * row is hidden we use a value of zero. (Not possible to hide row
      * yet).
      */
-    function _size_row($row) {
+    function _size_row($row): int|float {
         // Look up the cell value to see if it has been changed
         if (isset($this->_row_sizes[$row])) {
             if ($this->_row_sizes[$row] == 0) {
@@ -2772,7 +2751,7 @@ function insert_bitmap() {
      * be generalized to support other Excel objects.
      */
     function _store_obj_picture($col_start, $x1, $row_start, $y1,
-                                $col_end, $x2, $row_end, $y2) {
+                                $col_end, $x2, $row_end, $y2): void {
         $record      = 0x005d;       // Record identifier
         $length      = 0x003c;       // Bytes to follow
 
@@ -2857,7 +2836,7 @@ function insert_bitmap() {
      * Windows. This is described in BITMAPCOREHEADER and BITMAPCOREINFO
      * structures in the MSDN library.
      */
-    function _process_bitmap($bitmap) {
+    function _process_bitmap($bitmap): array {
         // Open file and binmode the data in case the platform needs it.
         $bmp=fopen($bitmap, "rb");
         if (!$bmp) {
@@ -2873,7 +2852,7 @@ function insert_bitmap() {
         }
 
         // The first 2 bytes are used to identify the bitmap.
-        if (substr($data, 0, 2) != "BM") {
+        if (substr($data, 0, 2) !== "BM") {
             trigger_error("$bitmap doesn't appear to to be a ".
                           "valid bitmap image.", E_USER_ERROR);
         }
@@ -2948,7 +2927,7 @@ function insert_bitmap() {
      * Store the window zoom factor. This should be a reduced fraction but for
      * simplicity we will store all fractions with a numerator of 100.
      */
-    function _store_zoom() {
+    function _store_zoom(): void {
         // If scale is 100% we don't need to write a record
         if ($this->_zoom == 100) {
             return;

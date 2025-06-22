@@ -29,24 +29,22 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 {
     /**
      * Name of the file for this cache
-     *
-     * @var string
      */
-    private $fileName = null;
+    private ?string $fileName = null;
 
     /**
      * File handle for this cache file
      *
      * @var resource
      */
-    private $fileHandle = null;
+    private $fileHandle;
 
     /**
      * Directory/Folder where the cache file is located
      *
      * @var string
      */
-    private $cacheDirectory = null;
+    private $cacheDirectory;
 
     /**
      * Store cell data in cache for the current cell object if it's "dirty",
@@ -76,10 +74,9 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
      *
      * @param    string            $pCoord        Coordinate address of the cell to update
      * @param    PHPExcel_Cell    $cell        Cell to update
-     * @return    PHPExcel_Cell
      * @throws    PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         if (($pCoord !== $this->currentObjectID) && ($this->currentObjectID !== null)) {
             $this->storeData();
@@ -142,7 +139,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
         parent::copyCellCollection($parent);
         //    Get a new id for the new file name
@@ -159,7 +156,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
      * Clear the cell collection and disconnect from our parent
      *
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if (!is_null($this->currentObject)) {
             $this->currentObject->detach();

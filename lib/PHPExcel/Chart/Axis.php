@@ -10,11 +10,15 @@
 class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
 {
     /**
+     * @var string
+     */
+    public $orientation;
+    /**
      * Axis Number
      *
      * @var  array of mixed
      */
-    private $axisNumber = array(
+    private array $axisNumber = array(
         'format' => self::FORMAT_CODE_GENERAL,
         'source_linked' => 1
     );
@@ -24,7 +28,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      *
      * @var  array of mixed
      */
-    private $axisOptions = array(
+    private array $axisOptions = array(
         'minimum' => null,
         'maximum' => null,
         'major_unit' => null,
@@ -64,7 +68,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      *
      * @var  array of mixed
      */
-    private $lineStyleProperties = array(
+    private array $lineStyleProperties = array(
         'width' => '9525',
         'compound' => self::LINE_STYLE_COMPOUND_SIMPLE,
         'dash' => self::LINE_STYLE_DASH_SOLID,
@@ -112,7 +116,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      *
      * @var  array of mixed
      */
-    private $glowProperties = array(
+    private array $glowProperties = array(
         'size' => null,
         'color' => array(
             'type' => self::EXCEL_COLOR_TYPE_STANDARD,
@@ -126,16 +130,14 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      *
      * @var  array of mixed
      */
-    private $softEdges = array(
+    private array $softEdges = array(
         'size' => null
     );
 
     /**
      * Get Series Data Type
-     *
-     * @return  string
      */
-    public function setAxisNumberProperties($format_code)
+    public function setAxisNumberProperties($format_code): void
     {
         $this->axisNumber['format'] = (string) $format_code;
         $this->axisNumber['source_linked'] = 0;
@@ -153,10 +155,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
 
     /**
      * Get Axis Number Source Linked
-     *
-     * @return  string
      */
-    public function getAxisNumberSourceLinked()
+    public function getAxisNumberSourceLinked(): string
     {
         return (string) $this->axisNumber['source_linked'];
     }
@@ -176,7 +176,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $minor_unit
      *
      */
-    public function setAxisOptionsProperties($axis_labels, $horizontal_crosses_value = null, $horizontal_crosses = null, $axis_orientation = null, $major_tmt = null, $minor_tmt = null, $minimum = null, $maximum = null, $major_unit = null, $minor_unit = null)
+    public function setAxisOptionsProperties($axis_labels, $horizontal_crosses_value = null, $horizontal_crosses = null, $axis_orientation = null, $major_tmt = null, $minor_tmt = null, $minimum = null, $maximum = null, $major_unit = null, $minor_unit = null): void
     {
         $this->axisOptions['axis_labels'] = (string) $axis_labels;
         ($horizontal_crosses_value !== null) ? $this->axisOptions['horizontal_crosses_value'] = (string) $horizontal_crosses_value : null;
@@ -209,7 +209,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $orientation
      *
      */
-    public function setAxisOrientation($orientation)
+    public function setAxisOrientation($orientation): void
     {
         $this->orientation = (string) $orientation;
     }
@@ -222,7 +222,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $type
      *
      */
-    public function setFillParameters($color, $alpha = 0, $type = self::EXCEL_COLOR_TYPE_ARGB)
+    public function setFillParameters($color, $alpha = 0, $type = self::EXCEL_COLOR_TYPE_ARGB): void
     {
         $this->fillProperties = $this->setColorProperties($color, $alpha, $type);
     }
@@ -235,7 +235,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $type
      *
      */
-    public function setLineParameters($color, $alpha = 0, $type = self::EXCEL_COLOR_TYPE_ARGB)
+    public function setLineParameters($color, $alpha = 0, $type = self::EXCEL_COLOR_TYPE_ARGB): void
     {
         $this->lineProperties = $this->setColorProperties($color, $alpha, $type);
     }
@@ -278,17 +278,17 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $end_arrow_size
      *
      */
-    public function setLineStyleProperties($line_width = null, $compound_type = null, $dash_type = null, $cap_type = null, $join_type = null, $head_arrow_type = null, $head_arrow_size = null, $end_arrow_type = null, $end_arrow_size = null)
+    public function setLineStyleProperties($line_width = null, $compound_type = null, $dash_type = null, $cap_type = null, $join_type = null, $head_arrow_type = null, $head_arrow_size = null, $end_arrow_type = null, $end_arrow_size = null): void
     {
-        (!is_null($line_width)) ? $this->lineStyleProperties['width'] = $this->getExcelPointsWidth((float) $line_width) : null;
-        (!is_null($compound_type)) ? $this->lineStyleProperties['compound'] = (string) $compound_type : null;
-        (!is_null($dash_type)) ? $this->lineStyleProperties['dash'] = (string) $dash_type : null;
-        (!is_null($cap_type)) ? $this->lineStyleProperties['cap'] = (string) $cap_type : null;
-        (!is_null($join_type)) ? $this->lineStyleProperties['join'] = (string) $join_type : null;
-        (!is_null($head_arrow_type)) ? $this->lineStyleProperties['arrow']['head']['type'] = (string) $head_arrow_type : null;
-        (!is_null($head_arrow_size)) ? $this->lineStyleProperties['arrow']['head']['size'] = (string) $head_arrow_size : null;
-        (!is_null($end_arrow_type)) ? $this->lineStyleProperties['arrow']['end']['type'] = (string) $end_arrow_type : null;
-        (!is_null($end_arrow_size)) ? $this->lineStyleProperties['arrow']['end']['size'] = (string) $end_arrow_size : null;
+        (is_null($line_width)) ? null : $this->lineStyleProperties['width'] = $this->getExcelPointsWidth((float) $line_width);
+        (is_null($compound_type)) ? null : $this->lineStyleProperties['compound'] = (string) $compound_type;
+        (is_null($dash_type)) ? null : $this->lineStyleProperties['dash'] = (string) $dash_type;
+        (is_null($cap_type)) ? null : $this->lineStyleProperties['cap'] = (string) $cap_type;
+        (is_null($join_type)) ? null : $this->lineStyleProperties['join'] = (string) $join_type;
+        (is_null($head_arrow_type)) ? null : $this->lineStyleProperties['arrow']['head']['type'] = (string) $head_arrow_type;
+        (is_null($head_arrow_size)) ? null : $this->lineStyleProperties['arrow']['head']['size'] = (string) $head_arrow_size;
+        (is_null($end_arrow_type)) ? null : $this->lineStyleProperties['arrow']['end']['type'] = (string) $end_arrow_type;
+        (is_null($end_arrow_size)) ? null : $this->lineStyleProperties['arrow']['end']['size'] = (string) $end_arrow_size;
     }
 
     /**
@@ -339,7 +339,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param float $sh_distance
      *
      */
-    public function setShadowProperties($sh_presets, $sh_color_value = null, $sh_color_type = null, $sh_color_alpha = null, $sh_blur = null, $sh_angle = null, $sh_distance = null)
+    public function setShadowProperties($sh_presets, $sh_color_value = null, $sh_color_type = null, $sh_color_alpha = null, $sh_blur = null, $sh_angle = null, $sh_distance = null): void
     {
         $this->setShadowPresetsProperties((int) $sh_presets)
             ->setShadowColor(
@@ -355,11 +355,9 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
     /**
      * Set Shadow Color
      *
-     * @param int $shadow_presets
      *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowPresetsProperties($shadow_presets)
+    private function setShadowPresetsProperties(int $shadow_presets): static
     {
         $this->shadowProperties['presets'] = $shadow_presets;
         $this->setShadowProperiesMapValues($this->getShadowPresetsMap($shadow_presets));
@@ -370,12 +368,10 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
     /**
      * Set Shadow Properties from Maped Values
      *
-     * @param array $properties_map
      * @param * $reference
      *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowProperiesMapValues(array $properties_map, &$reference = null)
+    private function setShadowProperiesMapValues(array $properties_map, &$reference = null): static
     {
         $base_reference = $reference;
         foreach ($properties_map as $property_key => $property_val) {
@@ -386,12 +382,10 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
                     $reference = & $reference[$property_key];
                 }
                 $this->setShadowProperiesMapValues($property_val, $reference);
+            } elseif ($base_reference === null) {
+                $this->shadowProperties[$property_key] = $property_val;
             } else {
-                if ($base_reference === null) {
-                    $this->shadowProperties[$property_key] = $property_val;
-                } else {
-                    $reference[$property_key] = $property_val;
-                }
+                $reference[$property_key] = $property_val;
             }
         }
 
@@ -404,10 +398,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $color
      * @param int $alpha
      * @param string $type
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowColor($color, $alpha, $type)
+    private function setShadowColor($color, $alpha, $type): static
     {
         $this->shadowProperties['color'] = $this->setColorProperties($color, $alpha, $type);
 
@@ -418,10 +410,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * Set Shadow Blur
      *
      * @param float $blur
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowBlur($blur)
+    private function setShadowBlur($blur): static
     {
         if ($blur !== null) {
             $this->shadowProperties['blur'] = (string) $this->getExcelPointsWidth($blur);
@@ -434,10 +424,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * Set Shadow Angle
      *
      * @param int $angle
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowAngle($angle)
+    private function setShadowAngle($angle): static
     {
         if ($angle !== null) {
             $this->shadowProperties['direction'] = (string) $this->getExcelPointsAngle($angle);
@@ -450,10 +438,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * Set Shadow Distance
      *
      * @param float $distance
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setShadowDistance($distance)
+    private function setShadowDistance($distance): static
     {
         if ($distance !== null) {
             $this->shadowProperties['distance'] = (string) $this->getExcelPointsWidth($distance);
@@ -483,7 +469,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param int $color_alpha
      * @param string $color_type
      */
-    public function setGlowProperties($size, $color_value = null, $color_alpha = null, $color_type = null)
+    public function setGlowProperties($size, $color_value = null, $color_alpha = null, $color_type = null): void
     {
         $this->setGlowSize($size)
             ->setGlowColor(
@@ -509,10 +495,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * Set Glow Color
      *
      * @param float $size
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setGlowSize($size)
+    private function setGlowSize($size): static
     {
         if (!is_null($size)) {
             $this->glowProperties['size'] = $this->getExcelPointsWidth($size);
@@ -527,10 +511,8 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      * @param string $color
      * @param int $alpha
      * @param string $type
-     *
-     * @return PHPExcel_Chart_Axis
      */
-    private function setGlowColor($color, $alpha, $type)
+    private function setGlowColor($color, $alpha, $type): static
     {
         $this->glowProperties['color'] = $this->setColorProperties($color, $alpha, $type);
 
@@ -542,7 +524,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
      *
      * @param float $size
      */
-    public function setSoftEdges($size)
+    public function setSoftEdges($size): void
     {
         if (!is_null($size)) {
             $softEdges['size'] = (string) $this->getExcelPointsWidth($size);

@@ -30,9 +30,7 @@ Class G5_object_cache {
         return false;
     }
 
-    function exists($type, $key, $group = 'default' ) {
-
-        $return_data = '';
+    function exists($type, $key, $group = 'default' ): bool {
 
         switch ($type) {
             case 'bbs':
@@ -49,7 +47,7 @@ Class G5_object_cache {
         return isset($datas[$group]) && ( isset($datas[$group][$key]) || array_key_exists($key, $datas[$group]) );
     }
 
-    function set($type, $key, $data=array(), $group='default') {
+    function set($type, $key, $data=array(), $group='default'): void {
         if ( is_object( $data ) )
             $data = clone $data;
 
@@ -71,9 +69,8 @@ Class G5_object_cache {
      * @param string $type
      * @param string $key
      * @param string $group
-     * @return bool
      */
-    function delete($type, $key, $group = 'default')
+    function delete($type, $key, $group = 'default'): bool
     {
         if (!$this->exists($type, $key, $group)) {
             return false;

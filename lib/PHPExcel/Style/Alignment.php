@@ -134,9 +134,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Build style array from subcomponents
      *
      * @param array $array
-     * @return array
      */
-    public function getStyleArray($array)
+    public function getStyleArray($array): array
     {
         return array('alignment' => $array);
     }
@@ -157,9 +156,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      *
      * @param    array    $pStyles    Array containing style information
      * @throws    PHPExcel_Exception
-     * @return PHPExcel_Style_Alignment
      */
-    public function applyFromArray($pStyles = null)
+    public function applyFromArray($pStyles = null): static
     {
         if (is_array($pStyles)) {
             if ($this->isSupervisor) {
@@ -211,9 +209,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set Horizontal
      *
      * @param string $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setHorizontal($pValue = PHPExcel_Style_Alignment::HORIZONTAL_GENERAL)
+    public function setHorizontal($pValue = PHPExcel_Style_Alignment::HORIZONTAL_GENERAL): static
     {
         if ($pValue == '') {
             $pValue = PHPExcel_Style_Alignment::HORIZONTAL_GENERAL;
@@ -245,9 +242,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set Vertical
      *
      * @param string $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setVertical($pValue = PHPExcel_Style_Alignment::VERTICAL_BOTTOM)
+    public function setVertical($pValue = PHPExcel_Style_Alignment::VERTICAL_BOTTOM): static
     {
         if ($pValue == '') {
             $pValue = PHPExcel_Style_Alignment::VERTICAL_BOTTOM;
@@ -280,9 +276,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      *
      * @param int $pValue
      * @throws PHPExcel_Exception
-     * @return PHPExcel_Style_Alignment
      */
-    public function setTextRotation($pValue = 0)
+    public function setTextRotation($pValue = 0): static
     {
         // Excel2007 value 255 => PHPExcel value -165
         if ($pValue == 255) {
@@ -321,9 +316,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set Wrap Text
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setWrapText($pValue = false)
+    public function setWrapText($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -354,9 +348,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set Shrink to fit
      *
      * @param boolean $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setShrinkToFit($pValue = false)
+    public function setShrinkToFit($pValue = false): static
     {
         if ($pValue == '') {
             $pValue = false;
@@ -387,16 +380,12 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set indent
      *
      * @param int $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setIndent($pValue = 0)
+    public function setIndent($pValue = 0): static
     {
-        if ($pValue > 0) {
-            if ($this->getHorizontal() != self::HORIZONTAL_GENERAL &&
-                $this->getHorizontal() != self::HORIZONTAL_LEFT &&
-                $this->getHorizontal() != self::HORIZONTAL_RIGHT) {
-                $pValue = 0; // indent not supported
-            }
+        if ($pValue > 0 && ($this->getHorizontal() != self::HORIZONTAL_GENERAL && $this->getHorizontal() != self::HORIZONTAL_LEFT && $this->getHorizontal() != self::HORIZONTAL_RIGHT)) {
+            $pValue = 0;
+            // indent not supported
         }
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(array('indent' => $pValue));
@@ -424,9 +413,8 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
      * Set read order
      *
      * @param int $pValue
-     * @return PHPExcel_Style_Alignment
      */
-    public function setReadorder($pValue = 0)
+    public function setReadorder($pValue = 0): static
     {
         if ($pValue < 0 || $pValue > 2) {
             $pValue = 0;

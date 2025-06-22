@@ -117,7 +117,7 @@ class PHPExcel_Calculation_LookupRef
         }
 
         if (is_array($cellAddress)) {
-            foreach ($cellAddress as $columnKey => $value) {
+            foreach (array_keys($cellAddress) as $columnKey) {
                 $columnKey = preg_replace('/[^a-z]/i', '', $columnKey);
                 return (integer) PHPExcel_Cell::columnIndexFromString($columnKey);
             }
@@ -139,6 +139,7 @@ class PHPExcel_Calculation_LookupRef
                 return (integer) PHPExcel_Cell::columnIndexFromString($cellAddress);
             }
         }
+        return null;
     }
 
 
@@ -194,7 +195,7 @@ class PHPExcel_Calculation_LookupRef
         }
 
         if (is_array($cellAddress)) {
-            foreach ($cellAddress as $columnKey => $rowValue) {
+            foreach ($cellAddress as $rowValue) {
                 foreach ($rowValue as $rowKey => $cellValue) {
                     return (integer) preg_replace('/[^0-9]/i', '', $rowKey);
                 }
@@ -217,6 +218,7 @@ class PHPExcel_Calculation_LookupRef
                 return (integer) preg_replace('/[^0-9]/', '', $cellAddress);
             }
         }
+        return null;
     }
 
 
@@ -272,11 +274,11 @@ class PHPExcel_Calculation_LookupRef
         $linkURL     = (is_null($linkURL))     ? '' : PHPExcel_Calculation_Functions::flattenSingleValue($linkURL);
         $displayName = (is_null($displayName)) ? '' : PHPExcel_Calculation_Functions::flattenSingleValue($displayName);
 
-        if ((!is_object($pCell)) || (trim($linkURL) == '')) {
+        if ((!is_object($pCell)) || (trim($linkURL) === '')) {
             return PHPExcel_Calculation_Functions::REF();
         }
 
-        if ((is_object($displayName)) || trim($displayName) == '') {
+        if ((is_object($displayName)) || trim($displayName) === '') {
             $displayName = $linkURL;
         }
 
@@ -428,7 +430,7 @@ class PHPExcel_Calculation_LookupRef
         $endCellColumn = PHPExcel_Cell::stringFromColumnIndex($endCellColumn);
 
         $cellAddress = $startCellColumn.$startCellRow;
-        if (($startCellColumn != $endCellColumn) || ($startCellRow != $endCellRow)) {
+        if (($startCellColumn != $endCellColumn) || ($startCellRow !== $endCellRow)) {
             $cellAddress .= ':'.$endCellColumn.$endCellRow;
         }
 
@@ -651,7 +653,7 @@ class PHPExcel_Calculation_LookupRef
      *
      * Unlike the Excel TRANSPOSE function, which will only work on a single row or column, this function will transpose a full matrix.
      */
-    public static function TRANSPOSE($matrixData)
+    public static function TRANSPOSE($matrixData): array
     {
         $returnMatrix = array();
         if (!is_array($matrixData)) {
@@ -668,17 +670,6 @@ class PHPExcel_Calculation_LookupRef
             ++$column;
         }
         return $returnMatrix;
-    }
-
-
-    private static function vlookupSort($a, $b)
-    {
-        reset($a);
-        $firstColumn = key($a);
-        if (($aLower = strtolower($a[$firstColumn])) == ($bLower = strtolower($b[$firstColumn]))) {
-            return 0;
-        }
-        return ($aLower < $bLower) ? -1 : 1;
     }
 
 

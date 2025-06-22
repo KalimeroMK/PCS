@@ -40,9 +40,8 @@ class PHPExcel_Shared_JAMA_QRDecomposition
 
     /**
      *    Array for internal storage of diagonal of R.
-     *    @var  array
      */
-    private $Rdiag = array();
+    private array $Rdiag = array();
 
 
     /**
@@ -99,7 +98,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
      *
      *    @return boolean true if R, and hence A, has full rank, else false.
      */
-    public function isFullRank()
+    public function isFullRank(): bool
     {
         for ($j = 0; $j < $this->n; ++$j) {
             if ($this->Rdiag[$j] == 0) {
@@ -114,15 +113,11 @@ class PHPExcel_Shared_JAMA_QRDecomposition
      *
      *    @return Matrix Lower trapezoidal matrix whose columns define the reflections
      */
-    public function getH()
+    public function getH(): \PHPExcel_Shared_JAMA_Matrix
     {
         for ($i = 0; $i < $this->m; ++$i) {
             for ($j = 0; $j < $this->n; ++$j) {
-                if ($i >= $j) {
-                    $H[$i][$j] = $this->QR[$i][$j];
-                } else {
-                    $H[$i][$j] = 0.0;
-                }
+                $H[$i][$j] = $i >= $j ? $this->QR[$i][$j] : 0.0;
             }
         }
         return new PHPExcel_Shared_JAMA_Matrix($H);
@@ -133,13 +128,13 @@ class PHPExcel_Shared_JAMA_QRDecomposition
      *
      *    @return Matrix upper triangular factor
      */
-    public function getR()
+    public function getR(): \PHPExcel_Shared_JAMA_Matrix
     {
         for ($i = 0; $i < $this->n; ++$i) {
             for ($j = 0; $j < $this->n; ++$j) {
                 if ($i < $j) {
                     $R[$i][$j] = $this->QR[$i][$j];
-                } elseif ($i == $j) {
+                } elseif ($i === $j) {
                     $R[$i][$j] = $this->Rdiag[$i];
                 } else {
                     $R[$i][$j] = 0.0;
@@ -154,7 +149,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
      *
      *    @return Matrix orthogonal factor
      */
-    public function getQ()
+    public function getQ(): \PHPExcel_Shared_JAMA_Matrix
     {
         for ($k = $this->n-1; $k >= 0; --$k) {
             for ($i = 0; $i < $this->m; ++$i) {

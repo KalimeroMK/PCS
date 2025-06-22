@@ -1,7 +1,7 @@
 <?php
 if (!defined('_GNUBOARD_')) exit;
 
-function shop_type_url($type, $add_param=''){
+function shop_type_url(string $type, ?string $add_param=''){
     global $config;
 
     if( $config['cf_bbs_rewrite'] ){
@@ -12,7 +12,7 @@ function shop_type_url($type, $add_param=''){
     return G5_SHOP_URL.'/listtype.php?type='.urlencode($type).$add_params;
 }
 
-function shop_item_url($it_id, $add_param=''){
+function shop_item_url($it_id, ?string $add_param=''){
     global $config;
 
     if( $config['cf_bbs_rewrite'] ){
@@ -23,7 +23,7 @@ function shop_item_url($it_id, $add_param=''){
     return G5_SHOP_URL.'/item.php?it_id='.urlencode($it_id).$add_params;
 }
 
-function shop_category_url($ca_id, $add_param=''){
+function shop_category_url(string $ca_id, ?string $add_param=''){
     global $config;
 
     if( $config['cf_bbs_rewrite'] ){
@@ -34,7 +34,7 @@ function shop_category_url($ca_id, $add_param=''){
     return G5_SHOP_URL.'/list.php?ca_id='.urlencode($ca_id).$add_params;
 }
 
-function add_pretty_shop_url($url, $folder, $no='', $query_string='', $action=''){
+function add_pretty_shop_url($url, $folder, $no='', ?string $query_string='', $action=''){
     global $g5, $config;
 
     if( $folder !== 'shop' ){
@@ -57,7 +57,7 @@ function add_pretty_shop_url($url, $folder, $no='', $query_string='', $action=''
 
         if($query_string) {
             // If the first character of the query string is '&', replace it with '?'.
-            if(substr($query_string, 0, 1) == '&') {
+            if(substr($query_string, 0, 1) === '&') {
                 $add_query = preg_replace("/\&amp;/", "?", $query_string, 1);
             } else {
                 $add_query = '?'. $query_string;
@@ -65,9 +65,9 @@ function add_pretty_shop_url($url, $folder, $no='', $query_string='', $action=''
         }
     } else {
         
-        if( preg_match('/^list\-([^\/]+)/i', $no) ){
+        if (preg_match('/^list\-([^\/]+)/i', $no)) {
             $url = G5_SHOP_URL. '/list.php?ca_id='.urlencode($no);
-        } else if( preg_match('/^type\-([^\/]+)/i', $no) ){
+        } elseif (preg_match('/^type\-([^\/]+)/i', $no)) {
             $url = G5_SHOP_URL. '/listtype.php?type='.urlencode($no);
         } else {
             $url = G5_SHOP_URL. '/item.php?it_id='.urlencode($no);
@@ -100,11 +100,11 @@ function shop_short_url_clean($string_url, $url, $page_name, $array_page_names){
 			
 			$key_value = $vars[$key];
 
-			if( $key === 'ca_id' ){
-				$key_value = 'list-'.$vars[$key];
-			} else if ( $key === 'type' ){
-				$key_value = 'type-'.$vars[$key];
-			}
+			if ($key === 'ca_id') {
+                $key_value = 'list-'.$vars[$key];
+            } elseif ($key === 'type') {
+                $key_value = 'type-'.$vars[$key];
+            }
 
             $s[$key] = $key_value;
         }
@@ -139,11 +139,11 @@ function shop_short_url_clean($string_url, $url, $page_name, $array_page_names){
         }
 
         if( isset($add_qry) ){
-            $add_param .= $add_param ? '&amp;'.$add_qry : '?'.$add_qry;
+            $add_param .= $add_param !== '' && $add_param !== '0' ? '&amp;'.$add_qry : '?'.$add_qry;
         }
 
         $return_url = '';
-        foreach($s as $k => $v) { $return_url .= '/'.$v; }
+        foreach($s as $v) { $return_url .= '/'.$v; }
 
         return $host.$return_url.$add_param.$fragment;
 	}
@@ -151,7 +151,7 @@ function shop_short_url_clean($string_url, $url, $page_name, $array_page_names){
 	return $string_url;
 }
 
-function add_shop_nginx_conf_rules($rules, $get_path_url, $base_path, $return_string=false){
+function add_shop_nginx_conf_rules(string $rules, $get_path_url, $base_path, $return_string=false): string{
 
     $add_rules = array();
 
@@ -164,7 +164,7 @@ function add_shop_nginx_conf_rules($rules, $get_path_url, $base_path, $return_st
 
 }
 
-function add_shop_mod_rewrite_rules($rules, $get_path_url, $base_path, $return_string=false){
+function add_shop_mod_rewrite_rules(string $rules, $get_path_url, $base_path, $return_string=false): string{
 
     $add_rules = array();
     
@@ -197,7 +197,7 @@ function add_shop_admin_dbupgrade($is_check){
 
 }
 
-function shop_exist_check_seo_title($seo_title, $type, $shop_item_table, $it_id){
+function shop_exist_check_seo_title($seo_title, $type, $shop_item_table, $it_id): string{
     
     $sql = "select it_seo_title FROM {$shop_item_table} WHERE it_seo_title = '".sql_real_escape_string($seo_title)."' AND it_id <> '$it_id' limit 1";
     $row = sql_fetch($sql, false);
@@ -209,10 +209,10 @@ function shop_exist_check_seo_title($seo_title, $type, $shop_item_table, $it_id)
     return '';
 }
 
-function shop_seo_title_update($it_id, $is_edit=false){
+function shop_seo_title_update($it_id, $is_edit=false): void{
     global $g5;
 
-	$shop_item_cache = $is_edit ? false : true;
+	$shop_item_cache = !(bool) $is_edit;
     $item = get_shop_item($it_id, $shop_item_cache);
 
     if( (! $item['it_seo_title'] || $is_edit) && $item['it_name'] ){

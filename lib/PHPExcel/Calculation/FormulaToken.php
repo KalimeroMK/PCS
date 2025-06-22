@@ -129,7 +129,7 @@ class PHPExcel_Calculation_FormulaToken
      *
      * @param string    $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
@@ -149,7 +149,7 @@ class PHPExcel_Calculation_FormulaToken
      *
      * @param string    $value
      */
-    public function setTokenType($value = PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_UNKNOWN)
+    public function setTokenType($value = PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_UNKNOWN): void
     {
         $this->tokenType = $value;
     }
@@ -169,7 +169,7 @@ class PHPExcel_Calculation_FormulaToken
      *
      * @param string    $value
      */
-    public function setTokenSubType($value = PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_NOTHING)
+    public function setTokenSubType($value = PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_NOTHING): void
     {
         $this->tokenSubType = $value;
     }

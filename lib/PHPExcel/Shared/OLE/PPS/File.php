@@ -47,7 +47,7 @@ class PHPExcel_Shared_OLE_PPS_File extends PHPExcel_Shared_OLE_PPS
     * @access public
     * @return mixed true on success
     */
-    public function init()
+    public function init(): bool
     {
         return true;
     }
@@ -58,7 +58,7 @@ class PHPExcel_Shared_OLE_PPS_File extends PHPExcel_Shared_OLE_PPS
     * @access public
     * @param string $data The data to append
     */
-    public function append($data)
+    public function append(string $data): void
     {
         $this->_data .= $data;
     }
@@ -67,7 +67,7 @@ class PHPExcel_Shared_OLE_PPS_File extends PHPExcel_Shared_OLE_PPS
      * Returns a stream for reading this file using fread() etc.
      * @return  resource  a read-only stream
      */
-    public function getStream()
+    public function getStream(): void
     {
         $this->ole->getStream($this);
     }

@@ -97,7 +97,7 @@ class PHPExcel_Calculation_Function
      * @param     string        $value
      * @throws     PHPExcel_Calculation_Exception
      */
-    public function setCategory($value = null)
+    public function setCategory($value = null): void
     {
         if (!is_null($value)) {
             $this->category = $value;
@@ -121,7 +121,7 @@ class PHPExcel_Calculation_Function
      *
      * @param string    $value
      */
-    public function setExcelName($value)
+    public function setExcelName($value): void
     {
         $this->excelName = $value;
     }
@@ -141,7 +141,7 @@ class PHPExcel_Calculation_Function
      *
      * @param string    $value
      */
-    public function setPHPExcelName($value)
+    public function setPHPExcelName($value): void
     {
         $this->phpExcelName = $value;
     }

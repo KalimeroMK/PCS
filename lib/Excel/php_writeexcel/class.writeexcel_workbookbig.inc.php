@@ -24,21 +24,22 @@
  * Spreadsheet::WriteExcel was written by John McNamara, jmcnamara@cpan.org
  */
 
-require_once "class.writeexcel_workbook.inc.php";
-require_once "class.ole_pps_root.php";
-require_once "class.ole_pps_file.php";
+require_once __DIR__ . "/class.writeexcel_workbook.inc.php";
+require_once __DIR__ . "/class.ole_pps_root.php";
+require_once __DIR__ . "/class.ole_pps_file.php";
 
 class writeexcel_workbookbig extends writeexcel_workbook {
 
-    function writeexcel_workbookbig($filename) {
+    function writeexcel_workbookbig($filename): void {
         $this->writeexcel_workbook($filename);
     }
 
-    function _store_OLE_file() {
+    function _store_OLE_file(): void {
         $file=new ole_pps_file(asc2ucs("Book"));
         $file->append($this->_data);
+        $counter = count($this->_worksheets);
 
-        for ($c=0;$c<sizeof($this->_worksheets);$c++) {
+        for ($c=0;$c<$counter;$c++) {
             $worksheet=&$this->_worksheets[$c];
             while ($data=$worksheet->get_data()) {
                 $file->append($data);

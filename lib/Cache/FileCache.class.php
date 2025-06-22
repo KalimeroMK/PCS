@@ -15,10 +15,8 @@ class FileCache
 
     /**
      * Creates a FileCache object
-     *
-     * @param array $options
      */
-    public function __construct($options = array())
+    public function __construct(array $options = array())
     {
         $available_options = array('_cache_path', 'file_extension');
         foreach ($available_options as $name) {
@@ -39,7 +37,7 @@ class FileCache
 		return is_array($data) ? $data['data'] : FALSE;
 	}
 
-    protected function get_cache_file_path($id){
+    protected function get_cache_file_path($id): string{
 
         $id = str_replace(DIRECTORY_SEPARATOR, '/', $id);
         $add_separator = '';
@@ -119,14 +117,12 @@ class FileCache
      * Deletes a cache entry.
      *
      * @param string $id
-     *
-     * @return bool
      */
-    public function delete($id)
+    public function delete($id): bool
     {
         $cache_file_path = $this->get_cache_file_path($id);
 
-        return file_exists($cache_file_path) ? unlink($cache_file_path) : FALSE;
+        return file_exists($cache_file_path) && unlink($cache_file_path);
     }
 
     /**
@@ -135,10 +131,8 @@ class FileCache
      * @param string $id
      * @param mixed  $data
      * @param int    $lifetime
-     *
-     * @return bool
      */
-	public function save($id, $data, $ttl = 60, $raw = FALSE)
+    public function save($id, $data, $ttl = 60, $raw = FALSE): bool
 	{
         $cache_file_path = $this->get_cache_file_path($id);
 
@@ -175,9 +169,8 @@ class FileCache
      *
      * @param mixed $data
      * @param int $ttl
-     * @return string
      */
-    public function encode($data, $ttl)
+    public function encode($data, $ttl): string
     {
         $expire = null;
         if ($ttl !== null) {
@@ -195,7 +188,7 @@ class FileCache
      * @param string $data
      * @return array (data, expire)
      */
-    public function decode($data)
+    public function decode($data): mixed
     {
         return unserialize(base64_decode($data));
     }

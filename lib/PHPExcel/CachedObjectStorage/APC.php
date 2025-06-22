@@ -31,9 +31,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Prefix used to uniquely identify cache data for this worksheet
      *
      * @access    private
-     * @var string
      */
-    private $cachePrefix = null;
+    private ?string $cachePrefix = null;
 
     /**
      * Cache timeout
@@ -75,10 +74,9 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @access  public
      * @param   string         $pCoord  Coordinate address of the cell to update
      * @param   PHPExcel_Cell  $cell    Cell to update
-     * @return  PHPExcel_Cell
      * @throws  PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         if (($pCoord !== $this->currentObjectID) && ($this->currentObjectID !== null)) {
             $this->storeData();
@@ -98,9 +96,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @access  public
      * @param   string  $pCoord  Coordinate address of the cell to check
      * @throws  PHPExcel_Exception
-     * @return  boolean
      */
-    public function isDataSet($pCoord)
+    public function isDataSet($pCoord): bool
     {
         //    Check if the requested entry is the current object, or exists in the cache
         if (parent::isDataSet($pCoord)) {
@@ -178,7 +175,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @param   string  $pCoord  Coordinate address of the cell to delete
      * @throws  PHPExcel_Exception
      */
-    public function deleteCacheData($pCoord)
+    public function deleteCacheData($pCoord): void
     {
         //    Delete the entry from APC
         apc_delete($this->cachePrefix.$pCoord.'.cache');
@@ -193,9 +190,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @access  public
      * @param   PHPExcel_Worksheet  $parent  The new worksheet
      * @throws  PHPExcel_Exception
-     * @return  void
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
         parent::copyCellCollection($parent);
         //    Get a new id for the new file name
@@ -221,10 +217,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
 
     /**
      * Clear the cell collection and disconnect from our parent
-     *
-     * @return  void
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if ($this->currentObject !== null) {
             $this->currentObject->detach();
@@ -281,10 +275,6 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         if (!function_exists('apc_store')) {
             return false;
         }
-        if (apc_sma_info() === false) {
-            return false;
-        }
-
-        return true;
+        return apc_sma_info() !== false;
     }
 }

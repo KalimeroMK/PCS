@@ -35,7 +35,7 @@ class PHPExcel_Shared_CodePage
      * @return string Code Page Name
      * @throws PHPExcel_Exception
      */
-    public static function NumberToName($codePage = 1252)
+    public static function NumberToName($codePage = 1252): string
     {
         switch ($codePage) {
             case 367:
@@ -77,14 +77,22 @@ class PHPExcel_Shared_CodePage
             case 874:
                 return 'CP874';    //    ANSI Thai
             case 932:
+            //    Apple Roman
+            case 10001:
                 return 'CP932';    //    ANSI Japanese Shift-JIS
             case 936:
+            //    Macintosh Cyrillic
+            case 10008:
                 return 'CP936';    //    ANSI Chinese Simplified GBK
             case 949:
                 return 'CP949';    //    ANSI Korean (Wansung)
             case 950:
+            //    Macintosh Japanese
+            case 10002:
                 return 'CP950';    //    ANSI Chinese Traditional BIG5
             case 1200:
+            //	Macintosh Croatian
+            case 21010:
                 return 'UTF-16LE'; //    UTF-16 (BIFF8)
             case 1250:
                 return 'CP1250';   //    ANSI Latin II (Central European)
@@ -106,16 +114,14 @@ class PHPExcel_Shared_CodePage
                 return 'CP1257';   //    ANSI Baltic
             case 1258:
                 return 'CP1258';   //    ANSI Vietnamese
-            case 1361:
-                return 'CP1361';   //    ANSI Korean (Johab)
-            case 10000:
-                return 'MAC';      //    Apple Roman
-            case 10001:
-                return 'CP932';    //    Macintosh Japanese
-            case 10002:
-                return 'CP950';    //    Macintosh Chinese Traditional
+            case 1361:    //    Macintosh Chinese Traditional
             case 10003:
-                return 'CP1361';   //    Macintosh Korean
+                return 'CP1361';
+            //    ANSI Korean (Johab)
+            case 10000:
+            //    UTF-16 (BIFF8) This isn't correct, but some Excel writer libraries erroneously use Codepage 21010 for UTF-16LE
+            case 32768:
+                return 'MAC';   //    Macintosh Korean
             case 10004:	
                 return 'MACARABIC';  //	Apple Arabic
             case 10005:
@@ -123,9 +129,7 @@ class PHPExcel_Shared_CodePage
             case 10006:
                 return 'MACGREEK';  //    Macintosh Greek
             case 10007:
-                return 'MACCYRILLIC';  //    Macintosh Cyrillic
-            case 10008:
-                return 'CP936';  //    Macintosh - Simplified Chinese (GB 2312)
+                return 'MACCYRILLIC';  //    Macintosh - Simplified Chinese (GB 2312)
             case 10010:
                 return 'MACROMANIA';	//	Macintosh Romania
             case 10017:
@@ -139,11 +143,7 @@ class PHPExcel_Shared_CodePage
             case 10081:
                 return 'MACTURKISH';  //    Macintosh Turkish
             case 10082:
-                return 'MACCROATIAN';	//	Macintosh Croatian
-            case 21010:
-                return 'UTF-16LE';  //    UTF-16 (BIFF8) This isn't correct, but some Excel writer libraries erroneously use Codepage 21010 for UTF-16LE
-            case 32768:
-                return 'MAC';      //    Apple Roman
+                return 'MACCROATIAN';      //    Apple Roman
             case 32769:
                 throw new PHPExcel_Exception('Code page 32769 not supported.');  //    ANSI Latin I (BIFF2-BIFF3)
             case 65000:

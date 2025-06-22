@@ -42,13 +42,12 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write content.xml to XML format
      *
-     * @param   PHPExcel                   $pPHPExcel
      * @return  string                     XML Output
      * @throws  PHPExcel_Writer_Exception
      */
     public function write(PHPExcel $pPHPExcel = null)
     {
-        if (!$pPHPExcel) {
+        if ($pPHPExcel === null) {
             $pPHPExcel = $this->getParentWriter()->getPHPExcel(); /* @var $pPHPExcel PHPExcel */
         }
 
@@ -116,10 +115,8 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
 
     /**
      * Write sheets
-     *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
      */
-    private function writeSheets(PHPExcel_Shared_XMLWriter $objWriter)
+    private function writeSheets(PHPExcel_Shared_XMLWriter $objWriter): void
     {
         $pPHPExcel = $this->getParentWriter()->getPHPExcel(); /* @var $pPHPExcel PHPExcel */
 
@@ -139,11 +136,8 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
 
     /**
      * Write rows of the specified sheet
-     *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
-     * @param PHPExcel_Worksheet $sheet
      */
-    private function writeRows(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet $sheet)
+    private function writeRows(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet $sheet): void
     {
         $number_rows_repeated = self::NUMBER_ROWS_REPEATED_MAX;
         $span_row = 0;
@@ -152,7 +146,7 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
             $number_rows_repeated--;
             $row = $rows->current();
             if ($row->getCellIterator()->valid()) {
-                if ($span_row) {
+                if ($span_row !== 0) {
                     $objWriter->startElement('table:table-row');
                     if ($span_row > 1) {
                         $objWriter->writeAttribute('table:number-rows-repeated', $span_row);
@@ -176,11 +170,9 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write cells of the specified row
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
-     * @param PHPExcel_Worksheet_Row $row
      * @throws PHPExcel_Writer_Exception
      */
-    private function writeCells(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet_Row $row)
+    private function writeCells(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet_Row $row): void
     {
         $number_cols_repeated = self::NUMBER_COLS_REPEATED_MAX;
         $prev_column = -1;
@@ -201,7 +193,6 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
 
                 case PHPExcel_Cell_DataType::TYPE_ERROR:
                     throw new PHPExcel_Writer_Exception('Writing of error not implemented yet.');
-                    break;
 
                 case PHPExcel_Cell_DataType::TYPE_FORMULA:
                     try {
@@ -221,7 +212,6 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
 
                 case PHPExcel_Cell_DataType::TYPE_INLINE:
                     throw new PHPExcel_Writer_Exception('Writing of inline not implemented yet.');
-                    break;
 
                 case PHPExcel_Cell_DataType::TYPE_NUMERIC:
                     $objWriter->writeAttribute('office:value-type', 'float');
@@ -254,11 +244,10 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write span
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
      * @param integer $curColumn
      * @param integer $prevColumn
      */
-    private function writeCellSpan(PHPExcel_Shared_XMLWriter $objWriter, $curColumn, $prevColumn)
+    private function writeCellSpan(PHPExcel_Shared_XMLWriter $objWriter, int|float $curColumn, int|float $prevColumn): void
     {
         $diff = $curColumn - $prevColumn - 1;
         if (1 === $diff) {

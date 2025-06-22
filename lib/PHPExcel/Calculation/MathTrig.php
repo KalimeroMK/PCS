@@ -39,7 +39,10 @@ class PHPExcel_Calculation_MathTrig
     //
     //    Private method to return an array of the factors of the input value
     //
-    private static function factors($value)
+    /**
+     * @return mixed[]
+     */
+    private static function factors($value): array
     {
         $startVal = floor(sqrt($value));
 
@@ -62,7 +65,7 @@ class PHPExcel_Calculation_MathTrig
     }
 
 
-    private static function romanCut($num, $n)
+    private static function romanCut(int $num, int $n): int|float
     {
         return ($num - ($num % $n ) ) / $n;
     }
@@ -243,10 +246,8 @@ class PHPExcel_Calculation_MathTrig
                 return PHPExcel_Calculation_Functions::NaN();
             }
             $factLoop = floor($factVal);
-            if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) {
-                if ($factVal > $factLoop) {
-                    return PHPExcel_Calculation_Functions::NaN();
-                }
+            if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC && $factVal > $factLoop) {
+                return PHPExcel_Calculation_Functions::NaN();
             }
 
             $factorial = 1;
@@ -380,7 +381,7 @@ class PHPExcel_Calculation_MathTrig
             foreach ($mergedArray as $mergedKey => $mergedValue) {
                 foreach ($allValuesFactors as $highestPowerTest) {
                     foreach ($highestPowerTest as $testKey => $testValue) {
-                        if (($testKey == $mergedKey) && ($testValue < $mergedValue)) {
+                        if (($testKey === $mergedKey) && ($testValue < $mergedValue)) {
                             $mergedArray[$mergedKey] = $testValue;
                             $mergedValue = $testValue;
                         }
@@ -399,7 +400,7 @@ class PHPExcel_Calculation_MathTrig
             $value = $mergedArray[$key];
             foreach ($allValuesFactors as $testValue) {
                 foreach ($testValue as $mergedKey => $mergedValue) {
-                    if (($mergedKey == $key) && ($mergedValue < $value)) {
+                    if (($mergedKey === $key) && ($mergedValue < $value)) {
                         $value = $mergedValue;
                     }
                 }
@@ -558,7 +559,7 @@ class PHPExcel_Calculation_MathTrig
             }
             ++$row;
         }
-        if ($row != $maxColumn) {
+        if ($row !== $maxColumn) {
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
@@ -609,7 +610,7 @@ class PHPExcel_Calculation_MathTrig
             }
             ++$row;
         }
-        if ($row != $maxColumn) {
+        if ($row !== $maxColumn) {
             return PHPExcel_Calculation_Functions::VALUE();
         }
 
@@ -673,7 +674,7 @@ class PHPExcel_Calculation_MathTrig
             }
             $matrixB = new PHPExcel_Shared_JAMA_Matrix($matrixBData);
 
-            if ($columnA != $rowB) {
+            if ($columnA !== $rowB) {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
 
@@ -845,7 +846,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed        $arg,...        Data values
      * @return    float
      */
-    public static function PRODUCT()
+    public static function PRODUCT(): float|int
     {
         // Return value
         $returnValue = null;
@@ -882,9 +883,8 @@ class PHPExcel_Calculation_MathTrig
      * @access    public
      * @category Mathematical and Trigonometric Functions
      * @param    mixed        $arg,...        Data values
-     * @return    float
      */
-    public static function QUOTIENT()
+    public static function QUOTIENT(): int
     {
         // Return value
         $returnValue = null;
@@ -895,12 +895,10 @@ class PHPExcel_Calculation_MathTrig
             if ((is_numeric($arg)) && (!is_string($arg))) {
                 if (is_null($returnValue)) {
                     $returnValue = ($arg == 0) ? 0 : $arg;
+                } elseif (($returnValue == 0) || ($arg == 0)) {
+                    $returnValue = 0;
                 } else {
-                    if (($returnValue == 0) || ($arg == 0)) {
-                        $returnValue = 0;
-                    } else {
-                        $returnValue /= $arg;
-                    }
+                    $returnValue /= $arg;
                 }
             }
         }
@@ -917,7 +915,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    int        $max    Maximal value
      * @return    int        Random number
      */
-    public static function RAND($min = 0, $max = 0)
+    public static function RAND($min = 0, $max = 0): int|float
     {
         $min = PHPExcel_Calculation_Functions::flattenSingleValue($min);
         $max = PHPExcel_Calculation_Functions::flattenSingleValue($max);
@@ -933,7 +931,7 @@ class PHPExcel_Calculation_MathTrig
     public static function ROMAN($aValue, $style = 0)
     {
         $aValue    = PHPExcel_Calculation_Functions::flattenSingleValue($aValue);
-        $style    = (is_null($style))    ? 0 :    (integer) PHPExcel_Calculation_Functions::flattenSingleValue($style);
+        (is_null($style))    ? 0 :    (integer) PHPExcel_Calculation_Functions::flattenSingleValue($style);
         if ((!is_numeric($aValue)) || ($aValue < 0) || ($aValue >= 4000)) {
             return PHPExcel_Calculation_Functions::VALUE();
         }
@@ -1162,7 +1160,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed        $arg,...        Data values
      * @return    float
      */
-    public static function SUM()
+    public static function SUM(): float|int
     {
         $returnValue = 0;
 
@@ -1192,7 +1190,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    string        $condition        The criteria that defines which cells will be summed.
      * @return    float
      */
-    public static function SUMIF($aArgs, $condition, $sumArgs = array())
+    public static function SUMIF($aArgs, $condition, $sumArgs = array()): int|float
     {
         $returnValue = 0;
 
@@ -1234,7 +1232,7 @@ class PHPExcel_Calculation_MathTrig
 	 *	@param	string		$condition		The criteria that defines which cells will be summed.
 	 *	@return	float
 	 */
-	public static function SUMIFS() {
+	public static function SUMIFS(): float|int {
 		$arrayList = func_get_args();
 
 		$sumArgs = PHPExcel_Calculation_Functions::flattenArray(array_shift($arrayList));
@@ -1307,7 +1305,7 @@ class PHPExcel_Calculation_MathTrig
         foreach ($arrayList as $matrixData) {
             $array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData);
             $count = count($array2);
-            if ($wrkCellCount != $count) {
+            if ($wrkCellCount !== $count) {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
 
@@ -1336,7 +1334,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed        $arg,...        Data values
      * @return    float
      */
-    public static function SUMSQ()
+    public static function SUMSQ(): float|int
     {
         $returnValue = 0;
 
@@ -1359,7 +1357,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed[]    $matrixData2    Matrix #2
      * @return    float
      */
-    public static function SUMX2MY2($matrixData1, $matrixData2)
+    public static function SUMX2MY2($matrixData1, $matrixData2): float|int
     {
         $array1 = PHPExcel_Calculation_Functions::flattenArray($matrixData1);
         $array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);
@@ -1384,7 +1382,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed[]    $matrixData2    Matrix #2
      * @return    float
      */
-    public static function SUMX2PY2($matrixData1, $matrixData2)
+    public static function SUMX2PY2($matrixData1, $matrixData2): float|int
     {
         $array1 = PHPExcel_Calculation_Functions::flattenArray($matrixData1);
         $array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);
@@ -1409,7 +1407,7 @@ class PHPExcel_Calculation_MathTrig
      * @param    mixed[]    $matrixData2    Matrix #2
      * @return    float
      */
-    public static function SUMXMY2($matrixData1, $matrixData2)
+    public static function SUMXMY2($matrixData1, $matrixData2): float|int
     {
         $array1 = PHPExcel_Calculation_Functions::flattenArray($matrixData1);
         $array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);

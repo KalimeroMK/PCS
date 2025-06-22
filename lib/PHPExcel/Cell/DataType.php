@@ -39,10 +39,8 @@ class PHPExcel_Cell_DataType
 
     /**
      * List of error codes
-     *
-     * @var array
      */
-    private static $errorCodes = array(
+    private static array $errorCodes = array(
         '#NULL!'  => 0,
         '#DIV/0!' => 1,
         '#VALUE!' => 2,
@@ -80,7 +78,7 @@ class PHPExcel_Cell_DataType
      * @param  mixed  Value to sanitize to an Excel string
      * @return mixed  Sanitized value
      */
-    public static function checkString($pValue = null)
+    public static function checkString($pValue = null): \PHPExcel_RichText|string|array
     {
         if ($pValue instanceof PHPExcel_RichText) {
             // TODO: Sanitize Rich-Text string (max. character count is 32,767)
@@ -102,7 +100,7 @@ class PHPExcel_Cell_DataType
      * @param  mixed   Value to sanitize to an Excel error code
      * @return string  Sanitized value
      */
-    public static function checkErrorCode($pValue = null)
+    public static function checkErrorCode($pValue = null): string
     {
         $pValue = (string) $pValue;
 

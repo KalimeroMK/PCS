@@ -173,13 +173,6 @@ class PHPExcel_Worksheet_HeaderFooter
     private $headerFooterImages = array();
 
     /**
-     * Create a new PHPExcel_Worksheet_HeaderFooter
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Get OddHeader
      *
      * @return string
@@ -193,9 +186,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set OddHeader
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setOddHeader($pValue)
+    public function setOddHeader($pValue): static
     {
         $this->oddHeader = $pValue;
         return $this;
@@ -215,9 +207,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set OddFooter
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setOddFooter($pValue)
+    public function setOddFooter($pValue): static
     {
         $this->oddFooter = $pValue;
         return $this;
@@ -237,9 +228,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set EvenHeader
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setEvenHeader($pValue)
+    public function setEvenHeader($pValue): static
     {
         $this->evenHeader = $pValue;
         return $this;
@@ -259,9 +249,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set EvenFooter
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setEvenFooter($pValue)
+    public function setEvenFooter($pValue): static
     {
         $this->evenFooter = $pValue;
         return $this;
@@ -281,9 +270,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set FirstHeader
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setFirstHeader($pValue)
+    public function setFirstHeader($pValue): static
     {
         $this->firstHeader = $pValue;
         return $this;
@@ -303,9 +291,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set FirstFooter
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setFirstFooter($pValue)
+    public function setFirstFooter($pValue): static
     {
         $this->firstFooter = $pValue;
         return $this;
@@ -325,9 +312,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set DifferentOddEven
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setDifferentOddEven($pValue = false)
+    public function setDifferentOddEven($pValue = false): static
     {
         $this->differentOddEven = $pValue;
         return $this;
@@ -347,9 +333,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set DifferentFirst
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setDifferentFirst($pValue = false)
+    public function setDifferentFirst($pValue = false): static
     {
         $this->differentFirst = $pValue;
         return $this;
@@ -369,9 +354,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set ScaleWithDocument
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setScaleWithDocument($pValue = true)
+    public function setScaleWithDocument($pValue = true): static
     {
         $this->scaleWithDocument = $pValue;
         return $this;
@@ -391,9 +375,8 @@ class PHPExcel_Worksheet_HeaderFooter
      * Set AlignWithMargins
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setAlignWithMargins($pValue = true)
+    public function setAlignWithMargins($pValue = true): static
     {
         $this->alignWithMargins = $pValue;
         return $this;
@@ -402,12 +385,10 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Add header/footer image
      *
-     * @param PHPExcel_Worksheet_HeaderFooterDrawing $image
      * @param string $location
      * @throws PHPExcel_Exception
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function addImage(PHPExcel_Worksheet_HeaderFooterDrawing $image = null, $location = self::IMAGE_HEADER_LEFT)
+    public function addImage(PHPExcel_Worksheet_HeaderFooterDrawing $image = null, $location = self::IMAGE_HEADER_LEFT): static
     {
         $this->headerFooterImages[$location] = $image;
         return $this;
@@ -418,9 +399,8 @@ class PHPExcel_Worksheet_HeaderFooter
      *
      * @param string $location
      * @throws PHPExcel_Exception
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function removeImage($location = self::IMAGE_HEADER_LEFT)
+    public function removeImage($location = self::IMAGE_HEADER_LEFT): static
     {
         if (isset($this->headerFooterImages[$location])) {
             unset($this->headerFooterImages[$location]);
@@ -433,9 +413,8 @@ class PHPExcel_Worksheet_HeaderFooter
      *
      * @param PHPExcel_Worksheet_HeaderFooterDrawing[] $images
      * @throws PHPExcel_Exception
-     * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setImages($images)
+    public function setImages($images): static
     {
         if (!is_array($images)) {
             throw new PHPExcel_Exception('Invalid parameter!');
@@ -450,7 +429,7 @@ class PHPExcel_Worksheet_HeaderFooter
      *
      * @return PHPExcel_Worksheet_HeaderFooterDrawing[]
      */
-    public function getImages()
+    public function getImages(): array
     {
         // Sort array
         $images = array();
@@ -484,11 +463,7 @@ class PHPExcel_Worksheet_HeaderFooter
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

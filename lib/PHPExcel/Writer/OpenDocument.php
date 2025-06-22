@@ -32,19 +32,15 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
      *
      * @var PHPExcel_Writer_OpenDocument_WriterPart[]
      */
-    private $writerParts = array();
+    private array $writerParts = array();
 
     /**
      * Private PHPExcel
-     *
-     * @var PHPExcel
      */
-    private $spreadSheet;
+    private ?\PHPExcel $spreadSheet = null;
 
     /**
      * Create a new PHPExcel_Writer_OpenDocument
-     *
-     * @param PHPExcel $pPHPExcel
      */
     public function __construct(PHPExcel $pPHPExcel = null)
     {
@@ -86,7 +82,7 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
      * @param  string  $pFilename
      * @throws PHPExcel_Writer_Exception
      */
-    public function save($pFilename = null)
+    public function save($pFilename = null): void
     {
         if (!$this->spreadSheet) {
             throw new PHPExcel_Writer_Exception('PHPExcel object unassigned.');
@@ -97,11 +93,8 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
 
         // If $pFilename is php://output or php://stdout, make it a temporary file...
         $originalFilename = $pFilename;
-        if (strtolower($pFilename) == 'php://output' || strtolower($pFilename) == 'php://stdout') {
-            $pFilename = @tempnam(PHPExcel_Shared_File::sys_get_temp_dir(), 'phpxltmp');
-            if ($pFilename == '') {
-                $pFilename = $originalFilename;
-            }
+        if (strtolower($pFilename) === 'php://output' || strtolower($pFilename) === 'php://stdout') {
+            $pFilename = $originalFilename;
         }
 
         $objZip = $this->createZip($pFilename);
@@ -151,10 +144,8 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
             unlink($pFilename);
         }
         // Try opening the ZIP file
-        if ($objZip->open($pFilename, $zipOverWrite) !== true) {
-            if ($objZip->open($pFilename, $zipCreate) !== true) {
-                throw new PHPExcel_Writer_Exception("Could not open $pFilename for writing.");
-            }
+        if ($objZip->open($pFilename, $zipOverWrite) !== true && $objZip->open($pFilename, $zipCreate) !== true) {
+            throw new PHPExcel_Writer_Exception("Could not open $pFilename for writing.");
         }
 
         return $objZip;
@@ -182,7 +173,7 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
      * @throws PHPExcel_Writer_Exception
      * @return PHPExcel_Writer_Excel2007
      */
-    public function setPHPExcel(PHPExcel $pPHPExcel = null)
+    public function setPHPExcel(PHPExcel $pPHPExcel = null): static
     {
         $this->spreadSheet = $pPHPExcel;
         return $this;

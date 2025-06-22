@@ -39,11 +39,10 @@ class PHPExcel_IOFactory
     /**
      * Search locations
      *
-     * @var    array
      * @access    private
      * @static
      */
-    private static $searchLocations = array(
+    private static array $searchLocations = array(
         array( 'type' => 'IWriter', 'path' => 'PHPExcel/Writer/{0}.php', 'class' => 'PHPExcel_Writer_{0}' ),
         array( 'type' => 'IReader', 'path' => 'PHPExcel/Reader/{0}.php', 'class' => 'PHPExcel_Reader_{0}' )
     );
@@ -51,11 +50,10 @@ class PHPExcel_IOFactory
     /**
      * Autoresolve classes
      *
-     * @var    array
      * @access    private
      * @static
      */
-    private static $autoResolveClasses = array(
+    private static array $autoResolveClasses = array(
         'Excel2007',
         'Excel5',
         'Excel2003XML',
@@ -93,7 +91,7 @@ class PHPExcel_IOFactory
      * @param    array $value
      * @throws    PHPExcel_Reader_Exception
      */
-    public static function setSearchLocations($value)
+    public static function setSearchLocations($value): void
     {
         if (is_array($value)) {
             self::$searchLocations = $value;
@@ -111,7 +109,7 @@ class PHPExcel_IOFactory
      * @param    string $location    Example: PHPExcel/Writer/{0}.php
      * @param    string $classname     Example: PHPExcel_Writer_{0}
      */
-    public static function addSearchLocation($type = '', $location = '', $classname = '')
+    public static function addSearchLocation($type = '', $location = '', $classname = ''): void
     {
         self::$searchLocations[] = array( 'type' => $type, 'path' => $location, 'class' => $classname );
     }
@@ -121,7 +119,6 @@ class PHPExcel_IOFactory
      *
      * @static
      * @access    public
-     * @param    PHPExcel $phpExcel
      * @param    string  $writerType    Example: Excel2007
      * @return    PHPExcel_Writer_IWriter
      * @throws    PHPExcel_Reader_Exception
@@ -198,10 +195,9 @@ class PHPExcel_IOFactory
      * @static
      * @access public
      * @param     string         $pFilename        The name of the spreadsheet file to identify
-     * @return    string
      * @throws    PHPExcel_Reader_Exception
      */
-    public static function identify($pFilename)
+    public static function identify($pFilename): string
     {
         $reader = self::createReaderForFile($pFilename);
         $className = get_class($reader);
@@ -255,10 +251,6 @@ class PHPExcel_IOFactory
                     $extensionType = 'HTML';
                     break;
                 case 'csv':
-                    // Do nothing
-                    // We must not try to use CSV reader since it loads
-                    // all files including Excel files etc.
-                    break;
                 default:
                     break;
             }

@@ -29,22 +29,16 @@ class PHPExcel_WorksheetIterator implements Iterator
 {
     /**
      * Spreadsheet to iterate
-     *
-     * @var PHPExcel
      */
-    private $subject;
+    private ?\PHPExcel $subject;
 
     /**
      * Current iterator position
-     *
-     * @var int
      */
-    private $position = 0;
+    private int $position = 0;
 
     /**
      * Create a new worksheet iterator
-     *
-     * @param PHPExcel         $subject
      */
     public function __construct(PHPExcel $subject = null)
     {
@@ -63,7 +57,7 @@ class PHPExcel_WorksheetIterator implements Iterator
     /**
      * Rewind iterator
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
@@ -91,7 +85,7 @@ class PHPExcel_WorksheetIterator implements Iterator
     /**
      * Next value
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }

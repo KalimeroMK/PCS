@@ -72,10 +72,8 @@ class PHPExcel_Calculation_FormulaParser
 
     /**
      * Formula
-     *
-     * @var string
      */
-    private $formula;
+    private string $formula;
 
     /**
      * Tokens
@@ -131,10 +129,8 @@ class PHPExcel_Calculation_FormulaParser
 
     /**
      * Get Token count
-     *
-     * @return string
      */
-    public function getTokenCount()
+    public function getTokenCount(): int
     {
         return count($this->tokens);
     }
@@ -152,7 +148,7 @@ class PHPExcel_Calculation_FormulaParser
     /**
      * Parse to tokens
      */
-    private function parseToTokens()
+    private function parseToTokens(): void
     {
         // No attempt is made to verify formulas; assumes formulas are derived from Excel, where
         // they can only exist if valid; stack overflows/underflows sunk as nulls without exceptions.
@@ -241,13 +237,11 @@ class PHPExcel_Calculation_FormulaParser
             }
 
             // scientific notation check
-            if (strpos(PHPExcel_Calculation_FormulaParser::OPERATORS_SN, $this->formula[$index]) !== false) {
-                if (strlen($value) > 1) {
-                    if (preg_match("/^[1-9]{1}(\.[0-9]+)?E{1}$/", $this->formula[$index]) != 0) {
-                        $value .= $this->formula[$index];
-                        ++$index;
-                        continue;
-                    }
+            if (strpos(PHPExcel_Calculation_FormulaParser::OPERATORS_SN, $this->formula[$index]) !== false && strlen($value) > 1) {
+                if (preg_match("/^[1-9]{1}(\\.\\d+)?E{1}\$/", $this->formula[$index]) != 0) {
+                    $value .= $this->formula[$index];
+                    ++$index;
+                    continue;
                 }
             }
 
@@ -255,7 +249,7 @@ class PHPExcel_Calculation_FormulaParser
 
             // establish state-dependent character evaluations
             if ($this->formula[$index] == PHPExcel_Calculation_FormulaParser::QUOTE_DOUBLE) {
-                if (strlen($value > 0)) {
+                if (strlen($value > 0) !== 0) {
                     // unexpected
                     $tokens1[] = new PHPExcel_Calculation_FormulaToken($value, PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_UNKNOWN);
                     $value = "";
@@ -372,16 +366,14 @@ class PHPExcel_Calculation_FormulaParser
             }
 
             // multi-character comparators
-            if (($index + 2) <= $formulaLength) {
-                if (in_array(substr($this->formula, $index, 2), $COMPARATORS_MULTI)) {
-                    if (strlen($value) > 0) {
-                        $tokens1[] = new PHPExcel_Calculation_FormulaToken($value, PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_OPERAND);
-                        $value = "";
-                    }
-                    $tokens1[] = new PHPExcel_Calculation_FormulaToken(substr($this->formula, $index, 2), PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_OPERATORINFIX, PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_LOGICAL);
-                    $index += 2;
-                    continue;
+            if ($index + 2 <= $formulaLength && in_array(substr($this->formula, $index, 2), $COMPARATORS_MULTI)) {
+                if (strlen($value) > 0) {
+                    $tokens1[] = new PHPExcel_Calculation_FormulaToken($value, PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_OPERAND);
+                    $value = "";
                 }
+                $tokens1[] = new PHPExcel_Calculation_FormulaToken(substr($this->formula, $index, 2), PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_OPERATORINFIX, PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_LOGICAL);
+                $index += 2;
+                continue;
             }
 
             // standard infix operators
@@ -473,16 +465,8 @@ class PHPExcel_Calculation_FormulaParser
         $tokenCount = count($tokens1);
         for ($i = 0; $i < $tokenCount; ++$i) {
             $token = $tokens1[$i];
-            if (isset($tokens1[$i - 1])) {
-                $previousToken = $tokens1[$i - 1];
-            } else {
-                $previousToken = null;
-            }
-            if (isset($tokens1[$i + 1])) {
-                $nextToken = $tokens1[$i + 1];
-            } else {
-                $nextToken = null;
-            }
+            $previousToken = isset($tokens1[$i - 1]) ? $tokens1[$i - 1] : null;
+            $nextToken = isset($tokens1[$i + 1]) ? $tokens1[$i + 1] : null;
 
             if (is_null($token)) {
                 continue;
@@ -527,16 +511,8 @@ class PHPExcel_Calculation_FormulaParser
         $tokenCount = count($tokens2);
         for ($i = 0; $i < $tokenCount; ++$i) {
             $token = $tokens2[$i];
-            if (isset($tokens2[$i - 1])) {
-                $previousToken = $tokens2[$i - 1];
-            } else {
-                $previousToken = null;
-            }
-            if (isset($tokens2[$i + 1])) {
-                $nextToken = $tokens2[$i + 1];
-            } else {
-                $nextToken = null;
-            }
+            $previousToken = isset($tokens2[$i - 1]) ? $tokens2[$i - 1] : null;
+            $nextToken = isset($tokens2[$i + 1]) ? $tokens2[$i + 1] : null;
 
             if (is_null($token)) {
                 continue;
@@ -595,7 +571,7 @@ class PHPExcel_Calculation_FormulaParser
             if ($token->getTokenType() == PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_OPERAND &&
                 $token->getTokenSubType() == PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_NOTHING) {
                 if (!is_numeric($token->getValue())) {
-                    if (strtoupper($token->getValue()) == "TRUE" || strtoupper($token->getValue() == "FALSE")) {
+                    if (strtoupper($token->getValue()) === "TRUE" || strtoupper($token->getValue() == "FALSE")) {
                         $token->setTokenSubType(PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_LOGICAL);
                     } else {
                         $token->setTokenSubType(PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_RANGE);
@@ -608,11 +584,9 @@ class PHPExcel_Calculation_FormulaParser
                 continue;
             }
 
-            if ($token->getTokenType() == PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_FUNCTION) {
-                if (strlen($token->getValue() > 0)) {
-                    if (substr($token->getValue(), 0, 1) == "@") {
-                        $token->setValue(substr($token->getValue(), 1));
-                    }
+            if ($token->getTokenType() == PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_FUNCTION && strlen($token->getValue() > 0)) {
+                if (substr($token->getValue(), 0, 1) === "@") {
+                    $token->setValue(substr($token->getValue(), 1));
                 }
             }
 

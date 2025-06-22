@@ -96,10 +96,10 @@ if (is_file($skin_file)) {
         $content = get_text(html_purifier($write['qa_content']), 0);
     }
 
-    $editor_html = editor_html('qa_content', $content, $is_dhtml_editor);
+    $editor_html = editor_html('qa_content', $content);
     $editor_js = '';
-    $editor_js .= get_editor_js('qa_content', $is_dhtml_editor);
-    $editor_js .= chk_editor_js('qa_content', $is_dhtml_editor);
+    $editor_js .= get_editor_js('qa_content');
+    $editor_js .= chk_editor_js('qa_content');
 
     $upload_max_filesize = number_format($qaconfig['qa_upload_size']).' 바이트';
 

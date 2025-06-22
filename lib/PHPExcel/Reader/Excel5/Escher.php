@@ -55,17 +55,13 @@ class PHPExcel_Reader_Excel5_Escher
 
     /**
      * Size in bytes of the Escher stream data
-     *
-     * @var int
      */
-    private $dataSize;
+    private ?int $dataSize = null;
 
     /**
      * Current position of stream pointer in Escher stream data
-     *
-     * @var int
      */
-    private $pos;
+    private ?int $pos = null;
 
     /**
      * The object to be returned by the reader. Modified during load.
@@ -101,7 +97,7 @@ class PHPExcel_Reader_Excel5_Escher
         // Parse Escher stream
         while ($this->pos < $this->dataSize) {
             // offset: 2; size: 2: Record Type
-            $fbt = PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos + 2);
+            $fbt = PHPExcel_Reader_Excel5::getInt2d($this->data, 2);
 
             switch ($fbt) {
                 case self::DGGCONTAINER:
@@ -170,19 +166,13 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read a generic record
      */
-    private function readDefault()
+    private function readDefault(): void
     {
         // offset 0; size: 2; recVer and recInstance
-        $verInstance = PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos);
-
+        PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos);
         // offset: 2; size: 2: Record Type
-        $fbt = PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos + 2);
-
-        // bit: 0-3; mask: 0x000F; recVer
-        $recVer = (0x000F & $verInstance) >> 0;
-
+        PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos + 2);
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -191,7 +181,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read DggContainer record (Drawing Group Container)
      */
-    private function readDggContainer()
+    private function readDggContainer(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -209,10 +199,9 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read Dgg record (Drawing Group)
      */
-    private function readDgg()
+    private function readDgg(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -221,7 +210,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read BstoreContainer record (Blip Store Container)
      */
-    private function readBstoreContainer()
+    private function readBstoreContainer(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -239,7 +228,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read BSE record
      */
-    private function readBSE()
+    private function readBSE(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -257,42 +246,17 @@ class PHPExcel_Reader_Excel5_Escher
         $this->object->addBSE($BSE);
 
         $BSE->setBLIPType($recInstance);
-
-        // offset: 0; size: 1; btWin32 (MSOBLIPTYPE)
-        $btWin32 = ord($recordData[0]);
-
-        // offset: 1; size: 1; btWin32 (MSOBLIPTYPE)
-        $btMacOS = ord($recordData[1]);
-
-        // offset: 2; size: 16; MD4 digest
-        $rgbUid = substr($recordData, 2, 16);
-
         // offset: 18; size: 2; tag
-        $tag = PHPExcel_Reader_Excel5::getInt2d($recordData, 18);
-
+        PHPExcel_Reader_Excel5::getInt2d($recordData, 18);
         // offset: 20; size: 4; size of BLIP in bytes
-        $size = PHPExcel_Reader_Excel5::getInt4d($recordData, 20);
-
+        PHPExcel_Reader_Excel5::getInt4d($recordData, 20);
         // offset: 24; size: 4; number of references to this BLIP
-        $cRef = PHPExcel_Reader_Excel5::getInt4d($recordData, 24);
-
+        PHPExcel_Reader_Excel5::getInt4d($recordData, 24);
         // offset: 28; size: 4; MSOFO file offset
-        $foDelay = PHPExcel_Reader_Excel5::getInt4d($recordData, 28);
-
-        // offset: 32; size: 1; unused1
-        $unused1 = ord($recordData[32]);
+        PHPExcel_Reader_Excel5::getInt4d($recordData, 28);
 
         // offset: 33; size: 1; size of nameData in bytes (including null terminator)
         $cbName = ord($recordData[33]);
-
-        // offset: 34; size: 1; unused2
-        $unused2 = ord($recordData[34]);
-
-        // offset: 35; size: 1; unused3
-        $unused3 = ord($recordData[35]);
-
-        // offset: 36; size: $cbName; nameData
-        $nameData = substr($recordData, 36, $cbName);
 
         // offset: 36 + $cbName, size: var; the BLIP data
         $blipData = substr($recordData, 36 + $cbName);
@@ -305,7 +269,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read BlipJPEG record. Holds raw JPEG image data
      */
-    private function readBlipJPEG()
+    private function readBlipJPEG(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -319,9 +283,6 @@ class PHPExcel_Reader_Excel5_Escher
         $this->pos += 8 + $length;
 
         $pos = 0;
-
-        // offset: 0; size: 16; rgbUid1 (MD4 digest of)
-        $rgbUid1 = substr($recordData, 0, 16);
         $pos += 16;
 
         // offset: 16; size: 16; rgbUid2 (MD4 digest), only if $recInstance = 0x46B or 0x6E3
@@ -329,9 +290,6 @@ class PHPExcel_Reader_Excel5_Escher
             $rgbUid2 = substr($recordData, 16, 16);
             $pos += 16;
         }
-
-        // offset: var; size: 1; tag
-        $tag = ord($recordData[$pos]);
         $pos += 1;
 
         // offset: var; size: var; the raw image data
@@ -346,7 +304,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read BlipPNG record. Holds raw PNG image data
      */
-    private function readBlipPNG()
+    private function readBlipPNG(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -360,9 +318,6 @@ class PHPExcel_Reader_Excel5_Escher
         $this->pos += 8 + $length;
 
         $pos = 0;
-
-        // offset: 0; size: 16; rgbUid1 (MD4 digest of)
-        $rgbUid1 = substr($recordData, 0, 16);
         $pos += 16;
 
         // offset: 16; size: 16; rgbUid2 (MD4 digest), only if $recInstance = 0x46B or 0x6E3
@@ -370,9 +325,6 @@ class PHPExcel_Reader_Excel5_Escher
             $rgbUid2 = substr($recordData, 16, 16);
             $pos += 16;
         }
-
-        // offset: var; size: 1; tag
-        $tag = ord($recordData[$pos]);
         $pos += 1;
 
         // offset: var; size: var; the raw image data
@@ -387,7 +339,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read OPT record. This record may occur within DggContainer record or SpContainer
      */
-    private function readOPT()
+    private function readOPT(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -406,15 +358,14 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read TertiaryOPT record
      */
-    private function readTertiaryOPT()
+    private function readTertiaryOPT(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
         // bit: 4-15; mask: 0xFFF0; recInstance
-        $recInstance = (0xFFF0 & PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos)) >> 4;
+        PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos);
 
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -423,10 +374,9 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read SplitMenuColors record
      */
-    private function readSplitMenuColors()
+    private function readSplitMenuColors(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -435,7 +385,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read DgContainer record (Drawing Container)
      */
-    private function readDgContainer()
+    private function readDgContainer(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -447,16 +397,15 @@ class PHPExcel_Reader_Excel5_Escher
         $dgContainer = new PHPExcel_Shared_Escher_DgContainer();
         $this->object->setDgContainer($dgContainer);
         $reader = new PHPExcel_Reader_Excel5_Escher($dgContainer);
-        $escher = $reader->load($recordData);
+        $reader->load($recordData);
     }
 
     /**
      * Read Dg record (Drawing)
      */
-    private function readDg()
+    private function readDg(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -465,7 +414,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read SpgrContainer record (Shape Group Container)
      */
-    private function readSpgrContainer()
+    private function readSpgrContainer(): void
     {
         // context is either context DgContainer or SpgrContainer
 
@@ -487,13 +436,13 @@ class PHPExcel_Reader_Excel5_Escher
         }
 
         $reader = new PHPExcel_Reader_Excel5_Escher($spgrContainer);
-        $escher = $reader->load($recordData);
+        $reader->load($recordData);
     }
 
     /**
      * Read SpContainer record (Shape Container)
      */
-    private function readSpContainer()
+    private function readSpContainer(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -507,16 +456,15 @@ class PHPExcel_Reader_Excel5_Escher
 
         // record is a container, read contents
         $reader = new PHPExcel_Reader_Excel5_Escher($spContainer);
-        $escher = $reader->load($recordData);
+        $reader->load($recordData);
     }
 
     /**
      * Read Spgr record (Shape Group)
      */
-    private function readSpgr()
+    private function readSpgr(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -525,15 +473,14 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read Sp record (Shape)
      */
-    private function readSp()
+    private function readSp(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
         // bit: 4-15; mask: 0xFFF0; recInstance
-        $recInstance = (0xFFF0 & PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos)) >> 4;
+        PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos);
 
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -542,15 +489,14 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read ClientTextbox record
      */
-    private function readClientTextbox()
+    private function readClientTextbox(): void
     {
         // offset: 0; size: 2; recVer and recInstance
 
         // bit: 4-15; mask: 0xFFF0; recInstance
-        $recInstance = (0xFFF0 & PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos)) >> 4;
+        PHPExcel_Reader_Excel5::getInt2d($this->data, $this->pos);
 
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -559,7 +505,7 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read ClientAnchor record. This record holds information about where the shape is anchored in worksheet
      */
-    private function readClientAnchor()
+    private function readClientAnchor(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -613,10 +559,9 @@ class PHPExcel_Reader_Excel5_Escher
     /**
      * Read ClientData record
      */
-    private function readClientData()
+    private function readClientData(): void
     {
         $length = PHPExcel_Reader_Excel5::getInt4d($this->data, $this->pos + 4);
-        $recordData = substr($this->data, $this->pos + 8, $length);
 
         // move stream pointer to next record
         $this->pos += 8 + $length;
@@ -628,7 +573,7 @@ class PHPExcel_Reader_Excel5_Escher
      * @param string $data Binary data
      * @param int $n Number of properties
      */
-    private function readOfficeArtRGFOPTE($data, $n)
+    private function readOfficeArtRGFOPTE(string $data, int $n): void
     {
         $splicedComplexData = substr($data, 6 * $n);
 
@@ -652,7 +597,7 @@ class PHPExcel_Reader_Excel5_Escher
             // offset: 2; size: 4; the value for this property
             $op = PHPExcel_Reader_Excel5::getInt4d($fopte, 2);
 
-            if ($opidFComplex) {
+            if ($opidFComplex !== 0) {
                 $complexData = substr($splicedComplexData, 0, $op);
                 $splicedComplexData = substr($splicedComplexData, $op);
 

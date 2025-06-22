@@ -32,14 +32,12 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      *
      * @var string
      */
-    private $TableName = null;
+    private $TableName;
 
     /**
      * Database handle
-     *
-     * @var resource
      */
-    private $DBHandle = null;
+    private ?\SQLite3 $DBHandle = null;
 
     /**
      * Prepared statement for a SQLite3 select query
@@ -97,10 +95,9 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      *
      * @param    string            $pCoord        Coordinate address of the cell to update
      * @param    PHPExcel_Cell    $cell        Cell to update
-     * @return    PHPExcel_Cell
      * @throws    PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         if (($pCoord !== $this->currentObjectID) && ($this->currentObjectID !== null)) {
             $this->storeData();
@@ -169,7 +166,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
         }
         $cellData = $cellResult->fetchArray(SQLITE3_ASSOC);
 
-        return ($cellData === false) ? false : true;
+        return $cellData !== false;
     }
 
     /**
@@ -178,7 +175,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      * @param    string            $pCoord        Coordinate address of the cell to delete
      * @throws    PHPExcel_Exception
      */
-    public function deleteCacheData($pCoord)
+    public function deleteCacheData($pCoord): void
     {
         if ($pCoord === $this->currentObjectID) {
             $this->currentObject->detach();
@@ -200,9 +197,8 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      *
      * @param    string        $fromAddress    Current address of the cell to move
      * @param    string        $toAddress        Destination address of the cell to move
-     * @return    boolean
      */
-    public function moveCell($fromAddress, $toAddress)
+    public function moveCell($fromAddress, $toAddress): bool
     {
         if ($fromAddress === $this->currentObjectID) {
             $this->currentObjectID = $toAddress;
@@ -229,7 +225,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      *
      * @return    string[]
      */
-    public function getCellList()
+    public function getCellList(): array
     {
         if ($this->currentObjectID !== null) {
             $this->storeData();
@@ -253,11 +249,9 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      * Clone the cell collection
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
-     * @return    void
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
-        $this->currentCellIsDirty;
         $this->storeData();
 
         //    Get a new id for the new table name
@@ -274,10 +268,8 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 
     /**
      * Clear the cell collection and disconnect from our parent
-     *
-     * @return    void
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if (!is_null($this->currentObject)) {
             $this->currentObject->detach();
@@ -332,15 +324,9 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
     /**
      * Identify whether the caching method is currently available
      * Some methods are dependent on the availability of certain extensions being enabled in the PHP build
-     *
-     * @return    boolean
      */
-    public static function cacheMethodIsAvailable()
+    public static function cacheMethodIsAvailable(): bool
     {
-        if (!class_exists('SQLite3', false)) {
-            return false;
-        }
-
-        return true;
+        return class_exists('SQLite3', false);
     }
 }

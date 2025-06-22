@@ -36,45 +36,33 @@ class PHPExcel_Chart
 
     /**
      * Worksheet
-     *
-     * @var PHPExcel_Worksheet
      */
-    private $worksheet;
+    private ?\PHPExcel_Worksheet $worksheet = null;
 
     /**
      * Chart Title
-     *
-     * @var PHPExcel_Chart_Title
      */
-    private $title;
+    private ?\PHPExcel_Chart_Title $title;
 
     /**
      * Chart Legend
-     *
-     * @var PHPExcel_Chart_Legend
      */
-    private $legend;
+    private ?\PHPExcel_Chart_Legend $legend;
 
     /**
      * X-Axis Label
-     *
-     * @var PHPExcel_Chart_Title
      */
-    private $xAxisLabel;
+    private ?\PHPExcel_Chart_Title $xAxisLabel;
 
     /**
      * Y-Axis Label
-     *
-     * @var PHPExcel_Chart_Title
      */
-    private $yAxisLabel;
+    private ?\PHPExcel_Chart_Title $yAxisLabel;
 
     /**
      * Chart Plot Area
-     *
-     * @var PHPExcel_Chart_PlotArea
      */
-    private $plotArea;
+    private ?\PHPExcel_Chart_PlotArea $plotArea;
 
     /**
      * Plot Visible Only
@@ -92,31 +80,23 @@ class PHPExcel_Chart
 
     /**
      * Chart Asix Y as
-     *
-     * @var PHPExcel_Chart_Axis
      */
-    private $yAxis;
+    private ?\PHPExcel_Chart_Axis $yAxis;
 
     /**
      * Chart Asix X as
-     *
-     * @var PHPExcel_Chart_Axis
      */
-    private $xAxis;
+    private ?\PHPExcel_Chart_Axis $xAxis;
 
     /**
      * Chart Major Gridlines as
-     *
-     * @var PHPExcel_Chart_GridLines
      */
-    private $majorGridlines;
+    private ?\PHPExcel_Chart_GridLines $majorGridlines;
 
     /**
      * Chart Minor Gridlines as
-     *
-     * @var PHPExcel_Chart_GridLines
      */
-    private $minorGridlines;
+    private ?\PHPExcel_Chart_GridLines $minorGridlines;
 
     /**
      * Top-Left Cell Position
@@ -208,11 +188,9 @@ class PHPExcel_Chart
     /**
      * Set Worksheet
      *
-     * @param    PHPExcel_Worksheet    $pValue
      * @throws    PHPExcel_Chart_Exception
-     * @return PHPExcel_Chart
      */
-    public function setWorksheet(PHPExcel_Worksheet $pValue = null)
+    public function setWorksheet(PHPExcel_Worksheet $pValue = null): static
     {
         $this->worksheet = $pValue;
 
@@ -231,11 +209,8 @@ class PHPExcel_Chart
 
     /**
      * Set Title
-     *
-     * @param    PHPExcel_Chart_Title $title
-     * @return    PHPExcel_Chart
      */
-    public function setTitle(PHPExcel_Chart_Title $title)
+    public function setTitle(PHPExcel_Chart_Title $title): static
     {
         $this->title = $title;
 
@@ -254,11 +229,8 @@ class PHPExcel_Chart
 
     /**
      * Set Legend
-     *
-     * @param    PHPExcel_Chart_Legend $legend
-     * @return    PHPExcel_Chart
      */
-    public function setLegend(PHPExcel_Chart_Legend $legend)
+    public function setLegend(PHPExcel_Chart_Legend $legend): static
     {
         $this->legend = $legend;
 
@@ -277,11 +249,8 @@ class PHPExcel_Chart
 
     /**
      * Set X-Axis Label
-     *
-     * @param    PHPExcel_Chart_Title $label
-     * @return    PHPExcel_Chart
      */
-    public function setXAxisLabel(PHPExcel_Chart_Title $label)
+    public function setXAxisLabel(PHPExcel_Chart_Title $label): static
     {
         $this->xAxisLabel = $label;
 
@@ -300,11 +269,8 @@ class PHPExcel_Chart
 
     /**
      * Set Y-Axis Label
-     *
-     * @param    PHPExcel_Chart_Title $label
-     * @return    PHPExcel_Chart
      */
-    public function setYAxisLabel(PHPExcel_Chart_Title $label)
+    public function setYAxisLabel(PHPExcel_Chart_Title $label): static
     {
         $this->yAxisLabel = $label;
 
@@ -335,9 +301,8 @@ class PHPExcel_Chart
      * Set Plot Visible Only
      *
      * @param boolean $plotVisibleOnly
-     * @return PHPExcel_Chart
      */
-    public function setPlotVisibleOnly($plotVisibleOnly = true)
+    public function setPlotVisibleOnly($plotVisibleOnly = true): static
     {
         $this->plotVisibleOnly = $plotVisibleOnly;
 
@@ -358,9 +323,8 @@ class PHPExcel_Chart
      * Set Display Blanks as
      *
      * @param string $displayBlanksAs
-     * @return PHPExcel_Chart
      */
-    public function setDisplayBlanksAs($displayBlanksAs = '0')
+    public function setDisplayBlanksAs($displayBlanksAs = '0'): void
     {
         $this->displayBlanksAs = $displayBlanksAs;
     }
@@ -429,9 +393,8 @@ class PHPExcel_Chart
      * @param    string    $cell
      * @param    integer    $xOffset
      * @param    integer    $yOffset
-     * @return PHPExcel_Chart
      */
-    public function setTopLeftPosition($cell, $xOffset = null, $yOffset = null)
+    public function setTopLeftPosition($cell, $xOffset = null, $yOffset = null): static
     {
         $this->topLeftCellRef = $cell;
         if (!is_null($xOffset)) {
@@ -449,7 +412,7 @@ class PHPExcel_Chart
      *
      * @return array    an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
      */
-    public function getTopLeftPosition()
+    public function getTopLeftPosition(): array
     {
         return array(
             'cell'    => $this->topLeftCellRef,
@@ -472,9 +435,8 @@ class PHPExcel_Chart
      * Set the Top Left cell position for the chart
      *
      * @param    string    $cell
-     * @return PHPExcel_Chart
      */
-    public function setTopLeftCell($cell)
+    public function setTopLeftCell($cell): static
     {
         $this->topLeftCellRef = $cell;
 
@@ -486,9 +448,8 @@ class PHPExcel_Chart
      *
      * @param    integer    $xOffset
      * @param    integer    $yOffset
-     * @return PHPExcel_Chart
      */
-    public function setTopLeftOffset($xOffset = null, $yOffset = null)
+    public function setTopLeftOffset($xOffset = null, $yOffset = null): static
     {
         if (!is_null($xOffset)) {
             $this->setTopLeftXOffset($xOffset);
@@ -505,7 +466,7 @@ class PHPExcel_Chart
      *
      * @return integer[]
      */
-    public function getTopLeftOffset()
+    public function getTopLeftOffset(): array
     {
         return array(
             'X' => $this->topLeftXOffset,
@@ -513,7 +474,7 @@ class PHPExcel_Chart
         );
     }
 
-    public function setTopLeftXOffset($xOffset)
+    public function setTopLeftXOffset($xOffset): static
     {
         $this->topLeftXOffset = $xOffset;
 
@@ -525,7 +486,7 @@ class PHPExcel_Chart
         return $this->topLeftXOffset;
     }
 
-    public function setTopLeftYOffset($yOffset)
+    public function setTopLeftYOffset($yOffset): static
     {
         $this->topLeftYOffset = $yOffset;
 
@@ -543,9 +504,8 @@ class PHPExcel_Chart
      * @param    string    $cell
      * @param    integer    $xOffset
      * @param    integer    $yOffset
-     * @return PHPExcel_Chart
      */
-    public function setBottomRightPosition($cell, $xOffset = null, $yOffset = null)
+    public function setBottomRightPosition($cell, $xOffset = null, $yOffset = null): static
     {
         $this->bottomRightCellRef = $cell;
         if (!is_null($xOffset)) {
@@ -563,7 +523,7 @@ class PHPExcel_Chart
      *
      * @return array    an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
      */
-    public function getBottomRightPosition()
+    public function getBottomRightPosition(): array
     {
         return array(
             'cell'    => $this->bottomRightCellRef,
@@ -572,7 +532,7 @@ class PHPExcel_Chart
         );
     }
 
-    public function setBottomRightCell($cell)
+    public function setBottomRightCell($cell): static
     {
         $this->bottomRightCellRef = $cell;
 
@@ -594,9 +554,8 @@ class PHPExcel_Chart
      *
      * @param    integer    $xOffset
      * @param    integer    $yOffset
-     * @return PHPExcel_Chart
      */
-    public function setBottomRightOffset($xOffset = null, $yOffset = null)
+    public function setBottomRightOffset($xOffset = null, $yOffset = null): static
     {
         if (!is_null($xOffset)) {
             $this->setBottomRightXOffset($xOffset);
@@ -613,7 +572,7 @@ class PHPExcel_Chart
      *
      * @return integer[]
      */
-    public function getBottomRightOffset()
+    public function getBottomRightOffset(): array
     {
         return array(
             'X' => $this->bottomRightXOffset,
@@ -621,7 +580,7 @@ class PHPExcel_Chart
         );
     }
 
-    public function setBottomRightXOffset($xOffset)
+    public function setBottomRightXOffset($xOffset): static
     {
         $this->bottomRightXOffset = $xOffset;
 
@@ -633,7 +592,7 @@ class PHPExcel_Chart
         return $this->bottomRightXOffset;
     }
 
-    public function setBottomRightYOffset($yOffset)
+    public function setBottomRightYOffset($yOffset): static
     {
         $this->bottomRightYOffset = $yOffset;
 
@@ -646,7 +605,7 @@ class PHPExcel_Chart
     }
 
 
-    public function refresh()
+    public function refresh(): void
     {
         if ($this->worksheet !== null) {
             $this->plotArea->refresh($this->worksheet);

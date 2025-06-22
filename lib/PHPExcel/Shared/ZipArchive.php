@@ -47,19 +47,16 @@ class PHPExcel_Shared_ZipArchive
 
     /**
      * Zip Archive Stream Handle
-     *
-     * @var string
      */
-    private $zip;
+    private ?\PclZip $zip = null;
 
 
     /**
      * Open a new zip archive
      *
      * @param    string    $fileName    Filename for the zip archive
-     * @return    boolean
      */
-    public function open($fileName)
+    public function open($fileName): bool
     {
         $this->tempDir = PHPExcel_Shared_File::sys_get_temp_dir();
         $this->zip = new PclZip($fileName);
@@ -83,7 +80,7 @@ class PHPExcel_Shared_ZipArchive
      * @param    string    $localname        Directory/Name of the file to add to the zip archive
      * @param    string    $contents        String of data to add to the zip archive
      */
-    public function addFromString($localname, $contents)
+    public function addFromString($localname, $contents): void
     {
         $filenameParts = pathinfo($localname);
 
@@ -103,9 +100,8 @@ class PHPExcel_Shared_ZipArchive
      * Find if given fileName exist in archive (Emulate ZipArchive locateName())
      *
      * @param        string        $fileName        Filename for the file in zip archive
-     * @return        boolean
      */
-    public function locateName($fileName)
+    public function locateName($fileName): int|false
     {
         $fileName = strtolower($fileName);
 
@@ -113,8 +109,8 @@ class PHPExcel_Shared_ZipArchive
         $listCount = count($list);
         $index = -1;
         for ($i = 0; $i < $listCount; ++$i) {
-            if (strtolower($list[$i]["filename"]) == $fileName ||
-                strtolower($list[$i]["stored_filename"]) == $fileName) {
+            if (strtolower($list[$i]["filename"]) === $fileName ||
+                strtolower($list[$i]["stored_filename"]) === $fileName) {
                 $index = $i;
                 break;
             }

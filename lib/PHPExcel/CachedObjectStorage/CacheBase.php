@@ -29,24 +29,22 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
 {
     /**
      * Parent worksheet
-     *
-     * @var PHPExcel_Worksheet
      */
-    protected $parent;
+    protected \PHPExcel_Worksheet $parent;
 
     /**
      * The currently active Cell
      *
      * @var PHPExcel_Cell
      */
-    protected $currentObject = null;
+    protected $currentObject;
 
     /**
      * Coordinate address of the currently active Cell
      *
      * @var string
      */
-    protected $currentObjectID = null;
+    protected $currentObjectID;
 
     /**
      * Flag indicating whether the currently active Cell requires saving
@@ -108,7 +106,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      * @param    string        $toAddress        Destination address of the cell to move
      * @return    boolean
      */
-    public function moveCell($fromAddress, $toAddress)
+    public function moveCell($fromAddress, string $toAddress)
     {
         if ($fromAddress === $this->currentObjectID) {
             $this->currentObjectID = $toAddress;
@@ -140,7 +138,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      * @param    string            $pCoord        Coordinate address of the cell to delete
      * @throws    PHPExcel_Exception
      */
-    public function deleteCacheData($pCoord)
+    public function deleteCacheData($pCoord): void
     {
         if ($pCoord === $this->currentObjectID && !is_null($this->currentObject)) {
             $this->currentObject->detach();
@@ -298,11 +296,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      */
     protected function getUniqueID()
     {
-        if (function_exists('posix_getpid')) {
-            $baseUnique = posix_getpid();
-        } else {
-            $baseUnique = mt_rand();
-        }
+        $baseUnique = function_exists('posix_getpid') ? posix_getpid() : mt_rand();
         return uniqid($baseUnique, true);
     }
 
@@ -310,11 +304,9 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      * Clone the cell collection
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
-     * @return    void
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
-        $this->currentCellIsDirty;
         $this->storeData();
 
         $this->parent = $parent;
@@ -322,14 +314,12 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
             $this->currentObject->attach($this);
         }
     }    //    function copyCellCollection()
-
     /**
      * Remove a row, deleting all cells in that row
      *
      * @param string    $row    Row number to remove
-     * @return void
      */
-    public function removeRow($row)
+    public function removeRow($row): void
     {
         foreach ($this->getCellList() as $coord) {
             sscanf($coord, '%[A-Z]%d', $c, $r);
@@ -343,9 +333,8 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      * Remove a column, deleting all cells in that column
      *
      * @param string    $column    Column ID to remove
-     * @return void
      */
-    public function removeColumn($column)
+    public function removeColumn($column): void
     {
         foreach ($this->getCellList() as $coord) {
             sscanf($coord, '%[A-Z]%d', $c, $r);

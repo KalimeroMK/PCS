@@ -77,10 +77,9 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
      * (Re)Set the start row and the current row pointer
      *
      * @param integer    $startRow    The row number at which to start iterating
-     * @return PHPExcel_Worksheet_ColumnCellIterator
      * @throws PHPExcel_Exception
      */
-    public function resetStart($startRow = 1)
+    public function resetStart($startRow = 1): static
     {
         $this->startRow = $startRow;
         $this->adjustForExistingOnlyRange();
@@ -93,10 +92,9 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
      * (Re)Set the end row
      *
      * @param integer    $endRow    The row number at which to stop iterating
-     * @return PHPExcel_Worksheet_ColumnCellIterator
      * @throws PHPExcel_Exception
      */
-    public function resetEnd($endRow = null)
+    public function resetEnd($endRow = null): static
     {
         $this->endRow = ($endRow) ? $endRow : $this->subject->getHighestRow();
         $this->adjustForExistingOnlyRange();
@@ -108,10 +106,9 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
      * Set the row pointer to the selected row
      *
      * @param integer    $row    The row number to set the current pointer at
-     * @return PHPExcel_Worksheet_ColumnCellIterator
      * @throws PHPExcel_Exception
      */
-    public function seek($row = 1)
+    public function seek($row = 1): static
     {
         if (($row < $this->startRow) || ($row > $this->endRow)) {
             throw new PHPExcel_Exception("Row $row is out of range ({$this->startRow} - {$this->endRow})");
@@ -126,7 +123,7 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
     /**
      * Rewind the iterator to the starting row
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = $this->startRow;
     }
@@ -154,7 +151,7 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
     /**
      * Set the iterator to its next value
      */
-    public function next()
+    public function next(): void
     {
         do {
             ++$this->position;
@@ -166,7 +163,7 @@ class PHPExcel_Worksheet_ColumnCellIterator extends PHPExcel_Worksheet_CellItera
     /**
      * Set the iterator to its previous value
      */
-    public function prev()
+    public function prev(): void
     {
         if ($this->position <= $this->startRow) {
             throw new PHPExcel_Exception("Row is already at the beginning of range ({$this->startRow} - {$this->endRow})");

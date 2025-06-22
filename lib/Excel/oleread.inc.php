@@ -23,7 +23,7 @@ define('IDENTIFIER_OLE', pack("CCCCCCCC",0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1
 //echo $data[ROOT_START_BLOCK_POS];
 //function log
 
-function GetInt4d($data, $pos)
+function GetInt4d(array $data, $pos): int
 {
 	$value = ord($data[$pos]) | (ord($data[$pos+1])	<< 8) | (ord($data[$pos+2]) << 16) | (ord($data[$pos+3]) << 24);
 	if ($value>=4294967294)
@@ -35,7 +35,22 @@ function GetInt4d($data, $pos)
 
 
 class OLERead {
-    var $data = '';
+    /**
+     * @var int
+     */
+    public $error;
+    public $numBigBlockDepotBlocks;
+    public $sbdStartBlock;
+    public $rootStartBlock;
+    public $extensionBlock;
+    public $numExtensionBlocks;
+    public $bigBlockChain;
+    public $smallBlockChain;
+    public $entry;
+    public $props;
+    public $wrkbook;
+    public $rootentry;
+    public $data = '';
     
     
     function OLERead(){
@@ -43,7 +58,7 @@ class OLERead {
         
     }
     
-    function read($sFileName){
+    function read($sFileName): ?bool{
         
     	// check if file exist and is readable (Darko Miljanovic)
     	if(!is_readable($sFileName)) {
@@ -58,7 +73,7 @@ class OLERead {
    		}
    		//echo IDENTIFIER_OLE;
    		//echo 'start';
-   		if (substr($this->data, 0, 8) != IDENTIFIER_OLE) {
+   		if (substr($this->data, 0, 8) !== IDENTIFIER_OLE) {
     		$this->error = 1; 
     		return false; 
    		}
@@ -147,7 +162,6 @@ class OLERead {
         
         // readData(rootStartBlock)
         $block = $this->rootStartBlock;
-        $pos = 0;
         $this->entry = $this->__readData($block);
         
         /*
@@ -159,24 +173,25 @@ class OLERead {
         */
         //echo '==='.$this->entry."===";
         $this->__readPropertySets();
+        return null;
 
     }
     
-     function __readData($bl) {
+     function __readData($bl): string {
         $block = $bl;
         $pos = 0;
         $data = '';
         
         while ($block != -2)  {
             $pos = ($block + 1) * BIG_BLOCK_SIZE;
-            $data = $data.substr($this->data, $pos, BIG_BLOCK_SIZE);
+            $data .= substr($this->data, $pos, BIG_BLOCK_SIZE);
             //echo "pos = $pos data=$data\n";	
 	    $block = $this->bigBlockChain[$block];
         }
 		return $data;
      }
         
-    function __readPropertySets(){
+    function __readPropertySets(): void{
         $offset = 0;
         //var_dump($this->entry);
         while ($offset < strlen($this->entry)) {
@@ -220,7 +235,7 @@ class OLERead {
     }
     
     
-    function getWorkBook(){
+    function getWorkBook(): string{
     	if ($this->props[$this->wrkbook]['size'] < SMALL_BLOCK_THRESHOLD){
 //    	  getSmallBlockStream(PropertyStorage ps)
 

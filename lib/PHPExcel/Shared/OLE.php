@@ -37,6 +37,10 @@ $GLOBALS['_OLE_INSTANCES'] = array();
 */
 class PHPExcel_Shared_OLE
 {
+    /**
+     * @var int
+     */
+    public $bigBlockThreshold;
     const OLE_PPS_TYPE_ROOT   =      5;
     const OLE_PPS_TYPE_DIR    =      1;
     const OLE_PPS_TYPE_FILE   =      2;
@@ -93,7 +97,7 @@ class PHPExcel_Shared_OLE
      * @param string $file
      * @return mixed true on success, PEAR_Error on failure
     */
-    public function read($file)
+    public function read($file): bool
     {
         $fh = fopen($file, "r");
         if (!$fh) {
@@ -183,7 +187,7 @@ class PHPExcel_Shared_OLE
      * @param  int  byte offset from beginning of file
      * @access public
      */
-    public function _getBlockOffset($blockId)
+    public function _getBlockOffset($blockId): int|float
     {
         return 512 + $blockId * $this->bigBlockSize;
     }
@@ -262,7 +266,7 @@ class PHPExcel_Shared_OLE
     * @param  integer  the block id of the first block
     * @return mixed true on success, PEAR_Error on failure
     */
-    public function _readPpsWks($blockId)
+    public function _readPpsWks($blockId): bool
     {
         $fh = $this->getStream($blockId);
         for ($pos = 0;; $pos += 128) {
@@ -302,7 +306,7 @@ class PHPExcel_Shared_OLE
             $this->_list[] = $pps;
 
             // check if the PPS tree (starting from root) is complete
-            if (isset($this->root) && $this->_ppsTreeComplete($this->root->No)) {
+            if ($this->root !== null && $this->_ppsTreeComplete($this->root->No)) {
                 break;
             }
         }
@@ -336,7 +340,7 @@ class PHPExcel_Shared_OLE
     * @param integer $index The index of the PPS from which we are checking
     * @return boolean Whether the PPS tree for the given PPS is complete
     */
-    public function _ppsTreeComplete($index)
+    public function _ppsTreeComplete($index): bool
     {
         return isset($this->_list[$index]) &&
                ($pps = $this->_list[$index]) &&
@@ -386,7 +390,7 @@ class PHPExcel_Shared_OLE
     * @access public
     * @return integer The total number of PPS's found in the OLE container
     */
-    public function ppsTotal()
+    public function ppsTotal(): int
     {
         return count($this->_list);
     }
@@ -403,7 +407,7 @@ class PHPExcel_Shared_OLE
     * @return string The binary string containing the data requested
     * @see OLE_PPS_File::getStream()
     */
-    public function getData($index, $position, $length)
+    public function getData($index, $position, $length): string|false
     {
         // if position is not valid return empty string
         if (!isset($this->_list[$index]) || ($position >= $this->_list[$index]->Size) || ($position < 0)) {
@@ -439,7 +443,7 @@ class PHPExcel_Shared_OLE
     * @param string $ascii The ASCII string to transform
     * @return string The string in Unicode
     */
-    public static function Asc2Ucs($ascii)
+    public static function Asc2Ucs($ascii): string
     {
         $rawname = '';
         for ($i = 0; $i < strlen($ascii); ++$i) {
@@ -457,7 +461,7 @@ class PHPExcel_Shared_OLE
     * @param integer $date A timestamp
     * @return string The string for the OLE container
     */
-    public static function LocalDate2OLE($date = null)
+    public static function LocalDate2OLE($date = null): string
     {
         if (!isset($date)) {
             return "\x00\x00\x00\x00\x00\x00\x00\x00";
@@ -501,7 +505,7 @@ class PHPExcel_Shared_OLE
     * @param integer $string A binary string with the encoded date
     * @return string The timestamp corresponding to the string
     */
-    public static function OLE2LocalDate($string)
+    public static function OLE2LocalDate($string): \PEAR_Error|float
     {
         if (strlen($string) != 8) {
             return new PEAR_Error("Expecting 8 byte string");

@@ -59,10 +59,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 
     /**
      * Format Count
-     *
-     * @var int
      */
-    private $format = 0;
+    private int $format = 0;
 
     /**
      * Create a new PHPExcel_Reader_SYLK
@@ -90,11 +88,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 
         // Analyze first line looking for ID; signature
         $lines = explode("\n", $data);
-        if (substr($lines[0], 0, 4) != 'ID;P') {
-            return false;
-        }
-
-        return true;
+        return substr($lines[0], 0, 4) === 'ID;P';
     }
 
     /**
@@ -102,7 +96,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
      *
      * @param string $pValue Input encoding
      */
-    public function setInputEncoding($pValue = 'ANSI')
+    public function setInputEncoding($pValue = 'ANSI'): static
     {
         $this->inputEncoding = $pValue;
         return $this;
@@ -121,10 +115,10 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
     /**
      * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns)
      *
-     * @param   string     $pFilename
      * @throws   PHPExcel_Reader_Exception
+     * @return list<array{worksheetName: 'Worksheet', lastColumnLetter: mixed, lastColumnIndex: mixed, totalRows: mixed, totalColumns: (float | int)}>
      */
-    public function listWorksheetInfo($pFilename)
+    public function listWorksheetInfo(string $pFilename): array
     {
         // Open file
         $this->openFile($pFilename);
@@ -206,12 +200,9 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
     /**
      * Loads PHPExcel from file into PHPExcel instance
      *
-     * @param     string         $pFilename
-     * @param    PHPExcel    $objPHPExcel
-     * @return     PHPExcel
      * @throws     PHPExcel_Reader_Exception
      */
-    public function loadIntoExisting($pFilename, PHPExcel $objPHPExcel)
+    public function loadIntoExisting(string $pFilename, PHPExcel $objPHPExcel): PHPExcel
     {
         // Open file
         $this->openFile($pFilename);
@@ -468,9 +459,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
      * Set sheet index
      *
      * @param    int        $pValue        Sheet index
-     * @return PHPExcel_Reader_SYLK
      */
-    public function setSheetIndex($pValue = 0)
+    public function setSheetIndex($pValue = 0): static
     {
         $this->sheetIndex = $pValue;
         return $this;

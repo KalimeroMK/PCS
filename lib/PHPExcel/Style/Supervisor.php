@@ -115,11 +115,7 @@ abstract class PHPExcel_Style_Supervisor
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if ((is_object($value)) && ($key != 'parent')) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) && $key !== 'parent' ? clone $value : $value;
         }
     }
 }

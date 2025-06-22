@@ -59,7 +59,7 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
      * @param     $pText string    Text
      * @return PHPExcel_RichText_ITextElement
      */
-    public function setText($pText = '')
+    public function setText($pText = ''): static
     {
         $this->text = $pText;
         return $this;
@@ -70,7 +70,7 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
      *
      * @return PHPExcel_Style_Font
      */
-    public function getFont()
+    public function getFont(): null
     {
         return null;
     }
@@ -80,7 +80,7 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
      *
      * @return string    Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
             $this->text .
@@ -95,11 +95,7 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

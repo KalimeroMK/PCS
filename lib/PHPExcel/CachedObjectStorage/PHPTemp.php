@@ -32,14 +32,14 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
      *
      * @var string
      */
-    private $fileHandle = null;
+    private $fileHandle;
 
     /**
      * Memory limit to use before reverting to file cache
      *
      * @var integer
      */
-    private $memoryCacheSize = null;
+    private $memoryCacheSize;
 
     /**
      * Store cell data in cache for the current cell object if it's "dirty",
@@ -70,10 +70,9 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
      *
      * @param    string            $pCoord        Coordinate address of the cell to update
      * @param    PHPExcel_Cell    $cell        Cell to update
-     * @return    PHPExcel_Cell
      * @throws    PHPExcel_Exception
      */
-    public function addCacheData($pCoord, PHPExcel_Cell $cell)
+    public function addCacheData($pCoord, PHPExcel_Cell $cell): PHPExcel_Cell
     {
         if (($pCoord !== $this->currentObjectID) && ($this->currentObjectID !== null)) {
             $this->storeData();
@@ -136,9 +135,8 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
      * Clone the cell collection
      *
      * @param    PHPExcel_Worksheet    $parent        The new worksheet
-     * @return    void
      */
-    public function copyCellCollection(PHPExcel_Worksheet $parent)
+    public function copyCellCollection(PHPExcel_Worksheet $parent): void
     {
         parent::copyCellCollection($parent);
         //    Open a new stream for the cell cache data
@@ -153,10 +151,8 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 
     /**
      * Clear the cell collection and disconnect from our parent
-     *
-     * @return    void
      */
-    public function unsetWorksheetCells()
+    public function unsetWorksheetCells(): void
     {
         if (!is_null($this->currentObject)) {
             $this->currentObject->detach();

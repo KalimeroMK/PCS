@@ -25,18 +25,22 @@
  */
 
 class writeexcel_biffwriter {
-    var $byte_order;
-    var $BIFF_version;
-    var $_byte_order;
-    var $_data;
-    var $_datasize;
-    var $_limit;
-    var $_debug;
+    /**
+     * @var int
+     */
+    public $byteorder;
+    public $byte_order;
+    public $BIFF_version;
+    public $_byte_order;
+    public $_data;
+    public $_datasize;
+    public $_limit;
+    public $_debug;
 
     /*
      * Constructor
      */
-    function writeexcel_biffwriter() {
+    function writeexcel_biffwriter(): void {
 
         $this->byte_order   = '';
         $this->BIFF_version = 0x0500;
@@ -52,15 +56,15 @@ class writeexcel_biffwriter {
      * Determine the byte order and store it as class data to avoid
      * recalculating it for each call to new().
      */
-    function _set_byte_order() {
+    function _set_byte_order(): void {
         $this->byteorder=0;
         // Check if "pack" gives the required IEEE 64bit float
         $teststr = pack("d", 1.2345);
         $number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
 
-        if ($number == $teststr) {
+        if ($number === $teststr) {
             $this->byte_order = 0; // Little Endian
-        } elseif ($number == strrev($teststr)) {
+        } elseif ($number === strrev($teststr)) {
             $this->byte_order = 1; // Big Endian
         } else {
             // Give up
@@ -75,7 +79,7 @@ class writeexcel_biffwriter {
     /*
      * General storage function
      */
-    function _prepend($data) {
+    function _prepend($data): void {
 
         if (func_num_args()>1) {
             trigger_error("writeexcel_biffwriter::_prepend() ".
@@ -104,7 +108,7 @@ class writeexcel_biffwriter {
     /*
      * General storage function
      */
-    function _append($data) {
+    function _append($data): void {
 
         if (func_num_args()>1) {
             trigger_error("writeexcel_biffwriter::_append() ".
@@ -126,7 +130,7 @@ class writeexcel_biffwriter {
             $data = $this->_add_continue($data);
         }
 
-        $this->_data      = $this->_data . $data;
+        $this->_data .= $data;
         $this->_datasize += strlen($data);
     }
 
@@ -137,7 +141,7 @@ class writeexcel_biffwriter {
      * $type = 0x0005, Workbook
      * $type = 0x0010, Worksheet
      */
-    function _store_bof($type) {
+    function _store_bof($type): void {
 
         $record  = 0x0809; // Record identifier
         $length  = 0x0008; // Number of bytes to follow
@@ -159,7 +163,7 @@ class writeexcel_biffwriter {
     /*
      * Writes Excel EOF record to indicate the end of a BIFF stream.
      */
-    function _store_eof() {
+    function _store_eof(): void {
 
         $record = 0x000A; // Record identifier
         $length = 0x0000; // Number of bytes to follow
@@ -177,7 +181,7 @@ class writeexcel_biffwriter {
      * This function take a long BIFF record and inserts CONTINUE records as
      * necessary.
      */
-    function _add_continue($data) {
+    function _add_continue($data): string {
 
         $limit  = $this->_limit;
         $record = 0x003C; // Record identifier
@@ -199,9 +203,8 @@ class writeexcel_biffwriter {
         // Mop up the last of the data
         $header  = pack("vv", $record, strlen($data));
         $tmp    .= $header;
-        $tmp    .= $data;
 
-        return $tmp;
+        return $tmp . $data;
     }
 
 }

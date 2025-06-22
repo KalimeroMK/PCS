@@ -163,10 +163,8 @@ class PHPExcel_Calculation_TextData
 
     /**
      * CONCATENATE
-     *
-     * @return    string
      */
-    public static function CONCATENATE()
+    public static function CONCATENATE(): string
     {
         $returnValue = '';
 
@@ -422,9 +420,8 @@ class PHPExcel_Calculation_TextData
      * STRINGLENGTH
      *
      * @param    string    $value    Value
-     * @return    string
      */
-    public static function STRINGLENGTH($value = '')
+    public static function STRINGLENGTH($value = ''): int
     {
         $value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 
@@ -507,9 +504,8 @@ class PHPExcel_Calculation_TextData
      * @param    int        $start        Start character
      * @param    int        $chars        Number of characters
      * @param    string    $newText    String to replace in defined position
-     * @return    string
      */
-    public static function REPLACE($oldText = '', $start = 1, $chars = null, $newText)
+    public static function REPLACE($oldText = '', $start = 1, $chars = null, $newText): string
     {
         $oldText = PHPExcel_Calculation_Functions::flattenSingleValue($oldText);
         $start   = PHPExcel_Calculation_Functions::flattenSingleValue($start);
@@ -577,7 +573,7 @@ class PHPExcel_Calculation_TextData
      * @param    mixed    $testValue    Value to check
      * @return    boolean
      */
-    public static function RETURNSTRING($testValue = '')
+    public static function RETURNSTRING($testValue = ''): ?string
     {
         $testValue = PHPExcel_Calculation_Functions::flattenSingleValue($testValue);
 
@@ -593,9 +589,8 @@ class PHPExcel_Calculation_TextData
      *
      * @param    mixed    $value    Value to check
      * @param    string    $format    Format mask to use
-     * @return    boolean
      */
-    public static function TEXTFORMAT($value, $format)
+    public static function TEXTFORMAT($value, $format): string
     {
         $value  = PHPExcel_Calculation_Functions::flattenSingleValue($value);
         $format = PHPExcel_Calculation_Functions::flattenSingleValue($format);

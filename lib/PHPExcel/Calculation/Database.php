@@ -86,7 +86,7 @@ class PHPExcel_Calculation_Database
      * @return    array of mixed
      *
      */
-    private static function filter($database, $criteria)
+    private static function filter(array $database, $criteria): array
     {
         $fieldNames = array_shift($database);
         $criteriaNames = array_shift($criteria);
@@ -97,7 +97,7 @@ class PHPExcel_Calculation_Database
         foreach ($criteriaNames as $key => $criteriaName) {
             $testCondition = array();
             $testConditionCount = 0;
-            foreach ($criteria as $row => $criterion) {
+            foreach ($criteria as $criterion) {
                 if ($criterion[$key] > '') {
                     $testCondition[] = '[:'.$criteriaName.']'.PHPExcel_Calculation_Functions::ifCondition($criterion[$key]);
                     $testConditionCount++;
@@ -122,7 +122,7 @@ class PHPExcel_Calculation_Database
         foreach ($database as $dataRow => $dataValues) {
             //    Substitute actual values from the database row for our [:placeholders]
             $testConditionList = $testConditionSet;
-            foreach ($criteriaNames as $key => $criteriaName) {
+            foreach ($criteriaNames as $criteriaName) {
                 $k = array_search($criteriaName, $fieldNames);
                 if (isset($dataValues[$k])) {
                     $dataValue = $dataValues[$k];
@@ -142,7 +142,10 @@ class PHPExcel_Calculation_Database
     }
 
 
-    private static function getFilteredColumn($database, $field, $criteria)
+    /**
+     * @return list
+     */
+    private static function getFilteredColumn($database, $field, $criteria): array
     {
         //    reduce the database to a set of rows that match all the criteria
         $database = self::filter($database, $criteria);
@@ -230,7 +233,7 @@ class PHPExcel_Calculation_Database
      *            database that match the criteria.
      *
      */
-    public static function DCOUNT($database, $field, $criteria)
+    public static function DCOUNT($database, $field, $criteria): ?int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {
@@ -274,7 +277,7 @@ class PHPExcel_Calculation_Database
      *            database that match the criteria.
      *
      */
-    public static function DCOUNTA($database, $field, $criteria)
+    public static function DCOUNTA($database, $field, $criteria): ?int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {
@@ -369,7 +372,7 @@ class PHPExcel_Calculation_Database
      * @return    float
      *
      */
-    public static function DMAX($database, $field, $criteria)
+    public static function DMAX($database, $field, $criteria): null|float|int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {
@@ -411,7 +414,7 @@ class PHPExcel_Calculation_Database
      * @return    float
      *
      */
-    public static function DMIN($database, $field, $criteria)
+    public static function DMIN($database, $field, $criteria): null|float|int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {
@@ -452,7 +455,7 @@ class PHPExcel_Calculation_Database
      * @return    float
      *
      */
-    public static function DPRODUCT($database, $field, $criteria)
+    public static function DPRODUCT($database, $field, $criteria): null|float|int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {
@@ -577,7 +580,7 @@ class PHPExcel_Calculation_Database
      * @return    float
      *
      */
-    public static function DSUM($database, $field, $criteria)
+    public static function DSUM($database, $field, $criteria): null|float|int
     {
         $field = self::fieldExtract($database, $field);
         if (is_null($field)) {

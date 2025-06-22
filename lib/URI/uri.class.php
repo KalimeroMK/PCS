@@ -16,7 +16,7 @@ class G5_URI {
         return $instance;
     }
 
-	public function parseURL() {
+	public function parseURL(): void {
 		/* grab URL query string and script name */
 		$uri = $_SERVER['REQUEST_URI'];
 		$script = $_SERVER['SCRIPT_NAME'];
@@ -47,7 +47,10 @@ class G5_URI {
 
 	}
 
-	public function setRelative($relativevar) {
+	/**
+     * @return ''[]|(\literal-string & \lowercase-string & \non-falsy-string & \uppercase-string)[]
+     */
+    public function setRelative($relativevar): array {
 		/* count the number of slash
 		   to define relative path */
 		$numslash = count($this->parts);
@@ -70,7 +73,10 @@ class G5_URI {
 		return $this->parts;
 	}
 
-	public function setParts() {
+	/**
+     * @return mixed[]
+     */
+    public function setParts(): array {
 		/* pair off query string variable and query string value */
 		$numargs = func_num_args();
 		$arg_list = func_get_args();
@@ -87,7 +93,7 @@ class G5_URI {
    /** 
    * convert normal URL query string to clean URL 
    */
-   public function makeClean($string_url) {
+   public function makeClean($string_url): string {
 	$url = parse_url($string_url);
         $strUrl = basename($url['path'],".php");
         parse_str($url['query'],$queryString);
@@ -97,7 +103,7 @@ class G5_URI {
         return $strUrl;
    }
 
-   public function url_clean($string_url, $add_qry='') {
+   public function url_clean($string_url, ?string $add_qry=''): string|array {
         global $config, $g5;
 
         $string_url = str_replace('&amp;', '&', $string_url);
@@ -125,7 +131,7 @@ class G5_URI {
 
         $s = array();
 
-        foreach( $allow_param_keys as $key=>$v ){
+        foreach( array_keys($allow_param_keys) as $key ){
             if( !isset($vars[$key]) || empty($vars[$key]) ) continue;
             $add = '';
             $s[$key] = $vars[$key];
@@ -160,7 +166,7 @@ class G5_URI {
         }
 
         if( $add_qry ){
-            $add_param .= $add_param ? '&amp;'.$add_qry : '?'.$add_qry;
+            $add_param .= $add_param !== '' && $add_param !== '0' ? '&amp;'.$add_qry : '?'.$add_qry;
         }
 
         foreach($s as $value){

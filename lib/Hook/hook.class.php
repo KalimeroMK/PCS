@@ -67,10 +67,8 @@ class Hook
      * Instances.
      *
      * @since 1.0.0
-     *
-     * @var array
      */
-    private static $instances = array();
+    private static array $instances = array();
 
     /**
      * Get instance.
@@ -115,10 +113,8 @@ class Hook
      * @param callable $func     → function to attach to action hook
      * @param int      $priority → order in which the action is executed
      * @param int      $args     → number of arguments accepted
-     *
-     * @return bool
      */
-    public static function addAction($tag, $func, $priority = 8, $args = 0)
+    public static function addAction($tag, $func, $priority = 8, $args = 0): bool
     {
         $that = self::getInstance(self::$id);
 
@@ -136,10 +132,8 @@ class Hook
      * @since 1.0.3
      *
      * @param array $actions
-     *
-     * @return bool
      */
-    public static function addActions($actions)
+    public static function addActions($actions): bool
     {
         foreach ($actions as $arguments) {
             call_user_func_array(array(__CLASS__, 'addAction'), $arguments);
@@ -201,7 +195,7 @@ class Hook
      *
      * @param string $method → singleton method name
      */
-    public static function setSingletonName($method)
+    public static function setSingletonName($method): void
     {
         $that = self::getInstance(self::$id);
 
@@ -226,10 +220,8 @@ class Hook
      * @since 1.0.7
      *
      * @param string $tag → action hook name
-     *
-     * @return bool
      */
-    public static function isAction($tag)
+    public static function isAction($tag): bool
     {
         $that = self::getInstance(self::$id);
 
@@ -259,9 +251,7 @@ class Hook
         if (! ($class && $method) && function_exists($function)) {
             return call_user_func($function, $args);
         } elseif ($obj = call_user_func(array($class, $this->singleton))) {
-            if ($obj !== false) {
-                return call_user_func_array(array($obj, $method), $args);
-            }
+            return call_user_func_array(array($obj, $method), $args);
         } elseif (class_exists($class)) {
             $instance = new $class;
 

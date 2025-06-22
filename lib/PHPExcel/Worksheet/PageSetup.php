@@ -265,21 +265,14 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @var string
      */
-    private $printArea = null;
+    private $printArea;
 
     /**
      * First page number
      *
      * @var int
      */
-    private $firstPageNumber = null;
-
-    /**
-     * Create a new PHPExcel_Worksheet_PageSetup
-     */
-    public function __construct()
-    {
-    }
+    private $firstPageNumber;
 
     /**
      * Get Paper Size
@@ -295,9 +288,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set Paper Size
      *
      * @param int $pValue
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER)
+    public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER): static
     {
         $this->paperSize = $pValue;
         return $this;
@@ -317,9 +309,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set Orientation
      *
      * @param string $pValue
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT)
+    public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT): static
     {
         $this->orientation = $pValue;
         return $this;
@@ -343,10 +334,9 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @param     int?    $pValue
      * @param boolean    $pUpdate    Update fitToPage so scaling applies rather than fitToHeight / fitToWidth
-     * @return PHPExcel_Worksheet_PageSetup
      * @throws     PHPExcel_Exception
      */
-    public function setScale($pValue = 100, $pUpdate = true)
+    public function setScale($pValue = 100, $pUpdate = true): static
     {
         // Microsoft Office Excel 2007 only allows setting a scale between 10 and 400 via the user interface,
         // but it is apparently still able to handle any scale >= 0, where 0 results in 100
@@ -375,9 +365,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set Fit To Page
      *
      * @param boolean $pValue
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setFitToPage($pValue = true)
+    public function setFitToPage($pValue = true): static
     {
         $this->fitToPage = $pValue;
         return $this;
@@ -398,9 +387,8 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @param int? $pValue
      * @param boolean $pUpdate Update fitToPage so it applies rather than scaling
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setFitToHeight($pValue = 1, $pUpdate = true)
+    public function setFitToHeight($pValue = 1, $pUpdate = true): static
     {
         $this->fitToHeight = $pValue;
         if ($pUpdate) {
@@ -424,9 +412,8 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @param int? $pValue
      * @param boolean $pUpdate Update fitToPage so it applies rather than scaling
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setFitToWidth($pValue = 1, $pUpdate = true)
+    public function setFitToWidth($pValue = 1, $pUpdate = true): static
     {
         $this->fitToWidth = $pValue;
         if ($pUpdate) {
@@ -437,18 +424,10 @@ class PHPExcel_Worksheet_PageSetup
 
     /**
      * Is Columns to repeat at left set?
-     *
-     * @return boolean
      */
-    public function isColumnsToRepeatAtLeftSet()
+    public function isColumnsToRepeatAtLeftSet(): bool
     {
-        if (is_array($this->columnsToRepeatAtLeft)) {
-            if ($this->columnsToRepeatAtLeft[0] != '' && $this->columnsToRepeatAtLeft[1] != '') {
-                return true;
-            }
-        }
-
-        return false;
+        return is_array($this->columnsToRepeatAtLeft) && ($this->columnsToRepeatAtLeft[0] != '' && $this->columnsToRepeatAtLeft[1] != '');
     }
 
     /**
@@ -465,9 +444,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set Columns to repeat at left
      *
      * @param array $pValue Containing start column and end column, empty array if option unset
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setColumnsToRepeatAtLeft($pValue = null)
+    public function setColumnsToRepeatAtLeft($pValue = null): static
     {
         if (is_array($pValue)) {
             $this->columnsToRepeatAtLeft = $pValue;
@@ -480,9 +458,8 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @param string $pStart
      * @param string $pEnd
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setColumnsToRepeatAtLeftByStartAndEnd($pStart = 'A', $pEnd = 'A')
+    public function setColumnsToRepeatAtLeftByStartAndEnd($pStart = 'A', $pEnd = 'A'): static
     {
         $this->columnsToRepeatAtLeft = array($pStart, $pEnd);
         return $this;
@@ -490,18 +467,10 @@ class PHPExcel_Worksheet_PageSetup
 
     /**
      * Is Rows to repeat at top set?
-     *
-     * @return boolean
      */
-    public function isRowsToRepeatAtTopSet()
+    public function isRowsToRepeatAtTopSet(): bool
     {
-        if (is_array($this->rowsToRepeatAtTop)) {
-            if ($this->rowsToRepeatAtTop[0] != 0 && $this->rowsToRepeatAtTop[1] != 0) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_array($this->rowsToRepeatAtTop) && ($this->rowsToRepeatAtTop[0] != 0 && $this->rowsToRepeatAtTop[1] != 0);
     }
 
     /**
@@ -518,9 +487,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set Rows to repeat at top
      *
      * @param array    $pValue    Containing start column and end column, empty array if option unset
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setRowsToRepeatAtTop($pValue = null)
+    public function setRowsToRepeatAtTop($pValue = null): static
     {
         if (is_array($pValue)) {
             $this->rowsToRepeatAtTop = $pValue;
@@ -533,9 +501,8 @@ class PHPExcel_Worksheet_PageSetup
      *
      * @param int $pStart
      * @param int $pEnd
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setRowsToRepeatAtTopByStartAndEnd($pStart = 1, $pEnd = 1)
+    public function setRowsToRepeatAtTopByStartAndEnd($pStart = 1, $pEnd = 1): static
     {
         $this->rowsToRepeatAtTop = array($pStart, $pEnd);
         return $this;
@@ -555,9 +522,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set center page horizontally
      *
      * @param bool $value
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setHorizontalCentered($value = false)
+    public function setHorizontalCentered($value = false): static
     {
         $this->horizontalCentered = $value;
         return $this;
@@ -577,9 +543,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set center page vertically
      *
      * @param bool $value
-     * @return PHPExcel_Worksheet_PageSetup
      */
-    public function setVerticalCentered($value = false)
+    public function setVerticalCentered($value = false): static
     {
         $this->verticalCentered = $value;
         return $this;
@@ -614,9 +579,8 @@ class PHPExcel_Worksheet_PageSetup
      *                            Default behaviour, or an index value of 0, will identify whether any print range is set
      *                            Otherwise, existence of the range identified by the value of $index will be returned
      *                            Print areas are numbered from 1
-     * @return    boolean
      */
-    public function isPrintAreaSet($index = 0)
+    public function isPrintAreaSet($index = 0): bool
     {
         if ($index == 0) {
             return !is_null($this->printArea);
@@ -632,9 +596,8 @@ class PHPExcel_Worksheet_PageSetup
      *                            Default behaviour, or an index value of 0, will clear all print ranges that are set
      *                            Otherwise, the range identified by the value of $index will be removed from the series
      *                            Print areas are numbered from 1
-     * @return    PHPExcel_Worksheet_PageSetup
      */
-    public function clearPrintArea($index = 0)
+    public function clearPrintArea($index = 0): static
     {
         if ($index == 0) {
             $this->printArea = null;
@@ -666,10 +629,9 @@ class PHPExcel_Worksheet_PageSetup
      * @param    string    $method    Determines the method used when setting multiple print areas
      *                            Default behaviour, or the "O" method, overwrites existing print area
      *                            The "I" method, inserts the new print area before any specified index, or at the end of the list
-     * @return    PHPExcel_Worksheet_PageSetup
      * @throws    PHPExcel_Exception
      */
-    public function setPrintArea($value, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE)
+    public function setPrintArea($value, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE): static
     {
         if (strpos($value, '!') !== false) {
             throw new PHPExcel_Exception('Cell coordinate must not specify a worksheet.');
@@ -806,7 +768,7 @@ class PHPExcel_Worksheet_PageSetup
      * @param int $value
      * @return PHPExcel_Worksheet_HeaderFooter
      */
-    public function setFirstPageNumber($value = null)
+    public function setFirstPageNumber($value = null): static
     {
         $this->firstPageNumber = $value;
         return $this;
@@ -829,11 +791,7 @@ class PHPExcel_Worksheet_PageSetup
     {
         $vars = get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
-                $this->$key = clone $value;
-            } else {
-                $this->$key = $value;
-            }
+            $this->$key = is_object($value) ? clone $value : $value;
         }
     }
 }

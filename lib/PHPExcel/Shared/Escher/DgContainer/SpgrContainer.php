@@ -46,7 +46,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
      *
      * @param PHPExcel_Shared_Escher_DgContainer_SpgrContainer $parent
      */
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         $this->parent = $parent;
     }
@@ -66,7 +66,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
      *
      * @param mixed $child
      */
-    public function addChild($child)
+    public function addChild($child): void
     {
         $this->children[] = $child;
         $child->setParent($this);
@@ -85,7 +85,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
      *
      * @return PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer[]
      */
-    public function getAllSpContainers()
+    public function getAllSpContainers(): array
     {
         $allSpContainers = array();
 

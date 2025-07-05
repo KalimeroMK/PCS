@@ -15,7 +15,7 @@ services:
   php:
     build: ./php
     ports:
-      - "83:80"
+      - "82:80"
     volumes:
       - ./:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/php.ini

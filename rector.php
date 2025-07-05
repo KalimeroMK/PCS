@@ -6,7 +6,7 @@ use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/bbs',
+        __DIR__ . '/app',
         __DIR__ . '/extend',
         __DIR__ . '/theme'
     ])

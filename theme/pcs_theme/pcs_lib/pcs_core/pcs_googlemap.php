@@ -6,7 +6,8 @@
 
 <div id="map holder" style="width:100%; height:100vh;"></div>
 <script src="https://maps.google.com/maps/api/js?key=<?php
-    include_once (__DIR__ . '/pcs_config.php');	echo PCS_GGL_API; ?>"></script>
+include_once(__DIR__ . '/pcs_config.php');
+echo PCS_GGL_API; ?>"></script>
 
 <script>
     let oblat =; <?php echo $_GET['lat']; ?>*
@@ -30,7 +31,7 @@
                 const centerpos = new google.maps.LatLng((pos.lat +<?php echo $_GET['lat']; ?>) / 2, (pos.lng +<?php echo $_GET['lon']; ?>) / 2);
 
                 const myOptions = {
-                    center: centerpos, zoom: <?php if ( ! G5_IS_MOBILE) {
+                    center: centerpos, zoom: <?php if (!G5_IS_MOBILE) {
                         echo '17';
                     } else {
                         echo '19';

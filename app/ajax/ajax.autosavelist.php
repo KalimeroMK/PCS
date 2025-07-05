@@ -3,7 +3,6 @@
 include_once(__DIR__ . '/../common.php');
 
 
-
 if (!$is_member) {
     die('');
 }

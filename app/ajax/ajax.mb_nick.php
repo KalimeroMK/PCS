@@ -2,7 +2,7 @@
 
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_LIB_PATH.'/register.lib.php');
+include_once(G5_LIB_PATH . '/register.lib.php');
 
 $mb_nick = isset($_POST['reg_mb_nick']) ? trim($_POST['reg_mb_nick']) : '';
 $mb_id = isset($_POST['reg_mb_id']) ? trim($_POST['reg_mb_id']) : '';

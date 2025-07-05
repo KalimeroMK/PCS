@@ -16,6 +16,13 @@ namespace setasign\Fpdi\PdfParser\Type;
 class PdfIndirectObjectReference extends PdfType
 {
     /**
+     * The generation number.
+     *
+     * @var int
+     */
+    public $generationNumber;
+
+    /**
      * Helper method to create an instance.
      *
      * @param int $objectNumber
@@ -24,8 +31,8 @@ class PdfIndirectObjectReference extends PdfType
     public static function create($objectNumber, $generationNumber): self
     {
         $v = new self();
-        $v->value = (int) $objectNumber;
-        $v->generationNumber = (int) $generationNumber;
+        $v->value = (int)$objectNumber;
+        $v->generationNumber = (int)$generationNumber;
 
         return $v;
     }
@@ -41,11 +48,4 @@ class PdfIndirectObjectReference extends PdfType
     {
         return PdfType::ensureType(self::class, $value, 'Indirect reference value expected.');
     }
-
-    /**
-     * The generation number.
-     *
-     * @var int
-     */
-    public $generationNumber;
 }

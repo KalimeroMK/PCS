@@ -26,7 +26,7 @@ sql_query(" update {$g5['member_table']} set mb_email_certify2 = '' where mb_id 
 
 if ($mb_md5 !== '' && $mb_md5 !== '0') {
     if ($mb_md5 == $row['mb_email_certify2']) {
-        sql_query(" update {$g5['member_table']} set mb_email_certify = '".G5_TIME_YMDHIS."' where mb_id = '{$mb_id}' ");
+        sql_query(" update {$g5['member_table']} set mb_email_certify = '" . G5_TIME_YMDHIS . "' where mb_id = '{$mb_id}' ");
 
         alert("Email certification completed.\n\nYou can now log in with the {$mb_id} ID.", G5_URL);
     } else {

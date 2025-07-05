@@ -7,8 +7,8 @@ if (!$is_member) {
     alert_close('Only members can view.');
 }
 
-$g5['title'] = get_text($member['mb_nick']).'\'s Scrap';
-include_once(G5_PATH.'/head.sub.php');
+$g5['title'] = get_text($member['mb_nick']) . '\'s Scrap';
+include_once(G5_PATH . '/head.sub.php');
 
 $sql_common = " from {$g5['scrap_table']} where mb_id = '{$member['mb_id']}' ";
 $sql_order = " order by ms_id desc ";
@@ -45,7 +45,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     }
 
     // Post title
-    $tmp_write_table = $g5['write_prefix'].$row['bo_table'];
+    $tmp_write_table = $g5['write_prefix'] . $row['bo_table'];
     $sql3 = " select wr_subject from $tmp_write_table where wr_id = '{$row['wr_id']}' ";
     $row3 = sql_fetch($sql3, false);
     $subject = get_text(cut_str($row3['wr_subject'], 100));
@@ -58,9 +58,9 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     $list[$i]['opener_href_wr_id'] = get_pretty_url($row['bo_table'], $row['wr_id']);
     $list[$i]['bo_subject'] = $row2['bo_subject'];
     $list[$i]['subject'] = $subject;
-    $list[$i]['del_href'] = './scrap_delete.php?ms_id='.$row['ms_id'].'&amp;page='.$page;
+    $list[$i]['del_href'] = './scrap_delete.php?ms_id=' . $row['ms_id'] . '&amp;page=' . $page;
 }
 
-include_once($member_skin_path.'/scrap.skin.php');
+include_once($member_skin_path . '/scrap.skin.php');
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

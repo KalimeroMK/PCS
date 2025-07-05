@@ -2,7 +2,7 @@
 
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_LIB_PATH.'/mailer.lib.php');
+include_once(G5_LIB_PATH . '/mailer.lib.php');
 
 if ($w == '') {
     $po_id = isset($_POST['po_id']) ? (int)$_POST['po_id'] : '';
@@ -16,13 +16,13 @@ if ($w == '') {
     $pc_id = $tmp_row['max_pc_id'] + 1;
     $sql = " insert into {$g5['poll_etc_table']}
                 ( pc_id, po_id, mb_id, pc_name, pc_idea, pc_datetime )
-                values ( '{$pc_id}', '{$po_id}', '{$member['mb_id']}', '{$pc_name}', '{$pc_idea}', '".G5_TIME_YMDHIS."' ) ";
+                values ( '{$pc_id}', '{$po_id}', '{$member['mb_id']}', '{$pc_name}', '{$pc_idea}', '" . G5_TIME_YMDHIS . "' ) ";
     sql_query($sql);
     $pc_idea = stripslashes($pc_idea);
     $name = get_text(cut_str($pc_name, $config['cf_cut_name']));
     $mb_id = '';
     if ($member['mb_id']) {
-        $mb_id = '('.$member['mb_id'].')';
+        $mb_id = '(' . $member['mb_id'] . ')';
     }
     // When writing other opinions for poll, if admin email notification is enabled, send to super admin
     if ($config['cf_email_po_super_admin']) {
@@ -37,7 +37,7 @@ if ($w == '') {
         // Send mail to admin
         $admin = get_admin('super');
         $from_email = $member['mb_email'] ? $member['mb_email'] : $admin['mb_email'];
-        mailer($name, $from_email, $admin['mb_email'], '['.$config['cf_title'].'] Poll Other Opinion Mail', $content, 1);
+        mailer($name, $from_email, $admin['mb_email'], '[' . $config['cf_title'] . '] Poll Other Opinion Mail', $content, 1);
     }
 } elseif ($w == 'd') {
     if ($member['mb_id'] || $is_admin == 'super') {
@@ -49,4 +49,4 @@ if ($w == '') {
     }
 }
 
-goto_url('./poll_result.php?po_id='.$po_id.'&amp;skin_dir='.$skin_dir);
+goto_url('./poll_result.php?po_id=' . $po_id . '&amp;skin_dir=' . $skin_dir);

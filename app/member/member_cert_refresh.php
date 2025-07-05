@@ -19,7 +19,7 @@ if ($config['cf_cert_use'] == 0) {
 $g5['title'] = 'Please re-verify your identity.';
 include_once(__DIR__ . '/../head.php');
 
-$action_url = G5_HTTPS_BBS_URL."/member_cert_refresh_update.php";
-include_once($member_skin_path.'/member_cert_refresh.skin.php');
+$action_url = G5_HTTPS_BBS_URL . "/member_cert_refresh_update.php";
+include_once($member_skin_path . '/member_cert_refresh.skin.php');
 
 include_once(__DIR__ . '/tail.php');

@@ -7,7 +7,7 @@ include_once(__DIR__ . '/../common.php');
 
 
 $g5['title'] = $error ? "Error Notice Page" : "Result Notice Page";
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 // Required input.
 // Remove spaces on both sides
 // Required (selection or input)
@@ -85,13 +85,13 @@ $header2 = $error ? "There is an error in the following item." : "Please check t
                     ?>
                     <input type="submit" value="Back">
                 </form>
-            <?php
+                <?php
             } else { ?>
                 <div class="btn_confirm">
                     <a href="<?php
                     echo $url ?>">Back</a>
                 </div>
-            <?php
+                <?php
             } ?>
 
             <?php
@@ -120,4 +120,4 @@ $header2 = $error ? "There is an error in the following item." : "Please check t
     </noscript>
 
 <?php
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

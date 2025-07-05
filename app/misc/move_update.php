@@ -24,7 +24,7 @@ if ($count_chk_bo_table === 0) {
 }
 
 // Original directory
-$src_dir = G5_DATA_PATH.'/file/'.$bo_table;
+$src_dir = G5_DATA_PATH . '/file/' . $bo_table;
 
 $save = [];
 $save_count_write = 0;
@@ -44,17 +44,17 @@ while ($row = sql_fetch_array($result)) {
             $_POST['chk_bo_table'][$i]) : '';
 
         // Security notice 18-0075 reference
-        $sql = "select * from {$g5['board_table']} where bo_table = '".sql_real_escape_string($move_bo_table)."' ";
+        $sql = "select * from {$g5['board_table']} where bo_table = '" . sql_real_escape_string($move_bo_table) . "' ";
         $move_board = sql_fetch($sql);
         // If the board does not exist
         if (!$move_board['bo_table']) {
             continue;
         }
 
-        $move_write_table = $g5['write_prefix'].$move_bo_table;
+        $move_write_table = $g5['write_prefix'] . $move_bo_table;
 
-        $src_dir = G5_DATA_PATH.'/file/'.$bo_table;      // Original directory
-        $dst_dir = G5_DATA_PATH.'/file/'.$move_bo_table; // Destination directory
+        $src_dir = G5_DATA_PATH . '/file/' . $bo_table;      // Original directory
+        $dst_dir = G5_DATA_PATH . '/file/' . $move_bo_table; // Destination directory
 
         $count_write = 0;
         $count_comment = 0;
@@ -71,14 +71,14 @@ while ($row = sql_fetch_array($result)) {
             $nick = cut_str($member['mb_nick'], $config['cf_cut_name']);
             if (!$row2['wr_is_comment'] && $config['cf_use_copy_log']) {
                 if (strstr($row2['wr_option'], 'html')) {
-                    $log_tag1 = '<div class="content_'.$sw.'">';
+                    $log_tag1 = '<div class="content_' . $sw . '">';
                     $log_tag2 = '</div>';
                 } else {
                     $log_tag1 = "\n";
                     $log_tag2 = '';
                 }
 
-                $row2['wr_content'] .= "\n".$log_tag1.'[This post was '.($sw == 'copy' ? 'copied' : 'moved').' by '.$nick.' on '.G5_TIME_YMDHIS.' from '.$board['bo_subject'].']'.$log_tag2;
+                $row2['wr_content'] .= "\n" . $log_tag1 . '[This post was ' . ($sw == 'copy' ? 'copied' : 'moved') . ' by ' . $nick . ' on ' . G5_TIME_YMDHIS . ' from ' . $board['bo_subject'] . ']' . $log_tag2;
             }
 
             // Post recommendation and non-recommendation count
@@ -89,17 +89,17 @@ while ($row = sql_fetch_array($result)) {
             }
 
             $sql = " insert into $move_write_table
-                        set wr_num = ".($next_wr_num ? "'$next_wr_num'" : "(SELECT IFNULL(MIN(wr_num) - 1, -1) FROM $move_write_table sq) ").",
+                        set wr_num = " . ($next_wr_num ? "'$next_wr_num'" : "(SELECT IFNULL(MIN(wr_num) - 1, -1) FROM $move_write_table sq) ") . ",
                              wr_reply = '{$row2['wr_reply']}',
                              wr_is_comment = '{$row2['wr_is_comment']}',
                              wr_comment = '{$row2['wr_comment']}',
                              wr_comment_reply = '{$row2['wr_comment_reply']}',
-                             ca_name = '".addslashes($row2['ca_name'])."',
+                             ca_name = '" . addslashes($row2['ca_name']) . "',
                              wr_option = '{$row2['wr_option']}',
-                             wr_subject = '".addslashes($row2['wr_subject'])."',
-                             wr_content = '".addslashes($row2['wr_content'])."',
-                             wr_link1 = '".addslashes($row2['wr_link1'])."',
-                             wr_link2 = '".addslashes($row2['wr_link2'])."',
+                             wr_subject = '" . addslashes($row2['wr_subject']) . "',
+                             wr_content = '" . addslashes($row2['wr_content']) . "',
+                             wr_link1 = '" . addslashes($row2['wr_link1']) . "',
+                             wr_link2 = '" . addslashes($row2['wr_link2']) . "',
                              wr_link1_hit = '{$row2['wr_link1_hit']}',
                              wr_link2_hit = '{$row2['wr_link2_hit']}',
                              wr_hit = '{$row2['wr_hit']}',
@@ -107,23 +107,23 @@ while ($row = sql_fetch_array($result)) {
                              wr_nogood = '{$wr_nogood}',
                              mb_id = '{$row2['mb_id']}',
                              wr_password = '{$row2['wr_password']}',
-                             wr_name = '".addslashes($row2['wr_name'])."',
-                             wr_email = '".addslashes($row2['wr_email'])."',
-                             wr_homepage = '".addslashes($row2['wr_homepage'])."',
+                             wr_name = '" . addslashes($row2['wr_name']) . "',
+                             wr_email = '" . addslashes($row2['wr_email']) . "',
+                             wr_homepage = '" . addslashes($row2['wr_homepage']) . "',
                              wr_datetime = '{$row2['wr_datetime']}',
                              wr_file = '{$row2['wr_file']}',
                              wr_last = '{$row2['wr_last']}',
                              wr_ip = '{$row2['wr_ip']}',
-                             wr_1 = '".addslashes($row2['wr_1'])."',
-                             wr_2 = '".addslashes($row2['wr_2'])."',
-                             wr_3 = '".addslashes($row2['wr_3'])."',
-                             wr_4 = '".addslashes($row2['wr_4'])."',
-                             wr_5 = '".addslashes($row2['wr_5'])."',
-                             wr_6 = '".addslashes($row2['wr_6'])."',
-                             wr_7 = '".addslashes($row2['wr_7'])."',
-                             wr_8 = '".addslashes($row2['wr_8'])."',
-                             wr_9 = '".addslashes($row2['wr_9'])."',
-                             wr_10 = '".addslashes($row2['wr_10'])."' ";
+                             wr_1 = '" . addslashes($row2['wr_1']) . "',
+                             wr_2 = '" . addslashes($row2['wr_2']) . "',
+                             wr_3 = '" . addslashes($row2['wr_3']) . "',
+                             wr_4 = '" . addslashes($row2['wr_4']) . "',
+                             wr_5 = '" . addslashes($row2['wr_5']) . "',
+                             wr_6 = '" . addslashes($row2['wr_6']) . "',
+                             wr_7 = '" . addslashes($row2['wr_7']) . "',
+                             wr_8 = '" . addslashes($row2['wr_8']) . "',
+                             wr_9 = '" . addslashes($row2['wr_9']) . "',
+                             wr_10 = '" . addslashes($row2['wr_10']) . "' ";
             sql_query($sql);
 
             $insert_id = sql_insert_id();
@@ -149,17 +149,17 @@ while ($row = sql_fetch_array($result)) {
                         if ($bo_table === $move_bo_table) {
                             if (preg_match('/_copy(\d+)?_(\d+)_/', $copy_file_name, $match)) {
                                 $number = isset($match[1]) ? (int)$match[1] : 0;
-                                $replace_str = '_copy'.($number + 1).'_'.$insert_id.'_';
+                                $replace_str = '_copy' . ($number + 1) . '_' . $insert_id . '_';
                                 $copy_file_name = preg_replace('/_copy(\d+)?_(\d+)_/', $replace_str, $copy_file_name);
                             } else {
-                                $copy_file_name = $row2['wr_id'].'_copy_'.$insert_id.'_'.$row3['bf_file'];
+                                $copy_file_name = $row2['wr_id'] . '_copy_' . $insert_id . '_' . $row3['bf_file'];
                             }
                         }
 
-                        $is_exist_file = is_file($src_dir.'/'.$row3['bf_file']) && file_exists($src_dir.'/'.$row3['bf_file']);
+                        $is_exist_file = is_file($src_dir . '/' . $row3['bf_file']) && file_exists($src_dir . '/' . $row3['bf_file']);
                         if ($is_exist_file) {
-                            @copy($src_dir.'/'.$row3['bf_file'], $dst_dir.'/'.$copy_file_name);
-                            @chmod($dst_dir.'/'.$row3['bf_file'], G5_FILE_PERMISSION);
+                            @copy($src_dir . '/' . $row3['bf_file'], $dst_dir . '/' . $copy_file_name);
+                            @chmod($dst_dir . '/' . $row3['bf_file'], G5_FILE_PERMISSION);
                         }
 
                         $row3 = run_replace('bbs_move_update_file', $row3, $copy_file_name, $bo_table, $move_bo_table,
@@ -170,13 +170,13 @@ while ($row = sql_fetch_array($result)) {
                                 set bo_table = '$move_bo_table',
                                      wr_id = '$insert_id',
                                      bf_no = '{$row3['bf_no']}',
-                                     bf_source = '".addslashes($row3['bf_source'])."',
+                                     bf_source = '" . addslashes($row3['bf_source']) . "',
                                      bf_file = '$copy_file_name',
                                      bf_download = '{$row3['bf_download']}',
-                                     bf_content = '".addslashes($row3['bf_content'])."',
-                                     bf_fileurl = '".addslashes($row3['bf_fileurl'])."',
-                                     bf_thumburl = '".addslashes($row3['bf_thumburl'])."',
-                                     bf_storage = '".addslashes($row3['bf_storage'])."',
+                                     bf_content = '" . addslashes($row3['bf_content']) . "',
+                                     bf_fileurl = '" . addslashes($row3['bf_fileurl']) . "',
+                                     bf_thumburl = '" . addslashes($row3['bf_thumburl']) . "',
+                                     bf_storage = '" . addslashes($row3['bf_storage']) . "',
                                      bf_filesize = '{$row3['bf_filesize']}',
                                      bf_width = '{$row3['bf_width']}',
                                      bf_height = '{$row3['bf_height']}',
@@ -185,7 +185,7 @@ while ($row = sql_fetch_array($result)) {
                     sql_query($sql);
 
                     if ($sw == 'move' && $row3['bf_file']) {
-                        $save[$cnt]['bf_file'][$k] = $src_dir.'/'.$row3['bf_file'];
+                        $save[$cnt]['bf_file'][$k] = $src_dir . '/' . $row3['bf_file'];
                     }
                 }
 
@@ -278,7 +278,7 @@ if ($sw == 'move') {
 }
 
 $msg = 'The selected posts have been ' . $act . ' to the chosen boards.';
-$opener_href = get_pretty_url($bo_table, '', '&amp;page='.$page.'&amp;'.$qstr);
+$opener_href = get_pretty_url($bo_table, '', '&amp;page=' . $page . '&amp;' . $qstr);
 $opener_href1 = str_replace('&amp;', '&', $opener_href);
 
 run_event('bbs_move_update', $bo_table, $chk_bo_table, $wr_id_list, $opener_href);

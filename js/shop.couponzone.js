@@ -1,6 +1,6 @@
-$(function() {
-    $("button.coupon_download").on("click", function() {
-        if(g5_is_member != "1") {
+$(function () {
+    $("button.coupon_download").on("click", function () {
+        if (g5_is_member != "1") {
             alert("회원 로그인 후 이용해 주십시오.");
             return false;
         }
@@ -8,7 +8,7 @@ $(function() {
         var $this = $(this);
         var cz_id = $this.data("cid");
 
-        if($this.hasClass("disabled")) {
+        if ($this.hasClass("disabled")) {
             alert("이미 다운로드하신 쿠폰입니다.");
             return false;
         }
@@ -17,13 +17,13 @@ $(function() {
 
         $.ajax({
             type: "GET",
-            data: { cz_id: cz_id },
-            url: g5_url+"/shop/ajax.coupondownload.php",
+            data: {cz_id: cz_id},
+            url: g5_url + "/shop/ajax.coupondownload.php",
             cache: false,
             async: true,
             dataType: "json",
-            success: function(data) {
-                if(data.error != "") {
+            success: function (data) {
+                if (data.error != "") {
                     $this.removeClass("disabled").attr("disabled", false);
                     alert(data.error);
                     return false;

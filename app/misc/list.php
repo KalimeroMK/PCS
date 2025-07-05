@@ -11,7 +11,7 @@ if ($board['bo_use_category']) {
     $is_category = true;
     $category_href = get_pretty_url($bo_table);
 
-    $category_option .= '<li><a href="'.$category_href.'"';
+    $category_option .= '<li><a href="' . $category_href . '"';
     if ($sca == '') {
         $category_option .= ' id="bo_cate_on"';
     }
@@ -25,13 +25,13 @@ if ($board['bo_use_category']) {
         if ($category === '') {
             continue;
         }
-        $category_option .= '<li><a href="'.(get_pretty_url($bo_table, '', 'sca='.urlencode($category))).'"';
+        $category_option .= '<li><a href="' . (get_pretty_url($bo_table, '', 'sca=' . urlencode($category))) . '"';
         $category_msg = '';
         if ($category == $sca) { // If this is the currently selected category
             $category_option .= ' id="bo_cate_on"';
             $category_msg = '<span class="sound_only">Opened category </span>';
         }
-        $category_option .= '>'.$category_msg.$category.'</a></li>';
+        $category_option .= '>' . $category_msg . $category . '</a></li>';
     }
 }
 
@@ -169,7 +169,7 @@ if ($is_member && ($is_admin == 'super' || $group['gr_admin'] == $member['mb_id'
 }
 
 // Query string for sorting
-$qstr2 = 'bo_table='.$bo_table.'&amp;sop='.$sop;
+$qstr2 = 'bo_table=' . $bo_table . '&amp;sop=' . $sop;
 
 // 0 to prevent division by zero error
 $bo_gallery_cols = $board['bo_gallery_cols'] ? $board['bo_gallery_cols'] : 1;
@@ -211,7 +211,7 @@ if ($is_search_bbs) {
 } else {
     $sql = " select * from {$write_table} where wr_is_comment = 0 ";
     if (!empty($notice_array)) {
-        $sql .= " and wr_id not in (".implode(', ', $notice_array).") ";
+        $sql .= " and wr_id not in (" . implode(', ', $notice_array) . ") ";
     }
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
 }
@@ -252,7 +252,7 @@ if ($page_rows > 0) {
 g5_latest_cache_data($board['bo_table'], $list);
 
 $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page,
-    get_pretty_url($bo_table, '', $qstr.'&amp;page='));
+    get_pretty_url($bo_table, '', $qstr . '&amp;page='));
 
 $list_href = '';
 $prev_part_href = '';
@@ -266,24 +266,24 @@ if ($is_search_bbs) {
     $prev_spt = $spt - $config['cf_search_part'];
     if (isset($min_spt) && $prev_spt >= $min_spt) {
         $qstr1 = preg_replace($patterns, '', $qstr);
-        $prev_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$prev_spt.'&amp;page=1');
+        $prev_part_href = get_pretty_url($bo_table, 0, $qstr1 . '&amp;spt=' . $prev_spt . '&amp;page=1');
         $write_pages = page_insertbefore($write_pages,
-            '<a href="'.$prev_part_href.'" class="pg_page pg_search pg_prev">Previous Search</a>');
+            '<a href="' . $prev_part_href . '" class="pg_page pg_search pg_prev">Previous Search</a>');
     }
 
     $next_spt = $spt + $config['cf_search_part'];
     if ($next_spt < 0) {
         $qstr1 = preg_replace($patterns, '', $qstr);
-        $next_part_href = get_pretty_url($bo_table, 0, $qstr1.'&amp;spt='.$next_spt.'&amp;page=1');
+        $next_part_href = get_pretty_url($bo_table, 0, $qstr1 . '&amp;spt=' . $next_spt . '&amp;page=1');
         $write_pages = page_insertafter($write_pages,
-            '<a href="'.$next_part_href.'" class="pg_page pg_search pg_next">Next Search</a>');
+            '<a href="' . $next_part_href . '" class="pg_page pg_search pg_next">Next Search</a>');
     }
 }
 
 
 $write_href = '';
 if ($member['mb_level'] >= $board['bo_write_level']) {
-    $write_href = short_url_clean(G5_BBS_URL.'/write.php?bo_table='.$bo_table);
+    $write_href = short_url_clean(G5_BBS_URL . '/write.php?bo_table=' . $bo_table);
 }
 
 $nobr_begin = $nobr_end = "";
@@ -295,8 +295,8 @@ if (preg_match("/gecko|firefox/i", $_SERVER['HTTP_USER_AGENT'])) {
 // RSS view is only available if enabled
 $rss_href = '';
 if ($board['bo_use_rss_view']) {
-    $rss_href = G5_BBS_URL.'/rss.php?bo_table='.$bo_table;
+    $rss_href = G5_BBS_URL . '/rss.php?bo_table=' . $bo_table;
 }
 
 $stx = get_text(stripslashes($stx));
-include_once($board_skin_path.'/list.skin.php');
+include_once($board_skin_path . '/list.skin.php');

@@ -14,7 +14,7 @@ if (!($token && $delete_token == $token)) {
 
 $count_write = $count_comment = 0;
 
-@include_once($board_skin_path.'/delete.head.skin.php');
+@include_once($board_skin_path . '/delete.head.skin.php');
 
 if ($is_admin != 'super') {
     if ($is_admin == 'group') {
@@ -38,7 +38,7 @@ if ($is_admin != 'super') {
             alert('This is not your post, so it cannot be deleted.');
         }
     } elseif ($write['mb_id']) {
-        alert('Please log in before deleting.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
+        alert('Please log in before deleting.', G5_BBS_URL . '/login.php?url=' . urlencode(get_pretty_url($bo_table, $wr_id)));
     } elseif (!check_password($wr_password, $write['wr_password'])) {
         alert('The password is incorrect, so it cannot be deleted.');
     }
@@ -68,12 +68,12 @@ $sql = " select count(*) as cnt from $write_table
             and wr_is_comment = 1 ";
 $row = sql_fetch($sql);
 if ($row['cnt'] >= $board['bo_count_delete'] && !$is_admin) {
-    alert('There is a related comment, so it cannot be deleted.\n\nIf there are more than '.$board['bo_count_delete'].' related comments, the original post cannot be deleted.');
+    alert('There is a related comment, so it cannot be deleted.\n\nIf there are more than ' . $board['bo_count_delete'] . ' related comments, the original post cannot be deleted.');
 }
 
 
 // Execute user code
-@include_once($board_skin_path.'/delete.skin.php');
+@include_once($board_skin_path . '/delete.skin.php');
 
 
 // Fixed by Naraoreum: Fixed the bug where the number of original posts and comments were not updated correctly.
@@ -93,7 +93,7 @@ while ($row = sql_fetch_array($result)) {
         $result2 = sql_query($sql2);
         while ($row2 = sql_fetch_array($result2)) {
             $delete_file = run_replace('delete_file_path',
-                G5_DATA_PATH.'/file/'.$bo_table.'/'.str_replace('../', '', $row2['bf_file']), $row2);
+                G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row2['bf_file']), $row2);
             if (file_exists($delete_file)) {
                 @unlink($delete_file);
             }
@@ -147,10 +147,10 @@ if ($count_write > 0 || $count_comment > 0) {
     sql_query(" update {$g5['board_table']} set bo_count_write = bo_count_write - '$count_write', bo_count_comment = bo_count_comment - '$count_comment' where bo_table = '$bo_table' ");
 }
 
-@include_once($board_skin_path.'/delete.tail.skin.php');
+@include_once($board_skin_path . '/delete.tail.skin.php');
 
 delete_cache_latest($bo_table);
 
 run_event('bbs_delete', $write, $board);
 
-goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;page='.$page.$qstr));
+goto_url(short_url_clean(G5_HTTP_BBS_URL . '/board.php?bo_table=' . $bo_table . '&amp;page=' . $page . $qstr));

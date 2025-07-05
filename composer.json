@@ -1,15 +1,15 @@
 {
-    "name": "kalimeromk/pcs",
-    "description": "PCS PHP project",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "PCS\\": "src/"
-        }
-    },
-    "minimum-stability": "stable",
-    "license": "MIT",
-    "require-dev": {
-        "rector/rector": "^2.0"
+  "name": "kalimeromk/pcs",
+  "description": "PCS PHP project",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "PCS\\": "src/"
     }
+  },
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "require-dev": {
+    "rector/rector": "^2.0"
+  }
 }

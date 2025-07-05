@@ -1,114 +1,150 @@
 <?php
-	$table_field_array = array('AG / UG','Unit','Material','Paint code','Spool number','Location','Scaned by','QRcode scaned Date','Photoed by','Photoed Date');
-	$table_width_array = array(6,6,6,6,11,8,8,20,9,20);
+$table_field_array = array('AG / UG', 'Unit', 'Material', 'Paint code', 'Spool number', 'Location', 'Scaned by', 'QRcode scaned Date', 'Photoed by', 'Photoed Date');
+$table_width_array = array(6, 6, 6, 6, 11, 8, 8, 20, 9, 20);
 
-	$query_field = 'DESCRIBE '.G5_TABLE_PREFIX.'pcs_info_spool';
-	$field_enum_value = enum_value($query_field);
+$query_field = 'DESCRIBE ' . G5_TABLE_PREFIX . 'pcs_info_spool';
+$field_enum_value = enum_value($query_field);
 
-	include_once(G5_PLUGIN_PATH.'/jquery-ui/datepicker.php');
+include_once(G5_PLUGIN_PATH . '/jquery-ui/datepicker.php');
 ?>
 <form name='submit_form' method="post" onSubmit="return doSumbit()">
 
-<table class="main">
-<caption> <a href = 'javascript:document.submit_form.submit()'> SELECT SPOOL STATUS </a> </caption>
-<tbody>
-<tr>
-<?php
-	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
-		echo '<td class="jnt_td jnt_th" style="width: '.$table_width_array[$i].'%">'.$table_field_array[$i].'</td>'; 
-	}
-?>
-</tr>
+    <table class="main">
+        <caption><a href='javascript:document.submit_form.submit()'> SELECT SPOOL STATUS </a></caption>
+        <tbody>
+        <tr>
+            <?php
+            for ($i = 0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++) {
+                echo '<td class="jnt_td jnt_th" style="width: ' . $table_width_array[$i] . '%">' . $table_field_array[$i] . '</td>';
+            }
+            ?>
+        </tr>
 
-<tr>
-<input type='hidden' name='btn_check' value='<?php echo $_GET['wr_id']; ?>'>
-<?php
-	for($i=0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++){
-		switch ($i)	{
-			case 0 :
-?>
+        <tr>
+            <input type='hidden' name='btn_check' value='<?php echo $_GET['wr_id']; ?>'>
+            <?php
+            for ($i = 0; isset($table_field_array[$i]) && $table_field_array[$i]; $i++) {
+                switch ($i) {
+                    case 0 :
+                        ?>
 
-<td class="jnt_td" >
-	<select name='<?php echo $mysql_field_array[$i]; ?>' style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
-		<?php sel_option_enum($field_enum_value[$mysql_field_array[$i]],''); ?>
-	</select>
-</td>
+                        <td class="jnt_td">
+                            <select name='<?php echo $mysql_field_array[$i]; ?>'
+                                    style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
+                                <?php sel_option_enum($field_enum_value[$mysql_field_array[$i]], ''); ?>
+                            </select>
+                        </td>
 
-<?php		Break;	
-		
-			case 4 :
-?>
-<td class="jnt_td" ><input type='text' name='<?php echo $mysql_field_array[$i]; ?>' style='padding:0px 0px 0px 5px; text-align:left;width:95%;height:30px;font-size:15px;background-color:bisque;'></td>
-<?php		Break;
+                        <?php break;
 
-			case 6:	
-			case 8 : 
-?>
-			
-<td class="jnt_td" >
-	<select name='<?php echo $mysql_field_array[$i]; ?>' style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
-		<option value=''>-</option>
-		<option value='<?php echo $member['mb_nick'];?>'>Myself</option>
-	</select>
-</td>
+                    case 4 :
+                        ?>
+                        <td class="jnt_td"><input type='text' name='<?php echo $mysql_field_array[$i]; ?>'
+                                                  style='padding:0px 0px 0px 5px; text-align:left;width:95%;height:30px;font-size:15px;background-color:bisque;'>
+                        </td>
+                        <?php break;
 
-<?php
-			Break;	
+                    case 6:
+                    case 8 :
+                        ?>
 
-			case 7 :
-				$datxt1f = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_qrf" id="sel_qrf" value="" onchange="datfol1();">';
-				$datxt1t = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_qrt" id="sel_qrt" value="">';
-?>
+                        <td class="jnt_td">
+                            <select name='<?php echo $mysql_field_array[$i]; ?>'
+                                    style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
+                                <option value=''>-</option>
+                                <option value='<?php echo $member['mb_nick']; ?>'>Myself</option>
+                            </select>
+                        </td>
 
-<td class="jnt_td" style="padding:0 20px 0 0 ; text-align:right;"><?php echo $datxt1f.' ~ '.$datxt1t; ?></td>
+                        <?php
+                        break;
 
-<?php		
-			Break;
+                    case 7 :
+                        $datxt1f = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_qrf" id="sel_qrf" value="" onchange="datfol1();">';
+                        $datxt1t = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_qrt" id="sel_qrt" value="">';
+                        ?>
 
-			case 9 :
-				$datxt2f = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_ptf" id="sel_ptf" value="" onchange="datfol2();">';
-				$datxt2t = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_ptt" id="sel_ptt" value="">';
+                        <td class="jnt_td"
+                            style="padding:0 20px 0 0 ; text-align:right;"><?php echo $datxt1f . ' ~ ' . $datxt1t; ?></td>
 
-?>
+                        <?php
+                        break;
 
-<td class="jnt_td" style="padding:0 20px 0 0 ; text-align:right;"><?php echo $datxt2f.' ~ '.$datxt2t; ?></td>
+                    case 9 :
+                        $datxt2f = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_ptf" id="sel_ptf" value="" onchange="datfol2();">';
+                        $datxt2t = '<input style="width: 100px; text-align:center;height:30px;font-size:15px;background-color:bisque;" type="text" autocomplete="off" name="sel_ptt" id="sel_ptt" value="">';
 
-<?php		
-			Break;
+                        ?>
 
-			default :
-?>
+                        <td class="jnt_td"
+                            style="padding:0 20px 0 0 ; text-align:right;"><?php echo $datxt2f . ' ~ ' . $datxt2t; ?></td>
 
-<td class="jnt_td" >
-	<select name='<?php echo $mysql_field_array[$i]; ?>' style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
-		<option value=''>-</option>
-		<?php sel_option_enum($field_enum_value[$mysql_field_array[$i]],''); ?>
-	</select>
-</td>
+                        <?php
+                        break;
 
-<?php		Break;			
-		}
-	}
-?>
+                    default :
+                        ?>
 
-</tr>
-</tbody>
-</table>
+                        <td class="jnt_td">
+                            <select name='<?php echo $mysql_field_array[$i]; ?>'
+                                    style='WIDTH: 95%; height: 30px; font-size:15px; background-color:bisque'>
+                                <option value=''>-</option>
+                                <?php sel_option_enum($field_enum_value[$mysql_field_array[$i]], ''); ?>
+                            </select>
+                        </td>
+
+                        <?php break;
+                }
+            }
+            ?>
+
+        </tr>
+        </tbody>
+    </table>
 </form>
 <p>&nbsp;</p>
 
 <script>
-$(function(){
-    $("#sel_qrf").datepicker({ changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", showButtonPanel: true, yearRange: "c-1:c", maxDate: "+365d" });
-	$("#sel_qrt").datepicker({ changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", showButtonPanel: true, yearRange: "c-1:c", maxDate: "+365d" });
-    $("#sel_ptf").datepicker({ changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", showButtonPanel: true, yearRange: "c-1:c", maxDate: "+365d" });
-	$("#sel_ptt").datepicker({ changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", showButtonPanel: true, yearRange: "c-1:c", maxDate: "+365d" });
-});
+    $(function () {
+        $("#sel_qrf").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            yearRange: "c-1:c",
+            maxDate: "+365d"
+        });
+        $("#sel_qrt").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            yearRange: "c-1:c",
+            maxDate: "+365d"
+        });
+        $("#sel_ptf").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            yearRange: "c-1:c",
+            maxDate: "+365d"
+        });
+        $("#sel_ptt").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd",
+            showButtonPanel: true,
+            yearRange: "c-1:c",
+            maxDate: "+365d"
+        });
+    });
 
-function datfol1(){
-	document.getElementById('sel_qrt').value = document.getElementById('sel_qrf').value;
-}
-function datfol2(){
-	document.getElementById('sel_ptt').value = document.getElementById('sel_ptf').value;
-}
+    function datfol1() {
+        document.getElementById('sel_qrt').value = document.getElementById('sel_qrf').value;
+    }
+
+    function datfol2() {
+        document.getElementById('sel_ptt').value = document.getElementById('sel_ptf').value;
+    }
 </script>

@@ -11,7 +11,7 @@ if (!(isset($po['po_id']) && $po['po_id'])) {
 }
 
 if ($member['mb_level'] < $po['po_level']) {
-    alert_close('Only members with level '.$po['po_level'].' or higher can participate in the poll.');
+    alert_close('Only members with level ' . $po['po_level'] . ' or higher can participate in the poll.');
 }
 
 $gb_poll = isset($_POST['gb_poll']) ? preg_replace('/[^0-9]/', '', $_POST['gb_poll']) : 0;
@@ -45,14 +45,14 @@ if ($is_member) {
 }
 
 $post_skin_dir = isset($_POST['skin_dir']) ? clean_xss_tags($_POST['skin_dir'], 1, 1) : '';
-$result_url = G5_BBS_URL."/poll_result.php?po_id=$po_id&skin_dir={$post_skin_dir}";
+$result_url = G5_BBS_URL . "/poll_result.php?po_id=$po_id&skin_dir={$post_skin_dir}";
 
 // If not, increment the selected poll item by 1 and save ip, id
 if (!$search_ip && !$search_mb_id) {
-    $po_ips = $po['po_ips'].$_SERVER['REMOTE_ADDR'].",";
+    $po_ips = $po['po_ips'] . $_SERVER['REMOTE_ADDR'] . ",";
     $mb_ids = $po['mb_ids'];
     if ($is_member) { // If member, add only id
-        $mb_ids .= $member['mb_id'].',';
+        $mb_ids .= $member['mb_id'] . ',';
         $sql = " update {$g5['poll_table']} set po_cnt{$gb_poll} = po_cnt{$gb_poll} + 1, mb_ids = '$mb_ids' where po_id = '$po_id' ";
     } else {
         $sql = " update {$g5['poll_table']} set po_cnt{$gb_poll} = po_cnt{$gb_poll} + 1, po_ips = '$po_ips' where po_id = '$po_id' ";
@@ -60,11 +60,11 @@ if (!$search_ip && !$search_mb_id) {
 
     sql_query($sql);
 } else {
-    alert(addcslashes($po['po_subject'], '"\\/').' has already participated.', $result_url);
+    alert(addcslashes($po['po_subject'], '"\\/') . ' has already participated.', $result_url);
 }
 
 if (!$search_mb_id) {
-    insert_point($member['mb_id'], $po['po_point'], $po['po_id'].'. '.cut_str($po['po_subject'], 20).' poll participation ', '@poll',
+    insert_point($member['mb_id'], $po['po_point'], $po['po_id'] . '. ' . cut_str($po['po_subject'], 20) . ' poll participation ', '@poll',
         $po['po_id'], 'poll');
 }
 

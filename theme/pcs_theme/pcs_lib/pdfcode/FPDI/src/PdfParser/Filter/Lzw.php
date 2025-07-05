@@ -134,25 +134,6 @@ class Lzw implements FilterInterface
     }
 
     /**
-     * Add a new string to the string table.
-     */
-    protected function addStringToTable(string $oldString, string $newString = '')
-    {
-        $string = $oldString . $newString;
-
-        // Add this new String to the table
-        $this->sTable[$this->tIdx++] = $string;
-
-        if ($this->tIdx === 511) {
-            $this->bitsToGet = 10;
-        } elseif ($this->tIdx === 1023) {
-            $this->bitsToGet = 11;
-        } elseif ($this->tIdx === 2047) {
-            $this->bitsToGet = 12;
-        }
-    }
-
-    /**
      * Returns the next 9, 10, 11 or 12 bits.
      */
     protected function getNextCode(): int
@@ -173,5 +154,24 @@ class Lzw implements FilterInterface
         $this->nextBits -= $this->bitsToGet;
 
         return $code;
+    }
+
+    /**
+     * Add a new string to the string table.
+     */
+    protected function addStringToTable(string $oldString, string $newString = '')
+    {
+        $string = $oldString . $newString;
+
+        // Add this new String to the table
+        $this->sTable[$this->tIdx++] = $string;
+
+        if ($this->tIdx === 511) {
+            $this->bitsToGet = 10;
+        } elseif ($this->tIdx === 1023) {
+            $this->bitsToGet = 11;
+        } elseif ($this->tIdx === 2047) {
+            $this->bitsToGet = 12;
+        }
     }
 }

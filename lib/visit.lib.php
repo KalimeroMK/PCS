@@ -2,7 +2,7 @@
 if (!defined('_GNUBOARD_')) exit;
 
 // 방문자수 출력
-function visit($skin_dir='basic'): string|false
+function visit($skin_dir = 'basic'): string|false
 {
     global $config, $g5;
 
@@ -13,32 +13,32 @@ function visit($skin_dir='basic'): string|false
     // $visit[4] = 전체
     // 숫자가 들어감
     preg_match("/오늘:(.*),어제:(.*),최대:(.*),전체:(.*)/", $config['cf_visit'], $visit);
-    $visit[1] = (int) $visit[1];
-    $visit[2] = (int) $visit[2];
-    $visit[3] = (int) $visit[3];
-    $visit[4] = (int) $visit[4];
+    $visit[1] = (int)$visit[1];
+    $visit[2] = (int)$visit[2];
+    $visit[3] = (int)$visit[3];
+    $visit[4] = (int)$visit[4];
 
     if (preg_match('#^theme/(.+)$#', $skin_dir, $match)) {
         if (G5_IS_MOBILE) {
-            $visit_skin_path = G5_THEME_MOBILE_PATH.'/'.G5_SKIN_DIR.'/visit/'.$match[1];
-            if(!is_dir($visit_skin_path))
-                $visit_skin_path = G5_THEME_PATH.'/'.G5_SKIN_DIR.'/visit/'.$match[1];
+            $visit_skin_path = G5_THEME_MOBILE_PATH . '/' . G5_SKIN_DIR . '/visit/' . $match[1];
+            if (!is_dir($visit_skin_path))
+                $visit_skin_path = G5_THEME_PATH . '/' . G5_SKIN_DIR . '/visit/' . $match[1];
             $visit_skin_url = str_replace(G5_PATH, G5_URL, $visit_skin_path);
         } else {
-            $visit_skin_path = G5_THEME_PATH.'/'.G5_SKIN_DIR.'/visit/'.$match[1];
+            $visit_skin_path = G5_THEME_PATH . '/' . G5_SKIN_DIR . '/visit/' . $match[1];
             $visit_skin_url = str_replace(G5_PATH, G5_URL, $visit_skin_path);
         }
         $skin_dir = $match[1];
     } elseif (G5_IS_MOBILE) {
-        $visit_skin_path = G5_MOBILE_PATH.'/'.G5_SKIN_DIR.'/visit/'.$skin_dir;
-        $visit_skin_url = G5_MOBILE_URL.'/'.G5_SKIN_DIR.'/visit/'.$skin_dir;
+        $visit_skin_path = G5_MOBILE_PATH . '/' . G5_SKIN_DIR . '/visit/' . $skin_dir;
+        $visit_skin_url = G5_MOBILE_URL . '/' . G5_SKIN_DIR . '/visit/' . $skin_dir;
     } else {
-        $visit_skin_path = G5_SKIN_PATH.'/visit/'.$skin_dir;
-        $visit_skin_url = G5_SKIN_URL.'/visit/'.$skin_dir;
+        $visit_skin_path = G5_SKIN_PATH . '/visit/' . $skin_dir;
+        $visit_skin_url = G5_SKIN_URL . '/visit/' . $skin_dir;
     }
 
     ob_start();
-    include_once ($visit_skin_path.'/visit.skin.php');
+    include_once($visit_skin_path . '/visit.skin.php');
     $content = ob_get_contents();
     ob_end_clean();
 
@@ -53,7 +53,7 @@ function get_brow($agent): string
     //echo $agent; echo "<br/>";
 
     if (preg_match("/msie ([1-9]\\d\\.\\d+)/", $agent, $m)) {
-        $s = 'MSIE '.$m[1];
+        $s = 'MSIE ' . $m[1];
     } elseif (preg_match("/firefox/", $agent)) {
         $s = "FireFox";
     } elseif (preg_match("/chrome/", $agent)) {
@@ -70,7 +70,9 @@ function get_brow($agent): string
         $s = "IE";
     } elseif (preg_match("/mozilla/", $agent)) {
         $s = "Mozilla";
-    } else { $s = "기타"; }
+    } else {
+        $s = "기타";
+    }
 
     return $s;
 }
@@ -119,7 +121,9 @@ function get_os($agent): string
         $s = "IE";
     } elseif (preg_match("/mozilla/", $agent)) {
         $s = "Mozilla";
-    } else { $s = "기타"; }
+    } else {
+        $s = "기타";
+    }
 
     return $s;
 }

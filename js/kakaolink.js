@@ -1,12 +1,11 @@
-function kakaolink_send(text, url, image)
-{
+function kakaolink_send(text, url, image) {
     if (window.Kakao && (kakao_javascript_apikey !== undefined)) {
-        if (! Kakao.isInitialized()) {
+        if (!Kakao.isInitialized()) {
             Kakao.init(kakao_javascript_apikey);
         }
     }
 
-    if( image === undefined ){
+    if (image === undefined) {
         image = '';
     }
 

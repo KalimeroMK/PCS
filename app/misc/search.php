@@ -71,7 +71,7 @@ if ($stx) {
 
     $text_stx = get_text(stripslashes($stx));
 
-    $search_query = 'sfl='.urlencode($sfl).'&amp;stx='.urlencode($stx).'&amp;sop='.$sop;
+    $search_query = 'sfl=' . urlencode($sfl) . '&amp;stx=' . urlencode($stx) . '&amp;sop=' . $sop;
 
     // Split search fields by delimiter. + used here
     $field = explode('||', trim($sfl));
@@ -130,7 +130,7 @@ if ($stx) {
     $total_count = 0;
     $counter = count($g5_search['tables']);
     for ($i = 0; $i < $counter; $i++) {
-        $tmp_write_table = $g5['write_prefix'].$g5_search['tables'][$i];
+        $tmp_write_table = $g5['write_prefix'] . $g5_search['tables'][$i];
 
         $sql = " select wr_id from {$tmp_write_table} where {$sql_search} ";
         $result = sql_query($sql, false);
@@ -152,7 +152,7 @@ if ($stx) {
             } else {
                 $sch_all = "class=sch_on";
             }
-            $str_board_list .= '<li><a href="'.$_SERVER['SCRIPT_NAME'].'?'.$search_query.'&amp;gr_id='.$gr_id.'&amp;onetable='.$g5_search['tables'][$i].'" '.$sch_class.'><strong>'.((G5_IS_MOBILE && $row2['bo_mobile_subject']) ? $row2['bo_mobile_subject'] : $row2['bo_subject']).'</strong><span class="cnt_cmt">'.$row['cnt'].'</span></a></li>';
+            $str_board_list .= '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?' . $search_query . '&amp;gr_id=' . $gr_id . '&amp;onetable=' . $g5_search['tables'][$i] . '" ' . $sch_class . '><strong>' . ((G5_IS_MOBILE && $row2['bo_mobile_subject']) ? $row2['bo_mobile_subject'] : $row2['bo_subject']) . '</strong><span class="cnt_cmt">' . $row['cnt'] . '</span></a></li>';
         }
     }
 
@@ -183,7 +183,7 @@ if ($stx) {
         $row = sql_fetch($sql);
         $bo_subject[$idx] = ((G5_IS_MOBILE && $row['bo_mobile_subject']) ? $row['bo_mobile_subject'] : $row['bo_subject']);
 
-        $tmp_write_table = $g5['write_prefix'].$search_table[$idx];
+        $tmp_write_table = $g5['write_prefix'] . $search_table[$idx];
 
         $sql = " select * from {$tmp_write_table} where {$sql_search} order by wr_id desc limit {$from_record}, {$rows} ";
         $result = sql_query($sql);
@@ -200,7 +200,7 @@ if ($stx) {
             }
 
             // Private posts are not searchable
-            if (strstr($row['wr_option'].(isset($row2['wr_option']) ? $row2['wr_option'] : ''), 'secret')) {
+            if (strstr($row['wr_option'] . (isset($row2['wr_option']) ? $row2['wr_option'] : ''), 'secret')) {
                 $row['wr_content'] = '[Private post]';
             }
 
@@ -244,7 +244,7 @@ if ($stx) {
     }
 
     $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page,
-        $_SERVER['SCRIPT_NAME'].'?'.$search_query.'&amp;gr_id='.$gr_id.'&amp;srows='.$srows.'&amp;onetable='.$onetable.'&amp;page=');
+        $_SERVER['SCRIPT_NAME'] . '?' . $search_query . '&amp;gr_id=' . $gr_id . '&amp;srows=' . $srows . '&amp;onetable=' . $onetable . '&amp;page=');
 }
 
 // Board group selection
@@ -252,8 +252,8 @@ $group_select = '<label for="gr_id" class="sound_only">Select Board Group</label
 $sql = " select gr_id, gr_subject from {$g5['group_table']} order by gr_id ";
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {
-    $group_select .= "<option value=\"".$row['gr_id']."\"".get_selected($gr_id,
-            $row['gr_id']).">".$row['gr_subject']."</option>";
+    $group_select .= "<option value=\"" . $row['gr_id'] . "\"" . get_selected($gr_id,
+            $row['gr_id']) . ">" . $row['gr_subject'] . "</option>";
 }
 $group_select .= '</select>';
 
@@ -264,6 +264,6 @@ if (!$sop) {
     $sop = 'or';
 }
 
-include_once($search_skin_path.'/search.skin.php');
+include_once($search_skin_path . '/search.skin.php');
 
 include_once(__DIR__ . '/tail.php');

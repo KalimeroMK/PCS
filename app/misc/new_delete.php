@@ -26,7 +26,7 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
     $save_bo_table[$i] = $bo_table;
     $save_wr_id[$i] = $wr_id;
 
-    $write_table = $g5['write_prefix'].$bo_table;
+    $write_table = $g5['write_prefix'] . $bo_table;
 
     if ($board['bo_table'] != $bo_table) {
         $board = sql_fetch(" select bo_subject, bo_write_point, bo_comment_point, bo_notice from {$g5['board_table']} where bo_table = '$bo_table' ");
@@ -61,9 +61,9 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
                 $result2 = sql_query($sql2);
                 while ($row2 = sql_fetch_array($result2)) {
                     $delete_file = run_replace('delete_file_path',
-                        G5_DATA_PATH.'/file/'.$bo_table.'/'.str_replace('../', '', $row2['bf_file']), $row2);
+                        G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row2['bf_file']), $row2);
                     if (file_exists($delete_file)) {
-                        @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.$row2['bf_file']);
+                        @unlink(G5_DATA_PATH . '/file/' . $bo_table . '/' . $row2['bf_file']);
                     }
                     // 이미지파일이면 썸네일삭제
                     if (preg_match("/\.({$config['cf_image_extension']})$/i", $row2['bf_file'])) {
@@ -87,7 +87,7 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
 
         if ($pressed == '선택내용삭제') {
             // 게시글 내용만 삭제
-            sql_query(" update $write_table set wr_subject =  '".G5_TIME_YMDHIS." - 본인 요청으로 인한 삭제 (냉무) ☆', wr_content = '', wr_name='본인요청삭제☆' where wr_id = '{$write['wr_id']}' ");
+            sql_query(" update $write_table set wr_subject =  '" . G5_TIME_YMDHIS . " - 본인 요청으로 인한 삭제 (냉무) ☆', wr_content = '', wr_name='본인요청삭제☆' where wr_id = '{$write['wr_id']}' ");
         } else {
             // 게시글 삭제
             sql_query(" delete from $write_table where wr_parent = '{$write['wr_id']}' ");
@@ -106,7 +106,7 @@ for ($i = 0; $i < $count_chk_bn_id; $i++) {
         $counter = count($notice_array);
         for ($k = 0; $k < $counter; $k++) {
             if ((int)$write['wr_id'] !== (int)$notice_array[$k]) {
-                $bo_notice .= $lf.$notice_array[$k];
+                $bo_notice .= $lf . $notice_array[$k];
             }
 
             if ($bo_notice !== '' && $bo_notice !== '0') {

@@ -20,6 +20,13 @@ use setasign\Fpdi\PdfParser\PdfParserException;
 class PdfType
 {
     /**
+     * The value of the PDF type.
+     *
+     * @var mixed
+     */
+    public $value;
+
+    /**
      * Resolves a PdfType value to its value.
      *
      * This method is used to evaluate indirect and direct object references until a final value is reached.
@@ -66,11 +73,4 @@ class PdfType
 
         return $value;
     }
-
-    /**
-     * The value of the PDF type.
-     *
-     * @var mixed
-     */
-    public $value;
 }

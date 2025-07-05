@@ -3,7 +3,7 @@
 include_once(__DIR__ . '/../common.php');
 
 include_once(G5_EDITOR_LIB);
-include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
 
 if (!$board['bo_table']) {
     alert('The specified board does not exist.', G5_URL);
@@ -25,8 +25,8 @@ if ($w == 'u' || $w == 'r') {
     if ($write['wr_id']) {
         // Create variables $wr_1 .. $wr_10 as temporary variables
         for ($i = 1; $i <= 10; $i++) {
-            $vvar = "wr_".$i;
-            $$vvar = $write['wr_'.$i];
+            $vvar = "wr_" . $i;
+            $$vvar = $write['wr_' . $i];
         }
     } else {
         alert("The post does not exist.\nIt may have been deleted or moved.", G5_URL);
@@ -34,7 +34,7 @@ if ($w == 'u' || $w == 'r') {
 } elseif ($w == '') {
     // When entering a post, also create variables $wr_1 ~ $wr_10 to prevent errors (DaonTema, 210806)
     for ($i = 1; $i <= 10; $i++) {
-        $vvar = "wr_".$i;
+        $vvar = "wr_" . $i;
         $$vvar = '';
     }
 }
@@ -43,21 +43,21 @@ run_event('bbs_write', $board, $wr_id, $w);
 
 if ($w == '') {
     if ($wr_id) {
-        alert('Do not use $wr_id value when writing a post.', G5_BBS_URL.'/board.php?bo_table='.$bo_table);
+        alert('Do not use $wr_id value when writing a post.', G5_BBS_URL . '/board.php?bo_table=' . $bo_table);
     }
     if ($member['mb_level'] < $board['bo_write_level']) {
         if ($member['mb_id']) {
             alert('You do not have permission to write a post.');
         } else {
             alert('You do not have permission to write a post.\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?'.$qstr.'&amp;url='.urlencode($_SERVER['SCRIPT_NAME'].'?bo_table='.$bo_table));
+                G5_BBS_URL . '/login.php?' . $qstr . '&amp;url=' . urlencode($_SERVER['SCRIPT_NAME'] . '?bo_table=' . $bo_table));
         }
     }
     // Negative numbers are also true
     if ($is_member) {
         $tmp_point = ($member['mb_point'] > 0) ? $member['mb_point'] : 0;
         if ($tmp_point + $board['bo_write_point'] < 0 && !$is_admin) {
-            alert('You do not have enough points ('.number_format($member['mb_point']).') to write a post ('.number_format($board['bo_write_point']).').\n\nPlease accumulate more points and try again.');
+            alert('You do not have enough points (' . number_format($member['mb_point']) . ') to write a post (' . number_format($board['bo_write_point']) . ').\n\nPlease accumulate more points and try again.');
         }
     }
     $title_msg = 'Write Post';
@@ -70,7 +70,7 @@ if ($w == '') {
             alert('You do not have permission to edit this post.');
         } else {
             alert('You do not have permission to edit this post.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?'.$qstr.'&amp;url='.urlencode($_SERVER['SCRIPT_NAME'].'?bo_table='.$bo_table));
+                G5_BBS_URL . '/login.php?' . $qstr . '&amp;url=' . urlencode($_SERVER['SCRIPT_NAME'] . '?bo_table=' . $bo_table));
         }
     }
     $len = strlen($write['wr_reply']);
@@ -104,12 +104,12 @@ if ($w == '') {
             alert('You do not have permission to reply to this post.');
         } else {
             alert('You do not have permission to reply to this post.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?'.$qstr.'&amp;url='.urlencode($_SERVER['SCRIPT_NAME'].'?bo_table='.$bo_table));
+                G5_BBS_URL . '/login.php?' . $qstr . '&amp;url=' . urlencode($_SERVER['SCRIPT_NAME'] . '?bo_table=' . $bo_table));
         }
     }
     $tmp_point = isset($member['mb_point']) ? $member['mb_point'] : 0;
     if ($tmp_point + $board['bo_write_point'] < 0 && !$is_admin) {
-        alert('You do not have enough points ('.number_format($member['mb_point']).') to reply to this post ('.number_format($board['bo_comment_point']).').\n\nPlease accumulate more points and try again.');
+        alert('You do not have enough points (' . number_format($member['mb_point']) . ') to reply to this post (' . number_format($board['bo_comment_point']) . ').\n\nPlease accumulate more points and try again.');
     }
     //if (preg_match("/[^0-9]{0,1}{$wr_id}[\r]{0,1}/",$board['bo_notice']))
     if (in_array((int)$wr_id, $notice_array)) {
@@ -163,16 +163,16 @@ if ($w == '') {
     } else {
         $reply_char = chr(ord($row['reply']) + $reply_number);
     }
-    $reply = $reply_array['wr_reply'].$reply_char;
+    $reply = $reply_array['wr_reply'] . $reply_char;
     $title_msg = 'Reply to Post';
-    $write['wr_subject'] = 'Re: '.$write['wr_subject'];
+    $write['wr_subject'] = 'Re: ' . $write['wr_subject'];
 }
 
 // Group access
 if (!empty($group['gr_use_access'])) {
     if ($is_guest) {
         alert("You do not have access to this board.\n\nIf you are a member, please log in and try again.",
-            'login.php?'.$qstr.'&amp;url='.urlencode($_SERVER['SCRIPT_NAME'].'?bo_table='.$bo_table));
+            'login.php?' . $qstr . '&amp;url=' . urlencode($_SERVER['SCRIPT_NAME'] . '?bo_table=' . $bo_table));
     }
 
     if ($is_admin == 'super' || $group['gr_admin'] === $member['mb_id'] || $board['bo_admin'] === $member['mb_id']) {
@@ -192,12 +192,12 @@ if ($board['bo_use_cert'] != '' && $config['cf_cert_use'] && !$is_admin) {
     // Only certified members can access
     if ($is_guest) {
         alert('This board is only accessible to certified members.\n\nIf you are a member, please log in and try again.',
-            G5_BBS_URL.'/login.php?wr_id='.$wr_id.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id,
+            G5_BBS_URL . '/login.php?wr_id=' . $wr_id . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id,
                 $qstr)));
     }
 
     if (strlen($member['mb_dupinfo']) == 64 && $member['mb_certify']) { // Certified members only
-        goto_url(G5_BBS_URL."/member_cert_refresh.php?url=".urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
+        goto_url(G5_BBS_URL . "/member_cert_refresh.php?url=" . urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
     }
 
     if ($board['bo_use_cert'] == 'cert' && !$member['mb_certify']) {
@@ -219,7 +219,7 @@ if ($is_admin || $board['bo_use_dhtml_editor']) {
     $write_max = (int)$board['bo_write_max'];
 }
 
-$g5['title'] = ((G5_IS_MOBILE && $board['bo_mobile_subject']) ? $board['bo_mobile_subject'] : $board['bo_subject']).' '.$title_msg;
+$g5['title'] = ((G5_IS_MOBILE && $board['bo_mobile_subject']) ? $board['bo_mobile_subject'] : $board['bo_subject']) . ' ' . $title_msg;
 
 $is_notice = false;
 $notice_checked = '';
@@ -321,8 +321,8 @@ if ($w == '') {
     $email = get_email_address($write['wr_email']);
     $homepage = get_text(stripslashes($write['wr_homepage']));
     for ($i = 1; $i <= G5_LINK_COUNT; $i++) {
-        $write['wr_link'.$i] = get_text($write['wr_link'.$i]);
-        $link[$i] = $write['wr_link'.$i];
+        $write['wr_link' . $i] = get_text($write['wr_link' . $i]);
+        $link[$i] = $write['wr_link' . $i];
     }
     if (strstr($write['wr_option'], 'html1')) {
         $html_checked = 'checked';
@@ -350,7 +350,7 @@ if ($w == '') {
     }
     $password_required = "required";
     for ($i = 1; $i <= G5_LINK_COUNT; $i++) {
-        $write['wr_link'.$i] = get_text($write['wr_link'.$i]);
+        $write['wr_link' . $i] = get_text($write['wr_link' . $i]);
     }
 }
 
@@ -368,16 +368,16 @@ if ($w == '') {
 } elseif ($w == 'r') {
     if (!strstr($write['wr_option'], 'html')) {
         $content = "\n\n\n &gt; "
-            ."\n &gt; "
-            ."\n &gt; ".str_replace("\n", "\n> ", get_text($write['wr_content'], 0))
-            ."\n &gt; "
-            ."\n &gt; ";
+            . "\n &gt; "
+            . "\n &gt; " . str_replace("\n", "\n> ", get_text($write['wr_content'], 0))
+            . "\n &gt; "
+            . "\n &gt; ";
     }
 } else {
     $content = get_text($write['wr_content'], 0);
 }
 
-$upload_max_filesize = number_format($board['bo_upload_size']).' bytes';
+$upload_max_filesize = number_format($board['bo_upload_size']) . ' bytes';
 
 $width = $board['bo_table_width'];
 if ($width <= 100) {
@@ -411,8 +411,8 @@ if ($config['cf_editor'] && $is_dhtml_editor_use && $board['bo_use_dhtml_editor'
         $content = get_text(html_purifier($write['wr_content']), 0);
     }
 
-    if (is_file(G5_EDITOR_PATH.'/'.$config['cf_editor'].'/autosave.editor.js')) {
-        $editor_content_js = '<script src="'.G5_EDITOR_URL.'/'.$config['cf_editor'].'/autosave.editor.js"></script>'.PHP_EOL;
+    if (is_file(G5_EDITOR_PATH . '/' . $config['cf_editor'] . '/autosave.editor.js')) {
+        $editor_content_js = '<script src="' . G5_EDITOR_URL . '/' . $config['cf_editor'] . '/autosave.editor.js"></script>' . PHP_EOL;
     }
 }
 $editor_html = editor_html('wr_content', $content);
@@ -423,15 +423,15 @@ $editor_js .= chk_editor_js('wr_content');
 // Number of temporarily saved posts
 $autosave_count = autosave_count($member['mb_id']);
 
-include_once(G5_PATH.'/head.sub.php');
-@include_once($board_skin_path.'/write.head.skin.php');
-include_once(G5_PATH.'/head.php');
+include_once(G5_PATH . '/head.sub.php');
+@include_once($board_skin_path . '/write.head.skin.php');
+include_once(G5_PATH . '/head.php');
 
-$action_url = https_url(G5_BBS_DIR)."/write_update.php";
+$action_url = https_url(G5_BBS_DIR) . "/write_update.php";
 
-echo '<!-- skin : '.(G5_IS_MOBILE ? $board['bo_mobile_skin'] : $board['bo_skin']).' -->';
-include_once($board_skin_path.'/write.skin.php');
+echo '<!-- skin : ' . (G5_IS_MOBILE ? $board['bo_mobile_skin'] : $board['bo_skin']) . ' -->';
+include_once($board_skin_path . '/write.skin.php');
 
 include_once(__DIR__ . '/board_tail.php');
-@include_once($board_skin_path.'/write.tail.skin.php');
-include_once(G5_PATH.'/tail.sub.php');
+@include_once($board_skin_path . '/write.tail.skin.php');
+include_once(G5_PATH . '/tail.sub.php');

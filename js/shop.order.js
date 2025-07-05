@@ -1,11 +1,11 @@
-var order_stock_check = function() {
+var order_stock_check = function () {
     var result = "";
     $.ajax({
         type: "POST",
-        url: g5_url+"/shop/ajax.orderstock.php",
+        url: g5_url + "/shop/ajax.orderstock.php",
         cache: false,
         async: false,
-        success: function(data) {
+        success: function (data) {
             result = data;
         }
     });

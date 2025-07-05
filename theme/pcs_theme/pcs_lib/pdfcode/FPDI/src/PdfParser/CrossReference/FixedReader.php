@@ -11,7 +11,6 @@
 namespace setasign\Fpdi\PdfParser\CrossReference;
 
 use setasign\Fpdi\PdfParser\PdfParser;
-use setasign\Fpdi\PdfParser\StreamReader;
 
 /**
  * Class FixedReader
@@ -40,41 +39,6 @@ class FixedReader extends AbstractReader implements ReaderInterface
         $this->reader = $parser->getStreamReader();
         $this->read();
         parent::__construct($parser);
-    }
-
-    /**
-     * Get all subsection data.
-     *
-     * @return array
-     */
-    public function getSubSections()
-    {
-        return $this->subSections;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOffsetFor($objectNumber): false|int
-    {
-        foreach ($this->subSections as $offset => list($startObject, $objectCount)) {
-            /**
-             * @var int $startObject
-             * @var int $objectCount
-             */
-            if ($objectNumber >= $startObject && $objectNumber < ($startObject + $objectCount)) {
-                $position = $offset + 20 * ($objectNumber - $startObject);
-                $this->reader->ensure($position, 20);
-                $line = $this->reader->readBytes(20);
-                if ($line[17] === 'f') {
-                    return false;
-                }
-
-                return (int) \substr($line, 0, 10);
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -186,6 +150,41 @@ class FixedReader extends AbstractReader implements ReaderInterface
                 $this->subSections[$offset] = [$startObject - 1, $objectCount];
             }
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all subsection data.
+     *
+     * @return array
+     */
+    public function getSubSections()
+    {
+        return $this->subSections;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getOffsetFor($objectNumber): false|int
+    {
+        foreach ($this->subSections as $offset => list($startObject, $objectCount)) {
+            /**
+             * @var int $startObject
+             * @var int $objectCount
+             */
+            if ($objectNumber >= $startObject && $objectNumber < ($startObject + $objectCount)) {
+                $position = $offset + 20 * ($objectNumber - $startObject);
+                $this->reader->ensure($position, 20);
+                $line = $this->reader->readBytes(20);
+                if ($line[17] === 'f') {
+                    return false;
+                }
+
+                return (int)\substr($line, 0, 10);
+            }
         }
 
         return false;

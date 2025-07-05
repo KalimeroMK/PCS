@@ -86,7 +86,7 @@ function exist_mb_nick($reg_mb_nick, $reg_mb_id): string
 function reserve_mb_nick($reg_mb_nick): string
 {
     global $config;
-    if (preg_match("/[\,]?".preg_quote($reg_mb_nick)."/i", $config['cf_prohibit_id']))
+    if (preg_match("/[\,]?" . preg_quote($reg_mb_nick) . "/i", $config['cf_prohibit_id']))
         return "이미 예약된 단어로 사용할 수 없는 닉네임 입니다.";
     else
         return "";
@@ -173,8 +173,8 @@ function exist_mb_hp($reg_mb_hp, $reg_mb_id): string
     $sql = "select count(*) as cnt from {$g5['member_table']} where mb_hp = '$reg_mb_hp' and mb_id <> '$reg_mb_id' ";
     $row = sql_fetch($sql);
 
-    if($row['cnt'])
-        return " 이미 사용 중인 휴대폰번호입니다. ".$reg_mb_hp;
+    if ($row['cnt'])
+        return " 이미 사용 중인 휴대폰번호입니다. " . $reg_mb_hp;
     else
         return "";
 }

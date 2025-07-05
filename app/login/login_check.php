@@ -45,25 +45,25 @@ if (!$is_need_not_password && (!(isset($mb['mb_id']) && $mb['mb_id']) || !login_
 // Check if the member ID is blocked
 if ($mb['mb_intercept_date'] && $mb['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
     $date = preg_replace("/(\\d{4})(\\d{2})(\\d{2})/", "\\1 year \\2 month \\3 day", $mb['mb_intercept_date']);
-    alert('The member ID is blocked.\nBlocked date: '.$date);
+    alert('The member ID is blocked.\nBlocked date: ' . $date);
 }
 
 // Check if the member ID is withdrawn
 if ($mb['mb_leave_date'] && $mb['mb_leave_date'] <= date("Ymd", G5_SERVER_TIME)) {
     $date = preg_replace("/(\\d{4})(\\d{2})(\\d{2})/", "\\1 year \\2 month \\3 day", $mb['mb_leave_date']);
-    alert('This is a withdrawn ID, so access is not allowed.\nWithdrawal date: '.$date);
+    alert('This is a withdrawn ID, so access is not allowed.\nWithdrawal date: ' . $date);
 }
 
 // Check if email verification is required
 if (is_use_email_certify() && !preg_match("/[1-9]/", $mb['mb_email_certify'])) {
-    $ckey = md5($mb['mb_ip'].$mb['mb_datetime']);
+    $ckey = md5($mb['mb_ip'] . $mb['mb_datetime']);
     confirm("You must verify your email to log in with {$mb['mb_email']}.", G5_URL,
-        G5_BBS_URL.'/register_email.php?mb_id='.$mb_id.'&ckey='.$ckey);
+        G5_BBS_URL . '/register_email.php?mb_id=' . $mb_id . '&ckey=' . $ckey);
 }
 
 run_event('login_session_before', $mb, $is_social_login);
 
-@include_once($member_skin_path.'/login_check.skin.php');
+@include_once($member_skin_path . '/login_check.skin.php');
 
 if (!(defined('SKIP_SESSION_REGENERATE_ID') && SKIP_SESSION_REGENERATE_ID)) {
     session_regenerate_id(false);
@@ -93,7 +93,7 @@ if ($config['cf_use_point']) {
 // Store the member ID in a cookie for a month
 if (isset($auto_login) && $auto_login) {
     // Store the member ID and password in cookies for a month
-    $key = md5($_SERVER['SERVER_ADDR'].$_SERVER['SERVER_SOFTWARE'].$_SERVER['HTTP_USER_AGENT'].$mb['mb_password']);
+    $key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_SOFTWARE'] . $_SERVER['HTTP_USER_AGENT'] . $mb['mb_password']);
     set_cookie('ck_mb_id', $mb['mb_id'], 86400 * 31);
     set_cookie('ck_auto', $key, 86400 * 31);
 } else {
@@ -152,8 +152,8 @@ if (function_exists('set_cart_id')) {
 run_event('member_login_check', $mb, $link, $is_social_login);
 
 // Check the administrator's permissions
-if (is_admin($mb['mb_id']) && is_dir(G5_DATA_PATH.'/tmp/')) {
-    $tmp_data_file = G5_DATA_PATH.'/tmp/tmp-write-test-'.time();
+if (is_admin($mb['mb_id']) && is_dir(G5_DATA_PATH . '/tmp/')) {
+    $tmp_data_file = G5_DATA_PATH . '/tmp/tmp-write-test-' . time();
     $tmp_data_check = @fopen($tmp_data_file, 'w');
     if ($tmp_data_check && !@fwrite($tmp_data_check, G5_URL)) {
         $tmp_data_check = false;

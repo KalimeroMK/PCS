@@ -22,7 +22,7 @@ if ($config['cf_cert_find'] != 1) {
 $g5['title'] = '패스워드 변경';
 include_once(__DIR__ . '/../head.php');
 
-$action_url = G5_HTTPS_BBS_URL."/password_reset_update.php";
-include_once($member_skin_path.'/password_reset.skin.php');
+$action_url = G5_HTTPS_BBS_URL . "/password_reset_update.php";
+include_once($member_skin_path . '/password_reset.skin.php');
 
 include_once(__DIR__ . '/tail.php');

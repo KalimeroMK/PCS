@@ -23,15 +23,14 @@ use setasign\Fpdi\PdfParser\Type\PdfNull;
  */
 class Fpdi extends FpdfTpl
 {
-    public $buffer;
-    use FpdiTrait;
-
     /**
      * FPDI version
      *
      * @string
      */
     const VERSION = '2.3.5';
+    use FpdiTrait;
+    public $buffer;
 
     public function _enddoc(): void
     {
@@ -131,18 +130,6 @@ class Fpdi extends FpdfTpl
     /**
      * @inheritdoc
      */
-    protected function _putxobjectdict()
-    {
-        foreach ($this->importedPages as $pageData) {
-            $this->_put('/' . $pageData['id'] . ' ' . $pageData['objectNumber'] . ' 0 R');
-        }
-
-        parent::_putxobjectdict();
-    }
-
-    /**
-     * @inheritdoc
-     */
     protected function _put($s, $newLine = true)
     {
         if ($newLine) {
@@ -150,5 +137,17 @@ class Fpdi extends FpdfTpl
         } else {
             $this->buffer .= $s;
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function _putxobjectdict()
+    {
+        foreach ($this->importedPages as $pageData) {
+            $this->_put('/' . $pageData['id'] . ' ' . $pageData['objectNumber'] . ' 0 R');
+        }
+
+        parent::_putxobjectdict();
     }
 }

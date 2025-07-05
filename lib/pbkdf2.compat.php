@@ -45,8 +45,8 @@ define('PBKDF2_COMPAT_HASH_BYTES', 24);
 function create_hash($password, $force_compat = false): string
 {
     // Generate the salt.
-    
-    if (function_exists('mcrypt_create_iv') && version_compare( PHP_VERSION, '7.2' , '<' ) ) {
+
+    if (function_exists('mcrypt_create_iv') && version_compare(PHP_VERSION, '7.2', '<')) {
         $salt = base64_encode(mcrypt_create_iv(PBKDF2_COMPAT_SALT_BYTES, MCRYPT_DEV_URANDOM));
     } elseif (@file_exists('/dev/urandom') && $fp = @fopen('/dev/urandom', 'r')) {
         $salt = base64_encode(fread($fp, PBKDF2_COMPAT_SALT_BYTES));
@@ -57,18 +57,18 @@ function create_hash($password, $force_compat = false): string
         }
         $salt = base64_encode(substr($salt, 0, PBKDF2_COMPAT_SALT_BYTES));
     }
-    
+
     // Determine the best supported algorithm and iteration count.
-    
+
     $algo = strtolower(PBKDF2_COMPAT_HASH_ALGORITHM);
     $iterations = PBKDF2_COMPAT_ITERATIONS;
     if ($force_compat || !function_exists('hash_algos') || !in_array($algo, hash_algos())) {
         $algo = false;                         // This flag will be detected by pbkdf2_default()
         $iterations = round($iterations / 5);  // PHP 4 is very slow. Don't cause too much server load.
     }
-    
+
     // Return format: algorithm:iterations:salt:hash
-    
+
     $pbkdf2 = pbkdf2_default($algo, $password, $salt, $iterations, PBKDF2_COMPAT_HASH_BYTES);
     $prefix = $algo ? $algo : 'sha1';
     return $prefix . ':' . $iterations . ':' . $salt . ':' . base64_encode($pbkdf2);
@@ -79,12 +79,12 @@ function create_hash($password, $force_compat = false): string
 function validate_password($password, $hash)
 {
     // Split the hash into 4 parts.
-    
+
     $params = explode(':', $hash);
     if (count($params) < 4) return false;
-    
+
     // Recalculate the hash and compare it with the original.
-    
+
     $pbkdf2 = base64_decode($params[3]);
     $pbkdf2_check = pbkdf2_default($params[0], $password, $params[2], (int)$params[1], strlen($pbkdf2));
     return slow_equals($pbkdf2, $pbkdf2_check);
@@ -95,14 +95,14 @@ function validate_password($password, $hash)
 function needs_upgrade($hash): bool
 {
     // Get the current algorithm and iteration count.
-    
+
     $params = explode(':', $hash);
     if (count($params) < 4) return true;
     $algo = $params[0];
     $iterations = (int)$params[1];
-    
+
     // Compare the current hash with the best supported options.
-    
+
     if (!function_exists('hash_algos') || !in_array($algo, hash_algos())) {
         return false;
     } elseif ($algo === strtolower(PBKDF2_COMPAT_HASH_ALGORITHM) && $iterations >= PBKDF2_COMPAT_ITERATIONS) {
@@ -117,10 +117,10 @@ function needs_upgrade($hash): bool
 function slow_equals($a, $b): bool
 {
     $diff = strlen($a) ^ strlen($b);
-    for($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
+    for ($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
         $diff |= ord($a[$i]) ^ ord($b[$i]);
     }
-    return $diff === 0; 
+    return $diff === 0;
 }
 
 // PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt
@@ -131,17 +131,17 @@ function slow_equals($a, $b): bool
 function pbkdf2_default($algo, $password, string $salt, $count, $key_length)
 {
     // Sanity check.
-    
+
     if ($count <= 0 || $key_length <= 0) {
         trigger_error('PBKDF2 ERROR: Invalid parameters.', E_USER_ERROR);
     }
-    
+
     // Check if we should use the fallback function.
-    
+
     if (!$algo) return pbkdf2_fallback($password, $salt, $count, $key_length);
-    
+
     // Check if the selected algorithm is available.
-    
+
     $algo = strtolower($algo);
     if (!function_exists('hash_algos') || !in_array($algo, hash_algos())) {
         if ($algo === 'sha1') {
@@ -150,20 +150,20 @@ function pbkdf2_default($algo, $password, string $salt, $count, $key_length)
             trigger_error('PBKDF2 ERROR: Hash algorithm not supported.', E_USER_ERROR);
         }
     }
-    
+
     // Use built-in function if available.
-    
+
     if (function_exists('hash_pbkdf2')) {
         return hash_pbkdf2($algo, $password, $salt, $count, $key_length, true);
     }
-    
+
     // Count the blocks.
-    
+
     $hash_length = strlen(hash($algo, '', true));
     $block_count = ceil($key_length / $hash_length);
-    
+
     // Hash it!
-    
+
     $output = '';
     for ($i = 1; $i <= $block_count; $i++) {
         $last = $salt . pack('N', $i);                               // $i encoded as 4 bytes, big endian.
@@ -173,9 +173,9 @@ function pbkdf2_default($algo, $password, string $salt, $count, $key_length)
         }
         $output .= $xorsum;
     }
-    
+
     // Truncate and return.
-    
+
     return substr($output, 0, $key_length);
 }
 
@@ -187,19 +187,19 @@ function pbkdf2_default($algo, $password, string $salt, $count, $key_length)
 function pbkdf2_fallback($password, string $salt, $count, $key_length): string
 {
     // Count the blocks.
-    
+
     $hash_length = 20;
     $block_count = ceil($key_length / $hash_length);
-    
+
     // Prepare the HMAC key and padding.
-    
+
     $password = strlen($password) > 64 ? str_pad(sha1($password, true), 64, chr(0)) : str_pad($password, 64, chr(0));
-    
+
     $opad = str_repeat(chr(0x5C), 64) ^ $password;
     $ipad = str_repeat(chr(0x36), 64) ^ $password;
-    
+
     // Hash it!
-    
+
     $output = '';
     for ($i = 1; $i <= $block_count; $i++) {
         $last = $salt . pack('N', $i);
@@ -210,8 +210,8 @@ function pbkdf2_fallback($password, string $salt, $count, $key_length): string
         }
         $output .= $xorsum;
     }
-    
+
     // Truncate and return.
-    
+
     return substr($output, 0, $key_length);
 }

@@ -6,15 +6,15 @@ include_once(__DIR__ . '/../common.php');
 
 $comment_id = isset($_REQUEST['comment_id']) ? (int)$_REQUEST['comment_id'] : 0;
 
-$delete_comment_token = get_session('ss_delete_comment_'.$comment_id.'_token');
-set_session('ss_delete_comment_'.$comment_id.'_token', '');
+$delete_comment_token = get_session('ss_delete_comment_' . $comment_id . '_token');
+set_session('ss_delete_comment_' . $comment_id . '_token', '');
 
 if (!($token && $delete_comment_token == $token)) {
     alert('Token error, deletion is not possible.');
 }
 
 // 4.1
-@include_once($board_skin_path.'/delete_comment.head.skin.php');
+@include_once($board_skin_path . '/delete_comment.head.skin.php');
 
 $write = sql_fetch(" select * from {$write_table} where wr_id = '{$comment_id}' ");
 
@@ -92,11 +92,11 @@ sql_query(" update {$g5['board_table']} set bo_count_comment = bo_count_comment 
 sql_query(" delete from {$g5['board_new_table']} where bo_table = '{$bo_table}' and wr_id = '{$comment_id}' ");
 
 // Execute user code
-@include_once($board_skin_path.'/delete_comment.skin.php');
-@include_once($board_skin_path.'/delete_comment.tail.skin.php');
+@include_once($board_skin_path . '/delete_comment.skin.php');
+@include_once($board_skin_path . '/delete_comment.tail.skin.php');
 
 delete_cache_latest($bo_table);
 
 run_event('bbs_delete_comment', $comment_id, $board);
 
-goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$write['wr_parent'].'&amp;page='.$page.$qstr));
+goto_url(short_url_clean(G5_HTTP_BBS_URL . '/board.php?bo_table=' . $bo_table . '&amp;wr_id=' . $write['wr_parent'] . '&amp;page=' . $page . $qstr));

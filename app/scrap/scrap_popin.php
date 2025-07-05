@@ -3,10 +3,10 @@
 include_once(__DIR__ . '/../common.php');
 
 
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 if ($is_guest) {
-    $href = './login.php?'.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id));
+    $href = './login.php?' . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id));
     $href2 = str_replace('&amp;', '&', $href);
     echo <<<HEREDOC
     <script>
@@ -59,6 +59,6 @@ HEREDOC;
     exit;
 }
 
-include_once($member_skin_path.'/scrap_popin.skin.php');
+include_once($member_skin_path . '/scrap_popin.skin.php');
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

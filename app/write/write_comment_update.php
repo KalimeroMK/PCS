@@ -3,7 +3,7 @@
 define('G5_CAPTCHA', true);
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
 
 // 토큰체크
 $comment_token = trim(get_session('ss_comment_token'));
@@ -42,7 +42,7 @@ if (!empty($_POST['wr_email'])) {
     $wr_email = get_email_address(trim($_POST['wr_email']));
 }
 
-@include_once($board_skin_path.'/write_comment_update.head.skin.php');
+@include_once($board_skin_path . '/write_comment_update.head.skin.php');
 
 // 비회원의 경우 이름이 누락되는 경우가 있음
 if ($is_guest) {
@@ -102,7 +102,7 @@ if ($w == 'c') {
     // 댓글쓰기 포인트설정시 회원의 포인트가 음수인 경우 댓글을 쓰지 못하던 버그를 수정 (곱슬최씨님)
     $tmp_point = ($member['mb_point'] > 0) ? $member['mb_point'] : 0;
     if ($tmp_point + $board['bo_comment_point'] < 0 && !$is_admin) {
-        alert('보유하신 포인트('.number_format($member['mb_point']).')가 없거나 모자라서 댓글쓰기('.number_format($board['bo_comment_point']).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 댓글을 써 주십시오.');
+        alert('보유하신 포인트(' . number_format($member['mb_point']) . ')가 없거나 모자라서 댓글쓰기(' . number_format($board['bo_comment_point']) . ')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 댓글을 써 주십시오.');
     }
     // 댓글 답변
     if ($comment_id) {
@@ -154,7 +154,7 @@ if ($w == 'c') {
             $reply_char = chr(ord($row['reply']) + $reply_number);
         }
 
-        $tmp_comment_reply = $reply_array['wr_comment_reply'].$reply_char;
+        $tmp_comment_reply = $reply_array['wr_comment_reply'] . $reply_char;
     } else {
         $sql = " select max(wr_comment) as max_comment from $write_table
                     where wr_parent = '$wr_id' and wr_is_comment = 1 ";
@@ -181,7 +181,7 @@ if ($w == 'c') {
                      wr_name = '$wr_name',
                      wr_email = '$wr_email',
                      wr_homepage = '$wr_homepage',
-                     wr_datetime = '".G5_TIME_YMDHIS."',
+                     wr_datetime = '" . G5_TIME_YMDHIS . "',
                      wr_last = '',
                      wr_ip = '{$_SERVER['REMOTE_ADDR']}',
                      wr_1 = '$wr_1',
@@ -197,9 +197,9 @@ if ($w == 'c') {
     sql_query($sql);
     $comment_id = sql_insert_id();
     // 원글에 댓글수 증가 & 마지막 시간 반영
-    sql_query(" update $write_table set wr_comment = wr_comment + 1, wr_last = '".G5_TIME_YMDHIS."' where wr_id = '$wr_id' ");
+    sql_query(" update $write_table set wr_comment = wr_comment + 1, wr_last = '" . G5_TIME_YMDHIS . "' where wr_id = '$wr_id' ");
     // 새글 INSERT
-    sql_query(" insert into {$g5['board_new_table']} ( bo_table, wr_id, wr_parent, bn_datetime, mb_id ) values ( '$bo_table', '$comment_id', '$wr_id', '".G5_TIME_YMDHIS."', '{$member['mb_id']}' ) ");
+    sql_query(" insert into {$g5['board_new_table']} ( bo_table, wr_id, wr_parent, bn_datetime, mb_id ) values ( '$bo_table', '$comment_id', '$wr_id', '" . G5_TIME_YMDHIS . "', '{$member['mb_id']}' ) ");
     // 댓글 1 증가
     sql_query(" update {$g5['board_table']} set bo_count_comment = bo_count_comment + 1 where bo_table = '$bo_table' ");
     // 포인트 부여
@@ -217,11 +217,11 @@ if ($w == 'c') {
         $warr = ['' => '입력', 'u' => '수정', 'r' => '답변', 'c' => '댓글 ', 'cu' => '댓글 수정'];
         $str = $warr[$w];
 
-        $subject = '['.$config['cf_title'].'] '.$board['bo_subject'].' 게시판에 '.$str.'글이 올라왔습니다.';
+        $subject = '[' . $config['cf_title'] . '] ' . $board['bo_subject'] . ' 게시판에 ' . $str . '글이 올라왔습니다.';
         // 4.00.15 - 메일로 보내는 댓글의 바로가기 링크 수정
-        $link_url = get_pretty_url($bo_table, $wr_id, $qstr."#c_".$comment_id);
+        $link_url = get_pretty_url($bo_table, $wr_id, $qstr . "#c_" . $comment_id);
 
-        include_once(G5_LIB_PATH.'/mailer.lib.php');
+        include_once(G5_LIB_PATH . '/mailer.lib.php');
 
         ob_start();
         include_once(__DIR__ . '/write_update_mail.php');
@@ -350,12 +350,12 @@ if ($w == 'c') {
 }
 
 // 사용자 코드 실행
-@include_once($board_skin_path.'/write_comment_update.skin.php');
-@include_once($board_skin_path.'/write_comment_update.tail.skin.php');
+@include_once($board_skin_path . '/write_comment_update.skin.php');
+@include_once($board_skin_path . '/write_comment_update.tail.skin.php');
 
 delete_cache_latest($bo_table);
 
-$redirect_url = short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr['wr_parent'].'&amp;'.$qstr.'&amp;#c_'.$comment_id);
+$redirect_url = short_url_clean(G5_HTTP_BBS_URL . '/board.php?bo_table=' . $bo_table . '&amp;wr_id=' . $wr['wr_parent'] . '&amp;' . $qstr . '&amp;#c_' . $comment_id);
 
 run_event('comment_update_after', $board, $wr_id, $w, $qstr, $redirect_url, $comment_id, $reply_array);
 

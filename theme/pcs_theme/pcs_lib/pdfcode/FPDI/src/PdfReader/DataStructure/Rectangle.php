@@ -32,6 +32,22 @@ class Rectangle
     protected float|int $ury;
 
     /**
+     * Rectangle constructor.
+     *
+     * @param float|int $ax
+     * @param float|int $ay
+     * @param float|int $bx
+     * @param float|int $by
+     */
+    public function __construct($ax, $ay, $bx, $by)
+    {
+        $this->llx = \min($ax, $bx);
+        $this->lly = \min($ay, $by);
+        $this->urx = \max($ax, $bx);
+        $this->ury = \max($ay, $by);
+    }
+
+    /**
      * Create a rectangle instance by a PdfArray.
      *
      * @param PdfArray|mixed $array
@@ -48,22 +64,6 @@ class Rectangle
         $by = PdfNumeric::ensure(PdfType::resolve($array[3], $parser))->value;
 
         return new self($ax, $ay, $bx, $by);
-    }
-
-    /**
-     * Rectangle constructor.
-     *
-     * @param float|int $ax
-     * @param float|int $ay
-     * @param float|int $bx
-     * @param float|int $by
-     */
-    public function __construct($ax, $ay, $bx, $by)
-    {
-        $this->llx = \min($ax, $bx);
-        $this->lly = \min($ay, $by);
-        $this->urx = \max($ax, $bx);
-        $this->ury = \max($ay, $by);
     }
 
     /**

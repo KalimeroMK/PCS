@@ -45,7 +45,7 @@ $group_select = '<label for="gr_id" class="sound_only">Group</label><select name
 $sql = " select gr_id, gr_subject from {$g5['group_table']} order by gr_id ";
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {
-    $group_select .= "<option value=\"".$row['gr_id']."\">".$row['gr_subject'];
+    $group_select .= "<option value=\"" . $row['gr_id'] . "\">" . $row['gr_subject'];
 }
 $group_select .= '</select>';
 
@@ -53,7 +53,7 @@ $list = [];
 $sql = " select a.*, b.bo_subject, b.bo_mobile_subject, c.gr_subject, c.gr_id {$sql_common} {$sql_order} limit {$from_record}, {$rows} ";
 $result = sql_query($sql);
 for ($i = 0; $row = sql_fetch_array($result); $i++) {
-    $tmp_write_table = $g5['write_prefix'].$row['bo_table'];
+    $tmp_write_table = $g5['write_prefix'] . $row['bo_table'];
 
     if ($row['wr_id'] == $row['wr_parent']) {
         // Original post
@@ -71,7 +71,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     } else {
         // Comment
         $comment = '[Comment] ';
-        $comment_link = '#c_'.$row['wr_id'];
+        $comment_link = '#c_' . $row['wr_id'];
         $row2 = sql_fetch(" select * from {$tmp_write_table} where wr_id = '{$row['wr_parent']}' ");
         $row3 = sql_fetch(" select mb_id, wr_name, wr_email, wr_homepage, wr_datetime from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
         $list[$i] = $row2;
@@ -105,6 +105,6 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page,
     "?gr_id=$gr_id&amp;view=$view&amp;mb_id=$mb_id&amp;page=");
 
-include_once($new_skin_path.'/new.skin.php');
+include_once($new_skin_path . '/new.skin.php');
 
 include_once(__DIR__ . '/tail.php');

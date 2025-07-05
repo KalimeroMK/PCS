@@ -32,14 +32,14 @@ if ($config['cf_popular_del'] > 0) {
 
 // Delete old recent posts based on settings
 if ($config['cf_new_del'] > 0) {
-    $sql = " delete from {$g5['board_new_table']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(bn_datetime)) > '{$config['cf_new_del']}' ";
+    $sql = " delete from {$g5['board_new_table']} where (TO_DAYS('" . G5_TIME_YMDHIS . "') - TO_DAYS(bn_datetime)) > '{$config['cf_new_del']}' ";
     sql_query($sql);
     sql_query(" OPTIMIZE TABLE `{$g5['board_new_table']}` ");
 }
 
 // Delete old memos based on settings
 if ($config['cf_memo_del'] > 0) {
-    $sql = " delete from {$g5['memo_table']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(me_send_datetime)) > '{$config['cf_memo_del']}' ";
+    $sql = " delete from {$g5['memo_table']} where (TO_DAYS('" . G5_TIME_YMDHIS . "') - TO_DAYS(me_send_datetime)) > '{$config['cf_memo_del']}' ";
     sql_query($sql);
     sql_query(" OPTIMIZE TABLE `{$g5['memo_table']}` ");
 }
@@ -47,7 +47,7 @@ if ($config['cf_memo_del'] > 0) {
 // Automatically delete withdrawn members
 if ($config['cf_leave_day'] > 0) {
     $sql = " select mb_id from {$g5['member_table']}
-                where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(mb_leave_date)) > '{$config['cf_leave_day']}'
+                where (TO_DAYS('" . G5_TIME_YMDHIS . "') - TO_DAYS(mb_leave_date)) > '{$config['cf_leave_day']}'
                   and mb_memo not regexp '^[0-9]{8}.*deleted' ";
     $result = sql_query($sql);
     while ($row = sql_fetch_array($result)) {
@@ -57,7 +57,7 @@ if ($config['cf_leave_day'] > 0) {
 }
 
 // Delete audio captcha files
-$captcha_mp3 = glob(G5_DATA_PATH.'/cache/kcaptcha-*.mp3');
+$captcha_mp3 = glob(G5_DATA_PATH . '/cache/kcaptcha-*.mp3');
 if ($captcha_mp3 && is_array($captcha_mp3)) {
     foreach ($captcha_mp3 as $file) {
         if (filemtime($file) + 86400 < G5_SERVER_TIME) {
@@ -68,5 +68,5 @@ if ($captcha_mp3 && is_array($captcha_mp3)) {
 
 // Log execution date
 if (isset($config['cf_optimize_date'])) {
-    sql_query(" update {$g5['config_table']} set cf_optimize_date = '".G5_TIME_YMD."' ");
+    sql_query(" update {$g5['config_table']} set cf_optimize_date = '" . G5_TIME_YMD . "' ");
 }

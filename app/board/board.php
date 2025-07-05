@@ -11,7 +11,7 @@ check_device($board['bo_device']);
 
 // If the post is a comment, redirect to the parent post
 if (isset($write['wr_is_comment']) && $write['wr_is_comment']) {
-    goto_url(get_pretty_url($bo_table, $write['wr_parent'], '#c_'.$wr_id));
+    goto_url(get_pretty_url($bo_table, $write['wr_parent'], '#c_' . $wr_id));
 }
 
 // If the board table is not specified, display an error message
@@ -36,7 +36,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         if ($is_guest) {
             $msg = "Guests do not have permission to access this board.\n\nIf you are a member, please log in and try again.";
             alert($msg,
-                G5_BBS_URL.'/login.php?wr_id='.$wr_id.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id,
+                G5_BBS_URL . '/login.php?wr_id=' . $wr_id . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id,
                     $qstr)));
         }
 
@@ -57,7 +57,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
             alert('You do not have permission to read this post.', G5_URL);
         } else {
             alert('You do not have permission to read this post.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?wr_id='.$wr_id.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id,
+                G5_BBS_URL . '/login.php?wr_id=' . $wr_id . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id,
                     $qstr)));
         }
     }
@@ -67,12 +67,12 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         // Only members who have been verified can access
         if ($is_guest) {
             alert('Only members who have completed identity verification can read this post.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?wr_id='.$wr_id.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id,
+                G5_BBS_URL . '/login.php?wr_id=' . $wr_id . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id,
                     $qstr)));
         }
 
         if (strlen($member['mb_dupinfo']) == 64 && $member['mb_certify']) { // If the account is verified and stored as di
-            goto_url(G5_BBS_URL."/member_cert_refresh.php?url=".urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
+            goto_url(G5_BBS_URL . "/member_cert_refresh.php?url=" . urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
         }
 
         if ($board['bo_use_cert'] == 'cert' && !$member['mb_certify']) {
@@ -98,15 +98,15 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
                 $is_owner = true;
             }
         }
-        $ss_name = 'ss_secret_'.$bo_table.'_'.$write['wr_num'];
+        $ss_name = 'ss_secret_' . $bo_table . '_' . $write['wr_num'];
         if (!$is_owner && !get_session($ss_name)) {
-            goto_url(G5_BBS_URL.'/password.php?w=s&amp;bo_table='.$bo_table.'&amp;wr_id='.$wr_id.$qstr);
+            goto_url(G5_BBS_URL . '/password.php?w=s&amp;bo_table=' . $bo_table . '&amp;wr_id=' . $wr_id . $qstr);
         }
         set_session($ss_name, true);
     }
 
     // Increment the post view count
-    $ss_name = 'ss_view_'.$bo_table.'_'.$wr_id;
+    $ss_name = 'ss_view_' . $bo_table . '_' . $wr_id;
     if (!get_session($ss_name)) {
         sql_query(" update {$write_table} set wr_hit = wr_hit + 1 where wr_id = '{$wr_id}' ");
 
@@ -121,7 +121,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
                 }
 
                 insert_point($member['mb_id'], $board['bo_read_point'],
-                    ((G5_IS_MOBILE && $board['bo_mobile_subject']) ? $board['bo_mobile_subject'] : $board['bo_subject']).' '.$wr_id.' read',
+                    ((G5_IS_MOBILE && $board['bo_mobile_subject']) ? $board['bo_mobile_subject'] : $board['bo_subject']) . ' ' . $wr_id . ' read',
                     $bo_table, $wr_id, 'read');
             }
         }
@@ -129,7 +129,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         set_session($ss_name, true);
     }
 
-    $g5['title'] = strip_tags(conv_subject($write['wr_subject'], 255))." > ".$g5['board_title'];
+    $g5['title'] = strip_tags(conv_subject($write['wr_subject'], 255)) . " > " . $g5['board_title'];
 } else {
     // If the member's level is lower than the board's list level, display an error message
     if ($member['mb_level'] < $board['bo_list_level']) {
@@ -137,7 +137,7 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
             alert('You do not have permission to view the list.', G5_URL);
         } else {
             alert('You do not have permission to view the list.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?'.$qstr.'&url='.urlencode(G5_BBS_URL.'/board.php?bo_table='.$bo_table.($qstr ? '&amp;' : '')));
+                G5_BBS_URL . '/login.php?' . $qstr . '&url=' . urlencode(G5_BBS_URL . '/board.php?bo_table=' . $bo_table . ($qstr ? '&amp;' : '')));
         }
     }
 
@@ -146,12 +146,12 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         // Only members who have been verified can access
         if ($is_guest) {
             alert('Only members who have completed identity verification can view the list.\n\nIf you are a member, please log in and try again.',
-                G5_BBS_URL.'/login.php?wr_id='.$wr_id.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id,
+                G5_BBS_URL . '/login.php?wr_id=' . $wr_id . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id,
                     $qstr)));
         }
 
         if (strlen($member['mb_dupinfo']) == 64 && $member['mb_certify']) { // If the account is verified and stored as di
-            goto_url(G5_BBS_URL."/member_cert_refresh.php?url=".urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
+            goto_url(G5_BBS_URL . "/member_cert_refresh.php?url=" . urlencode(get_pretty_url($bo_table, $wr_id, $qstr)));
         }
 
         if ($board['bo_use_cert'] == 'cert' && !$member['mb_certify']) {
@@ -168,12 +168,12 @@ if ((isset($wr_id) && $wr_id) || (isset($wr_seo_title) && $wr_seo_title)) {
         $page = 1;
     }
 
-    $g5['title'] = $g5['board_title'].' '.$page.' page';
+    $g5['title'] = $g5['board_title'] . ' ' . $page . ' page';
 }
 
-$is_auth = (bool) $is_admin;
+$is_auth = (bool)$is_admin;
 
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 // Set the board width
 $width = $board['bo_table_width'];
@@ -193,7 +193,7 @@ if ($is_admin) {
     }
 } elseif (isset($write['wr_ip'])) {
     // If not an admin, display the IP address with the last 3 digits hidden
-    $ip = substr($write['wr_ip'], 0, strlen($write['wr_ip']) - 3).'***';
+    $ip = substr($write['wr_ip'], 0, strlen($write['wr_ip']) - 3) . '***';
 }
 
 // Category settings
@@ -222,24 +222,24 @@ if ($board['bo_use_nogood']) {
 $admin_href = "";
 // If the member is a super admin or group admin, display the admin link
 if ($member['mb_id'] && ($is_admin === 'super' || $group['gr_admin'] === $member['mb_id'])) {
-    $admin_href = G5_ADMIN_URL.'/board_form.php?w=u&amp;bo_table='.$bo_table;
+    $admin_href = G5_ADMIN_URL . '/board_form.php?w=u&amp;bo_table=' . $bo_table;
 }
 
-include_once(G5_PATH.'/head.php');
+include_once(G5_PATH . '/head.php');
 
 // If the post ID is present, include the post view file
 if (isset($wr_id) && $wr_id) {
-    include_once(G5_PATH.'/app/view/view.php');
+    include_once(G5_PATH . '/app/view/view.php');
 }
 
 // If the member has permission to view the list, include the list file
 //if ($board['bo_use_list_view'] || empty($wr_id))
 if ($member['mb_level'] >= $board['bo_list_level'] && $board['bo_use_list_view'] || empty($wr_id)) {
-    include_once(G5_PATH.'/app/misc/list.php');
+    include_once(G5_PATH . '/app/misc/list.php');
 }
 
-include_once(G5_PATH.'/app/board/board_tail.php');
+include_once(G5_PATH . '/app/board/board_tail.php');
 
-echo "\n<!-- Using skin : ".(G5_IS_MOBILE ? $board['bo_mobile_skin'] : $board['bo_skin'])." -->\n";
+echo "\n<!-- Using skin : " . (G5_IS_MOBILE ? $board['bo_mobile_skin'] : $board['bo_skin']) . " -->\n";
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

@@ -40,12 +40,12 @@ if (!defined('_GNUBOARD_')) {
             <a href="<?php
             echo $certify_href ?>" target="_blank"
                style="display:block;padding:30px 0;background:#484848;color:#fff;text-decoration:none;text-align:center">메일인증</a>
-        <?php
+            <?php
         } else { ?>
             <a href="<?php
             echo G5_URL ?>" target="_blank"
                style="display:block;padding:30px 0;background:#484848;color:#fff;text-decoration:none;text-align:center">사이트바로가기</a>
-        <?php
+            <?php
         } ?>
     </div>
 </div>

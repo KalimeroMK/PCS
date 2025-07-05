@@ -2,15 +2,14 @@
 
 include_once(__DIR__ . '/../common.php');
 
-
 /*==========================
-$w == a : 답변
-$w == r : 추가질문
-$w == u : 수정
+$w == a : Answer
+$w == r : Additional question
+$w == u : Modify
 ==========================*/
 
 if ($is_guest) {
-    alert('회원이시라면 로그인 후 이용해 보십시오.', './login.php?url='.urlencode(G5_BBS_URL.'/qalist.php'));
+    alert('If you are a member, please log in to use this service.', './login.php?url=' . urlencode(G5_BBS_URL . '/qalist.php'));
 }
 
 $msg = [];
@@ -20,12 +19,12 @@ set_session('ss_qa_write_token', '');
 
 $token = isset($_POST['token']) ? clean_xss_tags($_POST['token'], 1, 1) : '';
 
-//모든 회원의 토큰을 검사합니다.
+// Validate all members' tokens.
 if (!($token && $write_token === $token)) {
-    alert('올바른 방법으로 이용해 주십시오.');
+    alert('Please use the correct method.');
 }
 
-// 1:1문의 설정값
+// 1:1 inquiry settings
 $qaconfig = get_qa_config();
 $qa_id = isset($_POST['qa_id']) ? (int)$_POST['qa_id'] : 0;
 
@@ -33,39 +32,39 @@ if (trim($qaconfig['qa_category']) !== '' && trim($qaconfig['qa_category']) !== 
     if ($w != 'a') {
         $category = explode('|', $qaconfig['qa_category']);
         if (!in_array($qa_category, $category)) {
-            alert('분류를 올바르게 지정해 주십시오.');
+            alert('Please specify the category correctly.');
         }
     }
 } else {
-    alert('1:1문의 설정에서 분류를 설정해 주십시오');
+    alert('Please set the category in the 1:1 inquiry settings');
 }
 
-// e-mail 체크
+// e-mail check
 $qa_email = '';
 if (isset($_POST['qa_email']) && $_POST['qa_email']) {
     $qa_email = get_email_address(trim($_POST['qa_email']));
 }
 
 if ($w != 'a' && $qaconfig['qa_req_email'] && !$qa_email) {
-    $msg[] = '이메일을 입력하세요.';
+    $msg[] = 'Please enter your email.';
 }
 
 $qa_subject = '';
 if (isset($_POST['qa_subject'])) {
     $qa_subject = substr(trim($_POST['qa_subject']), 0, 255);
-    $qa_subject = preg_replace("#[\\\]+$#", "", $qa_subject);
+    $qa_subject = preg_replace("#[\\\\]+$#", "", $qa_subject);
 }
 if ($qa_subject == '') {
-    $msg[] = '<strong>제목</strong>을 입력하세요.';
+    $msg[] = '<strong>Subject</strong> is required.';
 }
 
 $qa_content = '';
 if (isset($_POST['qa_content'])) {
     $qa_content = substr(trim($_POST['qa_content']), 0, 65536);
-    $qa_content = preg_replace("#[\\\]+$#", "", $qa_content);
+    $qa_content = preg_replace("#[\\\\]+$#", "", $qa_content);
 }
 if ($qa_content == '') {
-    $msg[] = '<strong>내용</strong>을 입력하세요.';
+    $msg[] = '<strong>Content</strong> is required.';
 }
 
 if (!empty($msg)) {
@@ -77,14 +76,14 @@ $qa_hp = isset($_POST['qa_hp']) ? preg_replace('/[^0-9\-]/', '', $_POST['qa_hp']
 
 // 090710
 if (substr_count($qa_content, '&#') > 50) {
-    alert('내용에 올바르지 않은 코드가 다수 포함되어 있습니다.');
+    alert('The content contains multiple invalid codes.');
     exit;
 }
 
 $upload_max_filesize = ini_get('upload_max_filesize');
 
 if (empty($_POST)) {
-    alert("파일 또는 글내용의 크기가 서버에서 설정한 값을 넘어 오류가 발생하였습니다.\\npost_max_size=".ini_get('post_max_size')." , upload_max_filesize=".$upload_max_filesize."\\n게시판관리자 또는 서버관리자에게 문의 바랍니다.");
+    alert("An error occurred because the file or content size exceeds the server's configured value.\npost_max_size=" . ini_get('post_max_size') . " , upload_max_filesize=" . $upload_max_filesize . "\nPlease contact the board administrator or server administrator.");
 }
 
 $qa_type = 0;
@@ -98,14 +97,14 @@ $answer_id = null;
 for ($i = 1; $i <= 5; $i++) {
     $var = "qa_$i";
     $$var = "";
-    if (isset($_POST['qa_'.$i]) && $_POST['qa_'.$i]) {
-        $$var = trim($_POST['qa_'.$i]);
+    if (isset($_POST['qa_' . $i]) && $_POST['qa_' . $i]) {
+        $$var = trim($_POST['qa_' . $i]);
     }
 }
 
 if ($w == 'u' || $w == 'a' || $w == 'r') {
     if ($w == 'a' && !$is_admin) {
-        alert('답변은 관리자만 등록할 수 있습니다.');
+        alert('Only administrators can register answers.');
     }
 
     $sql = " select * from {$g5['qa_content_table']} where qa_id = '$qa_id' ";
@@ -117,32 +116,32 @@ if ($w == 'u' || $w == 'a' || $w == 'r') {
 
     if ($w == 'u') {
         if (!$write['qa_id']) {
-            alert('게시글이 존재하지 않습니다.\\n삭제되었거나 자신의 글이 아닌 경우입니다.');
+            alert('The post does not exist.\nIt may have been deleted or is not your own post.');
         }
 
         if (!$is_admin) {
             if ($write['qa_type'] == 0 && $write['qa_status'] == 1) {
-                alert('답변이 등록된 문의글은 수정할 수 없습니다.');
+                alert('Inquiries with registered answers cannot be modified.');
             }
 
             if ($write['mb_id'] != $member['mb_id']) {
-                alert('게시글을 수정할 권한이 없습니다.\\n\\n올바른 방법으로 이용해 주십시오.', G5_URL);
+                alert('You do not have permission to modify the post.\n\nPlease use the correct method.', G5_URL);
             }
         }
     }
 
     if ($w == 'a') {
         if (!$write['qa_id']) {
-            alert('문의글이 존재하지 않아 답변글을 등록할 수 없습니다.');
+            alert('Cannot register an answer because the inquiry post does not exist.');
         }
 
         if ($write['qa_type'] == 1) {
-            alert('답변글에는 다시 답변을 등록할 수 없습니다.');
+            alert('You cannot reply to an answer post again.');
         }
     }
 }
 
-// 파일개수 체크
+// Check file count
 $file_count = 0;
 $upload_count = isset($_FILES['bf_file']['name']) ? count($_FILES['bf_file']['name']) : 0;
 
@@ -153,16 +152,16 @@ for ($i = 1; $i <= $upload_count; $i++) {
 }
 
 if ($file_count > 2) {
-    alert('첨부파일을 2개 이하로 업로드 해주십시오.');
+    alert('Please upload 2 or fewer attachments.');
 }
 
-// 디렉토리가 없다면 생성합니다. (퍼미션도 변경하구요.)
-@mkdir(G5_DATA_PATH.'/qa', G5_DIR_PERMISSION);
-@chmod(G5_DATA_PATH.'/qa', G5_DIR_PERMISSION);
+// If the directory does not exist, create it. (And change permissions.)
+@mkdir(G5_DATA_PATH . '/qa', G5_DIR_PERMISSION);
+@chmod(G5_DATA_PATH . '/qa', G5_DIR_PERMISSION);
 
 $chars_array = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
 
-// 가변 파일 업로드
+// Variable file upload
 $file_upload_msg = '';
 $upload = [];
 for ($i = 1; $i <= $upload_count; $i++) {
@@ -170,13 +169,13 @@ for ($i = 1; $i <= $upload_count; $i++) {
     $upload[$i]['source'] = '';
     $upload[$i]['del_check'] = false;
 
-    // 삭제에 체크가 되어있다면 파일을 삭제합니다.
+    // If deletion is checked, delete the file.
     if (isset($_POST['bf_file_del'][$i]) && $_POST['bf_file_del'][$i]) {
         $upload[$i]['del_check'] = true;
-        @unlink(G5_DATA_PATH.'/qa/'.clean_relative_paths($write['qa_file'.$i]));
-        // 썸네일삭제
-        if (preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file'.$i])) {
-            delete_qa_thumbnail($write['qa_file'.$i]);
+        @unlink(G5_DATA_PATH . '/qa/' . clean_relative_paths($write['qa_file' . $i]));
+        // Delete thumbnail
+        if (preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file' . $i])) {
+            delete_qa_thumbnail($write['qa_file' . $i]);
         }
     }
 
@@ -185,68 +184,68 @@ for ($i = 1; $i <= $upload_count; $i++) {
     $filename = $_FILES['bf_file']['name'][$i];
     $filename = get_safe_filename($filename);
 
-    // 서버에 설정된 값보다 큰파일을 업로드 한다면
+    // If uploading a file larger than the server's configured value
     if ($filename) {
         if ($_FILES['bf_file']['error'][$i] == 1) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일의 용량이 서버에 설정('.$upload_max_filesize.')된 값보다 크므로 업로드 할 수 없습니다.\\n';
+            $file_upload_msg .= 'The size of file \"' . $filename . '\" exceeds the server limit (' . $upload_max_filesize . ') and cannot be uploaded.\n';
             continue;
         } elseif ($_FILES['bf_file']['error'][$i] != 0) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
+            $file_upload_msg .= 'File \"' . $filename . '\" was not uploaded successfully.\n';
             continue;
         }
     }
 
     if (is_uploaded_file($tmp_file)) {
-        // 관리자가 아니면서 설정한 업로드 사이즈보다 크다면 건너뜀
+        // If not an admin and the file size is larger than the configured upload size, skip
         if (!$is_admin && $filesize > $qaconfig['qa_upload_size']) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일의 용량('.number_format($filesize).' 바이트)이 게시판에 설정('.number_format($qaconfig['qa_upload_size']).' 바이트)된 값보다 크므로 업로드 하지 않습니다.\\n';
+            $file_upload_msg .= 'The size of file \"' . $filename . '\" (' . number_format($filesize) . ' bytes) exceeds the board\'s configured limit (' . number_format($qaconfig['qa_upload_size']) . ' bytes) and will not be uploaded.\n';
             continue;
         }
 
-        //=================================================================\
+        //=================================================================
         // 090714
-        // 이미지나 플래시 파일에 악성코드를 심어 업로드 하는 경우를 방지
-        // 에러메세지는 출력하지 않는다.
+        // Prevent uploading malicious code embedded in image or flash files
+        // Do not display error messages.
         //-----------------------------------------------------------------
         $timg = @getimagesize($tmp_file);
         // image type
-        // webp 파일의 type 이 18 이므로 업로드가 가능하도록 수정
+        // Modified to allow upload since webp file type is 18
         if ((preg_match("/\.({$config['cf_image_extension']})$/i", $filename) || preg_match("/\.({$config['cf_flash_extension']})$/i", $filename)) && ($timg['2'] < 1 || $timg['2'] > 18)) {
             continue;
         }
         //=================================================================
 
         if ($w == 'u') {
-            // 존재하는 파일이 있다면 삭제합니다.
-            @unlink(G5_DATA_PATH.'/qa/'.clean_relative_paths($write['qa_file'.$i]));
-            // 이미지파일이면 썸네일삭제
-            if (preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file'.$i])) {
-                delete_qa_thumbnail($row['qa_file'.$i]);
+            // If the file exists, delete it.
+            @unlink(G5_DATA_PATH . '/qa/' . clean_relative_paths($write['qa_file' . $i]));
+            // If it is an image file, delete the thumbnail
+            if (preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file' . $i])) {
+                delete_qa_thumbnail($row['qa_file' . $i]);
             }
         }
 
-        // 프로그램 원래 파일명
+        // Original program file name
         $upload[$i]['source'] = $filename;
         $upload[$i]['filesize'] = $filesize;
 
-        // 아래의 문자열이 들어간 파일은 -x 를 붙여서 웹경로를 알더라도 실행을 하지 못하도록 함
+        // Append -x to files containing the following strings to prevent execution even if the web path is known
         $filename = preg_replace("/\.(php|pht|phtm|htm|cgi|pl|exe|jsp|asp|inc|phar)/i", "$0-x", $filename);
 
         shuffle($chars_array);
         $shuffle = implode('', $chars_array);
 
-        // 첨부파일 첨부시 첨부파일명에 공백이 포함되어 있으면 일부 PC에서 보이지 않거나 다운로드 되지 않는 현상이 있습니다. (길상여의 님 090925)
-        $upload[$i]['file'] = md5(sha1($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle, 0,
-                8).'_'.replace_filename($filename);
+        // If the attached file name contains spaces, it may not be visible or downloadable on some PCs. (From Gilsang-yeoui, 090925)
+        $upload[$i]['file'] = md5(sha1($_SERVER['REMOTE_ADDR'])) . '_' . substr($shuffle, 0,
+                8) . '_' . replace_filename($filename);
 
-        $dest_file = G5_DATA_PATH.'/qa/'.$upload[$i]['file'];
+        $dest_file = G5_DATA_PATH . '/qa/' . $upload[$i]['file'];
 
-        // 업로드가 안된다면 에러메세지 출력하고 죽어버립니다.
+        // If upload fails, print an error message and die.
         if (!$error_code = move_uploaded_file($tmp_file, $dest_file)) {
             die($_FILES['bf_file']['error'][$i]);
         }
 
-        // 올라간 파일의 퍼미션을 변경합니다.
+        // Change the permission of the uploaded file.
         chmod($dest_file, G5_FILE_PERMISSION);
     }
 }
@@ -271,7 +270,7 @@ if ($w == '' || $w == 'a' || $w == 'r') {
     $sql = " insert into {$g5['qa_content_table']}
                 set qa_num          = '$qa_num',
                     mb_id           = '{$member['mb_id']}',
-                    qa_name         = '".addslashes($member['mb_nick'])."',
+                    qa_name         = '" . addslashes($member['mb_nick']) . "',
                     qa_email        = '$qa_email',
                     qa_hp           = '$qa_hp',
                     qa_type         = '$qa_type',
@@ -289,7 +288,7 @@ if ($w == '' || $w == 'a' || $w == 'r') {
                     qa_file2        = '{$insert_qa_file2}',
                     qa_source2      = '{$insert_qa_source2}',
                     qa_ip           = '{$_SERVER['REMOTE_ADDR']}',
-                    qa_datetime     = '".G5_TIME_YMDHIS."',
+                    qa_datetime     = '" . G5_TIME_YMDHIS . "',
                     qa_1            = '$qa_1',
                     qa_2            = '$qa_2',
                     qa_3            = '$qa_3',
@@ -347,27 +346,27 @@ if ($w == '' || $w == 'a' || $w == 'r') {
 }
 
 /**
- * 1:1 문의/답변의 변경 시 Event Hook
- * @var int    $qa_id 삽입/수정 또는 답글/추가질문 대상 글의 ID
- * @var array  $write 삽입/수정 또는 답글/추가질문 대상 글의 데이터
- * @var string $w 동작 모드 ('': 질문글 작성, 'a': 답변글 작성, 'u': 질문/답변 수정, 'r': 추가(관련) 질문)
- * @var array  $qaconfig 1:1 문의 설정
- * @var ?int   $answer_id 답변글 작성($w = 'a') 시 답변글의 ID
+ * Event Hook for when 1:1 inquiry/answer is changed
+ * @var int $qa_id ID of the post to be inserted/modified or replied to/additionally questioned
+ * @var array $write Data of the post to be inserted/modified or replied to/additionally questioned
+ * @var string $w Operation mode ('': writing a question, 'a': writing an answer, 'u': modifying a question/answer, 'r': additional (related) question)
+ * @var array $qaconfig 1:1 inquiry settings
+ * @var ?int $answer_id ID of the answer post when writing an answer ($w = 'a')
  */
 run_event('qawrite_update', $qa_id, $write, $w, $qaconfig, ($w === 'a') ? $answer_id : null);
 
-// SMS 알림
+// SMS Notification
 if ($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
     if ($config['cf_sms_type'] == 'LMS') {
-        include_once(G5_LIB_PATH.'/icode.lms.lib.php');
+        include_once(G5_LIB_PATH . '/icode.lms.lib.php');
 
         $port_setting = get_icode_port_type($config['cf_icode_id'], $config['cf_icode_pw']);
 
-        // SMS 모듈 클래스 생성
+        // Create SMS module class
         if ($port_setting !== false) {
-            // 답변글은 질문 등록자에게 전송
+            // Send to the question registrant for answer posts
             if ($w == 'a' && $write['qa_sms_recv'] && trim($write['qa_hp'])) {
-                $sms_content = $config['cf_title'].' '.$qaconfig['qa_title'].'에 답변이 등록되었습니다.';
+                $sms_content = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' answer has been registered.';
                 $send_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_send_number']);
                 $recv_number = preg_replace('/[^0-9]/', '', $write['qa_hp']);
 
@@ -392,13 +391,13 @@ if ($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
                         $SMS->Send();
                     }
 
-                    $SMS->Init(); // 보관하고 있던 결과값을 지웁니다.
+                    $SMS->Init(); // Clear the stored result values.
                 }
             }
 
-            // 문의글 등록시 관리자에게 전송
+            // Send to administrator when an inquiry is registered
             if (($w == '' || $w == 'r') && trim($qaconfig['qa_admin_hp'])) {
-                $sms_content = $config['cf_title'].' '.$qaconfig['qa_title'].'에 문의글이 등록되었습니다.';
+                $sms_content = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' inquiry has been registered.';
                 $send_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_send_number']);
                 $recv_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_admin_hp']);
 
@@ -423,21 +422,21 @@ if ($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
                         $SMS->Send();
                     }
 
-                    $SMS->Init(); // 보관하고 있던 결과값을 지웁니다.
+                    $SMS->Init(); // Clear the stored result values.
                 }
             }
         }
     } else {
-        include_once(G5_LIB_PATH.'/icode.sms.lib.php');
+        include_once(G5_LIB_PATH . '/icode.sms.lib.php');
 
-        // 답변글은 질문 등록자에게 전송
+        // Send to the question registrant for answer posts
         if ($w == 'a' && $write['qa_sms_recv'] && trim($write['qa_hp'])) {
-            $sms_content = $config['cf_title'].' '.$qaconfig['qa_title'].'에 답변이 등록되었습니다.';
+            $sms_content = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' answer has been registered.';
             $send_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_send_number']);
             $recv_number = preg_replace('/[^0-9]/', '', $write['qa_hp']);
 
             if ($recv_number) {
-                $SMS = new SMS; // SMS 연결
+                $SMS = new SMS; // SMS connection
                 $SMS->SMS_con($config['cf_icode_server_ip'], $config['cf_icode_id'], $config['cf_icode_pw'],
                     $config['cf_icode_server_port']);
                 $SMS->Add($recv_number, $send_number, $config['cf_icode_id'],
@@ -446,14 +445,14 @@ if ($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
             }
         }
 
-        // 문의글 등록시 관리자에게 전송
+        // Send to administrator when an inquiry is registered
         if (($w == '' || $w == 'r') && trim($qaconfig['qa_admin_hp'])) {
-            $sms_content = $config['cf_title'].' '.$qaconfig['qa_title'].'에 문의글이 등록되었습니다.';
+            $sms_content = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' inquiry has been registered.';
             $send_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_send_number']);
             $recv_number = preg_replace('/[^0-9]/', '', $qaconfig['qa_admin_hp']);
 
             if ($recv_number) {
-                $SMS = new SMS; // SMS 연결
+                $SMS = new SMS; // SMS connection
                 $SMS->SMS_con($config['cf_icode_server_ip'], $config['cf_icode_id'], $config['cf_icode_pw'],
                     $config['cf_icode_server_port']);
                 $SMS->Add($recv_number, $send_number, $config['cf_icode_id'],
@@ -464,32 +463,32 @@ if ($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
     }
 }
 
-// 답변 이메일전송
+// Send answer email
 if ($w == 'a' && $write['qa_email_recv'] && trim($write['qa_email'])) {
-    include_once(G5_LIB_PATH.'/mailer.lib.php');
+    include_once(G5_LIB_PATH . '/mailer.lib.php');
 
-    $subject = $config['cf_title'].' '.$qaconfig['qa_title'].' 답변 알림 메일';
+    $subject = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' Answer Notification Mail';
     $content = nl2br(conv_unescape_nl(stripslashes($qa_content)));
 
     mailer($config['cf_admin_email_name'], $config['cf_admin_email'], $write['qa_email'], $subject, $content, 1);
 }
 
-// 문의글등록 이메일전송
+// Send inquiry registration email
 if (($w == '' || $w == 'r') && trim($qaconfig['qa_admin_email'])) {
-    include_once(G5_LIB_PATH.'/mailer.lib.php');
+    include_once(G5_LIB_PATH . '/mailer.lib.php');
 
-    $subject = $config['cf_title'].' '.$qaconfig['qa_title'].' 질문 알림 메일';
+    $subject = $config['cf_title'] . ' ' . $qaconfig['qa_title'] . ' Question Notification Mail';
     $content = nl2br(conv_unescape_nl(stripslashes($qa_content)));
 
     mailer($config['cf_admin_email_name'], $qa_email, $qaconfig['qa_admin_email'], $subject, $content, 1);
 }
 
 if ($w == 'a') {
-    $result_url = G5_BBS_URL.'/qaview.php?qa_id='.$qa_id.$qstr;
+    $result_url = G5_BBS_URL . '/qaview.php?qa_id=' . $qa_id . $qstr;
 } elseif ($w == 'u' && $write['qa_type']) {
-    $result_url = G5_BBS_URL.'/qaview.php?qa_id='.$write['qa_parent'].$qstr;
+    $result_url = G5_BBS_URL . '/qaview.php?qa_id=' . $write['qa_parent'] . $qstr;
 } else {
-    $result_url = G5_BBS_URL.'/qalist.php'.preg_replace('/^&amp;/', '?', $qstr);
+    $result_url = G5_BBS_URL . '/qalist.php' . preg_replace('/^&amp;/', '?', $qstr);
 }
 
 if ($file_upload_msg !== '' && $file_upload_msg !== '0') {

@@ -9,7 +9,7 @@ if (!$is_admin) {
 }
 
 // 4.11
-@include_once($board_skin_path.'/delete_all.head.skin.php');
+@include_once($board_skin_path . '/delete_all.head.skin.php');
 
 $count_write = 0;
 $count_comment = 0;
@@ -30,7 +30,7 @@ if ($chk_count > (G5_IS_MOBILE ? $board['bo_mobile_page_rows'] : $board['bo_page
 }
 
 // Execute user code
-@include_once($board_skin_path.'/delete_all.skin.php');
+@include_once($board_skin_path . '/delete_all.skin.php');
 
 // The reason for reading in reverse is that replies must be deleted first
 for ($i = $chk_count - 1; $i >= 0; $i--) {
@@ -58,10 +58,10 @@ for ($i = $chk_count - 1; $i >= 0; $i--) {
                 continue;
             }
         } elseif ($member['mb_id'] && $member['mb_id'] == $write['mb_id']) {
-            
+
         } elseif ($wr_password && !$write['mb_id'] && check_password($wr_password,
                 $write['wr_password'])) {
-            
+
         } else {
             continue;
         }
@@ -103,7 +103,7 @@ for ($i = $chk_count - 1; $i >= 0; $i--) {
             while ($row2 = sql_fetch_array($result2)) {
                 // Delete file
                 $delete_file = run_replace('delete_file_path',
-                    G5_DATA_PATH.'/file/'.$bo_table.'/'.str_replace('../', '', $row2['bf_file']), $row2);
+                    G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row2['bf_file']), $row2);
                 if (file_exists($delete_file)) {
                     @unlink($delete_file);
                 }
@@ -161,10 +161,10 @@ if ($count_write > 0 || $count_comment > 0) {
 }
 
 // 4.11
-@include_once($board_skin_path.'/delete_all.tail.skin.php');
+@include_once($board_skin_path . '/delete_all.tail.skin.php');
 
 delete_cache_latest($bo_table);
 
 run_event('bbs_delete_all', $tmp_array, $board);
 
-goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;page='.$page.$qstr));
+goto_url(short_url_clean(G5_HTTP_BBS_URL . '/board.php?bo_table=' . $bo_table . '&amp;page=' . $page . $qstr));

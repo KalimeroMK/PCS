@@ -2,8 +2,8 @@
 
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
-include_once(G5_LIB_PATH.'/mailer.lib.php');
+include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
+include_once(G5_LIB_PATH . '/mailer.lib.php');
 
 if (!$config['cf_email_use']) {
     alert('Please enable "Use email sending" in the environment settings to send emails.\n\nContact the administrator.');
@@ -26,8 +26,8 @@ if (!preg_match("/([0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)\.([0-9a-zA-Z_-]+)/", $to)) {
 
 $file = [];
 for ($i = 1; $i <= $attach; $i++) {
-    if ($_FILES['file'.$i]['name']) {
-        $file[] = attach_file($_FILES['file'.$i]['name'], $_FILES['file'.$i]['tmp_name']);
+    if ($_FILES['file' . $i]['name']) {
+        $file[] = attach_file($_FILES['file' . $i]['name'], $_FILES['file' . $i]['tmp_name']);
     }
 }
 
@@ -40,7 +40,7 @@ if ($type == 2) {
 // html 이면
 if ($type) {
     $current_url = G5_URL;
-    $mail_content = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Send Email</title><link rel="stylesheet" href="'.$current_url.'/style.css"></head><body>'.$content.'</body></html>';
+    $mail_content = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Send Email</title><link rel="stylesheet" href="' . $current_url . '/style.css"></head><body>' . $content . '</body></html>';
 } else {
     $mail_content = $content;
 }
@@ -53,8 +53,8 @@ foreach ($file as $f) {
 }
 
 $html_title = 'Sending Email';
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 alert_close('The email has been sent successfully.');
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

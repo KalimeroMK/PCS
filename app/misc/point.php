@@ -7,12 +7,12 @@ if ($is_guest) {
     alert_close('Only members can view this page.');
 }
 
-$g5['title'] = get_text($member['mb_nick'])."'s Point History";
-include_once(G5_PATH.'/head.sub.php');
+$g5['title'] = get_text($member['mb_nick']) . "'s Point History";
+include_once(G5_PATH . '/head.sub.php');
 
 $list = [];
 
-$sql_common = " from {$g5['point_table']} where mb_id = '".escape_trim($member['mb_id'])."' ";
+$sql_common = " from {$g5['point_table']} where mb_id = '" . escape_trim($member['mb_id']) . "' ";
 $sql_order = " order by po_id desc ";
 
 $sql = " select count(*) as cnt {$sql_common} ";
@@ -37,6 +37,6 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     $list[] = $row;
 }
 
-include_once($member_skin_path.'/point.skin.php');
+include_once($member_skin_path . '/point.skin.php');
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

@@ -16,18 +16,6 @@ namespace setasign\Fpdi\PdfParser\Filter;
 class Flate implements FilterInterface
 {
     /**
-     * Checks whether the zlib extension is loaded.
-     *
-     * Used for testing purpose.
-     *
-     * @internal
-     */
-    protected function extensionLoaded(): bool
-    {
-        return \extension_loaded('zlib');
-    }
-
-    /**
      * Decodes a flate compressed string.
      *
      * @param string|false $data The input string
@@ -81,5 +69,17 @@ class Flate implements FilterInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Checks whether the zlib extension is loaded.
+     *
+     * Used for testing purpose.
+     *
+     * @internal
+     */
+    protected function extensionLoaded(): bool
+    {
+        return \extension_loaded('zlib');
     }
 }

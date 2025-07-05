@@ -31,11 +31,11 @@ if ($mb_password !== $mb_password_re) {
     alert('비밀번호가 일치하지 않습니다.');
 }
 
-$sql_password = "mb_password = '".get_encrypt_string($mb_password)."' ";
+$sql_password = "mb_password = '" . get_encrypt_string($mb_password) . "' ";
 
 sql_query("update {$g5['member_table']} set {$sql_password} where mb_id = '{$mb_id}' AND mb_dupinfo = '{$mb_dupinfo}'");
 
 set_session('ss_cert_mb_id', '');
 set_session('ss_cert_dupinfo', '');
 
-goto_url(G5_BBS_URL.'/login.php');
+goto_url(G5_BBS_URL . '/login.php');

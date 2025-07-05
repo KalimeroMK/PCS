@@ -19,7 +19,7 @@ if ($is_admin != 'board' && $is_admin != 'group' && $is_admin != 'super') {
 }
 
 $g5['title'] = 'Post ' . $act;
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 $wr_id_list = '';
 if ($wr_id) {
@@ -31,7 +31,7 @@ if ($wr_id) {
 
     for ($i = 0; $i < $count_chk_wr_id; $i++) {
         $wr_id_val = isset($_POST['chk_wr_id'][$i]) ? preg_replace('/[^0-9]/', '', $_POST['chk_wr_id'][$i]) : 0;
-        $wr_id_list .= $comma.$wr_id_val;
+        $wr_id_list .= $comma . $wr_id_val;
         $comma = ',';
     }
 }
@@ -85,7 +85,8 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
             <div class="tbl_head01 tbl_wrap">
                 <table>
                     <caption><?php
-                        echo $act ?> the post to one of the following boards.</caption>
+                        echo $act ?> the post to one of the following boards.
+                    </caption>
                     <thead>
                     <tr>
                         <th scope="col">
@@ -97,8 +98,8 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
                     </tr>
                     </thead>
                     <tbody>
-                    
-$counter = count($list);<?php
+
+                    $counter = count($list);<?php
                     for ($i = 0; $i < $counter; $i++) {
                         $atc_mark = '';
                         $atc_bg = '';
@@ -121,7 +122,7 @@ $counter = count($list);<?php
                                 <label for="chk<?php
                                 echo $i ?>">
                                     <?php
-                                    echo $list[$i]['gr_subject'].' &gt; ';
+                                    echo $list[$i]['gr_subject'] . ' &gt; ';
                                     $save_gr_subject = $list[$i]['gr_subject'];
                                     ?>
                                     <?php
@@ -132,7 +133,7 @@ $counter = count($list);<?php
                                 </label>
                             </td>
                         </tr>
-                    <?php
+                        <?php
                     } ?>
                     </tbody>
                 </table>
@@ -197,4 +198,4 @@ $counter = count($list);<?php
 
 <?php
 run_event('move_html_footer');
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

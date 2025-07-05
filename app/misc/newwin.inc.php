@@ -7,8 +7,8 @@ if (!defined("_GNUBOARD_")) {
 $pop_division = defined('_SHOP_') ? 'shop' : 'comm';
 
 $sql = " select * from {$g5['new_win_table']}
-          where '".G5_TIME_YMDHIS."' between nw_begin_time and nw_end_time
-            and nw_device IN ( 'both', 'pc' ) and nw_division IN ( 'both', '".$pop_division."' )
+          where '" . G5_TIME_YMDHIS . "' between nw_begin_time and nw_end_time
+            and nw_device IN ( 'both', 'pc' ) and nw_division IN ( 'both', '" . $pop_division . "' )
           order by nw_id asc ";
 $result = sql_query($sql, false);
 ?>
@@ -45,7 +45,7 @@ $result = sql_query($sql, false);
                 echo $nw['nw_id']; ?>">Close <i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
         </div>
-    <?php
+        <?php
     }
     if ($i == 0) {
         echo '<span class="sound_only">No popup notifications.</span>';

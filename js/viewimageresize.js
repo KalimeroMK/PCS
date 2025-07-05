@@ -1,15 +1,14 @@
-(function($) {
-    $.fn.viewimageresize = function(selector)
-    {
+(function ($) {
+    $.fn.viewimageresize = function (selector) {
         var cfg = {
-                selector: "img"
-            };
+            selector: "img"
+        };
 
-        if(typeof selector == "object") {
+        if (typeof selector == "object") {
             cfg = $.extend(cfg, selector);
         } else {
-            if(selector) {
-                cfg = $.extend({ selector: selector });
+            if (selector) {
+                cfg = $.extend({selector: selector});
             }
         }
 
@@ -19,24 +18,23 @@
         $img.removeAttr("height")
             .css("height", "");
 
-        function image_resize()
-        {
+        function image_resize() {
             var width = $this.width();
 
-            $img.each(function() {
-				
-				if ($(this).attr("loading") === "lazy") return; // loading="lazy" 속성이 있는 경우 건너뜀
-				
-                if($(this).data("width") == undefined)
+            $img.each(function () {
+
+                if ($(this).attr("loading") === "lazy") return; // loading="lazy" 속성이 있는 경우 건너뜀
+
+                if ($(this).data("width") == undefined)
                     $(this).data("width", $(this).width());
 
-                if($(this).data("width") > width) {
+                if ($(this).data("width") > width) {
                     $(this).removeAttr("width")
-                           .removeAttr("height")
-                           .css("width","")
-                           .css("height", "");
+                        .removeAttr("height")
+                        .css("width", "")
+                        .css("height", "");
 
-                    if($(this).data("width") > width) {
+                    if ($(this).data("width") > width) {
                         $(this).css("width", "100%");
                     }
                 } else {
@@ -45,55 +43,53 @@
             });
         }
 
-        $(window).on("load", function() {
+        $(window).on("load", function () {
             image_resize();
         });
 
-        $(window).on("resize", function() {
+        $(window).on("resize", function () {
             image_resize();
         });
     }
 
-    $.fn.viewimageresize2 = function(selector)
-    {
+    $.fn.viewimageresize2 = function (selector) {
         var cfg = {
-                selector: "img"
-            };
+            selector: "img"
+        };
 
-        if(typeof selector == "object") {
+        if (typeof selector == "object") {
             cfg = $.extend(cfg, selector);
         } else {
-            if(selector) {
-                cfg = $.extend({ selector: selector });
+            if (selector) {
+                cfg = $.extend({selector: selector});
             }
         }
 
         var $img = this.find(cfg.selector);
         var $this = this;
 
-        function image_resize()
-        {
+        function image_resize() {
             var width = $this.width();
 
-            $img.each(function() {
-				
-				if ($(this).attr("loading") === "lazy") return; // loading="lazy" 속성이 있는 경우 건너뜀
-				
-                $(this).removeAttr("width")
-                       .removeAttr("height")
-                       .css("width","")
-                       .css("height", "");
+            $img.each(function () {
 
-                if($(this).data("width") == undefined)
+                if ($(this).attr("loading") === "lazy") return; // loading="lazy" 속성이 있는 경우 건너뜀
+
+                $(this).removeAttr("width")
+                    .removeAttr("height")
+                    .css("width", "")
+                    .css("height", "");
+
+                if ($(this).data("width") == undefined)
                     $(this).data("width", $(this).width());
 
-                if($(this).data("width") > width) {
+                if ($(this).data("width") > width) {
                     $(this).css("width", "100%");
                 }
             });
         }
 
-        $(window).on("resize", function() {
+        $(window).on("resize", function () {
             image_resize();
         });
 

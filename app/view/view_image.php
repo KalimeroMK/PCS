@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../common.php');
 
 
 $g5['title'] = '이미지 크게보기';
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 $filename = isset($_GET['fn']) ? preg_replace('/[^A-Za-z0-9 _ .\-\/]/', '', $_GET['fn']) : '';
 
@@ -18,15 +18,15 @@ if (!preg_match('/(jpg|jpeg|png|gif|bmp|webp)$/i', $extension)) {
     alert_close('이미지 확장자가 아닙니다.');
 }
 
-if (strpos($filename, G5_DATA_DIR.'/editor')) {
+if (strpos($filename, G5_DATA_DIR . '/editor')) {
     $editor_file = strstr($filename, 'editor');
-    $filepath = G5_DATA_PATH.'/'.$editor_file;
-} elseif (strpos($filename, G5_DATA_DIR.'/qa')) {
+    $filepath = G5_DATA_PATH . '/' . $editor_file;
+} elseif (strpos($filename, G5_DATA_DIR . '/qa')) {
     $editor_file = strstr($filename, 'qa');
-    $filepath = G5_DATA_PATH.'/'.$editor_file;
+    $filepath = G5_DATA_PATH . '/' . $editor_file;
 } else {
     $editor_file = '';
-    $filepath = G5_DATA_PATH.'/file/'.$bo_table.'/'.$filename;
+    $filepath = G5_DATA_PATH . '/file/' . $bo_table . '/' . $filename;
 }
 
 $file_exists = (is_file($filepath) && file_exists($filepath)) ? 1 : 0;
@@ -41,14 +41,14 @@ if ($file_exists = run_replace('exists_view_image', $file_exists, $filepath, $ed
     $height = (isset($size[1]) && $size[1]) ? (int)$size[1] : 0;
 
     if ($editor_file) {
-        $fileurl = run_replace('get_editor_content_url', G5_DATA_URL.'/'.$editor_file);
+        $fileurl = run_replace('get_editor_content_url', G5_DATA_URL . '/' . $editor_file);
     } else {
-        $fileurl = run_replace('get_file_board_url', G5_DATA_URL.'/file/'.$bo_table.'/'.$filename, $bo_table);
+        $fileurl = run_replace('get_file_board_url', G5_DATA_URL . '/file/' . $bo_table . '/' . $filename, $bo_table);
     }
 
-    $img_attr = ($width && $height) ? 'width="'.$width.'" height="'.$height.'"' : '';
+    $img_attr = ($width && $height) ? 'width="' . $width . '" height="' . $height . '"' : '';
 
-    $img = '<img src="'.$fileurl.'" alt="" '.$img_attr.' class="draggable" style="position:relative;top:0;left:0;cursor:move;">';
+    $img = '<img src="' . $fileurl . '" alt="" ' . $img_attr . ' class="draggable" style="position:relative;top:0;left:0;cursor:move;">';
 } else {
     alert_close('파일이 존재하지 않습니다.');
 }
@@ -155,4 +155,4 @@ if ($file_exists = run_replace('exists_view_image', $file_exists, $filepath, $ed
     </script>
 
 <?php
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

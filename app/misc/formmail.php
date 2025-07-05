@@ -2,7 +2,7 @@
 
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
 
 if (!$config['cf_email_use']) {
     alert_close('Please enable "Use email sending" in the environment settings to send emails.\n\nContact the administrator.');
@@ -35,7 +35,7 @@ if ($sendmail_count > 3) {
 }
 
 $g5['title'] = 'Write Email';
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 $email_enc = new str_encrypt();
 $email_dec = $email_enc->decrypt($email);
@@ -56,6 +56,6 @@ if (!isset($type)) {
 $type_checked[0] = $type_checked[1] = $type_checked[2] = "";
 $type_checked[$type] = 'checked';
 
-include_once($member_skin_path.'/formmail.skin.php');
+include_once($member_skin_path . '/formmail.skin.php');
 
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

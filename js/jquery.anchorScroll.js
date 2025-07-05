@@ -6,21 +6,21 @@
  * Licensed under the MIT license.
  */
 ;
-(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
     'use strict';
-    $.anchorScroll = function(el, options) {
+    $.anchorScroll = function (el, options) {
         var base = this;
 
         // Access to jQuery and DOM versions of element
         base.$el = $(el);
         base.el = el;
 
-        base.init = function() {
+        base.init = function () {
             base.options = $.extend({}, $.anchorScroll.defaultOptions, options);
         };
 
         // On click
-        base.$el.click(function(e) {
+        base.$el.click(function (e) {
             e.preventDefault();
             if ($(e.target).closest('a').length && $(base.el.hash).length) {
                 var targetPos = $(base.el.hash).offset().top - base.options.offsetTop,
@@ -36,7 +36,7 @@
                 // Smooth scroll
                 $('html,body').animate({
                     scrollTop: targetPos
-                }, base.options.scrollSpeed).promise().done(function() {
+                }, base.options.scrollSpeed).promise().done(function () {
                     // On animation complete
                     $(classTo).addClass(scrollEnd).removeClass(onScroll);
                     // Callback on scroll end
@@ -56,8 +56,8 @@
         offsetTop: 0
     };
 
-    $.fn.anchorScroll = function(options) {
-        return this.each(function() {
+    $.fn.anchorScroll = function (options) {
+        return this.each(function () {
             (new $.anchorScroll(this, options));
         });
     };

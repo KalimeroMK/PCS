@@ -5,7 +5,7 @@ include_once(__DIR__ . '/../common.php');
 
 run_event('bbs_good_before', $bo_table, $wr_id, $good);
 
-@include_once($board_skin_path.'/good.head.skin.php');
+@include_once($board_skin_path . '/good.head.skin.php');
 
 // When JavaScript is enabled
 if (isset($_POST['js']) && $_POST['js'] === "on") {
@@ -13,7 +13,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
 
     function print_result(string $error, string $count): void
     {
-        echo '{ "error": "'.$error.'", "count": "'.$count.'" }';
+        echo '{ "error": "' . $error . '", "count": "' . $count . '" }';
         if ($error !== '' && $error !== '0') {
             exit;
         }
@@ -29,7 +29,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
         print_result($error, $count);
     }
 
-    $ss_name = 'ss_view_'.$bo_table.'_'.$wr_id;
+    $ss_name = 'ss_view_' . $bo_table . '_' . $wr_id;
     if (!get_session($ss_name)) {
         $error = 'You can only recommend or not recommend from within the relevant post.';
         print_result($error, $count);
@@ -72,7 +72,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
             // Increase recommend (like), not recommend (dislike) count
             sql_query(" update {$g5['write_prefix']}{$bo_table} set wr_{$good} = wr_{$good} + 1 where wr_id = '{$wr_id}' ");
             // Insert record
-            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
+            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '" . G5_TIME_YMDHIS . "' ");
 
             $sql = " select wr_{$good} as count from {$g5['write_prefix']}{$bo_table} where wr_id = '$wr_id' ";
             $row = sql_fetch($sql);
@@ -85,10 +85,10 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
         }
     }
 } else {
-    include_once(G5_PATH.'/head.sub.php');
+    include_once(G5_PATH . '/head.sub.php');
 
     if (!$is_member) {
-        $href = G5_BBS_URL.'/login.php?'.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id));
+        $href = G5_BBS_URL . '/login.php?' . $qstr . '&amp;url=' . urlencode(get_pretty_url($bo_table, $wr_id));
 
         alert('Members only.', $href);
     }
@@ -97,7 +97,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
         alert('The value was not passed correctly.');
     }
 
-    $ss_name = 'ss_view_'.$bo_table.'_'.$wr_id;
+    $ss_name = 'ss_view_' . $bo_table . '_' . $wr_id;
     if (!get_session($ss_name)) {
         alert('You can only recommend or not recommend from within the relevant post.');
     }
@@ -134,7 +134,7 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
             // Increase recommend (like), not recommend (dislike) count
             sql_query(" update {$g5['write_prefix']}{$bo_table} set wr_{$good} = wr_{$good} + 1 where wr_id = '{$wr_id}' ");
             // Insert record
-            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
+            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '" . G5_TIME_YMDHIS . "' ");
 
             $status = $good == 'good' ? 'Recommend' : 'Not Recommend';
 
@@ -149,4 +149,4 @@ if (isset($_POST['js']) && $_POST['js'] === "on") {
 
 run_event('bbs_good_after', $bo_table, $wr_id, $good);
 
-@include_once($board_skin_path.'/good.tail.skin.php');
+@include_once($board_skin_path . '/good.tail.skin.php');

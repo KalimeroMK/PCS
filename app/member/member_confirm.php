@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../common.php');
 
 
 if ($is_guest) {
-    alert('Only logged-in members can access this page.', G5_BBS_URL.'/login.php');
+    alert('Only logged-in members can access this page.', G5_BBS_URL . '/login.php');
 }
 
 $url = isset($_GET['url']) ? clean_xss_tags($_GET['url']) : '';
@@ -40,6 +40,6 @@ if ($url) {
 
 $url = get_text($url);
 
-include_once($member_skin_path.'/member_confirm.skin.php');
+include_once($member_skin_path . '/member_confirm.skin.php');
 
 include_once(__DIR__ . '/_tail.sub.php');

@@ -30,7 +30,7 @@ if (!defined('_GNUBOARD_')) {
             if ($w == 'u') { ?>
                 <b><?php
                     echo $mb_name ?></b> 님의 E-mail 주소가 변경되었습니다.<br><br>
-            <?php
+                <?php
             } ?>
 
             아래의 주소를 클릭하시면 인증이 완료됩니다.<br>

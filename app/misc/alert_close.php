@@ -2,7 +2,7 @@
 
 include_once(__DIR__ . '/../common.php');
 
-include_once(G5_PATH.'/head.sub.php');
+include_once(G5_PATH . '/head.sub.php');
 
 $msg = isset($msg) ? strip_tags($msg) : '';
 
@@ -75,4 +75,4 @@ if ($error) {
     </noscript>
 
 <?php
-include_once(G5_PATH.'/tail.sub.php');
+include_once(G5_PATH . '/tail.sub.php');

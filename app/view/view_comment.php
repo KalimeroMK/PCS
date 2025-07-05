@@ -3,7 +3,7 @@
 if (!defined('_GNUBOARD_')) {
     exit;
 } // 개별 페이지 접근 불가
-include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
 
 $captcha_html = "";
 if ($is_guest && $board['bo_comment_level'] < 2) {
@@ -13,7 +13,7 @@ if ($is_guest && $board['bo_comment_level'] < 2) {
 $c_id = isset($_GET['c_id']) ? clean_xss_tags($_GET['c_id'], 1, 1) : '';
 $c_wr_content = '';
 
-@include_once($board_skin_path.'/view_comment.head.skin.php');
+@include_once($board_skin_path . '/view_comment.head.skin.php');
 
 $list = [];
 
@@ -35,7 +35,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
     if ($board['bo_use_sideview']) {
         $list[$i]['name'] = get_sideview($row['mb_id'], $tmp_name, $row['wr_email'], $row['wr_homepage']);
     } else {
-        $list[$i]['name'] = '<span class="'.($row['mb_id'] ? 'member' : 'guest').'">'.$tmp_name.'</span>';
+        $list[$i]['name'] = '<span class="' . ($row['mb_id'] ? 'member' : 'guest') . '">' . $tmp_name . '</span>';
     }
 
 
@@ -51,10 +51,10 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
         $list[$i]['content'] = conv_content($row['wr_content'], 0, 'wr_content');
         $list[$i]['content'] = search_font($stx, $list[$i]['content']);
     } else {
-        $ss_name = 'ss_secret_comment_'.$bo_table.'_'.$list[$i]['wr_id'];
+        $ss_name = 'ss_secret_comment_' . $bo_table . '_' . $list[$i]['wr_id'];
 
         if (!get_session($ss_name)) {
-            $list[$i]['content'] = '<a href="'.G5_BBS_URL.'/password.php?w=sc&amp;bo_table='.$bo_table.'&amp;wr_id='.$list[$i]['wr_id'].$qstr.'" class="s_cmt">댓글내용 확인</a>';
+            $list[$i]['content'] = '<a href="' . G5_BBS_URL . '/password.php?w=sc&amp;bo_table=' . $bo_table . '&amp;wr_id=' . $list[$i]['wr_id'] . $qstr . '" class="s_cmt">댓글내용 확인</a>';
         } else {
             $list[$i]['content'] = conv_content($row['wr_content'], 0, 'wr_content');
             $list[$i]['content'] = search_font($stx, $list[$i]['content']);
@@ -77,13 +77,13 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
         if ($member['mb_id']) {
             if ($row['mb_id'] === $member['mb_id'] || $is_admin) {
-                set_session('ss_delete_comment_'.$row['wr_id'].'_token', $token = uniqid(time()));
-                $list[$i]['del_link'] = G5_BBS_URL.'/delete_comment.php?bo_table='.$bo_table.'&amp;comment_id='.$row['wr_id'].'&amp;token='.$token.'&amp;page='.$page.$qstr;
+                set_session('ss_delete_comment_' . $row['wr_id'] . '_token', $token = uniqid(time()));
+                $list[$i]['del_link'] = G5_BBS_URL . '/delete_comment.php?bo_table=' . $bo_table . '&amp;comment_id=' . $row['wr_id'] . '&amp;token=' . $token . '&amp;page=' . $page . $qstr;
                 $list[$i]['is_edit'] = true;
                 $list[$i]['is_del'] = true;
             }
         } elseif (!$row['mb_id']) {
-            $list[$i]['del_link'] = G5_BBS_URL.'/password.php?w=x&amp;bo_table='.$bo_table.'&amp;comment_id='.$row['wr_id'].'&amp;page='.$page.$qstr;
+            $list[$i]['del_link'] = G5_BBS_URL . '/password.php?w=x&amp;bo_table=' . $bo_table . '&amp;comment_id=' . $row['wr_id'] . '&amp;page=' . $page . $qstr;
             $list[$i]['is_del'] = true;
         }
 
@@ -111,14 +111,14 @@ if ($is_admin) {
     $comment_max = (int)$board['bo_comment_max'];
 }
 
-$comment_action_url = https_url(G5_BBS_DIR)."/write_comment_update.php";
-$comment_common_url = short_url_clean(G5_BBS_URL.'/board.php?'.clean_query_string($_SERVER['QUERY_STRING']));
+$comment_action_url = https_url(G5_BBS_DIR) . "/write_comment_update.php";
+$comment_common_url = short_url_clean(G5_BBS_URL . '/board.php?' . clean_query_string($_SERVER['QUERY_STRING']));
 
-include_once($board_skin_path.'/view_comment.skin.php');
+include_once($board_skin_path . '/view_comment.skin.php');
 
 if (!$member['mb_id']) // 비회원일 경우에만
 {
-    echo '<script src="'.G5_JS_URL.'/md5.js"></script>'."\n";
+    echo '<script src="' . G5_JS_URL . '/md5.js"></script>' . "\n";
 }
 
-@include_once($board_skin_path.'/view_comment.tail.skin.php');
+@include_once($board_skin_path . '/view_comment.tail.skin.php');

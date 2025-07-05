@@ -19,7 +19,7 @@ set_cookie('ck_auto', '', 0); // Remove auto-login end
 
 if ($url) {
     if (substr($url, 0, 2) === '//') {
-        $url = 'http:'.$url;
+        $url = 'http:' . $url;
     }
     $p = @parse_url(urldecode($url));
     /*

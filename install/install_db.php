@@ -325,7 +325,7 @@ unset($row);
                         bo_image_width      = '835',
                         bo_skin             = '$bo_skin',
                         bo_mobile_skin      = '$bo_skin',
-                        bo_include_tail     = 'tail.php',
+                        bo_include_tail     = 'footer.php',
                         bo_content_head     = '',
                         bo_content_tail     = '',
                         bo_mobile_content_head     = '',

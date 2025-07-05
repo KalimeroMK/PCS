@@ -7,7 +7,7 @@ if (!defined('_GNUBOARD_')) {
 // 게시판 관리의 상단 내용
 if (G5_IS_MOBILE) {
     // 모바일의 경우 설정을 따르지 않는다.
-    include_once(__DIR__ . '/../head.php');
+    include_once(__DIR__ . '/../header.php');
     echo run_replace('board_mobile_content_head', html_purifier(stripslashes($board['bo_mobile_content_head'])),
         $board);
 } else {
@@ -16,7 +16,7 @@ if (G5_IS_MOBILE) {
         if (is_include_path_check($board['bo_include_head'])) {  //파일경로 체크
             @include($board['bo_include_head']);
         } else {    //파일경로가 올바르지 않으면 기본파일을 가져옴
-            include_once(__DIR__ . '/../head.php');
+            include_once(__DIR__ . '/../header.php');
         }
     }
     echo run_replace('board_content_head', html_purifier(stripslashes($board['bo_content_head'])), $board);

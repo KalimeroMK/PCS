@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../common.php');
 
 
 $g5['title'] = 'Current Visitors';
-include_once(__DIR__ . '/../head.php');
+include_once(__DIR__ . '/../header.php');
 $list = [];
 
 $sql = " select a.mb_id, b.mb_nick, b.mb_name, b.mb_email, b.mb_homepage, b.mb_open, b.mb_point, a.lo_ip, a.lo_location, a.lo_url
@@ -30,4 +30,4 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 
 include_once($connect_skin_path . '/current_connect.skin.php');
 
-include_once(__DIR__ . '/tail.php');
+include_once(__DIR__ . '/footer.php');

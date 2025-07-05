@@ -3,11 +3,11 @@
 if (!defined('_GNUBOARD_')) exit;
 // Individual page access not allowed
 if (G5_IS_MOBILE) {
-    include_once(G5_THEME_MOBILE_PATH . '/tail.php');
+    include_once(G5_THEME_MOBILE_PATH . '/footer.php');
     return;
 }
 if (G5_COMMUNITY_USE === false) {
-    include_once(G5_THEME_SHOP_PATH . '/shop.tail.php');
+    include_once(G5_THEME_SHOP_PATH . '/shop.footer.php');
     return;
 }
 ?>

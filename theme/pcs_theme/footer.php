@@ -3,7 +3,7 @@
 if (!defined('_GNUBOARD_')) exit;
 // Individual page access not allowed
 if (G5_IS_MOBILE) {
-    include_once(G5_THEME_MOBILE_PATH . '/tail.php');
+    include_once(G5_THEME_MOBILE_PATH . '/footer.php');
     return;
 }
 ?>

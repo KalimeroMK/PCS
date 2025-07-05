@@ -10,7 +10,7 @@ if (!$is_admin && $group['gr_device'] == 'mobile')
     alert($group['gr_subject'] . ' group can only be accessed on mobile.');
 
 $g5['title'] = $group['gr_subject'];
-include_once(G5_THEME_PATH . '/head.php');
+include_once(G5_THEME_PATH . '/header.php');
 include_once(G5_LIB_PATH . '/latest.lib.php');
 ?>
 
@@ -46,4 +46,4 @@ include_once(G5_LIB_PATH . '/latest.lib.php');
         <!-- Main Page Latest Posts End -->
     </div>
 <?php
-include_once(G5_THEME_PATH . '/tail.php');
+include_once(G5_THEME_PATH . '/footer.php');

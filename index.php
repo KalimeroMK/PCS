@@ -13,7 +13,7 @@ if (G5_IS_MOBILE) {
     return;
 }
 
-include_once(G5_PATH . '/head.php');
+include_once(G5_PATH . '/header.php');
 ?>
 
     <h2 class="sound_only">최신글</h2>
@@ -69,4 +69,4 @@ include_once(G5_PATH . '/head.php');
         <!-- } 최신글 끝 -->
     </div>
 <?php
-include_once(G5_PATH . '/tail.php');
+include_once(G5_PATH . '/footer.php');

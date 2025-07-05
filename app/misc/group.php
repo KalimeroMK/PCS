@@ -22,7 +22,7 @@ if (!$is_admin && $group['gr_device'] == 'mobile') {
 }
 
 $g5['title'] = $group['gr_subject'];
-include_once(__DIR__ . '/../head.php');
+include_once(__DIR__ . '/../header.php');
 include_once(G5_LIB_PATH . '/latest.lib.php');
 ?>
 
@@ -59,4 +59,4 @@ include_once(G5_LIB_PATH . '/latest.lib.php');
         <!-- Latest posts on main screen end -->
     </div>
 <?php
-include_once(__DIR__ . '/tail.php');
+include_once(__DIR__ . '/footer.php');

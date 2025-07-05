@@ -115,7 +115,7 @@ if ($w == "") {
     alert('The w value was not passed correctly.');
 }
 
-include_once(__DIR__ . '/../head.php');
+include_once(__DIR__ . '/../header.php');
 // Member icon path
 $mb_icon_path = G5_DATA_PATH . '/member/' . substr($member['mb_id'], 0, 2) . '/' . get_mb_icon_name($member['mb_id']) . '.gif';
 $mb_icon_filemtile = (defined('G5_USE_MEMBER_IMAGE_FILETIME') && G5_USE_MEMBER_IMAGE_FILETIME && file_exists($mb_icon_path)) ? '?' . filemtime($mb_icon_path) : '';
@@ -150,4 +150,4 @@ include_once($member_skin_path . '/register_form.skin.php');
 
 run_event('register_form_after', $w, $agree, $agree2);
 
-include_once(__DIR__ . '/tail.php');
+include_once(__DIR__ . '/footer.php');

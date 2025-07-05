@@ -10,7 +10,7 @@ if (G5_IS_MOBILE) {
     return;
 }
 
-include_once(G5_THEME_PATH . '/head.php');
+include_once(G5_THEME_PATH . '/header.php');
 ?>
 
     <h2 class="sound_only">Latest Posts</h2>
@@ -30,5 +30,5 @@ include_once(G5_THEME_PATH . '/head.php');
     </div>
 
 <?php
-include_once(G5_THEME_PATH . '/tail.php');
+include_once(G5_THEME_PATH . '/footer.php');
 ?>

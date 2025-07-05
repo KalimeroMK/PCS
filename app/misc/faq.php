@@ -35,7 +35,7 @@ $g5['title'] = $fm['fm_subject'];
 
 $skin_file = $faq_skin_path . '/list.skin.php';
 
-include_once(__DIR__ . '/../head.php');
+include_once(__DIR__ . '/../header.php');
 if (is_file($skin_file)) {
     $admin_href = '';
     $himg_src = '';
@@ -102,4 +102,4 @@ if (is_file($skin_file)) {
     echo '<p>' . str_replace(G5_PATH . '/', '', $skin_file) . ' does not exist.</p>';
 }
 
-include_once(__DIR__ . '/tail.php');
+include_once(__DIR__ . '/footer.php');

@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../common.php');
 
 // Set the title of the page
 $g5['title'] = 'Search Results';
-include_once(__DIR__ . '/../head.php');
+include_once(__DIR__ . '/../header.php');
 $search_table = [];
 $table_index = 0;
 $write_pages = "";
@@ -266,4 +266,4 @@ if (!$sop) {
 
 include_once($search_skin_path . '/search.skin.php');
 
-include_once(__DIR__ . '/tail.php');
+include_once(__DIR__ . '/footer.php');

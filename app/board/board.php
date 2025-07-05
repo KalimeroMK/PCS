@@ -225,7 +225,7 @@ if ($member['mb_id'] && ($is_admin === 'super' || $group['gr_admin'] === $member
     $admin_href = G5_ADMIN_URL . '/board_form.php?w=u&amp;bo_table=' . $bo_table;
 }
 
-include_once(G5_PATH . '/head.php');
+include_once(G5_PATH . '/header.php');
 
 // If the post ID is present, include the post view file
 if (isset($wr_id) && $wr_id) {

@@ -8,7 +8,7 @@ if (function_exists('social_check_login_before')) {
 }
 
 $g5['title'] = 'Login';
-include_once(__DIR__ . '/_head.sub.php');
+include_once(G5_PATH.'/head.sub.php');
 
 $url = isset($_GET['url']) ? strip_tags($_GET['url']) : '';
 $od_id = isset($_POST['od_id']) ? safe_replace_regex($_POST['od_id'], 'od_id') : '';
@@ -38,4 +38,4 @@ include_once($member_skin_path.'/login.skin.php');
 
 run_event('member_login_tail', $login_url, $login_action_url, $member_skin_path, $url);
 
-include_once(__DIR__ . '/_tail.sub.php');
+include_once(G5_PATH.'/tail.sub.php');

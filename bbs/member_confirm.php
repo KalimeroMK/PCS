@@ -25,7 +25,7 @@ if (function_exists('social_member_comfirm_redirect') && (!$url || $url === 'reg
 $url = run_replace('member_confirm_next_url', $url);
 
 $g5['title'] = 'Member Password Confirmation';
-include_once(__DIR__ . '/_head.sub.php');
+include_once(G5_PATH.'/head.sub.php');
 
 // url check
 check_url_host($url, '', G5_URL, true);
@@ -42,4 +42,4 @@ $url = get_text($url);
 
 include_once($member_skin_path.'/member_confirm.skin.php');
 
-include_once(__DIR__ . '/_tail.sub.php');
+include_once(G5_PATH.'/tail.sub.php');

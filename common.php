@@ -804,13 +804,15 @@ if (G5_IS_MOBILE) {
 }
 //==============================================================================
 
+// Start output buffering to prevent "headers already sent" errors
+ob_start();
 
 // 방문자수의 접속을 남김
-include_once(G5_BBS_PATH.'/visit_insert.inc.php');
+include_once(G5_PATH.'/app/bbs/misc/visit_insert.inc.php');
 
 
 // 일정 기간이 지난 DB 데이터 삭제 및 최적화
-include_once(G5_BBS_PATH.'/db_table.optimize.php');
+include_once(G5_PATH.'/app/bbs/misc/db_table.optimize.php');
 
 // common.php 파일을 수정할 필요가 없도록 확장합니다.
 $extend_file = array();
@@ -836,8 +838,6 @@ if($is_member && !$is_admin && (!defined("G5_CERT_IN_PROG") || !G5_CERT_IN_PROG)
         goto_url(G5_BBS_URL."/member_cert_refresh.php");
     }
 }
-
-ob_start();
 
 // 자바스크립트에서 go(-1) 함수를 쓰면 폼값이 사라질때 해당 폼의 상단에 사용하면
 // 캐쉬의 내용을 가져옴. 완전한지는 검증되지 않음

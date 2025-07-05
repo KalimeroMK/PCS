@@ -1,7 +1,7 @@
 <?php
 
 if ($_GET['wdr_select']=='welder_by')	{
-	
+
 	$rt_arr = array(5,20,100);
 
 ?>
@@ -82,21 +82,21 @@ if ($_GET['wdr_select']=='daily_by')	{
 <?php
 	$query_daily_list = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_info_joint WHERE s_f = "F" AND ft_date = "'.$_GET['wdate'].'" ORDER BY welder_1';
 	$sql_daily_list = sql_query ($query_daily_list);
-	
+
 	while ($sql_daily_list_arr = sql_fetch_array ($sql_daily_list))	{
 		$jnt_qty++;
 		$query_pcs_list = 'SELECT * FROM '.G5_TABLE_PREFIX.'pcs_info_jnt_krp WHERE j_key="'.$sql_daily_list_arr['j_key'].'"';
 		$sql_pcs_list = sql_query ($query_pcs_list);
 		$sql_sql_pcs_list_arr = sql_fetch_array ($sql_pcs_list);
-		
+
 		$query_rev = "SELECT rev_no FROM ".G5_TABLE_PREFIX."pcs_info_drawing WHERE dwg_no = '".$sql_daily_list_arr['dwg_no']."' ";
 		$sql_rev = sql_query ($query_rev);
 		$sql_rev_arr = sql_fetch_array ($sql_rev);
-		
+
 		$query_g5_dwg = "SELECT wr_id FROM ".G5_TABLE_PREFIX."write_drawing WHERE wr_subject = '".$sql_daily_list_arr['dwg_no']."'";
 		$sql_g5_dwg = sql_query ($query_g5_dwg);
 		$sql_g5_dwg_arr = sql_fetch_array ($sql_g5_dwg);
-		
+
 ?>
 <tr>
 	<td class="jnt_td" style="width: 50px"> <a href = 'javascript:document.submit_for<?php echo $jnt_qty;?>.submit()'> <font style='font-size:25px;'> <b> <?php echo $jnt_qty; ?> </b></font></a></td>
@@ -105,7 +105,7 @@ if ($_GET['wdr_select']=='daily_by')	{
 		<input type="hidden" name="file" value="<?php echo $sql_daily_list_arr['dwg_no'];?>">
 		<input type="hidden" name="rev" value="<?php echo $sql_rev_arr['rev_no'];?>">
 		</form>
-	<td class="jnt_td" style="width:300px"> <a href=<?php echo G5_URL.'/bbs/board.php?bo_table=drawing&wr_id='.$sql_g5_dwg_arr[wr_id]; ?> target='_self'> <font style='font-size:25px;'> <b> <?php echo $sql_daily_list_arr['dwg_no']; ?> </b></font></a></td>
+	<td class="jnt_td" style="width:300px"> <a href=<?php echo G5_URL.'/app/board/board.php?bo_table=drawing&wr_id='.$sql_g5_dwg_arr[wr_id]; ?> target='_self'> <font style='font-size:25px;'> <b> <?php echo $sql_daily_list_arr['dwg_no']; ?> </b></font></a></td>
 	<td class="jnt_td" style="width:100px"> <?php preg_match('/[A-Z1-9][A-Z0-9]*/',$sql_daily_list_arr['j_no'],$mts);	echo $mts[0]; ?> </td>
 	<td class="jnt_td" style="width:100px"> <?php echo $sql_daily_list_arr['j_type']; ?> </td>
 	<td class="jnt_td" style="width:100px"> <?php echo $sql_daily_list_arr['s_f']; ?> </td>
@@ -122,12 +122,12 @@ if ($_GET['wdr_select']=='daily_by')	{
 
 <?php
 }
-	
+
 if (!$_GET['wdr_select']) {
 	$bf_1day = substr(date('Y-m-d H:i:s', time() - (3600 * 6) ), 0, 10);
 	$bf_week = substr(date('Y-m-d H:i:s', time() - (3600 * 6) - (3600 * 24 * 7) ), 0, 10);
 	$bf_month = substr(date('Y-m-d H:i:s', time() - (3600 * 6) - (3600 * 24 * 30) ), 0, 10);
-	
+
 	for($i=0;$i<8;$i++){$wdate[$i] = substr(date('Y-m-d H:i:s', time() - (3600 * 6) - (3600 * 24 * (7-$i)) ), 0, 10);}
 ?>
 <table class="main">
@@ -153,11 +153,11 @@ if (!$_GET['wdr_select']) {
 	$query_welder_list = 'SELECT DISTINCT welder_1 FROM '.G5_TABLE_PREFIX.'pcs_info_joint WHERE s_f = "F" ORDER BY welder_1';
 	$sql_welder_list = sql_query ($query_welder_list);
 	$sql_welder_list_arr = sql_fetch_array ($sql_welder_list);
-	
+
 	while ($sql_welder_list_arr = sql_fetch_array ($sql_welder_list))	{
 ?>
 <tr>
-<td class="jnt_td"><?php echo '<a href='.G5_URL.'/bbs/board.php?bo_table=status&wr_id=3&wdr_select=welder_by&wdno='.$sql_welder_list_arr['welder_1'].' target="_self"><font style="font-size:25px;"> <b>'.$sql_welder_list_arr['welder_1'].'</b></font></a>'; ?></td>
+<td class="jnt_td"><?php echo '<a href='.G5_URL.'/app/board/board.php?bo_table=status&wr_id=3&wdr_select=welder_by&wdno='.$sql_welder_list_arr['welder_1'].' target="_self"><font style="font-size:25px;"> <b>'.$sql_welder_list_arr['welder_1'].'</b></font></a>'; ?></td>
 <?php
 	$welder_qty1++; 
 	$welder_qty2++; 
@@ -166,17 +166,17 @@ if (!$_GET['wdr_select']) {
 	$weak_acc_day = 0;
 
 		for($i=0;$i<7;$i++){
-			
+
 			$query_welder_di = "SELECT SUM(nps) FROM ".G5_TABLE_PREFIX."pcs_info_joint WHERE welder_1 = '".$sql_welder_list_arr['welder_1']."' AND ft_date = '".$wdate[$i-1]."'";
 			$weak_acc_di += pcs_sql_value ($query_welder_di);
 			$G_total_val[$i] += pcs_sql_value ($query_welder_di);
-			
+
 			if(pcs_sql_value ($query_welder_di)){$weak_acc_day++;}
-			
+
 			echo '<td class="jnt_td" >'.pcs_sql_value ($query_welder_di).'</td>';
-			
+
 		}
-		
+
 		$query_welder_di = "SELECT SUM(nps) FROM ".G5_TABLE_PREFIX."pcs_info_joint WHERE welder_1 = '".$sql_welder_list_arr['welder_1']."' AND w_type = 'WELD' AND ('".$bf_week."' <= ft_date AND ft_date <= '".$bf_1day."')";
 		$query_welder_day = "SELECT count(DISTINCT ft_date) FROM ".G5_TABLE_PREFIX."pcs_info_joint WHERE welder_1 = '".$sql_welder_list_arr['welder_1']."' AND w_type = 'WELD' AND ('".$bf_week."' <= ft_date AND ft_date <= '".$bf_1day."')";
 		if(pcs_sql_value ($query_welder_day)){$welder_day_avr = round(pcs_sql_value ($query_welder_di)/pcs_sql_value ($query_welder_day),1);}else{$welder_day_avr = 0;$welder_qty1--;}
@@ -204,7 +204,7 @@ if (!$_GET['wdr_select']) {
 		echo '<td class="jnt_td" >'.round(pcs_sql_value ($query_welder_di)/pcs_sql_value ($query_welder_day),1).'</td>';
 		$G_total_val[$i+6] += $welder_day_avr;
 
-		
+
 ?>
 
 </tr>
@@ -218,20 +218,20 @@ if (!$_GET['wdr_select']) {
 <tr>
 <td class="jnt_td td_S_total">G-TOTAL</td>
 <?php
-		for($i=0;$i<7;$i++){echo '<td class="jnt_td td_S_total" ><a href='.G5_URL.'/bbs/board.php?bo_table=status&wr_id=3&wdr_select=daily_by&wdate='.$wdate[$i-1].' target="_self"><font style="font-size:25px;"> <b>'.$G_total_val[$i].'</b></font></a></td>';}
-		
+		for($i=0;$i<7;$i++){echo '<td class="jnt_td td_S_total" ><a href='.G5_URL.'/app/board/board.php?bo_table=status&wr_id=3&wdr_select=daily_by&wdate='.$wdate[$i-1].' target="_self"><font style="font-size:25px;"> <b>'.$G_total_val[$i].'</b></font></a></td>';}
+
 		echo '<td class="jnt_td td_S_total" >'.$G_total_val[$i+1].'</td>';
-		
+
 		echo '<td class="jnt_td td_S_total" >'.round($G_total_val[$i+2]/$welder_qty1,1).'</td>';
-		
+
 		echo '<td class="jnt_td td_S_total" >'.$G_total_val[$i+3].'</td>';
-		
+
 		echo '<td class="jnt_td td_S_total" >'.round($G_total_val[$i+4]/$welder_qty2,1).'</td>';
-		
+
 		echo '<td class="jnt_td td_S_total" >'.$G_total_val[$i+5].'</td>';
-		
+
 		echo '<td class="jnt_td td_S_total" >'.round($G_total_val[$i+6]/$welder_qty3,1).'</td>';
-		
+
 
 ?>
 </tr>

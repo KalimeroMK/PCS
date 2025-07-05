@@ -11,7 +11,7 @@ if($member['mb_2']){
 <script>
 var lat = '';
 var lon = '';
-	
+
 var video = document.createElement("video");
 var canvasElement = document.getElementById("canvas");
 var canvas = canvasElement.getContext("2d");
@@ -55,14 +55,14 @@ function tick() {
 		} else {
 			canvasElement2.height = canvasElement2.width * 3/4;
 		}
-		
+
 		canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 		var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
 		canvas2.drawImage(canvasElement, 0, 0, canvasElement2.width, canvasElement2.height);
 		var code = jsQR(imageData.data, imageData.width, imageData.height, {
 		inversionAttempts: "dontInvert",
 		});
-		
+
 		if (code) {
 			var getTable;
 			var scanedtext = code.data.substr(4);
@@ -71,22 +71,22 @@ function tick() {
 			drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
 			drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 			outputData.parentElement.hidden = false;
-			
+
 			outputData.innerText = scanedtext;
 			if(code.data.substr(0,3)=='spl'){
-				getTable = 'spool';location.href='<?php echo G5_URL?>/bbs/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
+				getTable = 'spool';location.href='<?php echo G5_URL?>/app/board/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
 			}
 			else if(code.data.substr(0,3)=='dwg'){
-				getTable = 'drawing';location.href='<?php echo G5_URL?>/bbs/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
+				getTable = 'drawing';location.href='<?php echo G5_URL?>/app/board/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
 			}
 			else if(code.data.substr(0,3)=='pkg'){
-				getTable = 'package';location.href='<?php echo G5_URL?>/bbs/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
+				getTable = 'package';location.href='<?php echo G5_URL?>/app/board/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
 			}
 			else if(code.data.substr(0,3)=='tag'){
-				getTable = 'tp';location.href='<?php echo G5_URL?>/bbs/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
+				getTable = 'tp';location.href='<?php echo G5_URL?>/app/board/board.php?bo_table='+getTable+'&stx='+scanedtext+'&x='+lat+'&y='+lon;
 			}
 			else {location.reload();}
-			
+
 		}
 	}
 	requestAnimationFrame(tick);
@@ -127,7 +127,7 @@ function showError(error) {
 <?php
 	}
 ?>
-	
+
 </script>
 <?php
 }

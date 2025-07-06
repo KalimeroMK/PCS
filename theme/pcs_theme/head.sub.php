@@ -48,6 +48,13 @@ header("Pragma: no-cache"); // HTTP/1.0
             echo $config['cf_add_meta'] . PHP_EOL;
         ?>
         <title><?php echo $g5_head_title; ?></title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
         <link rel="stylesheet"
               href="<?php echo G5_THEME_CSS_URL; ?>/<?php echo G5_IS_MOBILE ? 'mobile' : 'default'; ?>.css?ver=<?php echo G5_CSS_VER; ?>">
         <link rel="stylesheet"
@@ -57,17 +64,19 @@ header("Pragma: no-cache"); // HTTP/1.0
 <script src="<?php echo G5_JS_URL ?>/html5.js"></script>
 <![endif]-->
         <script>
-            // Declare global variables used in JavaScript
-            var g5_url = "<?php echo G5_URL ?>";
-            var g5_bbs_url = "<?php echo G5_BBS_URL ?>";
-            var g5_is_member = "<?php echo isset($is_member) ? $is_member : ''; ?>";
-            var g5_is_admin = "<?php echo isset($is_admin) ? $is_admin : ''; ?>";
-            var g5_is_mobile = "<?php echo G5_IS_MOBILE ?>";
-            var g5_bo_table = "<?php echo isset($bo_table) ? $bo_table : ''; ?>";
-            var g5_sca = "<?php echo isset($sca) ? $sca : ''; ?>";
-            var g5_editor = "<?php echo ($config['cf_editor'] && $board['bo_use_dhtml_editor']) ? $config['cf_editor'] : ''; ?>";
-            var g5_cookie_domain = "<?php echo G5_COOKIE_DOMAIN ?>";
+            const g5_url = "<?php echo G5_URL ?>";
+            const g5_is_member = "<?php echo $is_member ?? ''; ?>";
+            const g5_is_admin = "<?php echo $is_admin ?? ''; ?>";
+            const g5_bo_table = "<?php echo $bo_table ?? ''; ?>";
+            const g5_sca = "<?php echo $sca ?? ''; ?>";
+            const g5_editor = "<?php echo ($config['cf_editor'] && $board['bo_use_dhtml_editor']) ? $config['cf_editor'] : ''; ?>";
+            const g5_cookie_domain = "<?php echo G5_COOKIE_DOMAIN ?>";
+            <?php if(defined('G5_IS_ADMIN')) { ?>
+            const g5_admin_url = "<?php echo G5_ADMIN_URL; ?>";
+            <?php } ?>
         </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
         <?php
         add_javascript('<script src="' . G5_JS_URL . '/jquery-1.12.4.min.js"></script>', 0);
         add_javascript('<script src="' . G5_JS_URL . '/jquery-migrate-1.4.1.min.js"></script>', 0);
@@ -76,10 +85,6 @@ header("Pragma: no-cache"); // HTTP/1.0
         add_javascript('<script src="' . G5_JS_URL . '/wrest.js?ver=' . G5_JS_VER . '"></script>', 0);
         add_javascript('<script src="' . G5_JS_URL . '/placeholders.min.js"></script>', 0);
         add_stylesheet('<link rel="stylesheet" href="' . G5_JS_URL . '/font-awesome/css/font-awesome.min.css">', 0);
-
-        if (G5_IS_MOBILE) {
-            add_javascript('<script src="' . G5_JS_URL . '/modernizr.custom.70111.js"></script>', 1); // Detect overflow scroll
-        }
         if (!defined('G5_IS_ADMIN'))
             echo $config['cf_add_script'];
         ?>

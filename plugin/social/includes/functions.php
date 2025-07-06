@@ -532,7 +532,7 @@ function social_check_login_before($p_service = '')
         $register_url = G5_BBS_URL . '/register_form.php?provider=' . $provider_name;
         $register_action_url = G5_BBS_URL . '/register_form_update.php';
 
-        $login_action_url = G5_HTTPS_BBS_URL . "/login_check.php";
+        $login_action_url = G5_URL . "/app/login/login_check.php";
         $mylink = (isset($_REQUEST['mylink']) && !empty($_REQUEST['mylink'])) ? 1 : 0;
 
         //소셜로 이미 가입 했다면 로그인 처리 합니다.

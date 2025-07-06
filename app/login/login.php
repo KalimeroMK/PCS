@@ -26,7 +26,7 @@ if ($is_member) {
 }
 
 $login_url = login_url($url);
-$login_action_url = G5_HTTPS_BBS_URL . "/login_check.php";
+$login_action_url = G5_URL . "/app/login/login_check.php";
 
 // If login skin does not exist, use the default skin to prevent admin page access issues
 $login_file = $member_skin_path . '/login.skin.php';

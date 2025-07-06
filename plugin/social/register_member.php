@@ -48,7 +48,7 @@ $g5['title'] = '소셜 회원 가입 - ' . social_get_provider_service_name($pro
 include_once(__DIR__ . '/../../header.php');
 
 $register_action_url = https_url(G5_PLUGIN_DIR . '/' . G5_SOCIAL_LOGIN_DIR, true) . '/register_member_update.php';
-$login_action_url = G5_HTTPS_BBS_URL . "/login_check.php";
+$login_action_url = G5_URL . "/app/login/login_check.php";
 $req_nick = !isset($member['mb_nick_date']) || (isset($member['mb_nick_date']) && $member['mb_nick_date'] <= date("Y-m-d", G5_SERVER_TIME - ($config['cf_nick_modify'] * 86400)));
 $required = ($w == '') ? 'required' : '';
 $readonly = ($w == 'u') ? 'readonly' : '';

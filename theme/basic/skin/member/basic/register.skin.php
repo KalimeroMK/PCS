@@ -15,7 +15,7 @@ add_stylesheet('<link rel="stylesheet" href="' . $member_skin_url . '/style.css"
 
         <?php
         // 소셜로그인 사용시 소셜로그인 버튼
-        @include_once(get_social_skin_path() . '/social_register.skin.php');
+        // Social login registration has been removed
         ?>
         <section id="fregister_term">
             <h2>회원가입약관</h2>
